@@ -1,3 +1,11 @@
+# Ignore build file contents
+build/*
+
+# Cmake output
+CMakeFiles
+Makefile
+CTestTestfile.cmake
+
 # Compiled Object files
 *.slo
 *.lo

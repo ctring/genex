@@ -1,0 +1,2 @@
+// the configured options and settings for Tutorial
+#cmakedefine FIND_EXACT
