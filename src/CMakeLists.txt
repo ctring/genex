@@ -26,8 +26,9 @@ find_package( PythonLibs 2.7 REQUIRED )
 find_package( PythonInterp 2.7 REQUIRED )
 
 # collect cpp files
-FILE(GLOB SRCFILES *.cpp *.hpp)
-add_executable(genex ${SRCFILES})
+FILE(GLOB SRC_FILES *.cpp *.hpp)
+add_library(genexLib ${SRC_FILES})
+add_executable(genex ${SRC_FILES})
 
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)
 # enable cmake to run tests
@@ -42,11 +43,14 @@ foreach(testSrc ${TEST_SRCS})
   # extract file names (w/o extension)
   get_filename_component(testName ${testSrc} NAME_WE)
 
+  # allow tests access to source
+  include_directories(${PROJECT_SOURCE_DIR})
+
   # set compile target
   add_executable(${testName} ${testSrc})
 
   #link to Boost libraries AND targets and dependencies
-  target_link_libraries(${testName}
+  target_link_libraries(${testName} genexLib
                                     ${PYTHON_LIBRARIES}
                                     ${Boost_LIBRARIES}
                                     ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
@@ -65,10 +69,8 @@ foreach(testSrc ${TEST_SRCS})
 
 endforeach(testSrc)
 
-# create executable from Test.cpp named genex
 # link libraries 
-target_link_libraries(genex
-                             ${PYTHON_LIBRARIES}
+target_link_libraries(genex  ${PYTHON_LIBRARIES}
                              ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
                              ${Boost_FILESYSTEM_LIBRARY}
                              ${Boost_PYTHON_LIBRARY}
