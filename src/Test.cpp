@@ -14,6 +14,9 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/stream.hpp>
 
+//including src files
+#include "ExampleClass.hpp"
+
 namespace io = boost::iostreams;
 namespace py = boost::python;
 
@@ -28,5 +31,9 @@ int main (int argc, char *argv[])
   std::ostream out(&buf);
   out << "testing boost io...\n";
   
+  Rectangle rect;
+  rect.set_values (3,4);
+  cout << "area: " << rect.area();
+
   return 0;
 }
