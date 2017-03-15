@@ -35,3 +35,6 @@ CTestTestfile.cmake
 *.exe
 *.out
 *.app
+
+# os
+.DS_STORE
