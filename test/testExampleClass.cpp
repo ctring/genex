@@ -1,5 +1,3 @@
-#define BOOST_TEST_DYN_LINK
-
 // define the module test name (generally the class name)
 #define BOOST_TEST_MODULE "Testing including classes"
 
