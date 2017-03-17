@@ -38,3 +38,4 @@ CTestTestfile.cmake
 
 # os
 .DS_STORE
+.swp*

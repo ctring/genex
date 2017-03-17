@@ -1,5 +1,6 @@
 #include <iostream>
 #include "config.hpp"
+#include "DistanceManager.cpp"
 
 int main (int argc, char *argv[])
 {
@@ -7,5 +8,7 @@ int main (int argc, char *argv[])
   std::cout << "Single precision!\n";
 #endif
   std::cout << "Unimplemented!\n";
-  return 0;
+
+  DistanceManager m;
+  return 1;
 }
