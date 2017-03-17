@@ -6,15 +6,25 @@
 
 struct MockData
 {
-  data_t dat[7] = {1, 2, 3, 4, 5, 6, 7};
+  data_t dat_1[5] = {1, 2, 3, 4, 5};
+  data_t dat_2[5] = {11, 2, 3, 4, 5};
 };
 
-BOOST_AUTO_TEST_CASE( time_series_length )
+BOOST_AUTO_TEST_CASE( mink_norm )
 {
   MockData data;
-  TimeSeries ts(data.dat, 0, 0, 5);
-  Minkowski dist;
+  TimeSeries ts_1(data.dat_1, 0, 0, 5);
+  TimeSeries ts_2(data.dat_2, 0, 0, 5);
 
-  BOOST_CHECK_EQUAL( dist.norm(ts), 5 );
+  Minkowski dist;
+  
+  data_t total = 0.0;
+
+  //TODO: what forloop type do we want here?
+  for (int i = 0; i < ts_1.getLength(); i++) {
+    total += dist.dist(ts_1[i], ts_2[i]);
+  }
+
+  BOOST_CHECK_EQUAL( dist.norm(total, ts_1, ts_2), 2.0 );
 }
 

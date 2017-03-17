@@ -3,24 +3,32 @@
 #include "Euclidean.hpp"
 #include "Minkowski.hpp"
 
-// Returns a distance metric given a Dists
-//
-// To extend this a user has to add a case statement
-// for their given distance function, additionally adding
-// an identifier to the Dists enum.
-//
-// Example:
-// //I create new distance called Magic, and add MAGIC to Dists
-// enum Dists = {... ,MAGIC};
-//
-// //in DistanceManager
-// case Dists::MAGIC:
-//   metric = new Magic;
-//   break;
-//
-// //usage:
-// DistanceManager m;
-// DistanceMetric * magic = m.getMetric(Dists::MAGIC) 
+
+
+/**
+ *  @brief returns a distance metric given a dist (ENUM)
+ *
+ *  To extend this a user has to add a case statement
+ *  for their given distance function, additionally adding
+ *  an identifier to the Dists enum.
+ * 
+ *  Example:
+ *  // create new distance called Magic, and add MAGIC to Dists
+ *  enum Dists = {... ,MAGIC};
+ *  
+ *  //in DistanceManager
+ *  case Dists::MAGIC:
+ *    metric = new Magic;
+ *    break;
+ *
+ *  //usage:
+ *  DistanceManager m;
+ *  DistanceMetric * magic = m.getMetric(Dists::MAGIC);
+ *
+ *
+ *  @param d is a Dists, used to indicate the metric class desired
+ *  @return metric is DistanceMetric of the corresponding type 
+ */
 DistanceMetric* DistanceManager::getMetric(Dists d)
 {
   DistanceMetric * metric = NULL;
