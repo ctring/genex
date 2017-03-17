@@ -4,9 +4,6 @@
 #include <iostream>
 #include "DistanceMetric.hpp"
 
-typedef double data_t;
-
-
 // This class is example of an implemented DistanceMetric
 class Euclidean : public DistanceMetric {
   public:
@@ -21,12 +18,9 @@ class Euclidean : public DistanceMetric {
        return a + dist(x_1, x_2); 
     };
 
-    data_t norm(data_t p_1)
+    data_t norm(TimeSeries& t)
     { 
-       //what does this function do?
-       //does it do the normalization, or does it return the constant?
-       //should we give it the ts? or length of the ts?
-       return 5; 
+       return t.getLength();
     };
 };
 
