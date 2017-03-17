@@ -15,9 +15,9 @@ public:
     return pow(x_1 - x_2, 2);
   };
 
-  data_t recurse(const data_t a, const data_t x_1, const data_t x_2)
+  data_t recurse(const data_t prev, const data_t x_1, const data_t x_2)
   {
-    return a + dist(x_1, x_2);
+    return prev + dist(x_1, x_2);
   };
 
   data_t norm(const data_t total, const TimeSeries& t, const TimeSeries& t_2)
