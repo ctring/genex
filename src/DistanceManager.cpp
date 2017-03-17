@@ -6,45 +6,38 @@
 
 
 /**
- *  @brief returns a distance metric given a dist (ENUM)
+ *  @brief returns a distance metric given a correct string
  *
- *  To extend this a user has to add a case statement
- *  for their given distance function, additionally adding
- *  an identifier to the Dists enum.
+ *  To extend this a user has to add an if statement
+ *  for their given distance function.
  *
  *  Example:
  *  // create new distance called Magic, and add MAGIC to Dists
- *  enum Dists = {... ,MAGIC};
  *
- *  //in DistanceManager
- *  case Dists::MAGIC:
+ *  //in DistanceManager.cpp (below)
+ *  else if (d == "magic") {
  *    metric = new Magic;
- *    break;
+ *  }
  *
  *  //usage:
  *  DistanceManager m;
- *  DistanceMetric * magic = m.getMetric(Dists::MAGIC);
+ *  DistanceMetric * magic = m.getMetric("magic");
  *
- *
- *  @param d is a Dists, used to indicate the metric class desired
+ *  @param d is a string, used to indicate the metric class desired
  *  @return metric is DistanceMetric of the corresponding type
  */
-DistanceMetric* DistanceManager::getMetric(const Dists d)
+DistanceMetric* DistanceManager::getMetric(const std::string d)
 {
   DistanceMetric * metric = NULL;
 
-  switch(d) {
-   case Dists::EUC:
-      metric = new Euclidean;
-      break;
-    case Dists::MINK:
-      metric = new Minkowski;
-      break;
-    case Dists::USER_DEF_1:
-      metric = new Euclidean;
-      break;
-    default:
-      throw GenexException("Undefined distance metric");
+  if (d == "euclidean") {
+    metric = new Euclidean;
+  } else if (d == "minkowski") {
+    metric = new Minkowski;
+  } else if (d == "new_func") {
+    metric = new Euclidean;
+  } else {
+    throw GenexException("Undefined distance metric");
   }
 
   return metric;

@@ -4,21 +4,18 @@
 #include "DistanceMetric.hpp"
 #include "Exception.hpp"
 
-//Add additional distance descriptors here
-enum Dists { EUC, MINK, USER_DEF_1 };
-
 /**
- *  @brief manages and returns correct metric given a Dist (ENUM)
+ *  @brief manages and returns correct metric given a correct string descriptor
  *
  *  Example:
  *    DistanceManager m;
- *    DistanceMetric * euc = m.getMetric(Dists::EUC);
+ *    DistanceMetric * euc = m.getMetric("euclidean");
  *    cout << euc.dist(A,B) << endl;
  */
 class DistanceManager
 {
 public:
-  DistanceMetric * getMetric(const Dists d);
+  DistanceMetric * getMetric(const std::string d);
 };
 
 #endif // GENEX_SRC_DISTANCE_MANAGER_H
