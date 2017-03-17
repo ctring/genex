@@ -1,18 +1,11 @@
-#include <cstdio>
 #include <iostream>
-
-#include "ExampleClass.hpp"
+#include "config.hpp"
 
 int main (int argc, char *argv[])
 {
-  fprintf(stdout, "Testing build & make.\n");
-#ifdef FIND_EXACT
-  fprintf(stdout, "Options working\n");
+#ifdef SINGLE_PRECISION
+  std::cout << "Single precision!\n";
 #endif
-
-  Rectangle rect;
-  rect.set_values (3,4);
-  std::cout << "area: " << rect.area() << std::endl;
-
+  std::cout << "Unimplemented!\n";
   return 0;
 }

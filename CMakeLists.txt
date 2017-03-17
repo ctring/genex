@@ -7,6 +7,7 @@ project(genex)
 set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
 
 # configure header file to include CMAKE values
+option(SINGLE_PRECISION "Represent data using single-precision floating-point" OFF)
 configure_file (
   "${PROJECT_SOURCE_DIR}/config.hpp.in"
   "${PROJECT_BINARY_DIR}/config.hpp"
@@ -43,9 +44,6 @@ enable_testing()
 # keep tests in a seperate folder
 file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
 
-# add directive for boost unit test dynamic linking
-add_definitions(-DBOOST_TEST_DYN_LINK)
-
 # for each test file
 foreach(testSrc ${TEST_SRCS})
 
@@ -54,6 +52,9 @@ foreach(testSrc ${TEST_SRCS})
 
   # set compile target
   add_executable(${testName} ${testSrc})
+
+
+  target_compile_definitions(${testName}  PRIVATE "BOOST_TEST_DYN_LINK=1")
 
   #link to Boost libraries AND targets and dependencies
   target_link_libraries(${testName} genexLib
