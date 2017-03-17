@@ -22,4 +22,3 @@ public:
 };
 
 #endif // GENEX_SRC_DISTANCE_MANAGER_H
-

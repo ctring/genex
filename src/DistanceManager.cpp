@@ -11,11 +11,11 @@
  *  To extend this a user has to add a case statement
  *  for their given distance function, additionally adding
  *  an identifier to the Dists enum.
- * 
+ *
  *  Example:
  *  // create new distance called Magic, and add MAGIC to Dists
  *  enum Dists = {... ,MAGIC};
- *  
+ *
  *  //in DistanceManager
  *  case Dists::MAGIC:
  *    metric = new Magic;
@@ -27,7 +27,7 @@
  *
  *
  *  @param d is a Dists, used to indicate the metric class desired
- *  @return metric is DistanceMetric of the corresponding type 
+ *  @return metric is DistanceMetric of the corresponding type
  */
 DistanceMetric* DistanceManager::getMetric(Dists d)
 {
@@ -38,14 +38,14 @@ DistanceMetric* DistanceManager::getMetric(Dists d)
       metric = new Euclidean;
       break;
     case Dists::MINK:
-      metric = new Minkowski; 
-      break;    
+      metric = new Minkowski;
+      break;
     case Dists::USER_DEF_1:
       metric = new Euclidean;
       break;
     default:
-      throw GenexException("Undefined distance metric"); 
+      throw GenexException("Undefined distance metric");
   }
 
-    return metric;
+  return metric;
 };

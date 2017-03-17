@@ -5,6 +5,7 @@
 #include <cmath>
 #include "DistanceMetric.hpp"
 
+
 //This class is an example of an implemented DistanceMetric
 class Minkowski : public DistanceMetric
 {
@@ -16,12 +17,12 @@ public:
 
   data_t recurse(data_t a, data_t x_1, data_t x_2)
   {
-    return a + dist(x_1, x_2); 
+    return a + dist(x_1, x_2);
   };
 
   data_t norm(data_t total, TimeSeries& t, TimeSeries& t_2)
-  { 
-    return total / t.getLength(); 
+  {
+    return total / t.getLength();
   };
 };
 #endif

@@ -2,7 +2,6 @@
 #define GENEX_SRC_DISTANCE_METRIC_H
 
 #include <iostream>
-
 #include "TimeSeries.hpp"
 
 /**
