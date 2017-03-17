@@ -23,7 +23,7 @@ public:
    *  @param x_2 is data_t, a point (ie, y_j from time series y)
    *  @return the distance between these two points using this metric
    */
-  virtual data_t dist(data_t x_1, data_t x_2) = 0;
+  virtual data_t dist(const data_t x_1, const data_t x_2) = 0;
 
   /**
    *  @brief this function is the individual recursion of the distance for
@@ -40,7 +40,7 @@ public:
    *  @param x_2 is a data point from the other of the timeseries
    *  @return the distance between the previous and rest (defined recursively)
    */
-   virtual data_t recurse(data_t a, data_t x_1, data_t x_2) = 0;
+   virtual data_t recurse(const data_t a, const data_t x_1, const data_t x_2) = 0;
 
   /**
    *  @brief returns the normalized distance between two timeseries
@@ -55,7 +55,7 @@ public:
    *  @param x_2 is the other of the two TimeSeries between which distance is being found
    *  @return the normalized distance between two time series
    */
-  virtual data_t norm(data_t total, TimeSeries& t_1, TimeSeries& t_2) = 0;
+  virtual data_t norm(const data_t total, const TimeSeries& t_1, const TimeSeries& t_2) = 0;
 };
 
 #endif // GENEX_SRC_DISTANCE_METRIC_H

@@ -29,7 +29,7 @@
  *  @param d is a Dists, used to indicate the metric class desired
  *  @return metric is DistanceMetric of the corresponding type
  */
-DistanceMetric* DistanceManager::getMetric(Dists d)
+DistanceMetric* DistanceManager::getMetric(const Dists d)
 {
   DistanceMetric * metric = NULL;
 

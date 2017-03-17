@@ -18,7 +18,7 @@ enum Dists { EUC, MINK, USER_DEF_1 };
 class DistanceManager
 {
 public:
-  DistanceMetric * getMetric(Dists d);
+  DistanceMetric * getMetric(const Dists d);
 };
 
 #endif // GENEX_SRC_DISTANCE_MANAGER_H
