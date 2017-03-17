@@ -2,7 +2,6 @@
 #define GENEX_SRC_DISTANCE_MANAGER_H
 
 #include "DistanceMetric.hpp"
-#include "Exception.hpp"
 
 /**
  *  @brief manages and returns correct metric given a correct string descriptor
