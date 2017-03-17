@@ -1,5 +1,4 @@
 #include <iostream>
-#include "DistanceMetric.hpp"
 #include "DistanceManager.hpp"
 #include "Euclidean.hpp"
 #include "Minkowski.hpp"
