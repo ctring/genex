@@ -11,12 +11,6 @@ typedef double data_t;
 
 class TimeSeries
 {
-private:
-  const data_t* data;
-  int id;
-  int start;
-  int end;
-  int length;
 public:
   TimeSeries(const data_t *data, int id, int start, int end)
     : data(data), id(id), start(start), end(end) {
@@ -27,6 +21,12 @@ public:
   int getLength() const { return this->length; }
 
 
+private:
+  const data_t* data;
+  int id;
+  int start;
+  int end;
+  int length;
 };
 
 #endif
