@@ -15,9 +15,10 @@ enum Dists { EUC, MINK, USER_DEF_1 };
  *    DistanceMetric * euc = m.getMetric(Dists::EUC);
  *    cout << euc.dist(A,B) << endl;
  */
-class DistanceManager {
-  public:
-    DistanceMetric * getMetric(Dists d);
+class DistanceManager
+{
+public:
+  DistanceMetric * getMetric(Dists d);
 };
 
 #endif // GENEX_SRC_DISTANCE_MANAGER_H
