@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "DistanceManager.hpp"
+#include "Exception.hpp"
 
 
 BOOST_AUTO_TEST_CASE( distance_manager )

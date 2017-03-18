@@ -1,9 +1,8 @@
 #include <iostream>
 #include "DistanceManager.hpp"
+#include "Exception.hpp"
 #include "Euclidean.hpp"
 #include "Minkowski.hpp"
-
-
 
 /**
  *  @brief returns a distance metric given a correct string
