@@ -66,7 +66,7 @@ foreach(testSrc ${TEST_SRCS})
 
   # add this to test execution
   add_test(NAME ${testName}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/testOut
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMAND ${CMAKE_BINARY_DIR}/testOut/${testName})
 
 endforeach(testSrc)

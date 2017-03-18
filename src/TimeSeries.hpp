@@ -12,21 +12,21 @@ typedef double data_t;
 class TimeSeries
 {
 public:
-  TimeSeries(const data_t *data, int id, int start, int end)
-    : data(data), id(id), start(start), end(end) {
+  TimeSeries(const data_t *data, int index, int start, int end)
+    : data(data), index(index), start(start), end(end) {
       this->length = end - start;
     };
 
-  data_t operator[](int index) const;
+  data_t operator[](int idx) const;
   int getLength() const { return this->length; }
 
 
 private:
   const data_t* data;
-  int id;
+  int index;
   int start;
   int end;
   int length;
 };
 
-#endif
+#endif // TIMESERIES_H

@@ -1,10 +1,10 @@
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
-data_t TimeSeries::operator[](int index) const
+data_t TimeSeries::operator[](int idx) const
 {
-  if (index < 0 || index >= this->length) {
+  if (idx < 0 || idx >= this->length) {
     throw GenexException("Index out of range");
   }
-  return this->data[index];
+  return this->data[idx];
 }
