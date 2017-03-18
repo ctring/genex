@@ -25,4 +25,4 @@ public:
     return total / t.getLength();
   };
 };
-#endif
+#endif // GENEX_SRC_MINKOWSKI_H

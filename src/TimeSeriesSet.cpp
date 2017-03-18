@@ -92,7 +92,16 @@ void TimeSeriesSet::clearData()
 
 TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end)
 {
-  return TimeSeries(this->data[index], index, start, end);
+  if (index < 0 || index >= this->itemCount)
+  {
+    throw GenexException("Invalid time series index");
+  }
+  if (start < 0 || start >= end || end > this->itemLength)
+  {
+    throw GenexException("Invalid starting or ending position of a time series");
+  }
+
+  return TimeSeries(this->data[index] + start, index, start, end);
 }
 
 TimeSeries TimeSeriesSet::getTimeSeries(int index)
@@ -114,8 +123,8 @@ void TimeSeriesSet::_resizeData(int size)
   {
     delete[] this->data[i];
   }
-
   delete[] this->data;
+
   this->data = temp;
   this->itemCount = size;
 }

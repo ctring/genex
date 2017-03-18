@@ -54,3 +54,29 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_uneven_rows )
   TimeSeriesSet tsSet("uneven_rows");
   BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10), GenexException);
 }
+
+BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  TimeSeriesSet tsSet("test_10_20_space");
+  tsSet.loadData(data.test_10_20_space, 20);
+
+  TimeSeries ts = tsSet.getTimeSeries(0, 5, 10);
+  BOOST_CHECK_EQUAL( ts.getLength(), 5);
+  BOOST_TEST( ts[0] == 2.656250000);
+  BOOST_TEST( ts[4] == 3.822265625);
+  BOOST_CHECK_THROW( ts[5], GenexException );
+}
+
+BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
+{
+  TimeSeriesSet tsSet("test_10_20_space");
+  tsSet.loadData(data.test_10_20_space, 20);
+
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(100), GenexException );        // index exceeds number of time series
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(-2), GenexException );         // negative index
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, -1, 10), GenexException );  // negative starting position
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 0, 100), GenexException );  // ending position exceeds time series length
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 11, 10), GenexException );  // starting position is larger than ending position
+  BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 10, 10), GenexException );  // starting position is equal to ending position
+
+}

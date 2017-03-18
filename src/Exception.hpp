@@ -9,4 +9,4 @@ public:
   GenexException(const char* msg) : std::runtime_error(msg) {}
 };
 
-#endif
+#endif // EXCEPTION_H
