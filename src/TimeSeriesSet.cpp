@@ -90,7 +90,7 @@ void TimeSeriesSet::clearData()
   this->itemLength = 0;
 }
 
-TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end)
+TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
 {
   if (index < 0 || index >= this->itemCount)
   {
@@ -104,7 +104,7 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end)
   return TimeSeries(this->data[index] + start, index, start, end);
 }
 
-TimeSeries TimeSeriesSet::getTimeSeries(int index)
+TimeSeries TimeSeriesSet::getTimeSeries(int index) const
 {
   return this->getTimeSeries(index, 0, this->itemLength);
 }

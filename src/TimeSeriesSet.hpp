@@ -83,7 +83,7 @@ public:
    * @param index index of the time series in this dataset
    * @return time series in the time series with given index
    */
-  TimeSeries getTimeSeries(int index);
+  TimeSeries getTimeSeries(int index) const;
 
   /**
    * @brief gets a sub-sequence of a time series
@@ -93,10 +93,16 @@ public:
    * @param end   ending position of the time series
    * @return a sub-sequence of a time series in the dataset
    */
-  TimeSeries getTimeSeries(int index, int start, int end);
+  TimeSeries getTimeSeries(int index, int start, int end) const;
 
 private:
+
+  /**
+   * Reallocate data to fit size. If size is smaller than before, only the part
+   * that fits the new size is kept. If size is larger, empty data is added.
+   */
   void _resizeData(int size);
+
   data_t** data;
   int itemLength;
   int itemCount;
