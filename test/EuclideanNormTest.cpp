@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE "Test Euclidean Normalization class"
 
 #include <boost/test/unit_test.hpp>
+
 #include "Euclidean.hpp"
 
 struct MockData
@@ -15,7 +16,7 @@ BOOST_AUTO_TEST_CASE( time_series_length )
   TimeSeries ts_1(data.dat_1, 0, 0, 5);
   TimeSeries ts_2(data.dat_2, 0, 0, 5);
   Euclidean dist;
-  
+
   data_t total = 0.0;
 
   //TODO: what forloop type do we want here?

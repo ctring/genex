@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "DistanceManager.hpp"
 #include "Exception.hpp"
 #include "Euclidean.hpp"

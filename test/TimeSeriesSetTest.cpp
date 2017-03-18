@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE "Test TimeSeriesSet class"
 
 #include <boost/test/unit_test.hpp>
+
 #include "TimeSeriesSet.hpp"
 #include "Exception.hpp"
 #include "TimeSeries.hpp"

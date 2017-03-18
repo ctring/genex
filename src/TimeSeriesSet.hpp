@@ -22,7 +22,7 @@ public:
    *  Create a TimeSeriestSet object with is an empty string for name
    */
   TimeSeriesSet()
-    : name(""), data(NULL), itemLength(0), itemCount(0){};
+    : name(""), data(NULL), itemLength(0), itemCount(0) {};
 
   /**
    *  @brief constructor for TimeSeriesSet
@@ -31,6 +31,10 @@ public:
    */
   TimeSeriesSet(std::string name)
     : name(name), data(NULL), itemLength(0), itemCount(0) {};
+
+  /**
+   *  @brief destructor
+   */
   ~TimeSeriesSet();
 
   /**
@@ -46,8 +50,8 @@ public:
    *  @param filePath path to a text file
    *  @param maxNumRow maximum number of rows to be read
    *  @param separator a string containings possible separator characters for values
-   *         in a line. Default " "
-   *  @param startCol columns before startCol are discarded.
+   *         in a line. Default: " "
+   *  @param startCol columns before startCol are discarded. Default: 0
    */
   void loadData(std::string filePath, int maxNumRow, std::string separator = " ", int startCol = 0);
 

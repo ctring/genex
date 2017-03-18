@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE "Test Minkowski Normalization class"
 
 #include <boost/test/unit_test.hpp>
+
 #include "Exception.hpp"
 #include "Minkowski.hpp"
 
@@ -17,7 +18,7 @@ BOOST_AUTO_TEST_CASE( mink_norm )
   TimeSeries ts_2(data.dat_2, 0, 0, 5);
 
   Minkowski dist;
-  
+
   data_t total = 0.0;
 
   //TODO: what forloop type do we want here?
