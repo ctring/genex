@@ -4,7 +4,7 @@
 #include "DistanceMetric.hpp"
 
 /**
- *  @brief manages and returns correct metric given a correct string descriptor
+ *  @brief this class returns metric given a string descriptor
  *
  *  Example:
  *    DistanceManager m;
