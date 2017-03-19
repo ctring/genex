@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "Euclidean.hpp"
+#include "distance/Euclidean.hpp"
 
 struct MockData
 {

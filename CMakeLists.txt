@@ -42,7 +42,7 @@ target_link_libraries(genexCLI genexLib)
 enable_testing()
 
 # keep tests in a seperate folder
-file(GLOB TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
+file(GLOB_RECURSE TEST_SRCS RELATIVE ${PROJECT_SOURCE_DIR} test/*.cpp)
 
 # for each test file
 foreach(testSrc ${TEST_SRCS})

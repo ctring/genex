@@ -1,7 +1,7 @@
 #ifndef GENEX_SRC_DISTANCE_MANAGER_H
 #define GENEX_SRC_DISTANCE_MANAGER_H
 
-#include "DistanceMetric.hpp"
+#include "distance/DistanceMetric.hpp"
 
 /**
  *  @brief this class returns metric given a string descriptor

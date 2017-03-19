@@ -4,7 +4,7 @@
 #include <math.h>
 #include <iostream>
 
-#include "DistanceMetric.hpp"
+#include "distance/DistanceMetric.hpp"
 
 // This class is example of an implemented DistanceMetric
 class Euclidean : public DistanceMetric

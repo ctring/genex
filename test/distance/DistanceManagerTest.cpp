@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "DistanceManager.hpp"
+#include "distance/DistanceManager.hpp"
 #include "Exception.hpp"
 
 

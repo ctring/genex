@@ -1,6 +1,6 @@
 #include <iostream>
 #include "config.hpp"
-#include "DistanceManager.cpp"
+#include "distance/DistanceManager.cpp"
 
 int main (int argc, char *argv[])
 {

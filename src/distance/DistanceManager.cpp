@@ -1,10 +1,11 @@
 #include <iostream>
 
-#include "DistanceManager.hpp"
+#include "distance/DistanceManager.hpp"
+#include "distance/Euclidean.hpp"
+#include "distance/Manhattan.hpp"
+#include "distance/Chebyshev.hpp"
+
 #include "Exception.hpp"
-#include "Euclidean.hpp"
-#include "Manhattan.hpp"
-#include "Chebyshev.hpp"
 
 DistanceManager* DistanceManager::instance = NULL;
 
