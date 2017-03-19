@@ -5,6 +5,8 @@
 #include "Euclidean.hpp"
 #include "Minkowski.hpp"
 
+DistanceManager* DistanceManager::instance = NULL;
+
 /**
  *  @brief returns a distance metric given a correct string
  *

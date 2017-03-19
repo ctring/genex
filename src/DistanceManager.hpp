@@ -14,7 +14,22 @@
 class DistanceManager
 {
 public:
-  DistanceMetric * getMetric(const std::string d);
+
+  static DistanceManager* getInstance()
+  {
+    if (!instance)
+    {
+      instance = new DistanceManager;
+    }
+    return instance;
+  }
+
+  DistanceMetric* getMetric(const std::string d);
+
+private:
+  static DistanceManager* instance;
+
+  DistanceManager() { }
 };
 
 #endif // GENEX_SRC_DISTANCE_MANAGER_H
