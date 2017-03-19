@@ -35,7 +35,7 @@ public:
   /**
    *  @brief destructor
    */
-  ~TimeSeriesSet();
+  virtual ~TimeSeriesSet();
 
   /**
    *  @brief loads data from a text file to this object
