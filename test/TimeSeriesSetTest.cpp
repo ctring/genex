@@ -8,6 +8,8 @@
 
 #define TOLERANCE 1e-9
 
+using namespace genex;
+
 struct MockDataset
 {
   std::string test_10_20_space = "dataset/test/test_10_20_space.txt";

@@ -5,6 +5,8 @@
 #include "GroupableTimeSeriesSet.hpp"
 #include "Exception.hpp"
 
+using namespace genex;
+
 struct MockDataset
 {
   std::string test_10_20_space = "dataset/test/test_10_20_space.txt";

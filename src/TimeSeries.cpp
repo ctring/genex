@@ -1,6 +1,8 @@
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
+namespace genex {
+
 data_t TimeSeries::operator[](int idx) const
 {
   if (idx < 0 || idx >= this->length) {
@@ -8,3 +10,5 @@ data_t TimeSeries::operator[](int idx) const
   }
   return this->data[idx];
 }
+
+} // namespace genex

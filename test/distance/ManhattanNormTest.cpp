@@ -5,6 +5,8 @@
 #include "distance/Manhattan.hpp"
 #include "Exception.hpp"
 
+using namespace genex;
+
 struct MockData
 {
   data_t dat_1[5] = {1, 2, 3, 4, 5};

@@ -4,6 +4,7 @@
 
 #include "distance/Chebyshev.hpp"
 
+using namespace genex;
 
 BOOST_AUTO_TEST_CASE( chebdist )
 {

@@ -4,6 +4,8 @@
 
 int main (int argc, char *argv[])
 {
+  using namespace genex;
+
 #ifdef SINGLE_PRECISION
   std::cout << "Single precision!\n";
 #endif

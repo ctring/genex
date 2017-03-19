@@ -1,10 +1,12 @@
 #ifndef GENEX_SRC_EUCLIDEAN_H
 #define GENEX_SRC_EUCLIDEAN_H
 
-#include <math.h>
+#include <cmath>
 #include <iostream>
 
 #include "distance/DistanceMetric.hpp"
+
+namespace genex {
 
 // This class is example of an implemented DistanceMetric
 class Euclidean : public DistanceMetric
@@ -25,5 +27,7 @@ public:
     return sqrt(total) / t.getLength();
   };
 };
+
+} // namespace genex
 
 #endif

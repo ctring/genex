@@ -9,6 +9,8 @@ typedef float data_t;
 typedef double data_t;
 #endif
 
+namespace genex {
+
 /**
  *  @brief header of a time series
  *
@@ -58,5 +60,7 @@ private:
   int end;
   int length;
 };
+
+} // namespace genex
 
 #endif // TIMESERIES_H

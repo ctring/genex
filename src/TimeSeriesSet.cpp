@@ -8,6 +8,8 @@
 
 #include "Exception.hpp"
 
+namespace genex {
+
 TimeSeriesSet::~TimeSeriesSet()
 {
   this->clearData();
@@ -128,3 +130,5 @@ void TimeSeriesSet::_resizeData(int size)
   this->data = temp;
   this->itemCount = size;
 }
+
+} // namespace genex

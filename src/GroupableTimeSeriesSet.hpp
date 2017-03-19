@@ -3,6 +3,8 @@
 
 #include "TimeSeriesSet.hpp"
 
+namespace genex {
+
 /**
  *  @brief a GroupableTimeSeriesSet object is a TimeSeriesSet with grouping
  *         functionalities
@@ -27,5 +29,7 @@ public:
     : TimeSeriesSet(name) {};
 
 };
+
+} // namespace genex
 
 #endif // GROUPABLE_TIME_SERIES_SET_H

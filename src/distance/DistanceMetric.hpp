@@ -4,6 +4,8 @@
 #include <iostream>
 #include "TimeSeries.hpp"
 
+namespace genex {
+
 /**
  *  @brief this is an abstract class that defines an API for distance metrics
  *
@@ -57,5 +59,7 @@ public:
    */
   virtual data_t norm(data_t total, const TimeSeries& t_1, const TimeSeries& t_2) = 0;
 };
+
+} // namespace genex
 
 #endif // GENEX_SRC_DISTANCE_METRIC_H

@@ -3,6 +3,8 @@
 
 #include "distance/DistanceMetric.hpp"
 
+namespace genex {
+
 /**
  *  @brief this class returns metric given a string descriptor
  *
@@ -31,5 +33,7 @@ private:
 
   DistanceManager() { }
 };
+
+} // namespace genex
 
 #endif // GENEX_SRC_DISTANCE_MANAGER_H

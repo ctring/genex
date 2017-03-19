@@ -7,6 +7,8 @@
 
 #include "distance/DistanceMetric.hpp"
 
+namespace genex {
+
 //This class is an example of an implemented DistanceMetric
 class Chebyshev : public DistanceMetric
 {
@@ -26,4 +28,7 @@ public:
     return total;
   };
 };
+
+} // namespace genex
+
 #endif // GENEX_SRC_MINKOWSKI_H

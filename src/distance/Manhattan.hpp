@@ -6,6 +6,7 @@
 
 #include "distance/DistanceMetric.hpp"
 
+namespace genex {
 
 //This class is an example of an implemented DistanceMetric
 class Manhattan : public DistanceMetric
@@ -26,4 +27,7 @@ public:
     return total / t.getLength();
   };
 };
+
+} // namespace genex
+
 #endif // GENEX_SRC_MINKOWSKI_H

@@ -5,6 +5,7 @@
 #include "distance/DistanceManager.hpp"
 #include "Exception.hpp"
 
+using namespace genex;
 
 BOOST_AUTO_TEST_CASE( distance_manager )
 {

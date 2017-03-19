@@ -7,6 +7,8 @@
 
 #include "Exception.hpp"
 
+namespace genex {
+
 DistanceManager* DistanceManager::instance = NULL;
 
 /**
@@ -46,3 +48,5 @@ DistanceMetric* DistanceManager::getMetric(const std::string& d) const
 
   return metric;
 };
+
+} // namespace genex

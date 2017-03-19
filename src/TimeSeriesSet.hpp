@@ -5,6 +5,8 @@
 
 #include "TimeSeries.hpp"
 
+namespace genex {
+
 /**
  *  @brief a TimeSeriesSet object contains values and information of a dataset
  *
@@ -113,5 +115,7 @@ private:
   const std::string name;
 
 };
+
+} // namespace genex
 
 #endif // TIMESERIESSET_H
