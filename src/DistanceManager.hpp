@@ -24,7 +24,7 @@ public:
     return instance;
   }
 
-  DistanceMetric* getMetric(const std::string d);
+  DistanceMetric* getMetric(const std::string d) const;
 
 private:
   static DistanceManager* instance;
