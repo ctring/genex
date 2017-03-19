@@ -29,7 +29,7 @@ DistanceManager* DistanceManager::instance = NULL;
  *  @param d is a string, used to indicate the metric class desired
  *  @return metric is DistanceMetric of the corresponding type
  */
-DistanceMetric* DistanceManager::getMetric(const std::string d) const
+DistanceMetric* DistanceManager::getMetric(const std::string& d) const
 {
   DistanceMetric * metric = NULL;
 

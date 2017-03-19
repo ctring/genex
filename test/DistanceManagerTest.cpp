@@ -8,7 +8,7 @@
 
 BOOST_AUTO_TEST_CASE( distance_manager )
 {
-   DistanceManager* m = DistanceManager::getInstance();
+   const DistanceManager* m = DistanceManager::getInstance();
    DistanceMetric * d = m->getMetric("euclidean");
 
    data_t a = d->dist(100.0, 110.0);
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( distance_manager )
 
 BOOST_AUTO_TEST_CASE( distance_manager_not_found )
 {
-   DistanceManager* m = DistanceManager::getInstance();
+   const DistanceManager* m = DistanceManager::getInstance();
    BOOST_CHECK_THROW( m->getMetric("oracle"), GenexException);
 }
 

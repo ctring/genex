@@ -29,7 +29,7 @@ public:
    *
    *  @param name name of the dataset
    */
-  TimeSeriesSet(std::string name)
+  TimeSeriesSet(const std::string& name)
     : name(name), data(NULL), itemLength(0), itemCount(0) {};
 
   /**
@@ -53,7 +53,7 @@ public:
    *         in a line. Default: " "
    *  @param startCol columns before startCol are discarded. Default: 0
    */
-  void loadData(std::string filePath, int maxNumRow, std::string separator = " ", int startCol = 0);
+  void loadData(const std::string& filePath, int maxNumRow, const std::string& separator = " ", int startCol = 0);
 
   /**
    * @brief clears all data

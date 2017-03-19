@@ -15,7 +15,7 @@ class DistanceManager
 {
 public:
 
-  static DistanceManager* getInstance()
+  static const DistanceManager* getInstance()
   {
     if (!instance)
     {
@@ -24,7 +24,7 @@ public:
     return instance;
   }
 
-  DistanceMetric* getMetric(const std::string d) const;
+  DistanceMetric* getMetric(const std::string& d) const;
 
 private:
   static DistanceManager* instance;

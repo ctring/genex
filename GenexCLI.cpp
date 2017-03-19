@@ -9,6 +9,6 @@ int main (int argc, char *argv[])
 #endif
   std::cout << "Unimplemented!\n";
 
-  DistanceManager* m = DistanceManager::getInstance();
+  const DistanceManager* m = DistanceManager::getInstance();
   return 1;
 }

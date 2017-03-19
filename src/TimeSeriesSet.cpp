@@ -13,8 +13,8 @@ TimeSeriesSet::~TimeSeriesSet()
   this->clearData();
 }
 
-void TimeSeriesSet::loadData(std::string filePath, int maxNumRow,
-                             std::string separators, int startCol)
+void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
+                             const std::string& separators, int startCol)
 {
   this->clearData();
 
