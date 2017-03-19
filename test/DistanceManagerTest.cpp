@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE( distance_manager )
    BOOST_CHECK( a == 100 );
    BOOST_CHECK( b == 150 );
 
-   DistanceMetric * d_2 = m->getMetric("minkowski");
+   DistanceMetric * d_2 = m->getMetric("manhattan");
 
    data_t e = d_2->dist(100.0, 110.0);
    data_t f = d_2->recurse(50.0, 20.0, 10.0);

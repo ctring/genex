@@ -3,7 +3,8 @@
 #include "DistanceManager.hpp"
 #include "Exception.hpp"
 #include "Euclidean.hpp"
-#include "Minkowski.hpp"
+#include "Manhattan.hpp"
+#include "Chebyshev.hpp"
 
 DistanceManager* DistanceManager::instance = NULL;
 
@@ -34,10 +35,10 @@ DistanceMetric* DistanceManager::getMetric(const std::string d) const
 
   if (d == "euclidean") {
     metric = new Euclidean;
-  } else if (d == "minkowski") {
-    metric = new Minkowski;
-  } else if (d == "new_func") {
-    metric = new Euclidean;
+  } else if (d == "manhattan") {
+    metric = new Manhattan;
+  } else if (d == "chebyshev") {
+    metric = new Chebyshev;
   } else {
     throw GenexException("Undefined distance metric");
   }
