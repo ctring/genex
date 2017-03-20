@@ -56,12 +56,15 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
         throw GenexException("File contains time series with inconsistent lengths");
       }
 
-      data[row] = new data_t[length];
+      data[row] = new data_t[length - startCol];
       int col = 0;
       for (tokenizer::iterator tok_iter = tokens.begin();
            tok_iter != tokens.end(); tok_iter++, col++)
       {
-        data[row][col] = (data_t)std::stod(*tok_iter);
+        if (col >= startCol)
+        {
+          data[row][col - startCol] = (data_t)std::stod(*tok_iter);
+        }
       }
     }
     else {
@@ -79,7 +82,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
     throw GenexException("Error while reading file");
   }
 
-  this->itemLength = length;
+  this->itemLength = length - startCol;
   this->filePath = filePath;
 
   f.close();

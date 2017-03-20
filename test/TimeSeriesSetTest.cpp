@@ -83,3 +83,16 @@ BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
   BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 10, 10), GenexException );  // starting position is equal to ending position
 
 }
+
+BOOST_AUTO_TEST_CASE( time_series_set_load_omit_rows_and_columns )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_10_20_space, 5, " ", 5);
+
+  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 15 );
+  BOOST_CHECK_EQUAL( tsSet.getItemCount(), 5 );
+
+  TimeSeries ts = tsSet.getTimeSeries(0);
+  BOOST_TEST( ts[0] == 2.656250000 );
+  BOOST_TEST( ts[ts.getLength() - 1] == 2.537109375);
+}
