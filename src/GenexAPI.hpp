@@ -34,8 +34,16 @@ public:
   int loadDataset(const std::string& filePath, int maxNumRow,
                   const std::string& separators = " ", int startCol = 0);
 
+  /**
+   *  @brief unloads a dataset at given index
+   *
+   *  @param index index of the dataset being unloaded
+   */
   void unloadDataset(int index);
 
+  /**
+   *  @brief unloads all dataset
+   */
   void unloadAllDataset();
 
   /**

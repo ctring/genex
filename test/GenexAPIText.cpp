@@ -40,7 +40,12 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
 
   api.unloadDataset(0);
   api.unloadDataset(2);
+
+  BOOST_CHECK_THROW( api.unloadDataset(0), GenexException );
+  BOOST_CHECK_THROW( api.unloadDataset(2), GenexException );
+
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 1 );
+
   id0 = api.loadDataset(data.test_15_20_comma, 14, ",", 4);
   id2 = api.loadDataset(data.test_15_20_comma, 9, ",");
   BOOST_CHECK_EQUAL( id0, 0 );

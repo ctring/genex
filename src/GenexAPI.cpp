@@ -45,11 +45,15 @@ int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
 
 void GenexAPI::unloadDataset(int index)
 {
-  delete this->loadedDataset[index];
-  this->loadedDataset[index] = NULL;
-  if (index == this->loadedDataset.size() - 1)
+  if (index < 0 || index >= loadedDataset.size() || loadedDataset[index] == NULL)
   {
-    this->loadedDataset.pop_back();
+    throw GenexException("No dataset with given index");
+  }
+  delete loadedDataset[index];
+  loadedDataset[index] = NULL;
+  if (index == loadedDataset.size() - 1)
+  {
+    loadedDataset.pop_back();
   }
   this->datasetCount--;
 }
