@@ -44,6 +44,10 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_comma, *boost::unit_test::tolerance(T
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 20 );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 15 );
   BOOST_CHECK( tsSet.getFilePath() == data.test_15_20_comma );
+
+  TimeSeries ts = tsSet.getTimeSeries(0);
+  BOOST_TEST( ts[0] == 4.122284712 );
+  BOOST_TEST( ts[ts.getLength() - 1] == 2.684802835);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_file_not_exist )
@@ -81,7 +85,6 @@ BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
   BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 0, 100), GenexException );  // ending position exceeds time series length
   BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 11, 10), GenexException );  // starting position is larger than ending position
   BOOST_CHECK_THROW( tsSet.getTimeSeries(0, 10, 10), GenexException );  // starting position is equal to ending position
-
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_omit_rows_and_columns )

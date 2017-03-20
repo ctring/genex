@@ -54,7 +54,7 @@ foreach(testSrc ${TEST_SRCS})
   add_executable(${testName} ${testSrc})
 
 
-  target_compile_definitions(${testName}  PRIVATE "BOOST_TEST_DYN_LINK=1")
+  target_compile_definitions(${testName} PRIVATE "BOOST_TEST_DYN_LINK=1")
 
   #link to Boost libraries AND targets and dependencies
   target_link_libraries(${testName} genexLib

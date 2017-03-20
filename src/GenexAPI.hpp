@@ -11,7 +11,12 @@ namespace genex {
 class GenexAPI
 {
 public:
+
+  /**
+   *  @brief destructor
+   */
   ~GenexAPI();
+
   /**
    *  @brief loads data from a text file to the memory
    *
@@ -42,14 +47,14 @@ public:
   void unloadDataset(int index);
 
   /**
-   *  @brief unloads all dataset
+   *  @brief unloads all datasets
    */
   void unloadAllDataset();
 
   /**
-   *  @brief gets the number of loaded dataset
+   *  @brief gets the number of loaded datasets
    *
-   *  @return number of loaded dataset
+   *  @return number of loaded datasets
    */
   int getDatasetCount();
 
