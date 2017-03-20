@@ -1,16 +1,17 @@
-#include <vector>
-#include <string>
+#include "GenexAPI.hpp"
 
 #include "Exception.hpp"
 #include "GroupableTimeSeriesSet.hpp"
 
 namespace genex {
 
-static std::vector<GroupableTimeSeriesSet*> loadedDataset;
-static int datasetCount = 0;
+GenexAPI::~GenexAPI()
+{
+  unloadAllDataset();
+}
 
-int loadDataset(const std::string& filePath, int maxNumRow,
-                const std::string& separators = " ", int startCol = 0)
+int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
+                          const std::string& separators, int startCol)
 {
 
   GroupableTimeSeriesSet* newSet = new GroupableTimeSeriesSet();
@@ -23,29 +24,48 @@ int loadDataset(const std::string& filePath, int maxNumRow,
   }
 
   int nextIndex = -1;
-  for (unsigned int i = 0; i < loadedDataset.size(); i++)
+  for (unsigned int i = 0; i < this->loadedDataset.size(); i++)
   {
-    if (loadedDataset[i] == NULL)
+    if (this->loadedDataset[i] == NULL)
     {
       nextIndex = i;
       break;
     }
   }
   if (nextIndex < 0) {
-    nextIndex = loadedDataset.size();
-    loadedDataset.push_back(NULL);
+    nextIndex = this->loadedDataset.size();
+    this->loadedDataset.push_back(NULL);
   }
 
-  loadedDataset[nextIndex] = newSet;
-
-  datasetCount++;
+  this->loadedDataset[nextIndex] = newSet;
+  this->datasetCount++;
 
   return nextIndex;
 }
 
-int getDatasetCount()
+void GenexAPI::unloadDataset(int index)
 {
-  return datasetCount;
+  delete this->loadedDataset[index];
+  this->loadedDataset[index] = NULL;
+  if (index == this->loadedDataset.size() - 1)
+  {
+    this->loadedDataset.pop_back();
+  }
+  this->datasetCount--;
+}
+
+void GenexAPI::unloadAllDataset()
+{
+  for (unsigned int i = 0; i < this->loadedDataset.size(); i++)
+  {
+    delete this->loadedDataset[i];
+  }
+  this->loadedDataset.clear();
+}
+
+int GenexAPI::getDatasetCount()
+{
+  return this->datasetCount;
 }
 
 } // namespace genex

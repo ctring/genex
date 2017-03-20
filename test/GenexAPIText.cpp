@@ -17,11 +17,33 @@ struct MockDataset
 
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
-  int id0 = loadDataset(data.test_10_20_space, 5);
-  int id1 = loadDataset(data.test_15_20_comma, 10, ",");
+  GenexAPI api;
+  int id0 = api.loadDataset(data.test_10_20_space, 5);
+  int id1 = api.loadDataset(data.test_15_20_comma, 10, ",");
   BOOST_CHECK_EQUAL( id0, 0 );
   BOOST_CHECK_EQUAL( id1, 1 );
-  BOOST_CHECK_EQUAL( getDatasetCount(), 2 );
-  BOOST_CHECK_THROW( loadDataset(data.not_exist, 10), GenexException );
-  BOOST_CHECK_THROW( loadDataset(data.uneven_rows, 10), GenexException );
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 2 );
+  BOOST_CHECK_THROW( api.loadDataset(data.not_exist, 10), GenexException );
+  BOOST_CHECK_THROW( api.loadDataset(data.uneven_rows, 10), GenexException );
+}
+
+BOOST_AUTO_TEST_CASE( api_unload_dataset )
+{
+  GenexAPI api;
+  int id0 = api.loadDataset(data.test_10_20_space, 5);
+  int id1 = api.loadDataset(data.test_15_20_comma, 10, ",");
+  int id2 = api.loadDataset(data.test_10_20_space, 6);
+  BOOST_CHECK_EQUAL( id0, 0 );
+  BOOST_CHECK_EQUAL( id1, 1 );
+  BOOST_CHECK_EQUAL( id2, 2 );
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
+
+  api.unloadDataset(0);
+  api.unloadDataset(2);
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 1 );
+  id0 = api.loadDataset(data.test_15_20_comma, 14, ",", 4);
+  id2 = api.loadDataset(data.test_15_20_comma, 9, ",");
+  BOOST_CHECK_EQUAL( id0, 0 );
+  BOOST_CHECK_EQUAL( id2, 2 );
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
 }
