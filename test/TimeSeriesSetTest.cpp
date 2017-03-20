@@ -21,7 +21,7 @@ struct MockDataset
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )
 {
   TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_10_20_space, 20);
+  tsSet.loadData(data.test_10_20_space, 20, " ", 0);
 
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 20 );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 10 );
@@ -49,19 +49,19 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_comma, *boost::unit_test::tolerance(T
 BOOST_AUTO_TEST_CASE( time_series_set_load_file_not_exist )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.loadData(data.not_exist, 0), GenexException);
+  BOOST_CHECK_THROW(tsSet.loadData(data.not_exist, 0, " ", 0), GenexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_uneven_rows )
 {
   TimeSeriesSet tsSet;
-  BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10), GenexException);
+  BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10, " ", 0), GenexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::tolerance(TOLERANCE) )
 {
   TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_10_20_space, 20);
+  tsSet.loadData(data.test_10_20_space, 20, " ", 0);
 
   TimeSeries ts = tsSet.getTimeSeries(0, 5, 10);
   BOOST_CHECK_EQUAL( ts.getLength(), 5);
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::to
 BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
 {
   TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_10_20_space, 20);
+  tsSet.loadData(data.test_10_20_space, 20, " ", 0);
 
   BOOST_CHECK_THROW( tsSet.getTimeSeries(100), GenexException );        // index exceeds number of time series
   BOOST_CHECK_THROW( tsSet.getTimeSeries(-2), GenexException );         // negative index
