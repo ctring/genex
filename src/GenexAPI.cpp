@@ -65,6 +65,7 @@ void GenexAPI::unloadAllDataset()
     delete this->loadedDataset[i];
   }
   this->loadedDataset.clear();
+  this->datasetCount = 0;
 }
 
 int GenexAPI::getDatasetCount()

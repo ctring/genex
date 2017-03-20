@@ -52,3 +52,16 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
   BOOST_CHECK_EQUAL( id2, 2 );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
 }
+
+BOOST_AUTO_TEST_CASE( api_unload_all_dataset )
+{
+  GenexAPI api;
+  int id0 = api.loadDataset(data.test_10_20_space, 5);
+  int id1 = api.loadDataset(data.test_15_20_comma, 10, ",");
+  int id2 = api.loadDataset(data.test_10_20_space, 6);
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
+
+  api.unloadAllDataset();
+  BOOST_CHECK_THROW( api.unloadDataset(0), GenexException );
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 0 );
+}
