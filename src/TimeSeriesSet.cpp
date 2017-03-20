@@ -27,6 +27,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
     throw GenexException("Cannot open file"); // TODO: use strerror(errno)
   }
 
+  // Initially, size of data is set to be the provided maxNumRow
   this->_resizeData(maxNumRow);
 
   int length = -1;
@@ -42,12 +43,14 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
 
       // Number of columns in the first line is assumed to be number of columns of
       // the whole dataset
-      if (length < 0)
+      if (row == 0)
       {
+        // If this is the first row, set length of each row to length of this row
         length = std::distance(tokens.begin(), tokens.end());
       }
       else if (length != std::distance(tokens.begin(), tokens.end()))
       {
+        // If some row has a different length, throw an error
         f.close();
         this->clearData();
         throw GenexException("File contains time series with inconsistent lengths");
@@ -62,8 +65,8 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
       }
     }
     else {
-      // Number of rows in the file is smaller than maxNumRow, resize the data to
-      // fix the real row count
+      // Number of rows in the file is smaller than maxNumRow, resize data to fit the
+      // real row count
       this->_resizeData(row);
       break;
     }
@@ -75,7 +78,9 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
     this->clearData();
     throw GenexException("Error while reading file");
   }
+
   this->itemLength = length;
+
   f.close();
 }
 
@@ -113,20 +118,24 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index) const
 
 void TimeSeriesSet::_resizeData(int size)
 {
+  // Prepare a container with the new size
   data_t** temp = new data_t*[size];
   memset(temp, 0, size * sizeof(data_t*));
 
+  // Copy as much data as possible from the old container to the new one
   for (int i = 0; i < std::min(size, this->itemCount); i++)
   {
     temp[i] = this->data[i];
   }
 
+  // Clear the old container
   for (int i = size; i < this->itemCount; i++)
   {
     delete[] this->data[i];
   }
   delete[] this->data;
 
+  // Point data to the new container and update the size variable
   this->data = temp;
   this->itemCount = size;
 }
