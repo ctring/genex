@@ -80,6 +80,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
   }
 
   this->itemLength = length;
+  this->filePath = filePath;
 
   f.close();
 }

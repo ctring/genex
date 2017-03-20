@@ -24,15 +24,7 @@ public:
    *  Create a TimeSeriestSet object with is an empty string for name
    */
   TimeSeriesSet()
-    : name(""), data(NULL), itemLength(0), itemCount(0) {};
-
-  /**
-   *  @brief constructor for TimeSeriesSet
-   *
-   *  @param name name of the dataset
-   */
-  TimeSeriesSet(const std::string& name)
-    : name(name), data(NULL), itemLength(0), itemCount(0) {};
+    : data(NULL), itemLength(0), itemCount(0) {};
 
   /**
    *  @brief destructor
@@ -54,6 +46,8 @@ public:
    *  @param separator a string containings possible separator characters for values
    *         in a line. Default: " "
    *  @param startCol columns before startCol are discarded. Default: 0
+   *
+   *  @throw GenexException if cannot read from the given file
    */
   void loadData(const std::string& filePath, int maxNumRow, const std::string& separator = " ", int startCol = 0);
 
@@ -67,21 +61,21 @@ public:
    *
    * @return length of each time series
    */
-  int getItemLength() const { return itemLength; }
+  int getItemLength() const { return this->itemLength; }
 
   /**
    * @brief gets number of time series in the dataset
    *
    * @return number of time series
    */
-  int getItemCount() const { return itemCount; }
+  int getItemCount() const { return this->itemCount; }
 
   /**
-   * @brief gets the name of the dataset
+   * @brief gets the file path of the dataset
    *
-   * @return name of the dataset
+   * @return file path of the dataset
    */
-  const std::string& getName() const { return name; }
+  const std::string& getFilePath() const { return this->filePath; }
 
   /**
    * @brief gets a whole time series
@@ -98,6 +92,8 @@ public:
    * @param start starting position of the time series
    * @param end   ending position of the time series
    * @return a sub-sequence of a time series in the dataset
+   *
+   * @throw GenexException if index, start or end is not in intended range
    */
   TimeSeries getTimeSeries(int index, int start, int end) const;
 
@@ -112,7 +108,7 @@ private:
   data_t** data;
   int itemLength;
   int itemCount;
-  const std::string name;
+  std::string filePath;
 
 };
 

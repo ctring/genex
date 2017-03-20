@@ -20,12 +20,12 @@ struct MockDataset
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )
 {
-  TimeSeriesSet tsSet("test_10_20_space");
+  TimeSeriesSet tsSet;
   tsSet.loadData(data.test_10_20_space, 20);
 
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 20 );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 10 );
-  BOOST_CHECK( tsSet.getName() == std::string("test_10_20_space") );
+  BOOST_CHECK( tsSet.getFilePath() == data.test_10_20_space );
 
   TimeSeries ts = tsSet.getTimeSeries(0);
   BOOST_TEST( ts[0] == 3.029296875 );
@@ -38,29 +38,29 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(T
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_comma, *boost::unit_test::tolerance(TOLERANCE) )
 {
-  TimeSeriesSet tsSet("test_15_20_comma");
+  TimeSeriesSet tsSet;
   tsSet.loadData(data.test_15_20_comma, 20, ",", 0);
 
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 20 );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 15 );
-  BOOST_CHECK( tsSet.getName() == std::string("test_15_20_comma") );
+  BOOST_CHECK( tsSet.getFilePath() == data.test_15_20_comma );
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_file_not_exist )
 {
-  TimeSeriesSet tsSet("not_exist");
+  TimeSeriesSet tsSet;
   BOOST_CHECK_THROW(tsSet.loadData(data.not_exist, 0), GenexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_uneven_rows )
 {
-  TimeSeriesSet tsSet("uneven_rows");
+  TimeSeriesSet tsSet;
   BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10), GenexException);
 }
 
 BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::tolerance(TOLERANCE) )
 {
-  TimeSeriesSet tsSet("test_10_20_space");
+  TimeSeriesSet tsSet;
   tsSet.loadData(data.test_10_20_space, 20);
 
   TimeSeries ts = tsSet.getTimeSeries(0, 5, 10);
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::to
 
 BOOST_AUTO_TEST_CASE( time_series_set_get_invalid_sub_time_series)
 {
-  TimeSeriesSet tsSet("test_10_20_space");
+  TimeSeriesSet tsSet;
   tsSet.loadData(data.test_10_20_space, 20);
 
   BOOST_CHECK_THROW( tsSet.getTimeSeries(100), GenexException );        // index exceeds number of time series
