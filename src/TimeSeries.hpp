@@ -33,18 +33,58 @@ public:
    *  @param start starting position of this time series
    *  @param end ending position of this time series
    */
-  TimeSeries(const data_t *data, int index, int start, int end)
+  TimeSeries(data_t *data, int index, int start, int end)
     : data(data), index(index), start(start), end(end) {
       this->length = end - start;
     };
 
   /**
-   *  @brief accesses a value of this time series
+   *  @brief constructor for TimeSeries
+   *
+   *  This constructor is use when pnly data and length is needed
+   *  to specify the time series. Index is set to 0, starting position
+   *  is set to 0 and ending position is the length of the time series
+   *
+   *  @param data a pointer pointing to the actual data
+   *  @param length length of the time series
+   */
+  TimeSeries(data_t *data, int length)
+    : data(data), index(0), start(0), end(length), length(length) {}
+
+
+  /**
+   *  @brief get a value of this time series
    *
    *  @param idx index of the value in this time series
-   *  @return accessed value
+   *  @return the value at idx
+   *
+   *  @throw GenexException if the index is out of bound
    */
-  data_t operator[](int idx) const;
+  const data_t& operator[](int idx) const;
+
+  /**
+   *  @brief get reference to a value of this time series
+   *
+   *  @param idx index of the value in this time series
+   *  @return a reference to the value at idx
+   *
+   *  @throw GenexException if the index is out of bound
+   */
+  data_t& operator[](int idx);
+
+  /**
+   *  @brief accumulate data from other time series into this one
+   *
+   *  The data of the given time series is added to this time series
+   *  point-wise. The other time series must have the same length as this
+   *  one.
+   *  @param other the other time series to be added to this one.
+   *  @return the reference to this time series
+   *
+   *  @throw GenexException if the other time series has different length
+   *         from this one
+   */
+  TimeSeries& operator+=(const TimeSeries& other);
 
   /**
    *  @brief gets the length of this time series
@@ -54,7 +94,7 @@ public:
   int getLength() const { return this->length; }
 
 private:
-  const data_t* data;
+  data_t* data;
   int index;
   int start;
   int end;
