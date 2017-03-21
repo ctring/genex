@@ -62,6 +62,16 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_uneven_rows )
   BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10, " ", 0), GenexException);
 }
 
+BOOST_AUTO_TEST_CASE( timeseries_set_load_all )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_15_20_comma, -1, ",", 0);
+
+  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 20 );
+  BOOST_CHECK_EQUAL( tsSet.getItemCount(), 15 );
+  BOOST_CHECK( tsSet.getFilePath() == data.test_15_20_comma );
+}
+
 BOOST_AUTO_TEST_CASE( time_series_set_get_sub_time_series, *boost::unit_test::tolerance(TOLERANCE) )
 {
   TimeSeriesSet tsSet;

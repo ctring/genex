@@ -65,11 +65,11 @@ public:
    *  @param length length of the time series
    */
   TimeSeries(int length)
-    : index(0), start(0), end(length), length(length) {
-      data_t* temp = new data_t[length];
-      memset(temp, 0, length * sizeof(data_t));
-      this->data = temp;
-    }
+    : index(0), start(0), end(length), length(length)
+  {
+    this->data = new data_t[length];
+    memset(this->data, 0, length * sizeof(data_t));
+  }
 
   /**
    *  @brief get a value of this time series
@@ -111,6 +111,7 @@ public:
    *  @return length of this time series
    */
   int getLength() const { return this->length; }
+
 protected:
   data_t* data;
 

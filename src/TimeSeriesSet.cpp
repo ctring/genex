@@ -27,15 +27,15 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
     throw GenexException("Cannot open file"); // TODO: use strerror(errno)
   }
 
-  // Initially, size of data is set to be the provided maxNumRow
-  this->_resizeData(maxNumRow);
+  if (maxNumRow <= 0) { maxNumRow = 999999999; }
 
   int length = -1;
   std::string line;
   boost::char_separator<char> sep(separators.c_str());
   typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
 
-  for (int row = 0; row < maxNumRow; row++)
+  this->itemCount = 0;
+  for (int row = 0; row < maxNumRow; row++, this->itemCount++)
   {
     if (getline(f, line))
     {
@@ -56,7 +56,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
         throw GenexException("File contains time series with inconsistent lengths");
       }
 
-      data[row] = new data_t[length - startCol];
+      data.push_back(new data_t[length - startCol]);
       int col = 0;
       for (tokenizer::iterator tok_iter = tokens.begin();
            tok_iter != tokens.end(); tok_iter++, col++)
@@ -68,9 +68,6 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
       }
     }
     else {
-      // Number of rows in the file is smaller than maxNumRow, resize data to fit the
-      // real row count
-      this->_resizeData(row);
       break;
     }
   }
@@ -95,8 +92,7 @@ void TimeSeriesSet::clearData()
     delete[] this->data[i];
     this->data[i] = NULL;
   }
-  delete[] this->data;
-  this->data = NULL;
+  this->data.clear();
   this->itemCount = 0;
   this->itemLength = 0;
 }
@@ -112,36 +108,12 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
     throw GenexException("Invalid starting or ending position of a time series");
   }
 
-  return TimeSeries(this->data[index] + start, index, start, end);
+  return TimeSeries(this->data[index], index, start, end);
 }
 
 TimeSeries TimeSeriesSet::getTimeSeries(int index) const
 {
   return this->getTimeSeries(index, 0, this->itemLength);
-}
-
-void TimeSeriesSet::_resizeData(int size)
-{
-  // Prepare a container with the new size
-  data_t** temp = new data_t*[size];
-  memset(temp, 0, size * sizeof(data_t*));
-
-  // Copy as much data as possible from the old container to the new one
-  for (int i = 0; i < std::min(size, this->itemCount); i++)
-  {
-    temp[i] = this->data[i];
-  }
-
-  // Clear the old container
-  for (int i = size; i < this->itemCount; i++)
-  {
-    delete[] this->data[i];
-  }
-  delete[] this->data;
-
-  // Point data to the new container and update the size variable
-  this->data = temp;
-  this->itemCount = size;
 }
 
 } // namespace genex

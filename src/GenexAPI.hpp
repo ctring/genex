@@ -24,11 +24,12 @@ public:
    *  values (a.k.a columns) is inferred from the first line. All lines must have
    *  the same number of columns. If the number of lines exceeds maxNumRow, only
    *  maxNumRow lines are read and the rest is discarded. On the other hand, if
-   *  maxNumRow is larger than or equal to the actual number of lines, all lines
-   *  are read.
+   *  maxNumRow is larger than or equal to the actual number of lines, or maxNumRow is
+   *  not positive all lines are read.
    *
    *  @param filePath path to a text file
-   *  @param maxNumRow maximum number of rows to be read
+   *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
+   *         all lines are read. Default: 0
    *  @param separator a string containings possible separator characters for values
    *         in a line. Default: " "
    *  @param startCol columns before startCol are discarded. Default: 0
@@ -36,7 +37,7 @@ public:
    *
    *  @throw GenexException if cannot read from the given file
    */
-  int loadDataset(const std::string& filePath, int maxNumRow,
+  int loadDataset(const std::string& filePath, int maxNumRow = 0,
                   const std::string& separators = " ", int startCol = 0);
 
   /**

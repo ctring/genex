@@ -8,7 +8,7 @@ const data_t& TimeSeries::operator[](int idx) const
   if (idx < 0 || idx >= this->length) {
     throw GenexException("Index is out of range");
   }
-  return this->data[idx];
+  return this->data[start + idx];
 }
 
 data_t& TimeSeries::operator[](int idx)
@@ -24,7 +24,7 @@ TimeSeries& TimeSeries::operator+=(const TimeSeries& other)
   }
   for (int i = 0; i < this->length; i++)
   {
-    data[i] += other[i];
+    data[start + i] += other[i];
   }
   return *this;
 }

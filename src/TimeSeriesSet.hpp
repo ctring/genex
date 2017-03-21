@@ -2,6 +2,7 @@
 #define TIMESERIESSET_H
 
 #include <string>
+#include <vector>
 
 #include "TimeSeries.hpp"
 
@@ -24,7 +25,7 @@ public:
    *  Create a TimeSeriestSet object with is an empty string for name
    */
   TimeSeriesSet()
-    : data(NULL), itemLength(0), itemCount(0) {};
+    : itemLength(0), itemCount(0) {};
 
   /**
    *  @brief destructor
@@ -32,17 +33,18 @@ public:
   virtual ~TimeSeriesSet();
 
   /**
-   *  @brief loads data from a text file to this object
+   *  @brief loads data from a text file to the memory
    *
    *  Values in the text file have to be arranged in a table format. The number of
    *  values (a.k.a columns) is inferred from the first line. All lines must have
    *  the same number of columns. If the number of lines exceeds maxNumRow, only
    *  maxNumRow lines are read and the rest is discarded. On the other hand, if
-   *  maxNumRow is larger than or equal to the actual number of lines, all lines
-   *  are read.
+   *  maxNumRow is larger than or equal to the actual number of lines, or maxNumRow is
+   *  not positive all lines are read.
    *
    *  @param filePath path to a text file
-   *  @param maxNumRow maximum number of rows to be read
+   *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
+   *         all lines are read
    *  @param separator a string containings possible separator characters for values
    *         in a line
    *  @param startCol columns before startCol are discarded
@@ -99,13 +101,7 @@ public:
 
 private:
 
-  /**
-   * Reallocate data to fit size. If size is smaller than before, only the part
-   * that fits the new size is kept. If size is larger, empty data is added.
-   */
-  void _resizeData(int size);
-
-  data_t** data;
+  std::vector<data_t*> data;
   int itemLength;
   int itemCount;
   std::string filePath;

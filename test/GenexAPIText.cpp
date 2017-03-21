@@ -18,7 +18,7 @@ struct MockDataset
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
   GenexAPI api;
-  int id0 = api.loadDataset(data.test_10_20_space, 5);
+  int id0 = api.loadDataset(data.test_10_20_space);
   int id1 = api.loadDataset(data.test_15_20_comma, 10, ",");
   BOOST_CHECK_EQUAL( id0, 0 );
   BOOST_CHECK_EQUAL( id1, 1 );
