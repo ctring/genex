@@ -10,7 +10,7 @@ namespace genex {
  *  @brief the centroid of a group of sequences
  *
  */
-class GroupCentroid
+class GroupCentroid : public TimeSeries
 {
 public:
 
@@ -20,19 +20,13 @@ public:
    *  @param length length of the centroid's group
    */
   GroupCentroid(int length)
-    : length(length), count(0), cacheValid(true) {
+    : TimeSeries(length), count(0), cacheValid(true)
+    {
+      data_t* temp = new data_t[length];
+      memset(temp, 0, length * sizeof(data_t));
 
-      // Prepare containers with correct size
-      data_t* temp_1 = new data_t[length];
-      memset(temp_1, 0, length * sizeof(data_t));
-
-      data_t* temp_2 = new data_t[length];
-      memset(temp_2, 0, length * sizeof(data_t));
-
-      // Point data to the new container and update the size variable
-      this->sum = temp_1;
-      this->cachedCentroid = temp_2;
-    };
+      this->cachedCentroid = temp;
+    }
 
   /**
    *  @brief gets the length of this group
@@ -53,18 +47,15 @@ public:
    *
    *  @param data the array to be added
    */
-  void addArray(const data_t *data);
   void addArray(const TimeSeries data);
 
   /**
-   *  @brief gets the value of the centroid
+   *  @brief refreshes the value of the centroid
    *
-   *  This function returns the cached centroid if valid,
+   *  This function refreshes the cached centroid if valid,
    *  else calculates it first.
-   *
-   *  @return the values of the centroid
    */
-  data_t* &getCentroid(void);
+  void refreshCentroid(void);
 
 private:
   int length, count;

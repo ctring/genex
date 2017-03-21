@@ -4,28 +4,15 @@
 namespace genex {
 
 /**
- *  @brief adds a sequence to the centroid's sum of value
- *
- *  @param data the array to be added
- */
-void GroupCentroid::addArray(const data_t *data)
-{
-  for (int i = 0; i < this->length; i++) //sum.size()
-  {
-    sum[i] += data[i];
-  }
-
-  this->count++;
-  this->cacheValid = false;
-}
-
-/**
  *  @brief adds a time series to the centroid's sum of value
  *
  *  @param data the array to be added
  */
 void GroupCentroid::addArray(const TimeSeries data)
 {
+  //future
+  //this->sum = this->sum + data;
+
   for (int i = 0; i < this->length; i++) //sum.size()
   {
     sum[i] += data[i];
@@ -36,26 +23,26 @@ void GroupCentroid::addArray(const TimeSeries data)
 }
 
 /**
- *  @brief gets the value of the centroid
+ *  @brief refreshes the value of the centroid
  *
- *  This function returns the cached centroid if valid,
+ *  This function refreshes the cached centroid if valid,
  *  else calculates it first.
- *
- *  @return the values of the centroid
  */
-data_t* &GroupCentroid::getCentroid(void)
+void GroupCentroid::refreshCentroid(void)
 {
   if (this->cacheValid) {
-    return this->cachedCentroid;
+    return;
   }
+
+  //future
+  //cachedCentroid = this->sum / this->count;
 
   for (int i = 0; i < this->length; i++) {
     cachedCentroid[i] = sum[i] / count;
   }
 
   cacheValid = true;
-
-  return cachedCentroid;
+  return;
 }
 
 }// namespace genex
