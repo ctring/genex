@@ -20,6 +20,8 @@ namespace genex {
  *  To be exact, a TimeSeries is a half-closed interval [start, end) of a time series in
  *  a TimeSeriesSet.
  *
+ *  Outside the context of TimeSeriesSet. TimeSeries can be used as a general purpose container
+ *  by providing a pointer to an array of data and its length.
  */
 class TimeSeries
 {
