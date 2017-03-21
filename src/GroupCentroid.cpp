@@ -20,6 +20,22 @@ void GroupCentroid::addArray(const data_t *data)
 }
 
 /**
+ *  @brief adds a time series to the centroid's sum of value
+ *
+ *  @param data the array to be added
+ */
+void GroupCentroid::addArray(const TimeSeries data)
+{
+  for (int i = 0; i < this->length; i++) //sum.size()
+  {
+    sum[i] += data[i];
+  }
+
+  this->count++;
+  this->cacheValid = false;
+}
+
+/**
  *  @brief gets the value of the centroid
  *
  *  This function returns the cached centroid if valid,

@@ -43,5 +43,38 @@ BOOST_AUTO_TEST_CASE( group_centroid, *boost::unit_test::tolerance(TOLERANCE) )
   {
     BOOST_TEST( centroid_values[i], 4.0 );
   }
+}
 
+BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  MockData data;
+  GroupCentroid gc(5);
+
+  BOOST_CHECK_EQUAL( gc.getLength(), 5 );
+  BOOST_CHECK_EQUAL( gc.getCount(), 0 );
+
+  TimeSeries ts_1(data.dat_1, 0, 0, 5);
+  TimeSeries ts_2(data.dat_2, 0, 0, 5);
+  TimeSeries ts_3(data.dat_3, 0, 0, 5);
+
+  gc.addArray(ts_1);
+  gc.addArray(ts_2);
+
+  data_t* centroid_values = gc.getCentroid();
+  for(int i = 0; i < 5; i++)
+  {
+    BOOST_TEST( centroid_values[i], 3.0 );
+  }
+
+  for(int i = 0; i < 5; i++)
+  {
+    BOOST_TEST( centroid_values[i], 3.0 );
+  }
+
+  gc.addArray(ts_3);
+
+  for(int i = 0; i < 5; i++)
+  {
+    BOOST_TEST( centroid_values[i], 4.0 );
+  }
 }
