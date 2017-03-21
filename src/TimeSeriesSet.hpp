@@ -112,10 +112,6 @@ private:
 
 };
 
-<<<<<<< a9f0d1534786f6000974d6945c3b24ca1f9cbcb8
 } // namespace genex
 
 #endif // TIMESERIESSET_H
-=======
-#endif // TIMESERIESSET_H
->>>>>>> Tolerance & Reduce

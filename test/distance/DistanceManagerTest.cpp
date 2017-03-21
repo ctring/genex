@@ -5,11 +5,8 @@
 #include "distance/DistanceManager.hpp"
 #include "Exception.hpp"
 
-<<<<<<< a9f0d1534786f6000974d6945c3b24ca1f9cbcb8:test/distance/DistanceManagerTest.cpp
 using namespace genex;
-=======
 #define TOLERANCE 1e-9
->>>>>>> Tolerance & Reduce:test/DistanceManagerTest.cpp
 
 BOOST_AUTO_TEST_CASE( distance_manager, *boost::unit_test::tolerance(TOLERANCE) )
 {
