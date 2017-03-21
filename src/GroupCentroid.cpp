@@ -3,7 +3,7 @@
 
 namespace genex {
 
-void GroupCentroid::addArray(const TimeSeries data)
+void GroupCentroid::addTimeSeries(const TimeSeries& data)
 {
   *(this) += (data);
   this->count++;

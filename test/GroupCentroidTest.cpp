@@ -1,13 +1,13 @@
 #define BOOST_TEST_MODULE "Test GroupCentroid class"
 
 #include <boost/test/unit_test.hpp>
-
+#include <iostream> // debug
 #include "GroupCentroid.hpp"
 
 #define TOLERANCE 1e-9
 
 using namespace genex;
-
+using namespace std;
 struct MockData
 {
   data_t dat_1[7] = {1, 2, 3, 4, 5, 6, 7};
@@ -27,10 +27,12 @@ BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(T
   TimeSeries ts_2(data.dat_2, 0, 0, 5);
   TimeSeries ts_3(data.dat_3, 0, 0, 5);
 
-  gc.addArray(ts_1);
-  gc.addArray(ts_2);
+  gc.addTimeSeries(ts_1);
+  gc.addTimeSeries(ts_2);
 
+  cout << "Before genCentroid 1" << endl;
   TimeSeries centroid_values = gc.getCentroid();
+  cout << "After genCentroid 1" << endl;
   //test that it updates
   for(int i = 0; i < 5; i++)
   {
@@ -43,8 +45,10 @@ BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(T
   }
 
   //test that it updates
-  gc.addArray(ts_3);
+  gc.addTimeSeries(ts_3);
+  cout << "Before genCentroid 2" << endl;
   centroid_values = gc.getCentroid();
+  cout << "After genCentroid 2" << endl;
   for(int i = 0; i < 5; i++)
   {
     BOOST_TEST( centroid_values[i], 4.0 );

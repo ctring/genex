@@ -1,7 +1,17 @@
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
-
+#include <iostream> // debug
 namespace genex {
+
+TimeSeries::~TimeSeries()
+{
+  if (this->isOwnerOfData)
+  {
+    std::cout << "Delete data" << std::endl; // debug
+    delete this->data;
+    this->data = NULL;
+  }
+}
 
 const data_t& TimeSeries::operator[](int idx) const
 {

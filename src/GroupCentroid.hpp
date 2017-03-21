@@ -34,7 +34,7 @@ public:
    *
    *  @param data the array to be added
    */
-  void addArray(const TimeSeries data);
+  void addTimeSeries(const TimeSeries& data);
 
   /**
    *  @brief refreshes the value of the centroid

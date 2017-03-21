@@ -37,7 +37,7 @@ public:
    *  @param end ending position of this time series
    */
   TimeSeries(data_t *data, int index, int start, int end)
-    : data(data), index(index), start(start), end(end) {
+    : data(data), index(index), start(start), end(end), isOwnerOfData(false) {
       this->length = end - start;
     };
 
@@ -52,7 +52,7 @@ public:
    *  @param length length of the time series
    */
   TimeSeries(data_t *data, int length)
-    : data(data), index(0), start(0), end(length), length(length) {}
+    : data(data), index(0), start(0), end(length), length(length), isOwnerOfData(false) {}
 
   /**
    *  @brief constructor for TimeSeries
@@ -65,11 +65,16 @@ public:
    *  @param length length of the time series
    */
   TimeSeries(int length)
-    : index(0), start(0), end(length), length(length)
+    : index(0), start(0), end(length), length(length), isOwnerOfData(true)
   {
     this->data = new data_t[length];
     memset(this->data, 0, length * sizeof(data_t));
   }
+
+  /**
+   *  @brief destructor
+   */
+  virtual ~TimeSeries();
 
   /**
    *  @brief get a value of this time series
@@ -116,6 +121,7 @@ protected:
   data_t* data;
 
 private:
+  int isOwnerOfData;
   int index;
   int start;
   int end;
