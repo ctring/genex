@@ -15,36 +15,6 @@ struct MockData
   data_t dat_3[5] = {6, 6, 6, 6, 6};
 };
 
-BOOST_AUTO_TEST_CASE( group_centroid, *boost::unit_test::tolerance(TOLERANCE) )
-{
-  MockData data;
-  GroupCentroid gc(5);
-
-  BOOST_CHECK_EQUAL( gc.getLength(), 5 );
-  BOOST_CHECK_EQUAL( gc.getCount(), 0 );
-
-  gc.addArray(data.dat_1);
-  gc.addArray(data.dat_2);
-
-  data_t* centroid_values = gc.getCentroid();
-  for(int i = 0; i < 5; i++)
-  {
-    BOOST_TEST( centroid_values[i], 3.0 );
-  }
-
-  for(int i = 0; i < 5; i++)
-  {
-    BOOST_TEST( centroid_values[i], 3.0 );
-  }
-
-  gc.addArray(data.dat_3);
-
-  for(int i = 0; i < 5; i++)
-  {
-    BOOST_TEST( centroid_values[i], 4.0 );
-  }
-}
-
 BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
@@ -60,19 +30,21 @@ BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(T
   gc.addArray(ts_1);
   gc.addArray(ts_2);
 
-  data_t* centroid_values = gc.getCentroid();
+  TimeSeries centroid_values = gc.getCentroid();
+  //test that it updates
   for(int i = 0; i < 5; i++)
   {
     BOOST_TEST( centroid_values[i], 3.0 );
   }
-
+  //test that it does not mutate original
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( centroid_values[i], 3.0 );
+    BOOST_TEST( gc[i], 6.0 );
   }
 
+  //test that it updates
   gc.addArray(ts_3);
-
+  centroid_values = gc.getCentroid();
   for(int i = 0; i < 5; i++)
   {
     BOOST_TEST( centroid_values[i], 4.0 );

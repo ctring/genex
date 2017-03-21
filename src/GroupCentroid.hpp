@@ -20,20 +20,7 @@ public:
    *  @param length length of the centroid's group
    */
   GroupCentroid(int length)
-    : TimeSeries(length), count(0), cacheValid(true)
-    {
-      data_t* temp = new data_t[length];
-      memset(temp, 0, length * sizeof(data_t));
-
-      this->cachedCentroid = temp;
-    }
-
-  /**
-   *  @brief gets the length of this group
-   *
-   *  @return length of this group
-   */
-  int getLength(void) const { return this->length; }
+    : TimeSeries(length), count(0), cacheValid(true), cachedCentroid(length){};
 
   /**
    *  @brief gets the count of this group (# of members)
@@ -55,14 +42,12 @@ public:
    *  This function refreshes the cached centroid if valid,
    *  else calculates it first.
    */
-  void refreshCentroid(void);
+  TimeSeries getCentroid(void);
 
 private:
-  int length, count;
-  data_t* sum;
-
+  int count;
   bool cacheValid;
-  data_t* cachedCentroid;
+  TimeSeries cachedCentroid;
 };
 
 } // namespace genex

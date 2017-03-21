@@ -2,6 +2,7 @@
 #define TIMESERIES_H
 
 #include "config.hpp"
+#include <string>
 
 #ifdef SINGLE_PRECISION
 typedef float data_t;
@@ -43,7 +44,7 @@ public:
   /**
    *  @brief constructor for TimeSeries
    *
-   *  This constructor is use when pnly data and length is needed
+   *  This constructor is use when only data and length is needed
    *  to specify the time series. Index is set to 0, starting position
    *  is set to 0 and ending position is the length of the time series
    *
@@ -53,6 +54,22 @@ public:
   TimeSeries(data_t *data, int length)
     : data(data), index(0), start(0), end(length), length(length) {}
 
+  /**
+   *  @brief constructor for TimeSeries
+   *
+   *  This constructor is use when only length is needed
+   *  to specify the time series. Index is set to 0, starting position
+   *  is set to 0 and ending position is the length of the time series
+   *  Memory is then allocated for the data.
+   *
+   *  @param length length of the time series
+   */
+  TimeSeries(int length)
+    : index(0), start(0), end(length), length(length) {
+      data_t* temp = new data_t[length];
+      memset(temp, 0, length * sizeof(data_t));
+      this->data = temp;
+    }
 
   /**
    *  @brief get a value of this time series
@@ -94,9 +111,10 @@ public:
    *  @return length of this time series
    */
   int getLength() const { return this->length; }
+protected:
+  data_t* data;
 
 private:
-  data_t* data;
   int index;
   int start;
   int end;
