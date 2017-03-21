@@ -17,7 +17,7 @@ public:
     return pow(x_1 - x_2, 2);
   };
 
-  data_t recurse(data_t prev, data_t x_1, data_t x_2)
+  data_t reduce(data_t prev, data_t x_1, data_t x_2)
   {
     return prev + dist(x_1, x_2);
   };

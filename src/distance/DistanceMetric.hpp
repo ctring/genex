@@ -42,7 +42,7 @@ public:
    *  @param x_2 is a data point from the other of the timeseries
    *  @return the distance between the previous and rest (defined recursively)
    */
-   virtual data_t recurse(data_t a, data_t x_1, data_t x_2) = 0;
+   virtual data_t reduce(data_t a, data_t x_1, data_t x_2) = 0;
 
   /**
    *  @brief returns the normalized distance between two timeseries
