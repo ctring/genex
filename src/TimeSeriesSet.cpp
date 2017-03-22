@@ -32,7 +32,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
   int length = -1;
   std::string line;
   boost::char_separator<char> sep(separators.c_str());
-  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+  typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
 
   this->itemCount = 0;
   for (int row = 0; row < maxNumRow; row++, this->itemCount++)
