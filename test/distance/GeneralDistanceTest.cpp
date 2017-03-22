@@ -26,12 +26,12 @@ BOOST_AUTO_TEST_CASE( time_series_length, *boost::unit_test::tolerance(TOLERANCE
   Manhattan dist_2;
   Chebyshev dist_3;
 
-  data_t total_1 = generalDistance(&dist_1, ts_1, ts_2, 5);
+  data_t total_1 = generalDistance(dist_1, ts_1, ts_2, 5);
   BOOST_TEST( total_1, 2.0 );
 
-  data_t total_2 = generalDistance(&dist_2, ts_1, ts_2, 5);
+  data_t total_2 = generalDistance(dist_2, ts_1, ts_2, 5);
   BOOST_TEST( total_2, 2.0 );
 
-  data_t total_3 = generalDistance(&dist_3, ts_1, ts_2, 5);
+  data_t total_3 = generalDistance(dist_3, ts_1, ts_2, 5);
   BOOST_TEST( total_3, 10.0 );
 }

@@ -10,7 +10,7 @@ namespace genex {
    *  @param x_2 the other of the two arrays of data
    *  @param x_3 the length of the data
    */
-  data_t generalWarpedDistance(DistanceMetric* metric, TimeSeries x_1, TimeSeries x_2, int len)
+  data_t generalWarpedDistance(const DistanceMetric& metric, const TimeSeries& x_1, const TimeSeries& x_2, int len)
   {
     //TODO implement this!!
     //TODO add dropout
@@ -25,13 +25,13 @@ namespace genex {
    *  @param x_2 the other of the two arrays of data
    *  @param x_3 the length of the data
    */
-  data_t generalDistance(DistanceMetric* metric, TimeSeries x_1, TimeSeries x_2, int len)
+  data_t generalDistance(const DistanceMetric& metric, const TimeSeries& x_1, const TimeSeries& x_2, int len)
   {
     data_t total = 0.0;
     for(int i = 0; i < len; i++) {
-      total = metric->reduce(total, x_1[i], x_2[i]);
+      total = metric.reduce(total, x_1[i], x_2[i]);
     }
-    return metric->norm(total, x_1, x_2);
+    return metric.norm(total, x_1, x_2);
   }
 
 } // namespace genex

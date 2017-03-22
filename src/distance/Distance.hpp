@@ -13,7 +13,7 @@ namespace genex {
  *  @param x_2 the other of the time series
  *  @param x_3 the length of the data
  */
-data_t generalWarpedDistance(DistanceMetric* metric, TimeSeries x_1, TimeSeries x_2, int len);
+data_t generalWarpedDistance(const DistanceMetric& metric, const TimeSeries& x_1, const TimeSeries& x_2, int len);
 
 /**
  *  @brief returns the distance between two sets of data
@@ -23,7 +23,7 @@ data_t generalWarpedDistance(DistanceMetric* metric, TimeSeries x_1, TimeSeries 
  *  @param x_2 the other of the time series
  *  @param x_3 the length of the data
  */
-data_t generalDistance(DistanceMetric* metric, TimeSeries x_1, TimeSeries x_2, int len);
+data_t generalDistance(const DistanceMetric& metric, const TimeSeries& x_1, const TimeSeries& x_2, int len);
 
 } // namespace genex
 
