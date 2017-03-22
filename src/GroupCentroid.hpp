@@ -3,6 +3,7 @@
 
 #include <string>
 #include "TimeSeries.hpp"
+#include <iostream> // debug
 
 namespace genex {
 
@@ -20,7 +21,18 @@ public:
    *  @param length length of the centroid's group
    */
   GroupCentroid(int length)
-    : TimeSeries(length), count(0), cacheValid(true), cachedCentroid(length){};
+    : TimeSeries(length), count(0), cacheValid(true) {
+      this->cachedAverages = new data_t[length];
+      memset(this->cachedAverages, 0, length * sizeof(data_t));
+    };
+
+  /**
+   *  @brief deconstructor for GroupCentroid
+   */
+  ~GroupCentroid()
+  {
+    delete cachedAverages;
+  }
 
   /**
    *  @brief gets the count of this group (# of members)
@@ -37,17 +49,30 @@ public:
   void addTimeSeries(const TimeSeries& data);
 
   /**
-   *  @brief refreshes the value of the centroid
+   *  @brief refreshes the value of the centroid and gets value
+   *
    *
    *  This function refreshes the cached centroid if valid,
-   *  else calculates it first.
+   *  else calculates it first. It then returns the averaged value
+   *  at that point.
+   *
+   *  @param idx the data location to get the value from
+   *  @return the value at that index of the centroid
    */
-  TimeSeries getCentroid(void);
+  const data_t& operator[](int idx);
+
+  /**
+   *  @brief gets the SUM value at this index (for testing purposes)
+   *
+   *  @param idx the data location to get the value from
+   *  @return the value at that index of the centroid
+   */
+  const data_t& getSumValue(int idx) const;
 
 private:
   int count;
   bool cacheValid;
-  TimeSeries cachedCentroid;
+  data_t* cachedAverages;
 };
 
 } // namespace genex

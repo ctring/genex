@@ -5,9 +5,9 @@ namespace genex {
 
 TimeSeries::~TimeSeries()
 {
+  // if object allocated the data, delete it
   if (this->isOwnerOfData)
   {
-    std::cout << "Delete data" << std::endl; // debug
     delete this->data;
     this->data = NULL;
   }

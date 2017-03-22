@@ -30,27 +30,20 @@ BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(T
   gc.addTimeSeries(ts_1);
   gc.addTimeSeries(ts_2);
 
-  cout << "Before genCentroid 1" << endl;
-  TimeSeries centroid_values = gc.getCentroid();
-  cout << "After genCentroid 1" << endl;
-  //test that it updates
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( centroid_values[i], 3.0 );
+    BOOST_TEST( gc[i], 3.0 );
   }
   //test that it does not mutate original
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( gc[i], 6.0 );
+    BOOST_TEST( gc.getSumValue(i), 6.0 );
   }
 
   //test that it updates
   gc.addTimeSeries(ts_3);
-  cout << "Before genCentroid 2" << endl;
-  centroid_values = gc.getCentroid();
-  cout << "After genCentroid 2" << endl;
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( centroid_values[i], 4.0 );
+    BOOST_TEST( gc[i], 4.0 );
   }
 }

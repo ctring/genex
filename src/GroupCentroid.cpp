@@ -1,5 +1,5 @@
 #include "GroupCentroid.hpp"
-
+#include "Exception.hpp"
 
 namespace genex {
 
@@ -10,18 +10,31 @@ void GroupCentroid::addTimeSeries(const TimeSeries& data)
   this->cacheValid = false;
 }
 
-TimeSeries GroupCentroid::getCentroid(void)
+const data_t& GroupCentroid::operator[](int idx)
 {
-  if (this->cacheValid) {
-    return this->cachedCentroid;
+  if (idx < 0 || idx >= this->getLength()) {
+    throw GenexException("Index is out of range");
   }
 
-  for (int i = 0; i < this->getLength(); i++) {
-     this->cachedCentroid[i] = this->data[i] / this->count;
+  // if the cache is not valid refresh the values
+  if (!(this->cacheValid))
+  {
+    for (int i = 0; i < this->getLength(); i++)
+    {
+      this->cachedAverages[i] = this->data[i] / this->count;
+    }
+    cacheValid = true;
   }
 
-  cacheValid = true;
-  return this->cachedCentroid;
+  return this->cachedAverages[idx];
+}
+
+const data_t& GroupCentroid::getSumValue(int idx) const
+{
+  if (idx < 0 || idx >= this->getLength()) {
+    throw GenexException("Index is out of range");
+  }
+  return this->data[idx];
 }
 
 }// namespace genex
