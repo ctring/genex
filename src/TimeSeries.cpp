@@ -9,7 +9,7 @@ TimeSeries::~TimeSeries()
   if (this->isOwnerOfData)
   {
     delete this->data;
-    this->data = NULL;
+    this->data = nullptr;
   }
 }
 

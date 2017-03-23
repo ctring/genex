@@ -26,7 +26,7 @@ int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
   int nextIndex = -1;
   for (unsigned int i = 0; i < this->loadedDataset.size(); i++)
   {
-    if (this->loadedDataset[i] == NULL)
+    if (this->loadedDataset[i] == nullptr)
     {
       nextIndex = i;
       break;
@@ -34,7 +34,7 @@ int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
   }
   if (nextIndex < 0) {
     nextIndex = this->loadedDataset.size();
-    this->loadedDataset.push_back(NULL);
+    this->loadedDataset.push_back(nullptr);
   }
 
   this->loadedDataset[nextIndex] = newSet;
@@ -45,12 +45,12 @@ int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
 
 void GenexAPI::unloadDataset(int index)
 {
-  if (index < 0 || index >= loadedDataset.size() || loadedDataset[index] == NULL)
+  if (index < 0 || index >= loadedDataset.size() || loadedDataset[index] == nullptr)
   {
     throw GenexException("No dataset with given index");
   }
   delete loadedDataset[index];
-  loadedDataset[index] = NULL;
+  loadedDataset[index] = nullptr;
   if (index == loadedDataset.size() - 1)
   {
     loadedDataset.pop_back();

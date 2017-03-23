@@ -9,7 +9,7 @@
 
 namespace genex {
 
-DistanceManager* DistanceManager::instance = NULL;
+DistanceManager* DistanceManager::instance = nullptr;
 
 /**
  *  @brief returns a distance metric given a correct string
@@ -34,7 +34,7 @@ DistanceManager* DistanceManager::instance = NULL;
  */
 DistanceMetric* DistanceManager::getMetric(const std::string& d) const
 {
-  DistanceMetric * metric = NULL;
+  DistanceMetric * metric = nullptr;
 
   if (d == "euclidean") {
     metric = new Euclidean;

@@ -36,7 +36,7 @@ struct node_t
     int data;
     node_t* next;
 
-    node_t() : data(-1), next(NULL) {};
+    node_t() : data(-1), next(nullptr) {};
 };
 
 /**
@@ -140,7 +140,7 @@ private:
   const int id;
   const TimeSeriesSet& dataset;
   node_t* memberMap;
-  node_t* lastMember = NULL;
+  node_t* lastMember = nullptr;
 
   int memberLength, repLength;
   int count;

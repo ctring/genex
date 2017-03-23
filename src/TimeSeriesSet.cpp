@@ -90,7 +90,7 @@ void TimeSeriesSet::clearData()
   for (int i = 0; i < this->itemCount; i++)
   {
     delete[] this->data[i];
-    this->data[i] = NULL;
+    this->data[i] = nullptr;
   }
   this->data.clear();
   this->itemCount = 0;

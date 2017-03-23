@@ -31,7 +31,7 @@ public:
   ~GroupCentroid()
   {
     delete cachedAverages;
-    cachedAverages = NULL;
+    cachedAverages = nullptr;
   }
 
   /**
