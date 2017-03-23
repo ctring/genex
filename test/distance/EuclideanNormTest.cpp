@@ -17,8 +17,8 @@ struct MockData
 BOOST_AUTO_TEST_CASE( time_series_length, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  TimeSeries ts_1(data.dat_1, 0, 0, 5);
-  TimeSeries ts_2(data.dat_2, 0, 0, 5);
+  TimeSeries ts_1 {data.dat_1, 0, 0, 5};
+  TimeSeries ts_2 {data.dat_2, 0, 0, 5};
   Euclidean dist;
 
   data_t total = 0.0;
@@ -27,5 +27,5 @@ BOOST_AUTO_TEST_CASE( time_series_length, *boost::unit_test::tolerance(TOLERANCE
     total = dist.reduce(total, ts_1[i], ts_2[i]);
   }
 
-  BOOST_TEST( dist.norm(total, ts_1, ts_2), 2.0 );
+  BOOST_TEST( dist.norm(total, ts_1, ts_2) == 2.0 );
 }

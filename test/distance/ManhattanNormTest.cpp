@@ -29,5 +29,5 @@ BOOST_AUTO_TEST_CASE( man_norm, *boost::unit_test::tolerance(TOLERANCE) )
     total = dist.reduce(total, ts_1[i], ts_2[i]);
   }
 
-  BOOST_TEST( dist.norm(total, ts_1, ts_2), 2.0 );
+  BOOST_TEST( dist.norm(total, ts_1, ts_2) == 2.0 );
 }

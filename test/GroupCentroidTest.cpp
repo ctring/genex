@@ -32,18 +32,19 @@ BOOST_AUTO_TEST_CASE( group_centroid_time_series, *boost::unit_test::tolerance(T
 
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( gc[i], 3.0 );
+    BOOST_TEST( gc[i] == 3.0 );
   }
+
   //test that it does not mutate original
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( gc.getSumValue(i), 6.0 );
+    BOOST_TEST( gc.getSumValue(i) == 6.0 );
   }
 
   //test that it updates
   gc.addTimeSeries(ts_3);
   for(int i = 0; i < 5; i++)
   {
-    BOOST_TEST( gc[i], 4.0 );
+    BOOST_TEST( gc[i] == 4.0 );
   }
 }
