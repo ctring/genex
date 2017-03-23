@@ -1,16 +1,19 @@
 #include "GroupCentroid.hpp"
 #include "Exception.hpp"
+#include <iostream>//debug
 
 namespace genex {
 
 void GroupCentroid::addTimeSeries(const TimeSeries& data)
 {
+  std::cout << "addTimeSeries " << this->getLength() << " " << data.getLength()<< '\n';
+
   *(this) += (data);
   this->count++;
   this->cacheValid = false;
 }
 
-const data_t& GroupCentroid::operator[](int idx)
+data_t& GroupCentroid::operator[](int idx)
 {
   if (idx < 0 || idx >= this->getLength()) {
     throw GenexException("Index is out of range");

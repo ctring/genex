@@ -53,10 +53,11 @@ public:
  *  @param data a pointer the timeseries set that this is a group from
  *  @param length the length of the sequences in this set
  */
-Group(const TimeSeriesSet *dataset, int memberLength)
-  : dataset(dataset), memberLength(memberLength), centroid(memberLength), id(Group::next_id++) {
+Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
+  : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength), memberMap(memberMap), id(Group::next_id++)
+  {
     // number of indices required to represent all sequences
-    this->repLength = dataset->getItemLength() - memberLength + 1;
+    this->repLength = dataset.getItemLength() - memberLength + 1;
   };
 
   /**
@@ -132,7 +133,7 @@ Group(const TimeSeriesSet *dataset, int memberLength)
 private:
   static int next_id;
   const int id;
-  const TimeSeriesSet *dataset;
+  const TimeSeriesSet& dataset;
   node_t* memberMap;
   node_t* lastMember = NULL;
 
@@ -143,7 +144,6 @@ private:
 };
 
 //each group will have a unique ID, not per equal length, but thats fine
-int Group::next_id = 0;
 
 } // namespace genex
 #endif //GROUP_HPP

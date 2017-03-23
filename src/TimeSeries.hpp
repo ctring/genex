@@ -84,7 +84,7 @@ public:
    *
    *  @throw GenexException if the index is out of bound
    */
-  const data_t& operator[](int idx) const;
+  virtual const data_t& operator[](int idx) const;
 
   /**
    *  @brief get reference to a value of this time series
@@ -94,7 +94,7 @@ public:
    *
    *  @throw GenexException if the index is out of bound
    */
-  data_t& operator[](int idx);
+  virtual data_t& operator[](int idx);
 
   /**
    *  @brief accumulate data from other time series into this one

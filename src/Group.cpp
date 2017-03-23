@@ -1,15 +1,16 @@
 #include "Group.hpp"
 #include "distance/Distance.hpp"
-
+#include <iostream>//debug
 namespace genex {
 
   void Group::addMember(int index, int start)
   {
     count++;
 
+    std::cout << index << " " << start << " " << this->memberLength << " " << '\n';
     //set the membership & add values to cendtroid
     memberMap[index * repLength + start].data = this->id;
-    centroid.addTimeSeries(this->dataset->getTimeSeries(index, start, index + this->memberLength + 1));
+    centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength));
 
     // track locations of members (reverse list)
     memberMap[index * repLength + start].next = lastMember;
@@ -31,13 +32,13 @@ namespace genex {
     data_t curr_d = 0;
     candidate_t bsf(-1);
 
-    for (int index = 0; index < dataset->getItemCount(); index++)
+    for (int index = 0; index < dataset.getItemCount(); index++)
     {
       for (int start = 0; start < this->repLength; start++)
       {
         if (isMember(index, start))
         {
-          TimeSeries curr = this->dataset->getTimeSeries(index, start, start + memberLength - 1);
+          TimeSeries curr = this->dataset.getTimeSeries(index, start, start + memberLength - 1);
           curr_d = generalWarpedDistance(metric, query, curr, memberLength);
           if (curr_d < bsf.dist)
           {
@@ -50,5 +51,7 @@ namespace genex {
 
     return bsf;
   }
+
+  int Group::next_id = 0;
 
 } // namespace genex

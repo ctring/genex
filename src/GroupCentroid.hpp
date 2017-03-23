@@ -32,6 +32,7 @@ public:
   ~GroupCentroid()
   {
     delete cachedAverages;
+    cachedAverages = NULL;
   }
 
   /**
@@ -59,7 +60,7 @@ public:
    *  @param idx the data location to get the value from
    *  @return the value at that index of the centroid
    */
-  const data_t& operator[](int idx);
+  data_t& operator[](int idx);
 
   /**
    *  @brief gets the SUM value at this index (for testing purposes)
