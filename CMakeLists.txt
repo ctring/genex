@@ -32,11 +32,8 @@ include_directories(${Readline_INCLUDE_DIRS})
 include_directories("${PROJECT_SOURCE_DIR}/src")
 add_subdirectory(src)
 
-
 # build the genex command-line interface
-add_executable(genexCLI GenexCLI.cpp)
-target_link_libraries(genexCLI ${Readline_LIBRARY} genexLib)
-
+add_subdirectory(cli)
 
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)
 enable_testing()
