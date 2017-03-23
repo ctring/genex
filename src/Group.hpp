@@ -125,6 +125,11 @@ Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
     return centroid;
   }
 
+  int getId(void)
+  {
+    return id;
+  }
+
   //TODO
   //candidate_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
   //vector<candidate_t> getSeasonal(int);

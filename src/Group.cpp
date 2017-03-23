@@ -1,13 +1,11 @@
 #include "Group.hpp"
 #include "distance/Distance.hpp"
-#include <iostream>//debug
 namespace genex {
 
   void Group::addMember(int index, int start)
   {
     count++;
 
-    std::cout << index << " " << start << " " << this->memberLength << " " << '\n';
     //set the membership & add values to cendtroid
     memberMap[index * repLength + start].data = this->id;
     centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength));

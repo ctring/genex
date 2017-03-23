@@ -3,7 +3,6 @@
 
 #include <string>
 #include "TimeSeries.hpp"
-#include <iostream> // debug
 
 namespace genex {
 

@@ -30,7 +30,6 @@ TimeSeries& TimeSeries::operator+=(const TimeSeries& other)
 {
   if (other.getLength() != this->length)
   {
-    std::cout << "+=error: " << other.getLength() << " " << this->length << std::endl;
     throw GenexException("Two time series must have the same length for addition");
   }
   for (int i = 0; i < this->length; i++)
