@@ -66,4 +66,4 @@ private:
 
 } // namespace genex
 
-#endif
+#endif // GENEX_API_H
