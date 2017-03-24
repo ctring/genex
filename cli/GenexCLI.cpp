@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <map>
 #include <boost/tokenizer.hpp>
@@ -16,7 +17,7 @@ static genex::GenexAPI genexAPI;
 MAKE_COMMAND(LoadData,
   {
     if (args.size() > 5) {
-      std::cout << "Error: Too many arguments" << std::endl;
+      std::cout << "Error! Too many arguments" << std::endl;
       return false;
     }
 
@@ -30,17 +31,22 @@ MAKE_COMMAND(LoadData,
       id = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
     } catch (genex::GenexException& e)
     {
-      std::cout << "Error: " << e.what() << std::endl;
+      std::cout << "Error! " << e.what() << std::endl;
     }
+    std::cout << "Dataset loaded. ID: " << id << std::endl;
     return true;
   },
+
+  "Load a dataset to the memory",
 
   "This is a help line\n"
   "This is another")
 
 std::map<std::string, Command*> commands = {
-  {"loadData", &cmdLoadData},
+  {"load", &cmdLoadData},
 };
+
+#define COUT_HELP_ALIGNMENT 15
 
 bool processLine(const std::string& line)
 {
@@ -64,23 +70,30 @@ bool processLine(const std::string& line)
     {
       if (commands.find(args[1]) == commands.end())
       {
-        std::cout << "Error: cannot find help for command: " << args[1] << std::endl;
-        return false;
+        std::cout << "Error! Cannot find help for command: " << args[1] << std::endl;
       }
-      std::cout << commands[args[1]]->getHelp() << std::endl;
+      else {
+        Command* cmd = commands[args[1]];
+        std::cout << cmd->getSummary() << std::endl << cmd->getHelp() << std::endl;
+      }
     }
     else {
-      // TODO: Show all helps
+      for (const auto& cmd : commands)
+      {
+        std::cout << std::setw(COUT_HELP_ALIGNMENT) << cmd.first << cmd.second->getSummary() << std::endl;
+      }
+      std::cout << std::setw(COUT_HELP_ALIGNMENT) << "exit|quit " << "Terminate the program" << std::endl;
     }
   }
   else
   {
     if (commands.find(args[0]) == commands.end())
     {
-      std::cout << "Error: cannot find command: " << args[0] << std::endl;
-      return false;
+      std::cout << "Error! Cannot find command: " << args[0] << std::endl;
     }
-    commands[args[0]]->doCommand(args);
+    else {
+      commands[args[0]]->doCommand(args);
+    }
   }
 
   return false;
@@ -88,6 +101,7 @@ bool processLine(const std::string& line)
 
 int main (int argc, char *argv[])
 {
+  std::cout << std::left;
   while (true)
   {
     char* raw_line = readline(">> ");
