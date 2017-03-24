@@ -44,15 +44,21 @@ MAKE_COMMAND(LoadData,
     int startCol  = args.size() > 3 ? std::stoi(args[3]) : 0;
     std::string separators = args.size() > 4 ? args[4] : " ";
 
-    int id = -1;
+    genex::dataset_info_t info;
     try {
-      id = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
+      info = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
     } catch (genex::GenexException& e)
     {
       std::cout << "Error! " << e.what() << std::endl;
       return false;
     }
-    std::cout << "Dataset loaded. ID: " << id << std::endl;
+
+    std::cout << "Dataset loaded                    " << std::endl
+              << "  Name:        " << info.name       << std::endl
+              << "  ID:          " << info.id         << std::endl
+              << "  Item count:  " << info.itemCount  << std::endl
+              << "  Item length: " << info.itemLength << std::endl;
+
     return true;
   },
 

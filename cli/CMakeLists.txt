@@ -2,8 +2,8 @@ project(genexCLI)
 
 file(GLOB_RECURSE SRC_FILES RELATIVE ${PROJECT_SOURCE_DIR} *.cpp)
 
-add_executable(genexCLI ${SRC_FILES})
+add_executable(genex ${SRC_FILES})
 
-target_link_libraries(genexCLI ${Readline_LIBRARY} genexLib)
+target_link_libraries(genex ${Readline_LIBRARY} genexLib)
 
-set_target_properties(genexCLI PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set_target_properties(genex PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

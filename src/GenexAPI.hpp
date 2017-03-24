@@ -8,6 +8,21 @@
 
 namespace genex {
 
+/**
+ * A struct holding generla information of a dataset
+ */
+struct dataset_info_t
+{
+  dataset_info_t() : name(""), id(-1), itemCount(0), itemLength(0) {}
+  dataset_info_t(int id, std::string name, int itemCount, int itemLength) :
+    name(name), id(id), itemCount(itemCount), itemLength(itemLength) {}
+
+  std::string name;
+  int id;
+  int itemCount;
+  int itemLength;
+};
+
 class GenexAPI
 {
 public:
@@ -37,8 +52,8 @@ public:
    *
    *  @throw GenexException if cannot read from the given file
    */
-  int loadDataset(const std::string& filePath, int maxNumRow,
-                  int startCol, const std::string& separators);
+  dataset_info_t loadDataset(const std::string& filePath, int maxNumRow,
+                             int startCol, const std::string& separators);
 
   /**
    *  @brief unloads a dataset at given index
@@ -59,8 +74,18 @@ public:
    */
   int getDatasetCount();
 
+  /**
+   *  @brief gets information of a dataset
+   *
+   *  @param index index of the dataset
+   *  @return a dataset_info_t struct containing information about the dataset
+   */
+  dataset_info_t getDatasetInfo(int index);
+
 private:
-  std::vector<GroupableTimeSeriesSet*> loadedDataset;
+  void _checkDatasetIndex(int index);
+
+  std::vector<GroupableTimeSeriesSet*> loadedDatasets;
   int datasetCount = 0;
 };
 

@@ -18,8 +18,8 @@ struct MockDataset
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
   GenexAPI api;
-  int id0 = api.loadDataset(data.test_10_20_space, 0, 0, " ");
-  int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",");
+  int id0 = api.loadDataset(data.test_10_20_space, 0, 0, " ").id;
+  int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",").id;
   BOOST_CHECK_EQUAL( id0, 0 );
   BOOST_CHECK_EQUAL( id1, 1 );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 2 );
@@ -30,9 +30,9 @@ BOOST_AUTO_TEST_CASE( api_load_dataset )
 BOOST_AUTO_TEST_CASE( api_unload_dataset )
 {
   GenexAPI api;
-  int id0 = api.loadDataset(data.test_10_20_space, 5, 0, " ");
-  int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",");
-  int id2 = api.loadDataset(data.test_10_20_space, 6, 0, " ");
+  int id0 = api.loadDataset(data.test_10_20_space, 5, 0, " ").id;
+  int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",").id;
+  int id2 = api.loadDataset(data.test_10_20_space, 6, 0, " ").id;
   BOOST_CHECK_EQUAL( id0, 0 );
   BOOST_CHECK_EQUAL( id1, 1 );
   BOOST_CHECK_EQUAL( id2, 2 );
@@ -46,8 +46,8 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
 
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 1 );
 
-  id0 = api.loadDataset(data.test_15_20_comma, 14, 4, ",");
-  id2 = api.loadDataset(data.test_15_20_comma, 9, 0, ",");
+  id0 = api.loadDataset(data.test_15_20_comma, 14, 4, ",").id;
+  id2 = api.loadDataset(data.test_15_20_comma, 9, 0, ",").id;
   BOOST_CHECK_EQUAL( id0, 0 );
   BOOST_CHECK_EQUAL( id2, 2 );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
@@ -56,9 +56,9 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
 BOOST_AUTO_TEST_CASE( api_unload_all_dataset )
 {
   GenexAPI api;
-  int id0 = api.loadDataset(data.test_10_20_space, 5, 0, " ");
-  int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",");
-  int id2 = api.loadDataset(data.test_10_20_space, 6, 0, " ");
+  int id0 = api.loadDataset(data.test_10_20_space, 5, 0, " ").id;
+  int id1 = api.loadDataset(data.test_15_20_comma, 10, 0, ",").id;
+  int id2 = api.loadDataset(data.test_10_20_space, 6, 0, " ").id;
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
 
   api.unloadAllDataset();

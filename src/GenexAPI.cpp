@@ -10,8 +10,8 @@ GenexAPI::~GenexAPI()
   unloadAllDataset();
 }
 
-int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
-                          int startCol, const std::string& separators)
+dataset_info_t GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
+                                     int startCol, const std::string& separators)
 {
 
   GroupableTimeSeriesSet* newSet = new GroupableTimeSeriesSet();
@@ -24,53 +24,71 @@ int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
   }
 
   int nextIndex = -1;
-  for (unsigned int i = 0; i < this->loadedDataset.size(); i++)
+  for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
   {
-    if (this->loadedDataset[i] == nullptr)
+    if (this->loadedDatasets[i] == nullptr)
     {
       nextIndex = i;
       break;
     }
   }
+
   if (nextIndex < 0) {
-    nextIndex = this->loadedDataset.size();
-    this->loadedDataset.push_back(nullptr);
+    nextIndex = this->loadedDatasets.size();
+    this->loadedDatasets.push_back(nullptr);
   }
 
-  this->loadedDataset[nextIndex] = newSet;
+  this->loadedDatasets[nextIndex] = newSet;
   this->datasetCount++;
 
-  return nextIndex;
+  return this->getDatasetInfo(nextIndex);
 }
 
 void GenexAPI::unloadDataset(int index)
 {
-  if (index < 0 || index >= loadedDataset.size() || loadedDataset[index] == nullptr)
+  _checkDatasetIndex(index);
+
+  delete loadedDatasets[index];
+  loadedDatasets[index] = nullptr;
+  if (index == loadedDatasets.size() - 1)
   {
-    throw GenexException("No dataset with given index");
-  }
-  delete loadedDataset[index];
-  loadedDataset[index] = nullptr;
-  if (index == loadedDataset.size() - 1)
-  {
-    loadedDataset.pop_back();
+    loadedDatasets.pop_back();
   }
   this->datasetCount--;
 }
 
 void GenexAPI::unloadAllDataset()
 {
-  for (unsigned int i = 0; i < this->loadedDataset.size(); i++)
+  for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
   {
-    delete this->loadedDataset[i];
+    delete this->loadedDatasets[i];
   }
-  this->loadedDataset.clear();
+  this->loadedDatasets.clear();
   this->datasetCount = 0;
 }
 
 int GenexAPI::getDatasetCount()
 {
   return this->datasetCount;
+}
+
+dataset_info_t GenexAPI::getDatasetInfo(int index)
+{
+  _checkDatasetIndex(index);
+
+  GroupableTimeSeriesSet* dataset = this->loadedDatasets[index];
+  return dataset_info_t(index,
+                        dataset->getFilePath(),
+                        dataset->getItemCount(),
+                        dataset->getItemLength());
+}
+
+void GenexAPI::_checkDatasetIndex(int index)
+{
+  if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
+  {
+    throw GenexException("No dataset with given index");
+  }
 }
 
 } // namespace genex
