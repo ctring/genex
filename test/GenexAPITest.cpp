@@ -65,3 +65,21 @@ BOOST_AUTO_TEST_CASE( api_unload_all_dataset )
   BOOST_CHECK_THROW( api.unloadDataset(0), GenexException );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 0 );
 }
+
+BOOST_AUTO_TEST_CASE( api_get_dataset_info )
+{
+  GenexAPI api;
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+  api.loadDataset(data.test_15_20_comma, 10, 4, ",");
+
+  dataset_info_t info = api.getDatasetInfo(1);
+  BOOST_CHECK_EQUAL( info.name, data.test_15_20_comma );
+  BOOST_CHECK_EQUAL( info.id, 1 );
+  BOOST_CHECK_EQUAL( info.itemCount, 10 );
+  BOOST_CHECK_EQUAL( info.itemLength, 16 );
+
+  api.loadDataset(data.test_15_20_comma, 10, 0, ",");
+
+  api.unloadDataset(1);
+  BOOST_CHECK_THROW( api.getDatasetInfo(1), GenexException );
+}

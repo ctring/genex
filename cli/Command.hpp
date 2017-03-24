@@ -24,6 +24,8 @@ protected:
  *  <command_name> - name of the command
  *  <code>         - the code being executed when this command is called.
  *                   Arguments are put in a vector of string call 'args'.
+ *                   This code should return true if the command is carried
+ *                   out successfully and false otherwise.
  *  <help_summary> - a short text line describing the command. This is
  *                   showed next to the command name when 'help' is called
  *  <help>         - a long text describe the command in details. This is

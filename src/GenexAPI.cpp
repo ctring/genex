@@ -87,7 +87,7 @@ void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
   {
-    throw GenexException("No dataset with given index");
+    throw GenexException("There is no dataset with given index");
   }
 }
 

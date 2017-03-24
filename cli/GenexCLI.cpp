@@ -14,6 +14,15 @@
 
 static genex::GenexAPI genexAPI;
 
+bool tooManyArgs(const std::vector<std::string>& args, int limit)
+{
+  if (args.size() > limit) {
+    std::cout << "Error! Too many arguments" << std::endl;
+    return true;
+  }
+  return false;
+}
+
 /**************************************************************************
  * HOW TO CREATE NEW COMMAND
  *
@@ -23,6 +32,8 @@ static genex::GenexAPI genexAPI;
  *  <command_name> - name of the command
  *  <code>         - the code being executed when this command is called.
  *                   Arguments are put in a vector of string call 'args'.
+ *                   This code should return true if the command is carried
+ *                   out successfully and false otherwise.
  *  <help_summary> - a short text line describing the command. This is
  *                   showed next to the command name when 'help' is called
  *  <help>         - a long text describe the command in details. This is
@@ -32,10 +43,9 @@ static genex::GenexAPI genexAPI;
  * called cmd<command_name>. This variable is used in step 2.
  **************************************************************************/
 
-MAKE_COMMAND(LoadData,
+MAKE_COMMAND(LoadDataset,
   {
-    if (args.size() > 5) {
-      std::cout << "Error! Too many arguments" << std::endl;
+    if (tooManyArgs(args, 5)) {
       return false;
     }
 
@@ -45,9 +55,11 @@ MAKE_COMMAND(LoadData,
     std::string separators = args.size() > 4 ? args[4] : " ";
 
     genex::dataset_info_t info;
-    try {
+    try
+    {
       info = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
-    } catch (genex::GenexException& e)
+    }
+    catch (genex::GenexException& e)
     {
       std::cout << "Error! " << e.what() << std::endl;
       return false;
@@ -77,6 +89,51 @@ MAKE_COMMAND(LoadData,
   "              (default: <space>)                                          "
   )
 
+MAKE_COMMAND(UnloadDataset,
+  {
+    if (tooManyArgs(args, 2)) {
+      return false;
+    }
+
+    int index = std::stoi(args[1]);
+
+    try {
+      genexAPI.unloadDataset(index);
+    } catch (genex::GenexException& e)
+    {
+      std::cout << "Error! " << e.what() << std::endl;
+      return false;
+    }
+
+    std::cout << "Dataset at " << index << " is unloaded" << std::endl;
+    return true;
+  },
+
+  "Unload a dataset from the memory",
+
+  "Usage: unload <dataset_index>                               \n"
+  "  dataset_index  - Index of the dataset being unloaded. Use \n"
+  "                   'list dataset' to retrieve the list of   \n"
+  "                   loaded datasets.                           "
+  )
+
+MAKE_COMMAND(Listing,
+  {
+    if (tooManyArgs(args, 2)) {
+      return false;
+    }
+
+    return true;
+  },
+
+  "Unload a dataset from the memory",
+
+  "Usage: unload <dataset_index>                               \n"
+  "  dataset_index  - Index of the dataset being unloaded. Use \n"
+  "                   'list dataset' to retrieve the list of   \n"
+  "                   loaded datasets.                           "
+  )
+
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
  *
@@ -85,7 +142,8 @@ MAKE_COMMAND(LoadData,
  **************************************************************************/
 
 std::map<std::string, Command*> commands = {
-  {"load", &cmdLoadData},
+  {"load", &cmdLoadDataset},
+  {"unload", &cmdUnloadDataset}
 };
 
 /**************************************************************************/
