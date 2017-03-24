@@ -68,14 +68,14 @@ MAKE_COMMAND(LoadData,
   "              smaller than this number, all lines are read. (default: 0)\n"
   "  startCol  - Omit all columns before this column. (default: 0)         \n"
   "  seprators - A list of characters used to separate values in the file  \n"
-  "              (default: <space>)                                        \n"
+  "              (default: <space>)                                          "
   )
 
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
  *
- * The key of a command is a string which is also the string that is used
- * to match with user input.
+ * The key is a string which is also the string that is used to match with
+ * user input. The value is the cmd<command_name> variable created in step 1.
  **************************************************************************/
 
 std::map<std::string, Command*> commands = {
@@ -86,6 +86,50 @@ std::map<std::string, Command*> commands = {
 /**************************************************************************/
 
 #define COUT_HELP_ALIGNMENT 15
+
+const std::string HELP_SUMMARY = "Retrieve a list of commands or get help for a command";
+const std::string HELP_HELP    = "Usage: help [<command_name>]                                \n"
+                                 "  command_name - Name of command to retrieve help about. If \n"
+                                 "                 not specified, a list of available commands\n"
+                                 "                 is shown instead.                            ";
+const std::string EXIT_SUMMARY = "Terminate the program";
+const std::string EXIT_HELP    = "Usage: Can use either 'exit' or 'quit'";
+
+void showHelp(const std::string& command_name)
+{
+  if (command_name == "help")
+  {
+    std::cout << HELP_SUMMARY << std::endl << HELP_HELP << std::endl;
+  }
+  else if (command_name == "exit" || command_name == "quit")
+  {
+    std::cout << EXIT_SUMMARY << std::endl << EXIT_HELP << std::endl;
+  }
+  else if (commands.find(command_name) != commands.end())
+  {
+    Command* cmd = commands[command_name];
+    std::cout << cmd->getSummary() << std::endl << cmd->getHelp() << std::endl;
+  }
+  else
+  {
+    std::cout << "Error! Cannot find help for command: " << command_name << std::endl;
+  }
+}
+
+void showAllHelps()
+{
+  std::cout << "Use 'help <command>' to see help for a command" << std::endl << std::endl;
+  for (const auto& cmd : commands)
+  {
+    std::cout << std::setw(COUT_HELP_ALIGNMENT);
+    std::cout << cmd.first << cmd.second->getSummary() << std::endl;
+  }
+  std::cout << std::setw(COUT_HELP_ALIGNMENT);
+  std::cout << "help" << HELP_SUMMARY << std::endl;
+
+  std::cout << std::setw(COUT_HELP_ALIGNMENT);
+  std::cout << "exit|quit " << EXIT_SUMMARY << std::endl;
+}
 
 bool processLine(const std::string& line)
 {
@@ -105,29 +149,16 @@ bool processLine(const std::string& line)
   }
   else if (args[0] == "help")
   {
-    if (args.size() > 1)
+    if (args.size() == 1)
     {
-      if (commands.find(args[1]) == commands.end())
-      {
-        std::cout << "Error! Cannot find help for command: " << args[1] << std::endl;
-      }
-      else {
-        Command* cmd = commands[args[1]];
-        std::cout << cmd->getSummary() << std::endl << cmd->getHelp() << std::endl;
-      }
+      showAllHelps();
+    }
+    else if (args.size() == 2)
+    {
+      showHelp(args[1]);
     }
     else {
-      std::cout << "Use help <command> to see help for a command" << std::endl << std::endl;
-      for (const auto& cmd : commands)
-      {
-        std::cout << std::setw(COUT_HELP_ALIGNMENT);
-        std::cout << cmd.first << cmd.second->getSummary() << std::endl;
-      }
-      std::cout << std::setw(COUT_HELP_ALIGNMENT);
-      std::cout << "help" << "Retrieve a list of commands" << std::endl;
-
-      std::cout << std::setw(COUT_HELP_ALIGNMENT);
-      std::cout << "exit|quit " << "Terminate the program" << std::endl;
+      std::cout << "Error! Too many arguments for 'help'" << std::endl;
     }
   }
   else

@@ -38,6 +38,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
   this->itemCount = 0;
   for (int row = 0; row < maxNumRow; row++, this->itemCount++)
   {
+    // Read and process line by line
     if (getline(f, line))
     {
       tokenizer tokens(line, sep);
@@ -51,17 +52,18 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
       }
       else if (length != std::distance(tokens.begin(), tokens.end()))
       {
-        // If some row has a different length, throw an error
         f.close();
         this->clearData();
         throw GenexException("File contains time series with inconsistent lengths");
       }
 
       data.push_back(new data_t[length - startCol]);
+
       int col = 0;
       for (tokenizer::iterator tok_iter = tokens.begin();
            tok_iter != tokens.end(); tok_iter++, col++)
       {
+        // Only read columns from startCol and after
         if (col >= startCol)
         {
           try
@@ -70,12 +72,14 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
           }
           catch (const std::invalid_argument& e)
           {
-            f.close(); this->clearData();
+            f.close();
+            this->clearData();
             throw GenexException("Dataset file contains unparsable text");
           }
           catch (const std::out_of_range& e)
           {
-            f.close(); this->clearData();
+            f.close();
+            this->clearData();
             throw GenexException("Values are out of range");
           }
         }
