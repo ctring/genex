@@ -17,6 +17,18 @@ protected:
   std::string help;
 };
 
+/**
+ * This macro creates a class Cmd<command_name> and its object cmd<command_name>
+ *
+ * MAKE_COMMAND(<command_name>, <code>, <help_summary>, <help>)
+ *  <command_name> - name of the command
+ *  <code>         - the code being executed when this command is called.
+ *                   Arguments are put in a vector of string call 'args'.
+ *  <help_summary> - a short text line describing the command. This is
+ *                   showed next to the command name when 'help' is called
+ *  <help>         - a long text describe the command in details. This is
+ *                   showed when 'help <command_name>' is called
+ */
 #define MAKE_COMMAND(_name, _content, _summary, _help)                  \
   class Cmd##_name : public Command {                                   \
   public:                                                               \
