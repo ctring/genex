@@ -20,7 +20,7 @@ protected:
   class Cmd##_name : public Command {                                   \
   public:                                                               \
     Cmd##_name() { help = _help; }                                      \
-    bool doCommand(const std::vector<std::string>&  args) { _content }  \
+    bool doCommand(const std::vector<std::string>&  args) _content      \
   } cmd##_name;
 
 #endif // COMMAND_H

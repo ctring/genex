@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
   int repLength = timeSeriesLengths - memberLength + 1;
 
   TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_5_10_space, timeSeriesCount, " ", 0);
+  tsSet.loadData(data.test_5_10_space, timeSeriesCount, 0, " ");
 
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), timeSeriesLengths );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), timeSeriesCount );
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   int repLength = timeSeriesLengths - memberLength + 1;
 
   TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_5_10_space, timeSeriesCount, " ", 0);
+  tsSet.loadData(data.test_5_10_space, timeSeriesCount, 0, " ");
 
   node_t* memberMap = new node_t[timeSeriesCount * repLength];
 
@@ -96,13 +96,13 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   TimeSeries& c = g.getCentroid();
 }
 
-BOOST_AUTO_TEST_CASE( group_id)
+BOOST_AUTO_TEST_CASE( group_id )
 {
   MockData data;
 
   TimeSeriesSet tsSet;
   int timeSeriesCount = 5;
-  tsSet.loadData(data.test_5_10_space, timeSeriesCount, " ", 0);
+  tsSet.loadData(data.test_5_10_space, timeSeriesCount, 0, " ");
 
   node_t* memberMap = new node_t[1];
 

@@ -16,7 +16,7 @@ TimeSeriesSet::~TimeSeriesSet()
 }
 
 void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
-                             const std::string& separators, int startCol)
+                             int startCol, const std::string& separators)
 {
   this->clearData();
 
@@ -24,7 +24,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
   if (!f.is_open())
   {
     f.close();
-    throw GenexException("Cannot open file"); // TODO: use strerror(errno)
+    throw GenexException(std::string("Cannot open ") + filePath);
   }
 
   if (maxNumRow <= 0) { maxNumRow = 999999999; }

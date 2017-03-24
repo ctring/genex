@@ -29,16 +29,16 @@ public:
    *
    *  @param filePath path to a text file
    *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
-   *         all lines are read. Default: 0
+   *         all lines are read
    *  @param separator a string containings possible separator characters for values
-   *         in a line. Default: " "
-   *  @param startCol columns before startCol are discarded. Default: 0
+   *         in a line
+   *  @param startCol columns before startCol are discarded
    *  @return an index used to refer to the just loaded dataset
    *
    *  @throw GenexException if cannot read from the given file
    */
-  int loadDataset(const std::string& filePath, int maxNumRow = 0,
-                  const std::string& separators = " ", int startCol = 0);
+  int loadDataset(const std::string& filePath, int maxNumRow,
+                  int startCol, const std::string& separators);
 
   /**
    *  @brief unloads a dataset at given index

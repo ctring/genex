@@ -11,12 +11,12 @@ GenexAPI::~GenexAPI()
 }
 
 int GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
-                          const std::string& separators, int startCol)
+                          int startCol, const std::string& separators)
 {
 
   GroupableTimeSeriesSet* newSet = new GroupableTimeSeriesSet();
   try {
-    newSet->loadData(filePath, maxNumRow, separators, startCol);
+    newSet->loadData(filePath, maxNumRow, startCol, separators);
   } catch (GenexException& e)
   {
     delete newSet;

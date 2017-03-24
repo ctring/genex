@@ -7,19 +7,34 @@
 
 #include "Command.hpp"
 #include "GenexAPI.hpp"
+#include "Exception.hpp"
 
 #include "config.hpp"
 
+static genex::GenexAPI genexAPI;
+
 MAKE_COMMAND(LoadData,
   {
-    if (args.size() > 5)
-    {
-      std::cout << "Too many variables" << std::endl;
+    if (args.size() > 5) {
+      std::cout << "Error: Too many arguments" << std::endl;
       return false;
     }
-    std::cout << "Load data called!" << std::endl;
+
+    std::string filePath = args[1];
+    int maxNumRow = args.size() > 2 ? std::stoi(args[2]) : 0;
+    int startCol  = args.size() > 3 ? std::stoi(args[3]) : 0;
+    std::string separators = args.size() > 4 ? args[4] : " ";
+
+    int id;
+    try {
+      id = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
+    } catch (genex::GenexException& e)
+    {
+      std::cout << "Error: " << e.what() << std::endl;
+    }
     return true;
   },
+
   "This is a help line\n"
   "This is another")
 
@@ -49,7 +64,7 @@ bool processLine(const std::string& line)
     {
       if (commands.find(args[1]) == commands.end())
       {
-        std::cout << "Cannot find help for command: " << args[1] << std::endl;
+        std::cout << "Error: cannot find help for command: " << args[1] << std::endl;
         return false;
       }
       std::cout << commands[args[1]]->getHelp() << std::endl;
@@ -62,7 +77,7 @@ bool processLine(const std::string& line)
   {
     if (commands.find(args[0]) == commands.end())
     {
-      std::cout << "Cannot find command: " << args[0] << std::endl;
+      std::cout << "Error: cannot find command: " << args[0] << std::endl;
       return false;
     }
     commands[args[0]]->doCommand(args);

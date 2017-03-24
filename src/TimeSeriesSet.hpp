@@ -45,13 +45,13 @@ public:
    *  @param filePath path to a text file
    *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
    *         all lines are read
+   *  @param startCol columns before startCol are discarded
    *  @param separator a string containings possible separator characters for values
    *         in a line
-   *  @param startCol columns before startCol are discarded
    *
    *  @throw GenexException if cannot read from the given file
    */
-  void loadData(const std::string& filePath, int maxNumRow, const std::string& separator, int startCol);
+  void loadData(const std::string& filePath, int maxNumRow, int startCol, const std::string& separator);
 
   /**
    * @brief clears all data
