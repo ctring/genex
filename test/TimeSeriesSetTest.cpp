@@ -16,6 +16,8 @@ struct MockDataset
   std::string test_15_20_comma = "dataset/test/test_15_20_comma.csv";
   std::string not_exist = "unicorn_santa_magic_halting_problem_solution";
   std::string uneven_rows = "dataset/test/uneven_rows.txt";
+  std::string text_only = "dataset/test/test_text_only.txt";
+  std::string very_big = "dataset/test/very_big_value.txt";
 } data;
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )
@@ -60,6 +62,18 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_uneven_rows )
 {
   TimeSeriesSet tsSet;
   BOOST_CHECK_THROW(tsSet.loadData(data.uneven_rows, 10, 0, " "), GenexException);
+}
+
+BOOST_AUTO_TEST_CASE( time_series_set_load_text_only )
+{
+  TimeSeriesSet tsSet;
+  BOOST_CHECK_THROW(tsSet.loadData(data.text_only, 10, 0, " "), GenexException);
+}
+
+BOOST_AUTO_TEST_CASE( time_series_set_load_very_big_value )
+{
+  TimeSeriesSet tsSet;
+  BOOST_CHECK_THROW(tsSet.loadData(data.very_big, 0, 0, " "), GenexException);
 }
 
 BOOST_AUTO_TEST_CASE( timeseries_set_load_all )

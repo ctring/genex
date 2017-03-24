@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstring>
+#include <stdexcept>
 #include <boost/tokenizer.hpp>
 
 #include "Exception.hpp"
@@ -63,7 +64,20 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
       {
         if (col >= startCol)
         {
-          data[row][col - startCol] = (data_t)std::stod(*tok_iter);
+          try
+          {
+            data[row][col - startCol] = (data_t)std::stod(*tok_iter);
+          }
+          catch (const std::invalid_argument& e)
+          {
+            f.close(); this->clearData();
+            throw GenexException("Dataset file contains unparsable text");
+          }
+          catch (const std::out_of_range& e)
+          {
+            f.close(); this->clearData();
+            throw GenexException("Values are out of range");
+          }
         }
       }
     }

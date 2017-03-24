@@ -44,12 +44,13 @@ MAKE_COMMAND(LoadData,
     int startCol  = args.size() > 3 ? std::stoi(args[3]) : 0;
     std::string separators = args.size() > 4 ? args[4] : " ";
 
-    int id;
+    int id = -1;
     try {
       id = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
     } catch (genex::GenexException& e)
     {
       std::cout << "Error! " << e.what() << std::endl;
+      return false;
     }
     std::cout << "Dataset loaded. ID: " << id << std::endl;
     return true;
@@ -57,8 +58,18 @@ MAKE_COMMAND(LoadData,
 
   "Load a dataset to the memory",
 
-  "This is a help line\n"
-  "This is another")
+  "Dataset are text files with table-like format, such as comma-separated  \n"
+  "values files.                                                           \n"
+  "                                                                        \n"
+  "Usage: load <filePath> [<maxNumRow> <startCol> <separators>]            \n"
+  "  filePath  - Path to a text file containing the dataset                \n"
+  "  maxNumRow - Maximum number of rows will be read from the file. If this\n"
+  "              number is non-positive or the number of actual line is    \n"
+  "              smaller than this number, all lines are read. (default: 0)\n"
+  "  startCol  - Omit all columns before this column. (default: 0)         \n"
+  "  seprators - A list of characters used to separate values in the file  \n"
+  "              (default: <space>)                                        \n"
+  )
 
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
@@ -106,11 +117,17 @@ bool processLine(const std::string& line)
       }
     }
     else {
+      std::cout << "Use help <command> to see help for a command" << std::endl << std::endl;
       for (const auto& cmd : commands)
       {
-        std::cout << std::setw(COUT_HELP_ALIGNMENT) << cmd.first << cmd.second->getSummary() << std::endl;
+        std::cout << std::setw(COUT_HELP_ALIGNMENT);
+        std::cout << cmd.first << cmd.second->getSummary() << std::endl;
       }
-      std::cout << std::setw(COUT_HELP_ALIGNMENT) << "exit|quit " << "Terminate the program" << std::endl;
+      std::cout << std::setw(COUT_HELP_ALIGNMENT);
+      std::cout << "help" << "Retrieve a list of commands" << std::endl;
+
+      std::cout << std::setw(COUT_HELP_ALIGNMENT);
+      std::cout << "exit|quit " << "Terminate the program" << std::endl;
     }
   }
   else
