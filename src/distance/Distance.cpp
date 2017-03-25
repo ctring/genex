@@ -82,9 +82,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
     for(int j = 1; j < n; j++)
     {
       // the recursion
-      data_t mp = std::min(cost[i-1][j],
-                    std::min(cost[i][j-1], cost[i-1][j-1]));
-
+      data_t mp = std::min({cost[i-1][j],cost[i][j-1], cost[i-1][j-1]});
       cost[i][j] = metric.reduce(mp, a[i], b[j]);
       min = std::min(min, cost[i][j]);
     }
@@ -161,12 +159,13 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
  *  @param x_1 one of the two arrays of data
  *  @param x_2 the other of the two arrays of data
  */
-data_t generalDistance(const DistanceMetric& metric, const TimeSeries& x_1,
-  const TimeSeries& x_2)
+data_t generalDistance(const DistanceMetric& metric,
+                       const TimeSeries& x_1,
+                       const TimeSeries& x_2)
 {
   if (x_1.getLength() != x_2.getLength())
   {
-    throw GenexException("Two time series must have the same length for general distance(pairwise)");
+    throw GenexException("Two time series must have the same length for general distance (pairwise)");
   }
 
   data_t total = 0.0;
