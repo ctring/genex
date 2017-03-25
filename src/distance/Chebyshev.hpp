@@ -2,9 +2,11 @@
 #define GENEX_SRC_CHEBYSHEV_H
 
 #include <iostream>
+#include <limits>
 #include <cmath>
 #include <algorithm>
 
+#include "TimeSeries.hpp"
 #include "distance/DistanceMetric.hpp"
 
 namespace genex {
@@ -16,17 +18,22 @@ public:
   data_t dist(data_t x_1, data_t x_2) const
   {
     return std::abs(x_1 - x_2);
-  };
+  }
+
+  data_t init() const
+  {
+    return -INF;
+  }
 
   data_t reduce(data_t prev, const data_t x_1, const data_t x_2) const
   {
     return std::max(prev, dist(x_1, x_2));
-  };
+  }
 
   data_t norm(data_t total, const TimeSeries& t, const TimeSeries& t_2) const
   {
     return total;
-  };
+  }
 };
 
 } // namespace genex

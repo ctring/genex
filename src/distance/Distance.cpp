@@ -50,7 +50,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
   }
   #endif
 
-  cost[0][0] = metric.dist(a[0], b[0]);
+  cost[0][0] = metric.reduce(metric.init(), a[0], b[0]);
   #if 0
   trace[0][0] = std::make_pair(-1, -1);
   #endif
@@ -168,7 +168,7 @@ data_t generalDistance(const DistanceMetric& metric,
     throw GenexException("Two time series must have the same length for general distance (pairwise)");
   }
 
-  data_t total = 0.0;
+  data_t total = metric.init();
 
   for(int i = 0; i < x_1.getLength(); i++)
   {

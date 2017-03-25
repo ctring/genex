@@ -28,6 +28,13 @@ public:
   virtual data_t dist(data_t x_1, data_t x_2) const = 0;
 
   /**
+   *  @brief this function returns the initial value of the reduce chain.
+   *
+   *  @return the inital value for reduce
+   */
+  virtual data_t init() const = 0;
+
+  /**
    *  @brief this function is the individual recursion of the distance for
    *
    *  This function is used as part of the general dynammic timewarping recursive
@@ -42,7 +49,7 @@ public:
    *  @param x_2 is a data point from the other of the timeseries
    *  @return the distance between the previous and rest (defined recursively)
    */
-   virtual data_t reduce(data_t a, data_t x_1, data_t x_2) const = 0;
+  virtual data_t reduce(data_t a, data_t x_1, data_t x_2) const = 0;
 
   /**
    *  @brief returns the normalized distance between two timeseries
