@@ -255,16 +255,19 @@ void showHelp(const std::string& command_name)
 void showAllHelps()
 {
   std::cout << "Use 'help <command>' to see help for a command" << std::endl << std::endl;
-  for (const auto& cmd : commands)
-  {
-    std::cout << std::setw(COUT_HELP_ALIGNMENT);
-    std::cout << cmd.first << cmd.second->getSummary() << std::endl;
-  }
+
   std::cout << std::setw(COUT_HELP_ALIGNMENT);
   std::cout << "help" << HELP_SUMMARY << std::endl;
 
   std::cout << std::setw(COUT_HELP_ALIGNMENT);
   std::cout << "exit|quit " << EXIT_SUMMARY << std::endl;
+
+  std::cout << std::endl;
+  for (const auto& cmd : commands)
+  {
+    std::cout << std::setw(COUT_HELP_ALIGNMENT);
+    std::cout << cmd.first << cmd.second->getSummary() << std::endl;
+  }
 }
 
 bool processLine(const std::string& line)

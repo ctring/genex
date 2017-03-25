@@ -3,14 +3,17 @@
 
 #include "config.hpp"
 #include <string>
+#include <limits>
+
+#define INF std::numeric_limits<data_t>::infinity()
+
+namespace genex {
 
 #ifdef SINGLE_PRECISION
 typedef float data_t;
 #else
 typedef double data_t;
 #endif
-
-namespace genex {
 
 /**
  *  @brief header of a time series
