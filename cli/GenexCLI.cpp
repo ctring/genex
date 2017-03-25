@@ -117,21 +117,31 @@ MAKE_COMMAND(UnloadDataset,
   "                   loaded datasets.                           "
   )
 
-MAKE_COMMAND(Listing,
+MAKE_COMMAND(List,
   {
     if (tooManyArgs(args, 2)) {
       return false;
     }
+    if (args[1] == "dataset") {
+      std::vector<genex::dataset_info_t> infos = genexAPI.getAllDatasetInfo();
+      std::cout << "There are " << infos.size() << " loaded datasets" << std::endl;
+      for (const auto& i : infos)
+      {
+        std::cout << "\t" << std::setw(4) << i.id << "\t" << i.name << std::endl;
+      }
+    }
+    else if (args[1] == "metric") {
 
+    }
+    else {
+      std::cout << "Error! Unknown object: " << args[1] << std::endl;
+    }
     return true;
   },
 
-  "Unload a dataset from the memory",
+  "List loaded dataset or available metric",
 
-  "Usage: unload <dataset_index>                               \n"
-  "  dataset_index  - Index of the dataset being unloaded. Use \n"
-  "                   'list dataset' to retrieve the list of   \n"
-  "                   loaded datasets.                           "
+  "Usage: list dataset|metric"
   )
 
 /**************************************************************************
@@ -143,7 +153,8 @@ MAKE_COMMAND(Listing,
 
 std::map<std::string, Command*> commands = {
   {"load", &cmdLoadDataset},
-  {"unload", &cmdUnloadDataset}
+  {"unload", &cmdUnloadDataset},
+  {"list", &cmdList}
 };
 
 /**************************************************************************/
@@ -246,6 +257,7 @@ int main (int argc, char *argv[])
   while (true)
   {
     char* raw_line = readline(">> ");
+
     add_history(raw_line);
     std::string line = std::string(raw_line);
     delete raw_line;

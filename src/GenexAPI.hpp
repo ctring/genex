@@ -82,6 +82,14 @@ public:
    */
   dataset_info_t getDatasetInfo(int index);
 
+  /**
+   *  @brief gets information of all loaded dataset
+   *
+   *  @return a vector of information of loaded dataset
+   */
+  std::vector<dataset_info_t> getAllDatasetInfo();
+
+
 private:
   void _checkDatasetIndex(int index);
 

@@ -83,6 +83,16 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
                         dataset->getItemLength());
 }
 
+std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
+{
+  std::vector<dataset_info_t> infos;
+  for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
+  {
+    infos.push_back(getDatasetInfo(i));
+  }
+  return infos;
+}
+
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
