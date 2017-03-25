@@ -88,7 +88,10 @@ std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
   std::vector<dataset_info_t> infos;
   for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
   {
-    infos.push_back(getDatasetInfo(i));
+    if (loadedDatasets[i] != nullptr)
+    {
+      infos.push_back(getDatasetInfo(i));
+    }
   }
   return infos;
 }

@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <cstring>
-#include <stdexcept>
 #include <boost/tokenizer.hpp>
 
 #include "Exception.hpp"

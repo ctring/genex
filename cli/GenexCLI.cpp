@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <map>
+#include <cstring>
 #include <boost/tokenizer.hpp>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -91,21 +92,24 @@ MAKE_COMMAND(LoadDataset,
 
 MAKE_COMMAND(UnloadDataset,
   {
-    if (tooManyArgs(args, 2)) {
+    if (tooManyArgs(args, 2))
+    {
       return false;
     }
 
     int index = std::stoi(args[1]);
 
-    try {
+    try
+    {
       genexAPI.unloadDataset(index);
-    } catch (genex::GenexException& e)
+    }
+    catch (genex::GenexException& e)
     {
       std::cout << "Error! " << e.what() << std::endl;
       return false;
     }
 
-    std::cout << "Dataset at " << index << " is unloaded" << std::endl;
+    std::cout << "Dataset " << index << " is unloaded" << std::endl;
     return true;
   },
 
@@ -119,21 +123,24 @@ MAKE_COMMAND(UnloadDataset,
 
 MAKE_COMMAND(List,
   {
-    if (tooManyArgs(args, 2)) {
+    if (tooManyArgs(args, 2))
+    {
       return false;
     }
-    if (args[1] == "dataset") {
+    if (args[1] == "dataset")
+    {
       std::vector<genex::dataset_info_t> infos = genexAPI.getAllDatasetInfo();
       std::cout << "There are " << infos.size() << " loaded datasets" << std::endl;
       for (const auto& i : infos)
       {
-        std::cout << "\t" << std::setw(4) << i.id << "\t" << i.name << std::endl;
+        std::cout << "  " << std::setw(4) << i.id << "\t" << i.name << std::endl;
       }
     }
     else if (args[1] == "metric") {
 
     }
-    else {
+    else
+    {
       std::cout << "Error! Unknown object: " << args[1] << std::endl;
     }
     return true;
@@ -232,7 +239,8 @@ bool processLine(const std::string& line)
     {
       showHelp(args[1]);
     }
-    else {
+    else
+    {
       std::cout << "Error! Too many arguments for 'help'" << std::endl;
     }
   }
@@ -250,22 +258,66 @@ bool processLine(const std::string& line)
   return false;
 }
 
+bool wantToQuitByEOF()
+{
+  std::cout << std::endl;
+  char* raw_line = nullptr;
+  do
+  {
+    delete raw_line;
+    raw_line = readline("Do you really want to exit ([y]/n)? ");
+    if (raw_line == nullptr || strcmp(raw_line, "y") == 0 || strcmp(raw_line, "") == 0)
+    {
+      return true;
+    }
+  }
+  while (strcmp(raw_line, "n") != 0);
+  return false;
+}
+
 int main (int argc, char *argv[])
 {
   // Align left
   std::cout << std::left;
+  std::cout << "Welcome to GENEX!\n"
+               "Use 'help' to see the list of available commands." << std::endl;
   while (true)
   {
+    bool quit = false;
     char* raw_line = readline(">> ");
 
-    add_history(raw_line);
-    std::string line = std::string(raw_line);
-    delete raw_line;
+    if (raw_line == nullptr) // Ctrl-D is hit or EOF
+    {
+      quit = wantToQuitByEOF();
+    }
+    else
+    {
+      if (strlen(raw_line) > 0)
+      {
+        add_history(raw_line);
+      }
+      std::string line = std::string(raw_line);
+      delete raw_line;
+      try
+      {
+        quit = processLine(line);
+      }
+      catch (std::logic_error& e)
+      {
+        std::cout << "Error! Cannot convert some value to numeric" << std::endl;
+      }
+      catch (...)
+      {
+        std::cout << "Error! Unknown but most likely memory problem. Exitting..." << std::endl;
+        quit = true;
+      }
+      std::cout << std::endl;
+    }
 
-    bool quit = processLine(line);
-    std::cout << std::endl;
-
-    if (quit) { break; }
+    if (quit)
+    {
+      break;
+    }
   }
   return 0;
 }
