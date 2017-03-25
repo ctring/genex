@@ -1,19 +1,30 @@
+#include <chrono>
+#include <cstring>
 #include <iostream>
 #include <iomanip>
-#include <vector>
 #include <map>
-#include <cstring>
+#include <vector>
 #include <boost/tokenizer.hpp>
 #include <readline/readline.h>
 #include <readline/history.h>
 
 #include "Command.hpp"
-#include "GenexAPI.hpp"
+#include "genexAPI.hpp"
 #include "Exception.hpp"
 
 #include "config.hpp"
 
-static genex::GenexAPI genexAPI;
+genex::GenexAPI gGenexAPI;
+bool gTimerEnabled = false;
+
+bool tooFewArgs(const std::vector<std::string>& args, int limit)
+{
+  if (args.size() < limit) {
+    std::cout << "Error! Too few arguments" << std::endl;
+    return true;
+  }
+  return false;
+}
 
 bool tooManyArgs(const std::vector<std::string>& args, int limit)
 {
@@ -46,7 +57,8 @@ bool tooManyArgs(const std::vector<std::string>& args, int limit)
 
 MAKE_COMMAND(LoadDataset,
   {
-    if (tooManyArgs(args, 5)) {
+    if (tooFewArgs(args, 2) || tooManyArgs(args, 5))
+    {
       return false;
     }
 
@@ -58,7 +70,7 @@ MAKE_COMMAND(LoadDataset,
     genex::dataset_info_t info;
     try
     {
-      info = genexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
+      info = gGenexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
     }
     catch (genex::GenexException& e)
     {
@@ -92,7 +104,7 @@ MAKE_COMMAND(LoadDataset,
 
 MAKE_COMMAND(UnloadDataset,
   {
-    if (tooManyArgs(args, 2))
+    if (tooFewArgs(args, 2) || tooManyArgs(args, 5))
     {
       return false;
     }
@@ -101,7 +113,7 @@ MAKE_COMMAND(UnloadDataset,
 
     try
     {
-      genexAPI.unloadDataset(index);
+      gGenexAPI.unloadDataset(index);
     }
     catch (genex::GenexException& e)
     {
@@ -123,13 +135,14 @@ MAKE_COMMAND(UnloadDataset,
 
 MAKE_COMMAND(List,
   {
-    if (tooManyArgs(args, 2))
+    if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
     {
       return false;
     }
+
     if (args[1] == "dataset")
     {
-      std::vector<genex::dataset_info_t> infos = genexAPI.getAllDatasetInfo();
+      std::vector<genex::dataset_info_t> infos = gGenexAPI.getAllDatasetInfo();
       std::cout << "There are " << infos.size() << " loaded datasets" << std::endl;
       for (const auto& i : infos)
       {
@@ -142,6 +155,7 @@ MAKE_COMMAND(List,
     else
     {
       std::cout << "Error! Unknown object: " << args[1] << std::endl;
+      return false;
     }
     return true;
   },
@@ -150,6 +164,45 @@ MAKE_COMMAND(List,
 
   "Usage: list dataset|metric"
   )
+
+MAKE_COMMAND(Timer,
+  {
+    if (tooFewArgs(args, 1) || tooManyArgs(args, 2))
+    {
+      return false;
+    }
+    if (args.size() == 1)
+    {
+      std::cout << "Timer is " << (gTimerEnabled ? "ON" : "OFF") << std::endl;
+    }
+    else
+    {
+      if (args[1] == "on")
+      {
+        gTimerEnabled = true;
+        std::cout << "Timer is ON" << std::endl;
+      }
+      else if (args[1] == "off")
+      {
+        gTimerEnabled = false;
+        std::cout << "Timer is OFF" << std::endl;
+      }
+      else
+      {
+        std::cout << "Error! Argument for timer must be 'on' or 'off'" << std::endl;
+        return false;
+      }
+    }
+    return true;
+  },
+
+  "Turn timer on or off",
+
+  "When timer is turned on, each command is timed and reported at  \n"
+  "the end of its execution. If this command is called without 'on'\n"
+  "or 'off', the current state of timer is printed out             \n"
+  "                                                                \n"
+  "Usage: timer [on|off]                                             ")
 
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
@@ -161,7 +214,8 @@ MAKE_COMMAND(List,
 std::map<std::string, Command*> commands = {
   {"load", &cmdLoadDataset},
   {"unload", &cmdUnloadDataset},
-  {"list", &cmdList}
+  {"list", &cmdList},
+  {"timer", &cmdTimer}
 };
 
 /**************************************************************************/
@@ -251,7 +305,18 @@ bool processLine(const std::string& line)
       std::cout << "Error! Cannot find command: " << args[0] << std::endl;
     }
     else {
-      commands[args[0]]->doCommand(args);
+      std::chrono::time_point<std::chrono::system_clock> start, end;
+      start = std::chrono::system_clock::now();
+
+      bool success = commands[args[0]]->doCommand(args);
+
+      end = std::chrono::system_clock::now();
+      if (gTimerEnabled && success)
+      {
+        std::chrono::duration<float> elapsed_seconds = end - start;
+        std::cout << std::endl << "Command executed in ";
+        std::cout << std::setprecision(4) << elapsed_seconds.count() << "s" << std::endl;
+      }
     }
   }
 
@@ -277,14 +342,18 @@ bool wantToQuitByEOF()
 
 int main (int argc, char *argv[])
 {
+  bool quit = false;
+  char* raw_line;
+
   // Align left
   std::cout << std::left;
   std::cout << "Welcome to GENEX!\n"
                "Use 'help' to see the list of available commands." << std::endl;
+
   while (true)
   {
-    bool quit = false;
-    char* raw_line = readline(">> ");
+    quit = false;
+    raw_line = readline(">> ");
 
     if (raw_line == nullptr) // Ctrl-D is hit or EOF
     {
