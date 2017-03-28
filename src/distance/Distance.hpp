@@ -18,11 +18,10 @@ namespace distance {
  */
 const DistanceMetric* getDistanceMetric(const std::string& metric_name);
 
-
 /**
  *  @return a vector of names of available distances
  */
-std::vector<std::string> getAllDistanceNames();
+const std::vector<const DistanceMetric*>& getAllDistanceMetrics();
 
 /**
  *  @brief returns the warped distance between two sets of data

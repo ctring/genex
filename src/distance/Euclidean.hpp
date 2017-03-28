@@ -32,6 +32,16 @@ public:
   {
     return sqrt(total) / t.getLength();
   }
+
+  std::string getName() const
+  {
+    return "euclidean";
+  }
+
+  std::string getDescription() const
+  {
+    return "Description of Euclidiean distance";
+  }
 };
 
 } // namespace genex

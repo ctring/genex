@@ -65,6 +65,17 @@ public:
    *  @return the normalized total distance between two time series
    */
   virtual data_t norm(data_t total, const TimeSeries& t_1, const TimeSeries& t_2) const = 0;
+
+  /**
+   *  @return the name of the distance
+   */
+  virtual std::string getName() const = 0;
+
+  /**
+   *  @return the description of the distance
+   */
+  virtual std::string getDescription() const = 0;
+
 };
 
 } // namespace genex

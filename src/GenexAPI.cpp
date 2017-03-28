@@ -2,6 +2,7 @@
 
 #include "Exception.hpp"
 #include "GroupableTimeSeriesSet.hpp"
+#include "distance/Distance.hpp"
 
 namespace genex {
 
@@ -85,15 +86,26 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
 
 std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
 {
-  std::vector<dataset_info_t> infos;
+  std::vector<dataset_info_t> info;
   for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
   {
     if (loadedDatasets[i] != nullptr)
     {
-      infos.push_back(getDatasetInfo(i));
+      info.push_back(getDatasetInfo(i));
     }
   }
-  return infos;
+  return info;
+}
+
+std::vector<distance_metric_info_t> GenexAPI::getAllDistanceMetricInfo()
+{
+  std::vector<const DistanceMetric*> allMetric = distance::getAllDistanceMetrics();
+  std::vector<distance_metric_info_t> info;
+  for (auto metric : allMetric)
+  {
+    info.push_back(distance_metric_info_t(metric->getName(), metric->getDescription()));
+  }
+  return info;
 }
 
 void GenexAPI::_checkDatasetIndex(int index)

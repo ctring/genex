@@ -32,6 +32,16 @@ public:
   {
     return total / t.getLength();
   }
+
+  std::string getName() const
+  {
+    return "manhattan";
+  }
+
+  std::string getDescription() const
+  {
+    return "Description of Manhattan distance";
+  }
 };
 
 } // namespace genex

@@ -34,6 +34,16 @@ public:
   {
     return total;
   }
+
+  std::string getName() const
+  {
+    return "chebyshev";
+  }
+
+  std::string getDescription() const
+  {
+    return "Description of Chebyshev distance";
+  }
 };
 
 } // namespace genex

@@ -5,37 +5,46 @@
 
 #include "Exception.hpp"
 
-#include "Euclidean.hpp"
-#include "Manhattan.hpp"
-#include "Chebyshev.hpp"
+#include "distance/Euclidean.hpp"
+#include "distance/Manhattan.hpp"
+#include "distance/Chebyshev.hpp"
 
 namespace genex {
 namespace distance {
 
-std::map<std::string, const DistanceMetric*> allMetric =
+static std::vector<const DistanceMetric*> gAllMetric =
   {
-    {"euclidean", new Euclidean()},
-    {"manhattan", new Manhattan()},
-    {"chebyshev", new Chebyshev()}
+    new Euclidean(),
+    new Manhattan(),
+    new Chebyshev()
   };
+
+static std::map<std::string, const DistanceMetric*> gAllMetricMap;
+
+void _initializeAllMetricMap()
+{
+  if (gAllMetricMap.empty())
+  {
+    for (auto metric : gAllMetric)
+    {
+      gAllMetricMap[metric->getName()] = metric;
+    }
+  }
+}
 
 const DistanceMetric* getDistanceMetric(const std::string& metric_name)
 {
-  if (allMetric.find(metric_name) == allMetric.end())
+  _initializeAllMetricMap();
+  if (gAllMetricMap.find(metric_name) == gAllMetricMap.end())
   {
-    throw GenexException(std::string("Cannot find distance with name: ")+ metric_name);
+    throw GenexException(std::string("Cannot find distance with name: ") + metric_name);
   }
-  return allMetric[metric_name];
+  return gAllMetricMap[metric_name];
 }
 
-std::vector<std::string> getAllDistanceMetricNames()
+const std::vector<const DistanceMetric*>& getAllDistanceMetrics()
 {
-  std::vector<std::string> allName;
-  for (const auto& metric : allMetric)
-  {
-    allName.push_back(metric.first);
-  }
-  return allName;
+  return gAllMetric;
 }
 
 template<typename T>

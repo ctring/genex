@@ -9,7 +9,7 @@
 namespace genex {
 
 /**
- * A struct holding generla information of a dataset
+ * A struct holding general information of a dataset
  */
 struct dataset_info_t
 {
@@ -21,6 +21,17 @@ struct dataset_info_t
   int id;
   int itemCount;
   int itemLength;
+};
+
+/**
+ * A struct holding general information of a distance metric
+ */
+struct distance_metric_info_t
+{
+  distance_metric_info_t(std::string name, std::string description) :
+    name(name), description(description) {}
+  std::string name;
+  std::string description;
 };
 
 class GenexAPI
@@ -68,8 +79,6 @@ public:
   void unloadAllDataset();
 
   /**
-   *  @brief gets the number of loaded datasets
-   *
    *  @return number of loaded datasets
    */
   int getDatasetCount();
@@ -83,12 +92,14 @@ public:
   dataset_info_t getDatasetInfo(int index);
 
   /**
-   *  @brief gets information of all loaded dataset
-   *
    *  @return a vector of information of loaded dataset
    */
   std::vector<dataset_info_t> getAllDatasetInfo();
 
+  /**
+   *  @return a vector of names of available distance metrics
+   */
+  std::vector<distance_metric_info_t> getAllDistanceMetricInfo();
 
 private:
   void _checkDatasetIndex(int index);
