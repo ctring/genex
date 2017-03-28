@@ -15,15 +15,15 @@ namespace genex {
  */
 struct candidate_t
 {
-    TimeSeries* data;
-    data_t dist;
+  TimeSeries* data;
+  data_t dist;
 
-    bool operator<(candidate_t &other)
-    {
-        return dist < other.dist;
-    }
+  bool operator<(candidate_t &other)
+  {
+      return dist < other.dist;
+  }
 
-    candidate_t(data_t dist) : dist(dist) {};
+  candidate_t(data_t dist) : dist(dist) {};
 };
 
 /**
@@ -106,14 +106,14 @@ Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
    *  @param metric the distance metric to use
    *  @return the distance between the data and the centroid using the metric
    */
-  data_t distance(int len, const TimeSeries& query, const DistanceMetric& metric); //data_t dropout=INF
+  data_t distance(int len, const TimeSeries& query, const DistanceMetric* metric); //data_t dropout=INF
 
   /**
    *  @brief gets the best match within the group
    *
    *  @return values of the centroid
    */
-  candidate_t getBestMatch(int len, const TimeSeries& query, const DistanceMetric& metric);
+  candidate_t getBestMatch(int len, const TimeSeries& query, const DistanceMetric* metric);
 
   /**
    *  @brief gets the centroid of the group

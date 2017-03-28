@@ -31,7 +31,7 @@ const std::vector<const DistanceMetric*>& getAllDistanceMetrics();
  *  @param b the other of the two arrays of data
  *  @param dropout drops the calculation of distance if within this
  */
-data_t generalWarpedDistance(const DistanceMetric& metric,
+data_t generalWarpedDistance(const DistanceMetric* metric,
                              const TimeSeries& x_1,
                              const TimeSeries& x_2,
                              data_t dropout);
@@ -44,7 +44,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
  *  @param x_2 the other of the time series
  *  @param x_3 the length of the data
  */
-data_t generalDistance(const DistanceMetric& metric,
+data_t generalDistance(const DistanceMetric* metric,
                        const TimeSeries& x_1,
                        const TimeSeries& x_2);
 

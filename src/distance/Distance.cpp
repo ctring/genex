@@ -68,7 +68,7 @@ void deallocate2Darray(T** arr, int nrow)
   delete[] arr;
 }
 
-data_t generalWarpedDistance(const DistanceMetric& metric,
+data_t generalWarpedDistance(const DistanceMetric* metric,
                              const TimeSeries& a,
                              const TimeSeries& b,
                              data_t dropout)
@@ -79,7 +79,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
   // Fastpath for base intervals.
   if (m == 1 && n == 1)
   {
-    return metric.dist(a[0], b[0]);
+    return metric->dist(a[0], b[0]);
   }
 
   // create cost matrix
@@ -92,7 +92,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
   }
   #endif
 
-  cost[0][0] = metric.reduce(metric.init(), a[0], b[0]);
+  cost[0][0] = metric->reduce(metric->init(), a[0], b[0]);
   #if 0
   trace[0][0] = std::make_pair(-1, -1);
   #endif
@@ -100,7 +100,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
   // calculate first column
   for(int i = 1; i < m; i++)
   {
-      cost[i][0] = metric.reduce(cost[i-1][0], a[i], b[0]);
+      cost[i][0] = metric->reduce(cost[i-1][0], a[i], b[0]);
       #if 0
       trace[i][0] = std::make_pair(i - 1, 0);
       #endif
@@ -109,7 +109,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
   // calculate first row
   for(int j = 1; j < n; j++)
   {
-    cost[0][j] = metric.reduce(cost[0][j-1], a[0], b[j]);
+    cost[0][j] = metric->reduce(cost[0][j-1], a[0], b[j]);
     #if 0
     trace[0][j] = std::make_pair(0, j - 1);
     #endif
@@ -125,7 +125,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
     {
       // the recursion
       data_t mp = std::min({cost[i-1][j],cost[i][j-1], cost[i-1][j-1]});
-      cost[i][j] = metric.reduce(mp, a[i], b[j]);
+      cost[i][j] = metric->reduce(mp, a[i], b[j]);
       min = std::min(min, cost[i][j]);
     }
 
@@ -201,7 +201,7 @@ data_t generalWarpedDistance(const DistanceMetric& metric,
  *  @param x_1 one of the two arrays of data
  *  @param x_2 the other of the two arrays of data
  */
-data_t generalDistance(const DistanceMetric& metric,
+data_t generalDistance(const DistanceMetric* metric,
                        const TimeSeries& x_1,
                        const TimeSeries& x_2)
 {
@@ -210,14 +210,14 @@ data_t generalDistance(const DistanceMetric& metric,
     throw GenexException("Two time series must have the same length for general distance (pairwise)");
   }
 
-  data_t total = metric.init();
+  data_t total = metric->init();
 
   for(int i = 0; i < x_1.getLength(); i++)
   {
-    total = metric.reduce(total, x_1[i], x_2[i]);
+    total = metric->reduce(total, x_1[i], x_2[i]);
   }
 
-  return metric.norm(total, x_1, x_2);
+  return metric->norm(total, x_1, x_2);
 }
 
 

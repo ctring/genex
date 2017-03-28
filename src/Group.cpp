@@ -20,12 +20,12 @@ bool Group::isMember(int index, int start) const
   return  memberMap[index * this->repLength + start].data == this->id;
 }
 
-data_t Group::distance(int len, const TimeSeries& query, const DistanceMetric& metric)
+data_t Group::distance(int len, const TimeSeries& query, const DistanceMetric* metric)
 {
   return distance::generalWarpedDistance(metric, this->centroid, query, len);
 }
 
-candidate_t Group::getBestMatch(int len, const TimeSeries& query, const DistanceMetric& metric)
+candidate_t Group::getBestMatch(int len, const TimeSeries& query, const DistanceMetric* metric)
 {
   data_t curr_d = 0;
   candidate_t bsf(-1);

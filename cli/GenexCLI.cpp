@@ -203,8 +203,8 @@ MAKE_COMMAND(Timer,
   "Turn timer on or off",
 
   "When timer is turned on, each command is timed and reported at  \n"
-  "the end of its execution. If this command is called without 'on'\n"
-  "or 'off', the current state of timer is printed out             \n"
+  "the end of its execution. If this command is called without     \n"
+  "an additional argument, the current state of timer is printed.  \n"
   "                                                                \n"
   "Usage: timer [on|off]                                             ")
 
