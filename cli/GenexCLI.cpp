@@ -36,7 +36,7 @@ bool tooManyArgs(const std::vector<std::string>& args, int limit)
 }
 
 /**************************************************************************
- * HOW TO CREATE NEW COMMAND
+ * HOW TO CREATE A NEW COMMAND
  *
  * Step 1: Define a new command using the MAKE_COMMAND macro
  *

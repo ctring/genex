@@ -1,9 +1,42 @@
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
 
-#include <utility> //pair
+#include <map>
+
+#include "Exception.hpp"
+
+#include "Euclidean.hpp"
+#include "Manhattan.hpp"
+#include "Chebyshev.hpp"
 
 namespace genex {
+namespace distance {
+
+std::map<std::string, const DistanceMetric*> allMetric =
+  {
+    {"euclidean", new Euclidean()},
+    {"manhattan", new Manhattan()},
+    {"chebyshev", new Chebyshev()}
+  };
+
+const DistanceMetric* getDistanceMetric(const std::string& metric_name)
+{
+  if (allMetric.find(metric_name) == allMetric.end())
+  {
+    throw GenexException(std::string("Cannot find distance with name: ")+ metric_name);
+  }
+  return allMetric[metric_name];
+}
+
+std::vector<std::string> getAllDistanceMetricNames()
+{
+  std::vector<std::string> allName;
+  for (const auto& metric : allMetric)
+  {
+    allName.push_back(metric.first);
+  }
+  return allName;
+}
 
 template<typename T>
 T** allocate2DArray(int nrow, int ncol)
@@ -178,4 +211,6 @@ data_t generalDistance(const DistanceMetric& metric,
   return metric.norm(total, x_1, x_2);
 }
 
+
+} // namespace distance
 } // namespace genex

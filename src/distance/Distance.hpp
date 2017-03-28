@@ -1,10 +1,28 @@
 #ifndef GENERAL_DISTANCE_H
 #define GENERAL_DISTANCE_H
 
+#include <vector>
+
 #include "TimeSeries.hpp"
 #include "distance/DistanceMetric.hpp"
 
 namespace genex {
+namespace distance {
+
+/**
+ *  @brief returns the an object representing a distance metric
+ *
+ *  @param metric_name name of a distance metric
+ *  @return an object containing methods of the requested distance metric
+ *  @throw GenexException if no distance with given name is found
+ */
+const DistanceMetric* getDistanceMetric(const std::string& metric_name);
+
+
+/**
+ *  @return a vector of names of available distances
+ */
+std::vector<std::string> getAllDistanceNames();
 
 /**
  *  @brief returns the warped distance between two sets of data
@@ -31,6 +49,7 @@ data_t generalDistance(const DistanceMetric& metric,
                        const TimeSeries& x_1,
                        const TimeSeries& x_2);
 
+} // namespace distance
 } // namespace genex
 
 #endif //GENERAL_DISTANCE_H

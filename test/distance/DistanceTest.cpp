@@ -7,8 +7,7 @@
 #include "distance/Manhattan.hpp"
 
 #include "distance/Distance.hpp"
-
-#include <iostream> //debug
+#include "Exception.hpp"
 
 using namespace genex;
 
@@ -40,13 +39,13 @@ BOOST_AUTO_TEST_CASE( general_distance, *boost::unit_test::tolerance(TOLERANCE) 
   Manhattan dist_2;
   Chebyshev dist_3;
 
-  data_t total_1 = generalDistance(dist_1, ts_1, ts_2);
+  data_t total_1 = distance::generalDistance(dist_1, ts_1, ts_2);
   BOOST_TEST( total_1, 2.0 );
 
-  data_t total_2 = generalDistance(dist_2, ts_1, ts_2);
+  data_t total_2 = distance::generalDistance(dist_2, ts_1, ts_2);
   BOOST_TEST( total_2, 2.0 );
 
-  data_t total_3 = generalDistance(dist_3, ts_1, ts_2);
+  data_t total_3 = distance::generalDistance(dist_3, ts_1, ts_2);
   BOOST_TEST( total_3, 10.0 );
 }
 
@@ -63,22 +62,22 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   Manhattan dist_2;
   Chebyshev dist_3;
 
-  data_t total_1 = generalWarpedDistance(dist_1, ts_3, ts_4, INF);
+  data_t total_1 = distance::generalWarpedDistance(dist_1, ts_3, ts_4, INF);
   BOOST_TEST( total_1 == 0.0 );
 
-  data_t total_2 = generalWarpedDistance(dist_2, ts_3, ts_4, INF);
+  data_t total_2 = distance::generalWarpedDistance(dist_2, ts_3, ts_4, INF);
   BOOST_TEST( total_2 == 0.0 );
 
-  data_t total_3 = generalWarpedDistance(dist_3, ts_3, ts_4, INF);
+  data_t total_3 = distance::generalWarpedDistance(dist_3, ts_3, ts_4, INF);
   BOOST_TEST( total_3 == 0.0 );
 
-  data_t total_4 = generalWarpedDistance(dist_1, ts_5, ts_6, INF);
+  data_t total_4 = distance::generalWarpedDistance(dist_1, ts_5, ts_6, INF);
   BOOST_TEST( total_4 == 1.0 );
 
-  data_t total_5 = generalWarpedDistance(dist_2, ts_5, ts_6, INF);
+  data_t total_5 = distance::generalWarpedDistance(dist_2, ts_5, ts_6, INF);
   BOOST_TEST( total_5 == 1.0 );
 
-  data_t total_6 = generalWarpedDistance(dist_3, ts_5, ts_6, INF);
+  data_t total_6 = distance::generalWarpedDistance(dist_3, ts_5, ts_6, INF);
   BOOST_TEST( total_6 == 1.0 );
 }
 
@@ -95,22 +94,22 @@ BOOST_AUTO_TEST_CASE( easy_gwd_dropout, *boost::unit_test::tolerance(TOLERANCE) 
   Manhattan dist_2;
   Chebyshev dist_3;
 
-  data_t total_1 = generalWarpedDistance(dist_1, ts_3, ts_4, 5);
+  data_t total_1 = distance::generalWarpedDistance(dist_1, ts_3, ts_4, 5);
   BOOST_TEST( total_1 == 0.0 );
 
-  data_t total_2 = generalWarpedDistance(dist_2, ts_3, ts_4, 5);
+  data_t total_2 = distance::generalWarpedDistance(dist_2, ts_3, ts_4, 5);
   BOOST_TEST( total_2 == 0.0 );
 
-  data_t total_3 = generalWarpedDistance(dist_3, ts_3, ts_4, 5);
+  data_t total_3 = distance::generalWarpedDistance(dist_3, ts_3, ts_4, 5);
   BOOST_TEST( total_3 == 0.0 );
 
-  data_t total_4 = generalWarpedDistance(dist_1, ts_7, ts_8, 5);
+  data_t total_4 = distance::generalWarpedDistance(dist_1, ts_7, ts_8, 5);
   BOOST_TEST( total_4 == INF );
 
-  data_t total_5 = generalWarpedDistance(dist_2, ts_7, ts_8, 5);
+  data_t total_5 = distance::generalWarpedDistance(dist_2, ts_7, ts_8, 5);
   BOOST_TEST( total_5 == INF );
 
-  data_t total_6 = generalWarpedDistance(dist_3, ts_7, ts_8, 5);
+  data_t total_6 = distance::generalWarpedDistance(dist_3, ts_7, ts_8, 5);
   BOOST_TEST( total_6 == INF );
 }
 
@@ -124,12 +123,37 @@ BOOST_AUTO_TEST_CASE( gwd_different_distances, *boost::unit_test::tolerance(TOLE
   Manhattan dist_2;
   Chebyshev dist_3;
 
-  data_t total_1 = generalWarpedDistance(dist_1, ts_9, ts_10, INF);
+  data_t total_1 = distance::generalWarpedDistance(dist_1, ts_9, ts_10, INF);
   BOOST_TEST( total_1 == 9.0 );
 
-  data_t total_2 = generalWarpedDistance(dist_2, ts_9, ts_10, INF);
+  data_t total_2 = distance::generalWarpedDistance(dist_2, ts_9, ts_10, INF);
   BOOST_TEST( total_2 == 7.0 );
 
-  data_t total_3 = generalWarpedDistance(dist_3, ts_9, ts_10, INF);
+  data_t total_3 = distance::generalWarpedDistance(dist_3, ts_9, ts_10, INF);
   BOOST_TEST( total_3 == 2.0 );
 }
+
+BOOST_AUTO_TEST_CASE( get_distance_metric, *boost::unit_test::tolerance(TOLERANCE) )
+{
+   const DistanceMetric * d = distance::getDistanceMetric("euclidean");
+
+   data_t a = d->dist(100.0, 110.0);
+   data_t b = d->reduce(50.0, 20.0, 10.0);
+
+   BOOST_TEST( a == 100 );
+   BOOST_TEST( b == 150 );
+
+   const DistanceMetric * d_2 = distance::getDistanceMetric("manhattan");
+
+   data_t e = d_2->dist(100.0, 110.0);
+   data_t f = d_2->reduce(50.0, 20.0, 10.0);
+
+   BOOST_TEST( e == 10 );
+   BOOST_TEST( f == 60 );
+}
+
+BOOST_AUTO_TEST_CASE( distance_metric_not_found )
+{
+   BOOST_CHECK_THROW( distance::getDistanceMetric("oracle"), GenexException );
+}
+

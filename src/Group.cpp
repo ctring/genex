@@ -22,7 +22,7 @@ bool Group::isMember(int index, int start) const
 
 data_t Group::distance(int len, const TimeSeries& query, const DistanceMetric& metric)
 {
-  return generalWarpedDistance(metric, this->centroid, query, len);
+  return distance::generalWarpedDistance(metric, this->centroid, query, len);
 }
 
 candidate_t Group::getBestMatch(int len, const TimeSeries& query, const DistanceMetric& metric)
@@ -37,7 +37,7 @@ candidate_t Group::getBestMatch(int len, const TimeSeries& query, const Distance
       if (isMember(index, start))
       {
         TimeSeries curr = this->dataset.getTimeSeries(index, start, start + memberLength - 1);
-        curr_d = generalWarpedDistance(metric, query, curr, memberLength);
+        curr_d = distance::generalWarpedDistance(metric, query, curr, memberLength);
         if (curr_d < bsf.dist)
         {
           bsf.data = &curr;
