@@ -120,7 +120,7 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
       cost[i][j] = metric->reduce(mp, a[i], b[j]);
       bestSoFar = minCache(bestSoFar, cost[i][j]);
     }
-    std::cout << " d:" << metric->norm(bestSoFar, a , b) << " ";
+
     if (metric->norm(bestSoFar, a, b) > dropout)  //short circuit calculation.
     {
       dropped = true;
