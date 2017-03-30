@@ -6,6 +6,13 @@
 
 namespace genex {
 
+class Cache
+{
+public:
+  virtual bool lessThan(const Cache* other) const = 0;
+  virtual ~Cache() {};
+};
+
 /**
  *  @brief this is an abstract class that defines an API for distance metrics
  *
@@ -32,7 +39,7 @@ public:
    *
    *  @return the inital value for reduce
    */
-  virtual data_t init() const = 0;
+  virtual Cache* init() const = 0;
 
   /**
    *  @brief this function is the individual recursion of the distance for
@@ -49,7 +56,7 @@ public:
    *  @param x_2 is a data point from the other of the timeseries
    *  @return the distance between the previous and rest (defined recursively)
    */
-  virtual data_t reduce(data_t a, data_t x_1, data_t x_2) const = 0;
+  virtual Cache* reduce(const Cache* prev, data_t x_1, data_t x_2) const = 0;
 
   /**
    *  @brief returns the normalized distance between two timeseries
@@ -64,7 +71,7 @@ public:
    *  @param x_2 is the other of the two TimeSeries between which distance is being found
    *  @return the normalized total distance between two time series
    */
-  virtual data_t norm(data_t total, const TimeSeries& t_1, const TimeSeries& t_2) const = 0;
+  virtual data_t norm(const Cache* total, const TimeSeries& t_1, const TimeSeries& t_2) const = 0;
 
   /**
    *  @return the name of the distance

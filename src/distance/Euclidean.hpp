@@ -2,35 +2,65 @@
 #define GENEX_SRC_EUCLIDEAN_H
 
 #include <cmath>
-#include <iostream>
+#include <iostream>//debug
+#include <math.h>       /* sqrt */
 
 #include "TimeSeries.hpp"
 #include "distance/DistanceMetric.hpp"
+#include "Exception.hpp"
 
 namespace genex {
 
 // This class is example of an implemented DistanceMetric
 class Euclidean : public DistanceMetric
 {
+  class EuclideanCache : public Cache {
+    public:
+      data_t val = 0;
+      EuclideanCache(data_t val) : val(val) {};
+      bool lessThan(const Cache* other) const
+      {
+        if(const EuclideanCache* c = dynamic_cast<const EuclideanCache*>(other))
+        {
+          return val < c->val;
+        }
+        throw GenexException("Incorrect cache type");
+      }
+  };
+
 public:
   data_t dist(data_t x_1, data_t x_2) const
   {
     return pow(x_1 - x_2, 2);
   }
 
-  data_t init() const
+  Cache* init() const
   {
-    return 0;
+    return new EuclideanCache(0.0);
   }
 
-  data_t reduce(data_t prev, data_t x_1, data_t x_2) const
+  Cache* reduce(const Cache* prev, data_t x_1, data_t x_2) const
   {
-    return prev + dist(x_1, x_2);
+    if (const EuclideanCache* c = dynamic_cast<const EuclideanCache *>(prev))
+    {
+      return new EuclideanCache(sqrt(pow(c->val, 2) + dist(x_1, x_2)));
+    }
+    throw GenexException("Incorrect cache type.");
   }
 
-  data_t norm(data_t total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    return sqrt(total) / t.getLength();
+    // const EuclideanCache* c = CAST_TO(EuclidieanCache, total)
+
+    if (const EuclideanCache* c = dynamic_cast<const EuclideanCache *>(total))
+    {
+      std::cout << "length: " << t.getLength() << std::endl;
+      std::cout << "res: " << (c->val) / t.getLength() << std::endl;
+      std::cout << "val: " << (c->val) << std::endl;
+      ///###
+      return (c->val) / t.getLength();
+    }
+    throw GenexException("Incorrect cache type.");
   }
 
   std::string getName() const

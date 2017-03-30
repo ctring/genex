@@ -4,13 +4,20 @@
 #include <map>
 
 #include "Exception.hpp"
-
+#include "distance/DistanceMetric.hpp"
 #include "distance/Euclidean.hpp"
 #include "distance/Manhattan.hpp"
 #include "distance/Chebyshev.hpp"
 
+#include <iostream>
+bool gDebug;
 namespace genex {
 namespace distance {
+
+const Cache* minCache(const Cache* c1, const Cache* c2)
+{
+  return c1->lessThan(c2) ? c1 : c2;
+}
 
 static std::vector<const DistanceMetric*> gAllMetric =
   {
@@ -83,7 +90,9 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   }
 
   // create cost matrix
-  data_t** cost = allocate2DArray<data_t>(m, n);
+  //Cache** cost = allocate2DArray<data_t>(m, n);
+  std::vector< std::vector< Cache* > > cost(m, std::vector<Cache*>(n));
+
   #if 0
   auto trace = new std::pair<data_t, data_t>*[m]; // For tracing warping
   for (int i = 0; i < m; i++)
@@ -92,7 +101,10 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   }
   #endif
 
-  cost[0][0] = metric->reduce(metric->init(), a[0], b[0]);
+  Cache* init = metric->init();
+  cost[0][0] = metric->reduce(init, a[0], b[0]);
+  delete init;
+
   #if 0
   trace[0][0] = std::make_pair(-1, -1);
   #endif
@@ -117,35 +129,61 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
 
   data_t result;
   bool dropped = false;
+
   // fill matrix. If using dropout, keep tabs on min cost per row.
   for(int i = 1; i < m; i++)
   {
-    data_t min = cost[i][0];
+    const Cache* bestSoFar = cost[i][0];
     for(int j = 1; j < n; j++)
     {
-      // the recursion
-      data_t mp = std::min({cost[i-1][j],cost[i][j-1], cost[i-1][j-1]});
+      //TODO switch to norm, for more complicated dists < may not work
+      //error is likely here
+      const Cache* g1 = minCache(cost[i-1][j], cost[i][j-1]);
+      const Cache* mp = minCache(g1, cost[i-1][j-1]);
+      //Cache* mp = std::min({cost[i-1][j], cost[i][j-1], cost[i-1][j-1]});
       cost[i][j] = metric->reduce(mp, a[i], b[j]);
-      min = std::min(min, cost[i][j]);
+      bestSoFar = minCache(bestSoFar, cost[i][j]);
     }
 
-    if (min > dropout) // Short circuit calculation.
+    if (metric->norm(bestSoFar, a, b) > dropout)  //Short circuit calculation.
     {
       dropped = true;
     }
   }
+
   if (dropped)
   {
     result = INF;
   }
   else
   {
-    result = cost[m - 1][n - 1];
+    result = metric->norm(cost[m - 1][n - 1], a, b);
+  }
+  // if (gDebug)
+  // {
+  //   for (int i = m - 1; i >= 0; i--)
+  //   {
+  //     for (int j = 0; j < n; j++)
+  //     {
+  //       std::cout << pow(cost[i][j]->val, 2) << " ";
+  //     }
+  //     std::cout << std::endl;
+  //   }
+  // }
+  //deallocate2Darray(cost, m);
+  for(int i = 1; i < m; i++)
+  {
+    for(int j = 1; j < n; j++)
+    {
+      delete cost[i][j];
+    }
   }
 
-  deallocate2Darray(cost, m);
-
   return result;
+}
+
+
+
   #if 0
   //TODO: warping_path
   if (warping_path != NULL)
@@ -191,7 +229,6 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
 
   delete[] trace;
   #endif
-}
 
 
 /**
@@ -210,14 +247,20 @@ data_t generalDistance(const DistanceMetric* metric,
     throw GenexException("Two time series must have the same length for general distance (pairwise)");
   }
 
-  data_t total = metric->init();
+  Cache* total = metric->init();
+  Cache* curr;
 
   for(int i = 0; i < x_1.getLength(); i++)
   {
-    total = metric->reduce(total, x_1[i], x_2[i]);
+    curr = metric->reduce(total, x_1[i], x_2[i]);
+    delete total;
+    total = curr;
   }
 
-  return metric->norm(total, x_1, x_2);
+  data_t result = metric->norm(total, x_1, x_2);
+  delete total;
+
+  return result;
 }
 
 
