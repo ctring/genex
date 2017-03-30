@@ -33,10 +33,10 @@ struct candidate_t
  */
 struct node_t
 {
-    int data;
+    int index, start;
     node_t* next;
 
-    node_t() : data(-1), next(nullptr) {};
+    node_t(int index, int start, node_t* next) : index(index), start(start), next(next) {};
 };
 
 /**
@@ -53,12 +53,9 @@ public:
  *  @param data a pointer the timeseries set that this is a group from
  *  @param length the length of the sequences in this set
  */
-Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
-  : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength), memberMap(memberMap), id(Group::next_id++)
-  {
-    // number of indices required to represent all sequences
-    this->repLength = dataset.getItemLength() - memberLength + 1;
-  };
+Group(const TimeSeriesSet& dataset, int memberLength)
+  : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength), id(Group::next_id++)
+  {};
 
   /**
    *  @brief adds a member to the group
@@ -66,16 +63,7 @@ Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
    *  @param seq which sequence the member is from
    *  @param start where the member starts in the data
    */
-  void addMember(int index, int start); //, bool update=true
-
-  /**
-   *  @brief returns if a member is part of the group
-   *
-   *  @param seq which sequence the member is from
-   *  @param start where the member starts in the data
-   *  @return whether or not the sequence is part of the group
-   */
-  bool isMember(int index, int start) const;
+  void addMember(int index, int start);
 
   /**
    *  @brief gets the length of each sequence in the group
@@ -83,13 +71,6 @@ Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
    *  @return length of this group
    */
   int getMemberLength(void) const { return this->memberLength; }
-
-  /**
-   *  @brief the length of each full time series
-   *
-   *  @return length of this group
-   */
-  int getRepLength(void) const { return this->repLength; }
 
   /**
    *  @brief gets the number of members in the group
@@ -113,7 +94,7 @@ Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
    *
    *  @return values of the centroid
    */
-  candidate_t getBestMatch(int len, const TimeSeries& query, const DistanceMetric* metric);
+  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric);
 
   /**
    *  @brief gets the centroid of the group
@@ -136,19 +117,17 @@ Group(const TimeSeriesSet& dataset, node_t* memberMap, int memberLength)
   //vector<TimeSeriesInterval> getGroupValues(void);
 
 private:
-  static int next_id;
+  static int next_id; // I think we don't need ids anymore...
   const int id;
   const TimeSeriesSet& dataset;
-  node_t* memberMap;
+  //node_t* memberMap;
   node_t* lastMember = nullptr;
 
-  int memberLength, repLength;
+  int memberLength;
   int count;
 
   GroupCentroid centroid;
 };
-
-//each group will have a unique ID, not per equal length, but thats fine
 
 } // namespace genex
 #endif //GROUP_HPP

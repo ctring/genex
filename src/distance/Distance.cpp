@@ -54,27 +54,6 @@ const std::vector<const DistanceMetric*>& getAllDistanceMetrics()
   return gAllMetric;
 }
 
-template<typename T>
-T** allocate2DArray(int nrow, int ncol)
-{
-  T** arr = new T*[nrow];
-  for (int i = 0; i < nrow; i++)
-  {
-    arr[i] = new T[ncol];
-  }
-  return arr;
-}
-
-template<typename T>
-void deallocate2Darray(T** arr, int nrow)
-{
-  for (int i = 0; i < nrow; i++)
-  {
-    delete[] arr[i];
-  }
-  delete[] arr;
-}
-
 data_t generalWarpedDistance(const DistanceMetric* metric,
                              const TimeSeries& a,
                              const TimeSeries& b,
@@ -136,18 +115,16 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
     const Cache* bestSoFar = cost[i][0];
     for(int j = 1; j < n; j++)
     {
-      //TODO switch to norm, for more complicated dists < may not work
-      //error is likely here
       const Cache* g1 = minCache(cost[i-1][j], cost[i][j-1]);
       const Cache* mp = minCache(g1, cost[i-1][j-1]);
-      //Cache* mp = std::min({cost[i-1][j], cost[i][j-1], cost[i-1][j-1]});
       cost[i][j] = metric->reduce(mp, a[i], b[j]);
       bestSoFar = minCache(bestSoFar, cost[i][j]);
     }
-
-    if (metric->norm(bestSoFar, a, b) > dropout)  //Short circuit calculation.
+    std::cout << " d:" << metric->norm(bestSoFar, a , b) << " ";
+    if (metric->norm(bestSoFar, a, b) > dropout)  //short circuit calculation.
     {
       dropped = true;
+      break;
     }
   }
 

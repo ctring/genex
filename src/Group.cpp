@@ -1,23 +1,13 @@
 #include "Group.hpp"
 #include "distance/Distance.hpp"
+#include <iostream> //debug
 namespace genex {
 
 void Group::addMember(int index, int start)
 {
   count++;
-
-  //set the membership & add values to cendtroid
-  memberMap[index * repLength + start].data = this->id;
+  this->lastMember = new node_t(index, start, this->lastMember);
   centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength));
-
-  // track locations of members (reverse list)
-  memberMap[index * repLength + start].next = lastMember;
-  this->lastMember = &memberMap[index * repLength + start];
-}
-
-bool Group::isMember(int index, int start) const
-{
-  return  memberMap[index * this->repLength + start].data == this->id;
 }
 
 data_t Group::distance(int len, const TimeSeries& query, const DistanceMetric* metric)
@@ -25,26 +15,28 @@ data_t Group::distance(int len, const TimeSeries& query, const DistanceMetric* m
   return distance::generalWarpedDistance(metric, this->centroid, query, len);
 }
 
-candidate_t Group::getBestMatch(int len, const TimeSeries& query, const DistanceMetric* metric)
+candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric)
 {
+  int index, start;
   data_t curr_d = 0;
-  candidate_t bsf(-1);
+  candidate_t bsf(INF);
+  node_t* current_node = this->lastMember;
 
-  for (int index = 0; index < dataset.getItemCount(); index++)
+  for(int g = 0; g < this->count; g++)
   {
-    for (int start = 0; start < this->repLength; start++)
+    index = current_node->index;
+    start = current_node->start;
+    // this may not work because its a temporary object
+    TimeSeries curr = this->dataset.getTimeSeries(index, start, start + this->memberLength);
+    curr_d = distance::generalWarpedDistance(metric, query, curr, bsf.dist);
+
+    if (curr_d < bsf.dist)
     {
-      if (isMember(index, start))
-      {
-        TimeSeries curr = this->dataset.getTimeSeries(index, start, start + memberLength - 1);
-        curr_d = distance::generalWarpedDistance(metric, query, curr, memberLength);
-        if (curr_d < bsf.dist)
-        {
-          bsf.data = &curr;
-          bsf.dist = curr_d;
-        }
-      }
+      bsf.data = &curr;
+      bsf.dist = curr_d;
     }
+    
+    current_node = current_node->next;
   }
 
   return bsf;
