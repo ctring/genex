@@ -10,16 +10,16 @@ void Group::addMember(int index, int start)
   centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength));
 }
 
-data_t Group::distance(int len, const TimeSeries& query, const DistanceMetric* metric)
+data_t Group::distance(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
 {
-  return distance::generalWarpedDistance(metric, this->centroid, query, len);
+  return distance::generalWarpedDistance(metric, this->centroid, query, dropout);
 }
 
-candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric)
+candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
 {
   int index, start;
   data_t curr_d = 0;
-  candidate_t bsf(INF);
+  candidate_t bsf(dropout);
   node_t* current_node = this->lastMember;
 
   for(int g = 0; g < this->count; g++)
@@ -35,7 +35,7 @@ candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* m
       bsf.data = &curr;
       bsf.dist = curr_d;
     }
-    
+
     current_node = current_node->next;
   }
 

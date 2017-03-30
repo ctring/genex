@@ -87,14 +87,16 @@ Group(const TimeSeriesSet& dataset, int memberLength)
    *  @param metric the distance metric to use
    *  @return the distance between the data and the centroid using the metric
    */
-  data_t distance(int len, const TimeSeries& query, const DistanceMetric* metric); //data_t dropout=INF
+  data_t distance(const TimeSeries& query, const DistanceMetric* metric, data_t dropout=INF);
 
   /**
    *  @brief gets the best match within the group
    *
+   *  @param query finding the best match to the query in the group
+   *  @param metric the distance metric
    *  @return values of the centroid
    */
-  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric);
+  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout=INF);
 
   /**
    *  @brief gets the centroid of the group
