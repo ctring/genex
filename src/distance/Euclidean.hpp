@@ -2,7 +2,6 @@
 #define GENEX_SRC_EUCLIDEAN_H
 
 #include <cmath>
-#include <iostream>//debug
 #include <math.h>       /* sqrt */
 
 #include "TimeSeries.hpp"
@@ -51,13 +50,8 @@ public:
   data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
     // const EuclideanCache* c = CAST_TO(EuclidieanCache, total)
-
     if (const EuclideanCache* c = dynamic_cast<const EuclideanCache *>(total))
     {
-      std::cout << "length: " << t.getLength() << std::endl;
-      std::cout << "res: " << (c->val) / t.getLength() << std::endl;
-      std::cout << "val: " << (c->val) << std::endl;
-      ///###
       return (c->val) / t.getLength();
     }
     throw GenexException("Incorrect cache type.");

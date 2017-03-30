@@ -6,8 +6,6 @@
 #include "TimeSeries.hpp"
 #include "distance/DistanceMetric.hpp"
 
-extern bool gDebug;
-
 namespace genex {
 namespace distance {
 

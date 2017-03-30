@@ -10,7 +10,7 @@
 #include "distance/Chebyshev.hpp"
 
 #include <iostream>
-bool gDebug;
+
 namespace genex {
 namespace distance {
 
@@ -159,17 +159,7 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   {
     result = metric->norm(cost[m - 1][n - 1], a, b);
   }
-  // if (gDebug)
-  // {
-  //   for (int i = m - 1; i >= 0; i--)
-  //   {
-  //     for (int j = 0; j < n; j++)
-  //     {
-  //       std::cout << pow(cost[i][j]->val, 2) << " ";
-  //     }
-  //     std::cout << std::endl;
-  //   }
-  // }
+
   //deallocate2Darray(cost, m);
   for(int i = 1; i < m; i++)
   {

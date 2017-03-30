@@ -88,11 +88,10 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   data_t total_6 = distance::generalWarpedDistance(data.dist_3, ts_5, ts_6, INF);
   BOOST_TEST( total_6 == 1.0 );
 
-  gDebug = true;
   data_t total_7 = distance::generalWarpedDistance(data.dist_1, ts_11, ts_12, INF);
   data_t result_7 = (sqrt(12.0)/7.0);
   BOOST_TEST( total_7 == result_7 );
-  gDebug = false;
+
   data_t total_8 = distance::generalWarpedDistance(data.dist_2, ts_11, ts_12, INF);
   BOOST_TEST( total_8 == (8.0/7.0) );
 
