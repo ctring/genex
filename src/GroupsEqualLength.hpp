@@ -83,7 +83,7 @@ public:
    *  @param metric the metric that determines the distance between ts
    *  @param dropout the dropout optimization param
    */
-  int getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t dropout=INF) const; //seqitem_t *dist=NULL, int warps=-1,
+  int getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t& dist, data_t dropout=INF) const; //seqitem_t *dist=NULL, int warps=-1,
 
 private:
   int length, perSeq;

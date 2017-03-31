@@ -9,6 +9,7 @@
 
 namespace genex {
 
+
 Group* GroupsEqualLength::getGroup(int idx) const
 {
   if (idx < 0 || idx >= this->length) {
@@ -76,7 +77,7 @@ void GroupsEqualLength::clearGroups(void)
   groups.clear();
 }
 
-int GroupsEqualLength::getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t dropout) const
+int GroupsEqualLength::getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t& out_dist, data_t dropout) const
 {
   data_t bsfDist = dropout;
   int bsfIndex = -1;
@@ -90,7 +91,7 @@ int GroupsEqualLength::getBestGroup(const TimeSeries& query, DistanceMetric* met
           bsfIndex = i;
       }
   }
-
+  out_dist = bsfDist;
   return bsfIndex;
 }
 
