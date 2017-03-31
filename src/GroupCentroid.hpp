@@ -20,9 +20,10 @@ public:
    *  @param length length of the centroid's group
    */
   GroupCentroid(int length)
-    : TimeSeries(length), count(0), cacheValid(true) {
+    : TimeSeries(length), count(0) {
       this->cachedAverages = new data_t[length];
       memset(this->cachedAverages, 0, length * sizeof(data_t));
+      cacheValid = new bool(true);
     };
 
   /**
@@ -32,6 +33,9 @@ public:
   {
     delete cachedAverages;
     cachedAverages = nullptr;
+
+    delete cacheValid;
+    cacheValid = nullptr;
   }
 
   /**
@@ -60,6 +64,7 @@ public:
    *  @return the value at that index of the centroid
    */
   data_t& operator[](int idx);
+  const data_t& operator[](int idx) const;
 
   /**
    *  @brief gets the SUM value at this index (for testing purposes)
@@ -71,7 +76,7 @@ public:
 
 private:
   int count;
-  bool cacheValid;
+  bool* cacheValid;
   data_t* cachedAverages;
 };
 

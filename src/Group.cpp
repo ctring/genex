@@ -3,11 +3,25 @@
 #include <iostream> //debug
 namespace genex {
 
+Group::~Group()
+{
+  int groupCount = this->getCount();
+  node_t* last = this->lastMember;
+  node_t* next;
+
+  for (int i = 0; i < this->count; i++ )
+  {
+    next = last->next;
+    delete last;
+    last = next;
+  }
+}
+
 void Group::addMember(int index, int start)
 {
   count++;
   this->lastMember = new node_t(index, start, this->lastMember);
-  centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength));
+  centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength)); //check
 }
 
 data_t Group::distance(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)

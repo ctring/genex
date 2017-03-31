@@ -47,15 +47,17 @@ class Group
 {
 public:
 
-/**
- *  @brief constructor for Group
- *
- *  @param data a pointer the timeseries set that this is a group from
- *  @param length the length of the sequences in this set
- */
-Group(const TimeSeriesSet& dataset, int memberLength)
+  /**
+   *  @brief constructor for Group
+   *
+   *  @param data a pointer the timeseries set that this is a group from
+   *  @param length the length of the sequences in this set
+   */
+  Group(const TimeSeriesSet& dataset, int memberLength)
   : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength), id(Group::next_id++)
   {};
+
+  ~Group();
 
   /**
    *  @brief adds a member to the group

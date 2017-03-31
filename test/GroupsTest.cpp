@@ -17,6 +17,7 @@ struct MockData
   data_t dat_2[10] = {1, 1, 2, 2, 3, 3, 4, 4, 5, 5};
 
   data_t centroid_1[5] = {1, 1.5, 2.5, 3, 4};
+  data_t centroid_2[10] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.5};
 
   data_t dat_3[10] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
   data_t dat_4[10] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
@@ -79,7 +80,6 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
 
 BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERANCE) )
 {
-  //TODO(complete test)
   MockData data;
   Euclidean metric;
 
