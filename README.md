@@ -52,9 +52,7 @@ than one numeric value, implement a cache as in our `Cosine.cpp` example.
   * (b) Converts from a cache to a data_t
 
 #### Add Distance to List
-Added your class to the list of distance `gAllMetric` in the file
-
-`src/distance/Distance.cpp`. Include the header file you created in
+Added your class to the list of distance `gAllMetric` in the file `src/distance/Distance.cpp`. Include the header file you created in
 this folder as well.
 
 #### Finished!
