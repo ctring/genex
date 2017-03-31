@@ -2,7 +2,7 @@
 # genex
 
 ### Why?
-This project allows one to use warped versions of any distance! This is a  powerful capability and opens avenues for further research. Furthermore, the underlying structure enables warped distance of more complicated (polynomial) functions to still be useful in a large scale.
+This project allows one to use warped versions of any distance! This is a  powerful capability and opens avenues for further research. Furthermore, the underlying structure enables warped distance of more complicated functions to still be useful in a large scale.
 
 ### Install build dependencies
 
