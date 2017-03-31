@@ -5,6 +5,10 @@
 
 #include "Exception.hpp"
 #include "distance/DistanceMetric.hpp"
+
+////////////////////////////////////////////////////////////////////////////////
+/////**********      Include distance headers directly below     **********/////
+////////////////////////////////////////////////////////////////////////////////
 #include "distance/Euclidean.hpp"
 #include "distance/Manhattan.hpp"
 #include "distance/Chebyshev.hpp"
@@ -14,17 +18,23 @@
 namespace genex {
 namespace distance {
 
-const Cache* minCache(const Cache* c1, const Cache* c2)
-{
-  return c1->lessThan(c2) ? c1 : c2;
-}
-
+/**
+ *  Add new distances to this list of metrics
+ */
 static std::vector<const DistanceMetric*> gAllMetric =
   {
     new Euclidean(),
     new Manhattan(),
     new Chebyshev()
   };
+
+////////////////////////////////////////////////////////////////////////////////
+/////**********          no need to make changes below!          **********/////
+////////////////////////////////////////////////////////////////////////////////
+const Cache* minCache(const Cache* c1, const Cache* c2)
+{
+  return c1->lessThan(c2) ? c1 : c2;
+}
 
 static std::map<std::string, const DistanceMetric*> gAllMetricMap;
 
