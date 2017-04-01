@@ -20,11 +20,12 @@ public:
    *  @param length length of the centroid's group
    */
   GroupCentroid(int length)
-    : TimeSeries(length), count(0) {
-      this->cachedAverages = new data_t[length];
-      memset(this->cachedAverages, 0, length * sizeof(data_t));
-      cacheValid = new bool(true);
-    };
+    : TimeSeries(length), count(0)
+  {
+    this->cachedAverages = new data_t[length];
+    memset(this->cachedAverages, 0, length * sizeof(data_t));
+    cacheValid = new bool(true);
+  };
 
   /**
    *  @brief deconstructor for GroupCentroid

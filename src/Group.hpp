@@ -33,10 +33,10 @@ struct candidate_t
  */
 struct node_t
 {
-    int index, start;
-    node_t* next;
+  int index, start;
+  node_t* next;
 
-    node_t(int index, int start, node_t* next) : index(index), start(start), next(next) {};
+  node_t(int index, int start, node_t* next) : index(index), start(start), next(next) {};
 };
 
 /**
@@ -54,7 +54,7 @@ public:
    *  @param length the length of the sequences in this set
    */
   Group(const TimeSeriesSet& dataset, int memberLength)
-  : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength), id(Group::next_id++)
+  : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength)
   {};
 
   ~Group();
@@ -110,21 +110,14 @@ public:
     return centroid;
   }
 
-  int getId(void)
-  {
-    return id;
-  }
-
   //TODO
   //candidate_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
   //vector<candidate_t> getSeasonal(int);
   //vector<TimeSeriesInterval> getGroupValues(void);
 
 private:
-  static int next_id; // I think we don't need ids anymore...
-  const int id;
   const TimeSeriesSet& dataset;
-  //node_t* memberMap;
+
   node_t* lastMember = nullptr;
 
   int memberLength;

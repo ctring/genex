@@ -98,16 +98,3 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   candidate_t best = g.getBestMatch(t, &metric, INF);
   BOOST_TEST(best.dist == 1.0/10.0);
 }
-
-BOOST_AUTO_TEST_CASE( group_id )
-{
-  MockData data;
-
-  TimeSeriesSet tsSet;
-  int timeSeriesCount = 5;
-  tsSet.loadData(data.test_5_10_space, timeSeriesCount, 0, " ");
-
-  Group g_1(tsSet, 1);
-  Group g_2(tsSet, 1);
-  BOOST_CHECK_PREDICATE( std::not_equal_to<int>(),  (g_1.getId()) (g_2.getId()) );
-}

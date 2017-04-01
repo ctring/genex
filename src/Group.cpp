@@ -19,9 +19,10 @@ Group::~Group()
 
 void Group::addMember(int index, int start)
 {
-  count++;
+  this->count++;
   this->lastMember = new node_t(index, start, this->lastMember);
-  centroid.addTimeSeries(this->dataset.getTimeSeries(index, start, start + this->memberLength)); //check
+  TimeSeries newMember = this->dataset.getTimeSeries(index, start, start + this->memberLength);
+  this->centroid.addTimeSeries(newMember);
 }
 
 data_t Group::distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
@@ -55,7 +56,5 @@ candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* m
 
   return bsf;
 }
-
-int Group::next_id = 0;
 
 } // namespace genex
