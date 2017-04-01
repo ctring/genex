@@ -31,27 +31,27 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
   GroupsEqualLengthSet gSet(tsSet);
   gSet.group(metric, 0.5);
 
-  candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0,0,10), metric);
+  candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0, 0, 10), metric);
   BOOST_TEST((best.dist) == 0);
-  // best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10), metric);
-  // BOOST_TEST((best.dist) == 0);
-  // // best = gSet.getBestMatch(tsSet.getTimeSeries(0,6,9), metric); //fails
-  // // BOOST_TEST((best.dist) == 0);
-  // best = gSet.getBestMatch(tsSet.getTimeSeries(0,2,10), metric);
-  // BOOST_TEST((best.dist) == 0);
-  // // best = gSet.getBestMatch(tsSet.getTimeSeries(0,3,7), metric); //fails
-  // // BOOST_TEST((best.dist) == 0);
-  // best = gSet.getBestMatch(tsSet.getTimeSeries(4,0,10), metric);
-  // BOOST_TEST((best.dist) == 0);
-  // best = gSet.getBestMatch(tsSet.getTimeSeries(4,4,10), metric);
-  // BOOST_TEST((best.dist) == 0);
-  // // best = gSet.getBestMatch(tsSet.getTimeSeries(4,6,10), metric); //fails
-  // // BOOST_TEST((best.dist) == 0);
-  // best = gSet.getBestMatch(tsSet.getTimeSeries(4,2,10), metric);
-  // BOOST_TEST((best.dist) == 0);
-  // // best = gSet.getBestMatch(tsSet.getTimeSeries(4,3,7), metric); //fails
-  // // BOOST_TEST((best.dist) == 0);
-  // TimeSeries ts1(data.dat, 0,0,7);
-  // best = gSet.getBestMatch(ts1, metric);
-  // BOOST_TEST((best.dist)> 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,6,9), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,2,10), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,3,7), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,0,10), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,4,10), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,6,10), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,2,10), metric);
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,3,7), metric);
+  BOOST_TEST((best.dist) == 0);
+  TimeSeries ts1(data.dat, 0,0,7);
+  best = gSet.getBestMatch(ts1, metric);
+  BOOST_TEST((best.dist)> 0);
 }
