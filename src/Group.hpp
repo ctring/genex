@@ -105,9 +105,9 @@ public:
    *
    *  @return values of the centroid
    */
-  TimeSeries& getCentroid(void)
+  const GroupCentroid& getCentroid() const
   {
-    return centroid;
+    return this->centroid;
   }
 
   //TODO

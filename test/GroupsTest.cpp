@@ -47,31 +47,27 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
   BOOST_CHECK( tsSet.getFilePath() == data.test_5_10_space );
 
   Group g(tsSet, memberLength);
-  TimeSeries& c = g.getCentroid();
+  const GroupCentroid& c = g.getCentroid();
 
-  //test initial centroid is all zeros
+  // test initial centroid is all zeros
   for (int i = 0; i < memberLength; i++)
   {
     BOOST_TEST( c[i] == 0 );
   }
 
   g.addMember(0, 0);
-  c = g.getCentroid();
 
   //checking if centroid is updated
+  BOOST_CHECK_EQUAL( g.getCount(), 1 );
   for (int i = 0; i < memberLength; i++)
   {
     BOOST_TEST( c[i] == data.dat_1[i] );
   }
 
-  BOOST_CHECK_EQUAL( g.getCount(), 1 );
-
   g.addMember(1, 0);
-  c = g.getCentroid();
-
-  BOOST_CHECK_EQUAL( g.getCount(), 2 );
 
   //checking if centroid is updated
+  BOOST_CHECK_EQUAL( g.getCount(), 2 );
   for (int i = 0; i < memberLength; i++)
   {
     BOOST_TEST( c[i] == data.centroid_1[i] );

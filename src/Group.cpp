@@ -34,7 +34,7 @@ candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* m
 {
   int index, start;
   data_t curr_d = 0;
-  candidate_t bsf(dropout);
+  candidate_t bestSoFar(dropout);
   node_t* current_node = this->lastMember;
 
   for(int g = 0; g < this->count; g++)
@@ -43,18 +43,18 @@ candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* m
     start = current_node->start;
     // this may not work because its a temporary object
     TimeSeries curr = this->dataset.getTimeSeries(index, start, start + this->memberLength);
-    curr_d = distance::generalWarpedDistance(metric, query, curr, bsf.dist);
+    curr_d = distance::generalWarpedDistance(metric, query, curr, bestSoFar.dist);
 
-    if (curr_d < bsf.dist)
+    if (curr_d < bestSoFar.dist)
     {
-      bsf.data = &curr;
-      bsf.dist = curr_d;
+      bestSoFar.data = &curr;
+      bestSoFar.dist = curr_d;
     }
 
     current_node = current_node->next;
   }
 
-  return bsf;
+  return bestSoFar;
 }
 
 } // namespace genex
