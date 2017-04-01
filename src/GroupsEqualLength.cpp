@@ -16,11 +16,10 @@ GroupsEqualLength::~GroupsEqualLength()
     delete groups[i];
     groups[i] = NULL;
   }
-
   groups.clear();
 }
 
-Group* GroupsEqualLength::getGroup(int idx) const
+const Group* GroupsEqualLength::getGroup(int idx) const
 {
   if (idx < 0 || idx >= this->length) {
     throw GenexException("Index is out of range");
@@ -67,23 +66,25 @@ void GroupsEqualLength::genGroups(DistanceMetric* metric, data_t threshold)
   //std::sort(groups.begin(), groups.end(), &_group_gt_op);
 }
 
-int GroupsEqualLength::getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t& out_dist, data_t dropout) const
+candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
+                                                  DistanceMetric* metric,
+                                                  data_t dropout) const
 {
-  data_t bsfDist = dropout;
-  int bsfIndex = -1;
+  data_t bestSoFarDist = dropout;
+  const Group* bestSoFarGroup = nullptr;
 
   for (unsigned int i = 0; i < groups.size(); i++) {
 
-      data_t dist = groups[i]->distanceFromCentroid(query, metric, bsfDist);
+      data_t dist = groups[i]->distanceFromCentroid(query, metric, bestSoFarDist);
 
-      if ((dist < bsfDist) || (bsfDist == INF)) {
-          bsfDist = dist;
-          bsfIndex = i;
+      if (dist < bestSoFarDist) {
+        bestSoFarDist = dist;
+        bestSoFarGroup = groups[i];
       }
   }
-  out_dist = bsfDist;
-  return bsfIndex;
+
+  return std::make_pair(bestSoFarGroup, bestSoFarDist);
 }
 
 
-}//genex
+} // namespace genex

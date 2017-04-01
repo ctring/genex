@@ -13,17 +13,12 @@ namespace genex {
  *  @brief a struct pairing a dist with a time series
  *
  */
-struct candidate_t
+struct candidate_time_series_t
 {
   TimeSeries data;
   data_t dist;
 
-  bool operator<(candidate_t &other)
-  {
-      return dist < other.dist;
-  }
-
-  candidate_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {};
+  candidate_time_series_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {};
 };
 
 /**
@@ -94,7 +89,7 @@ public:
   /**
    * ...
    */
-  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric);
+  candidate_time_series_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric) const;
 
   /**
    *  @brief gets the centroid of the group
@@ -107,8 +102,8 @@ public:
   }
 
   //TODO
-  //candidate_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
-  //vector<candidate_t> getSeasonal(int);
+  //candidate_time_series_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
+  //vector<candidate_time_series_t> getSeasonal(int);
   //vector<TimeSeriesInterval> getGroupValues(void);
 
 private:

@@ -9,6 +9,8 @@
 
 namespace genex {
 
+typedef std::pair<const Group*, data_t> candidate_group_t;
+
 class GroupsEqualLength
 {
 public:
@@ -33,14 +35,6 @@ public:
   ~GroupsEqualLength();
 
   /**
-   *  @brief gets the group at a given index
-   *
-   *  @param idx the index of the group to be returned
-   *  @return the group
-   */
-  Group *getGroup(int idx) const;
-
-  /**
    *  @brief returns the number of groups inside this object
    *  @return the number of groups
    */
@@ -61,16 +55,12 @@ public:
    *  @param metric the metric that determines the distance between ts
    *  @param dropout the dropout optimization param
    */
-  int getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t& dist, data_t dropout) const; //seqitem_t *dist=NULL, int warps=-1,
+  candidate_group_t getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t dropout) const;
 
   /**
-   *  @brief gets the best match among all groups in current set
-   *
-   *  @param query finding the best match to the query in the group
-   *  @param metric the distance metric
-   *  @return values of the centroid
+   *  @return a group with given index
    */
-  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
+  const Group* getGroup(int idx) const;
 
 private:
   int length, subTimeSeriesCount;

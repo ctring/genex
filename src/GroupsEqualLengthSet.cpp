@@ -27,32 +27,26 @@ int GroupsEqualLengthSet::group(DistanceMetric* metric, data_t threshold)
   return numberOfGroups;
 }
 
-candidate_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, DistanceMetric* metric)
+candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, DistanceMetric* metric)
 {
-  data_t bsf = INF;
-  int bsfGroup = -1;
-  int bsfLen = -1;
+  data_t bestSoFarDist = INF;
+  const Group* bestSoFarGroup = nullptr;
 
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
-    // this finds the best set of groups of a length
-    data_t dist = -1;
+    // this looks through each group of a certain length finding the best of those groups
+    candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(data, metric, bestSoFarDist);
 
-    // this looks through each group of a certain length finding the best of those groups and setting dist
-    int g = this->groupsEqualLength[i]->getBestGroup(data, metric, dist, bsf);
+    std::cout << " post gg " << candidate.second << std::endl;
 
-    //  by ref
-    std::cout << " post gg " << dist << std::endl;
-
-    if ((dist < bsf) || (bsf == INF))
+    if (candidate.second < bestSoFarDist)
     {
-      bsf = dist;
-      bsfGroup = g;
-      bsfLen = i + 1;
+      bestSoFarGroup = candidate.first;
+      bestSoFarDist = candidate.second;
     }
   }
 
-  return this->groupsEqualLength[bsfLen - 1]->getGroup(bsfGroup)->getBestMatch(data, metric);
+  return bestSoFarGroup->getBestMatch(data, metric);
 }
 
 void GroupsEqualLengthSet::reset(void)

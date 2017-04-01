@@ -27,15 +27,13 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
 
   BOOST_CHECK_EQUAL(tsSet.getItemCount(), 5);
   BOOST_CHECK_EQUAL(tsSet.getItemLength(), 10);
-  data_t out_dist;
 
   GroupsEqualLengthSet gSet(tsSet);
   gSet.group(metric, 0.5);
 
-
-  candidate_t best = gSet.getBestMatch(tsSet.getTimeSeries(0,0,10), metric);
+  candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0,0,10), metric);
   BOOST_TEST((best.dist) == 0);
-  best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10), metric);
+  // best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10), metric);
   // BOOST_TEST((best.dist) == 0);
   // // best = gSet.getBestMatch(tsSet.getTimeSeries(0,6,9), metric); //fails
   // // BOOST_TEST((best.dist) == 0);

@@ -50,7 +50,7 @@ public:
    *  @param metric the metric to warp by
    *  @return the best match in the dataset
    */
-  candidate_t getBestMatch(const TimeSeries& data, DistanceMetric* metric);
+  candidate_time_series_t getBestMatch(const TimeSeries& data, DistanceMetric* metric);
 
   /**
    *  @brief clears the groups
