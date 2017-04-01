@@ -52,7 +52,7 @@ candidate_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, DistanceM
     }
   }
 
-  return this->groupsEqualLength[bsfLen - 1]->getGroup(bsfGroup)->getBestMatch(data, metric, INF);
+  return this->groupsEqualLength[bsfLen - 1]->getGroup(bsfGroup)->getBestMatch(data, metric);
 }
 
 void GroupsEqualLengthSet::reset(void)

@@ -91,6 +91,6 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   g.addMember(0, 0);
   TimeSeries t = tsSet.getTimeSeries(1,0,memberLength);
   BOOST_TEST(t[0] == 1.0);
-  candidate_t best = g.getBestMatch(t, &metric, INF);
+  candidate_t best = g.getBestMatch(t, &metric);
   BOOST_TEST(best.dist == 1.0/10.0);
 }

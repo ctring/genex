@@ -30,10 +30,10 @@ data_t Group::distanceFromCentroid(const TimeSeries& query, const DistanceMetric
   return distance::generalWarpedDistance(metric, this->centroid, query, dropout);
 }
 
-candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
+candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric)
 {
   node_t* currentNode = this->lastMember;
-  data_t bestSoFarDist = dropout;
+  data_t bestSoFarDist = INF;
   node_t* bestSoFarNode;
 
   while (currentNode != nullptr)

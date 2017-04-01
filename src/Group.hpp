@@ -84,21 +84,17 @@ public:
   /**
    *  @brief returns the distance between the centroid and the data
    *
-   *  @param len the length of the data
    *  @param data the data to be finding the distance to
    *  @param metric the distance metric to use
+   *  @param dropout upper bound for early stopping
    *  @return the distance between the data and the centroid using the metric
    */
   data_t distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
 
   /**
-   *  @brief gets the best match within the group
-   *
-   *  @param query finding the best match to the query in the group
-   *  @param metric the distance metric
-   *  @return values of the centroid
+   * ...
    */
-  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
+  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric);
 
   /**
    *  @brief gets the centroid of the group

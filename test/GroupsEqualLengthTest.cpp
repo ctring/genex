@@ -58,23 +58,23 @@ BOOST_AUTO_TEST_CASE( groups_best_group, *boost::unit_test::tolerance(TOLERANCE)
 
   GroupsEqualLength groups(tsSet, 10);
   groups.genGroups( metric, 0.5 );
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,10), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,9), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,8), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,6), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,5), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,4), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,4,10), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,5,10), metric, out_dist));
-  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(0,3,7), metric, out_dist));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,10), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,9), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,8), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,6), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,5), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,0,4), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,4,10), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(1,5,10), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 0, groups.getBestGroup(tsSet.getTimeSeries(0,3,7), metric, out_dist, INF));
 
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,10), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,9), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,8), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,6), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,5), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,4), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,4,10), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,5,10), metric, out_dist));
-  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,6,10), metric, out_dist));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,10), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,9), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,8), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,6), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,5), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,0,4), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,4,10), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,5,10), metric, out_dist, INF));
+  BOOST_CHECK_EQUAL( 1, groups.getBestGroup(tsSet.getTimeSeries(4,6,10), metric, out_dist, INF));
 }
