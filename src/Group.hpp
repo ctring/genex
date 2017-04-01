@@ -89,7 +89,7 @@ public:
    *  @param metric the distance metric to use
    *  @return the distance between the data and the centroid using the metric
    */
-  data_t distance(const TimeSeries& query, const DistanceMetric* metric, data_t dropout=INF);
+  data_t distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
 
   /**
    *  @brief gets the best match within the group
@@ -98,7 +98,7 @@ public:
    *  @param metric the distance metric
    *  @return values of the centroid
    */
-  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout=INF);
+  candidate_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
 
   /**
    *  @brief gets the centroid of the group

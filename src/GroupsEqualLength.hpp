@@ -24,7 +24,7 @@ public:
   GroupsEqualLength(const TimeSeriesSet& dataset, int length) :
     dataset(dataset), length(length)
   {
-    this->perSeq = dataset.getItemLength() - length + 1;
+    this->subTimeSeriesCount = dataset.getItemLength() - length + 1;
   }
 
   /**
@@ -64,7 +64,7 @@ public:
   int getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t& dist, data_t dropout=INF) const; //seqitem_t *dist=NULL, int warps=-1,
 
 private:
-  int length, perSeq;
+  int length, subTimeSeriesCount;
   const TimeSeriesSet& dataset;
   std::vector<Group*> groups;
 };

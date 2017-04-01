@@ -35,33 +35,32 @@ int GroupsEqualLength::getNumberOfGroups(void) const
 
 void GroupsEqualLength::genGroups(DistanceMetric* metric, data_t threshold)
 {
-
-  for (int start = 0; start < perSeq; start++)
+  for (int start = 0; start < this->subTimeSeriesCount; start++)
   {
     for (int idx = 0; idx < dataset.getItemCount(); idx++)
     {
-      TimeSeries query = dataset.getTimeSeries(idx, start, start+length);
+      TimeSeries query = dataset.getTimeSeries(idx, start, start + this->length);
 
-      data_t bsf = threshold/2 + 0.01;
-      int bsfIndex = -1;
+      data_t bestSoFar = INF;
+      int bestSoFarIndex;
 
       for (unsigned int i = 0; i < groups.size(); i++)
       {
-        data_t dist = groups[i]->distance(query, metric, INF);
-        if (dist < bsf)
+        data_t dist = this->groups[i]->distanceFromCentroid(query, metric, INF);
+        if (dist < bestSoFar)
         {
-          bsf = dist;
-          bsfIndex = i;
+          bestSoFar = dist;
+          bestSoFarIndex = i;
         }
       }
 
-      if (bsf > threshold/2)
+      if (bestSoFar > threshold / 2)
       {
-        bsfIndex = groups.size();
+        bestSoFarIndex = this->groups.size();
         this->groups.push_back(new Group(dataset, length));
       }
 
-      this->groups[bsfIndex]->addMember(idx, start);
+      this->groups[bestSoFarIndex]->addMember(idx, start);
     }
   }
   //if we care about order:
@@ -75,7 +74,7 @@ int GroupsEqualLength::getBestGroup(const TimeSeries& query, DistanceMetric* met
 
   for (unsigned int i = 0; i < groups.size(); i++) {
 
-      data_t dist = groups[i]->distance(query, metric, bsfDist);
+      data_t dist = groups[i]->distanceFromCentroid(query, metric, bsfDist);
 
       if ((dist < bsfDist) || (bsfDist == INF)) {
           bsfDist = dist;
