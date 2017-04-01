@@ -32,29 +32,33 @@ data_t Group::distanceFromCentroid(const TimeSeries& query, const DistanceMetric
 
 candidate_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
 {
-  int index, start;
-  data_t curr_d = 0;
-  candidate_t bestSoFar(dropout);
-  node_t* current_node = this->lastMember;
+  node_t* currentNode = this->lastMember;
+  data_t bestSoFarDist = dropout;
+  node_t* bestSoFarNode;
 
-  for(int g = 0; g < this->count; g++)
+  while (currentNode != nullptr)
   {
-    index = current_node->index;
-    start = current_node->start;
-    // this may not work because its a temporary object
-    TimeSeries curr = this->dataset.getTimeSeries(index, start, start + this->memberLength);
-    curr_d = distance::generalWarpedDistance(metric, query, curr, bestSoFar.dist);
+    int index = currentNode->index;
+    int start = currentNode->start;
 
-    if (curr_d < bestSoFar.dist)
+    TimeSeries currentTimeSeries = this->dataset.getTimeSeries(index, start, start + this->memberLength);
+    data_t currentDistance = distance::generalWarpedDistance(metric, query, currentTimeSeries, bestSoFarDist);
+
+    if (currentDistance < bestSoFarDist)
     {
-      bestSoFar.data = &curr;
-      bestSoFar.dist = curr_d;
+      bestSoFarDist = currentDistance;
+      bestSoFarNode = currentNode;
     }
 
-    current_node = current_node->next;
+    currentNode = currentNode->next;
   }
 
-  return bestSoFar;
+  int bestIndex = bestSoFarNode->index;
+  int bestStart = bestSoFarNode->start;
+  TimeSeries bestTimeSeries = this->dataset.getTimeSeries(bestIndex, bestStart, bestStart + this->memberLength);
+  candidate_t best(bestTimeSeries, bestSoFarDist);
+
+  return best;
 }
 
 } // namespace genex

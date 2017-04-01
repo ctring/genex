@@ -15,7 +15,7 @@ namespace genex {
  */
 struct candidate_t
 {
-  TimeSeries* data;
+  TimeSeries data;
   data_t dist;
 
   bool operator<(candidate_t &other)
@@ -23,7 +23,7 @@ struct candidate_t
       return dist < other.dist;
   }
 
-  candidate_t(data_t dist) : dist(dist) {};
+  candidate_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {};
 };
 
 /**
