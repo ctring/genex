@@ -21,7 +21,7 @@ int GroupsEqualLengthSet::group(DistanceMetric* metric, data_t threshold)
   {
     this->groupsEqualLength[i] = new GroupsEqualLength(dataset, i);
     this->groupsEqualLength[i]->genGroups(metric, threshold);
-    numberOfGroups += this->groupsEqualLength[i]->getCount();
+    numberOfGroups += this->groupsEqualLength[i]->getNumberOfGroups();
   }
   this->threshold = threshold;
   return numberOfGroups;

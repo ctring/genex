@@ -11,14 +11,13 @@ namespace genex {
 
 GroupsEqualLength::~GroupsEqualLength()
 {
-  // clears contents of groups
-  clearGroups();
-
-  // deletes every group
-  for (auto it = groups.begin(); it != groups.end(); ++it)
+  for (unsigned int i = 0; i < groups.size(); i++)
   {
-    delete *it;
+    delete groups[i];
+    groups[i] = NULL;
   }
+
+  groups.clear();
 }
 
 Group* GroupsEqualLength::getGroup(int idx) const
@@ -29,14 +28,14 @@ Group* GroupsEqualLength::getGroup(int idx) const
   return this->groups[idx];
 }
 
-int GroupsEqualLength::getCount(void) const
+int GroupsEqualLength::getNumberOfGroups(void) const
 {
   return this->groups.size();
 }
 
 void GroupsEqualLength::genGroups(DistanceMetric* metric, data_t threshold)
 {
-  clearGroups();
+
   for (int start = 0; start < perSeq; start++)
   {
     for (int idx = 0; idx < dataset.getItemCount(); idx++)
@@ -67,20 +66,6 @@ void GroupsEqualLength::genGroups(DistanceMetric* metric, data_t threshold)
   }
   //if we care about order:
   //std::sort(groups.begin(), groups.end(), &_group_gt_op);
-}
-
-// void clearGroups(void);
-void GroupsEqualLength::clearGroups(void)
-{
-  for (unsigned int i = 0; i < groups.size(); i++)
-  {
-    if (groups[i] != NULL)
-    {
-      delete groups[i];
-    }
-  }
-
-  groups.clear();
 }
 
 int GroupsEqualLength::getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t& out_dist, data_t dropout) const

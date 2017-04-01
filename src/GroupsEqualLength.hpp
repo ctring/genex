@@ -16,17 +16,16 @@ public:
    *  @brief constructor for GroupsEqualLength
    *
    *  this class contains all the groups of a given length
-   *  for a timeseriesset
+   *  for a TimeSeriesSet
    *
    *  @param dataset the dataset that the class creates groups for
-   *  @param length the length of each group
+   *  @param length the length of each time series in each group
    */
   GroupsEqualLength(const TimeSeriesSet& dataset, int length) :
     dataset(dataset), length(length)
-    {
-      this->perSeq = dataset.getItemLength() - length + 1;
-      this->groups = std::vector<Group*>();
-    }
+  {
+    this->perSeq = dataset.getItemLength() - length + 1;
+  }
 
   /**
    * @brief deconstructor for GroupsEqualLength
@@ -45,7 +44,7 @@ public:
    *  @brief returns the number of groups inside this object
    *  @return the number of groups
    */
-  int getCount(void) const;
+  int getNumberOfGroups(void) const;
 
   /**
    *  @brief generates all the groups for the timeseries of this length
@@ -54,11 +53,6 @@ public:
    *  @param threshold the threshold to use when splitting into new groups
    */
   void genGroups(DistanceMetric* metric, data_t threshold);
-
-  /**
-   *  @brief clears all the contents of all the groups in this object
-   */
-  void clearGroups(void);
 
   /**
    *  @brief gets the group closest to a query (measured from the centroid)

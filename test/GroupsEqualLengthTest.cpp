@@ -26,10 +26,10 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
 
   GroupsEqualLength groups(tsSet, 10);
 
-  BOOST_CHECK_EQUAL( groups.getCount(), 0 );
+  BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 0 );
 
   groups.genGroups( metric, 0.5 );
-  BOOST_CHECK_EQUAL( groups.getCount(), 1 );
+  BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 1 );
 }
 
 BOOST_AUTO_TEST_CASE( groups_equal_length_different, *boost::unit_test::tolerance(TOLERANCE) )
@@ -41,10 +41,10 @@ BOOST_AUTO_TEST_CASE( groups_equal_length_different, *boost::unit_test::toleranc
 
   GroupsEqualLength groups(tsSet, 10);
 
-  BOOST_CHECK_EQUAL( groups.getCount(), 0 );
+  BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 0 );
 
   groups.genGroups( metric, 0.5 );
-  BOOST_CHECK_EQUAL( groups.getCount(), 2);
+  BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 2);
 }
 
 BOOST_AUTO_TEST_CASE( groups_best_group, *boost::unit_test::tolerance(TOLERANCE) )
