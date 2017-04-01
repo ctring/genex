@@ -10,64 +10,63 @@
 
 namespace genex {
 
-  int GroupsEqualLengthSet::group(DistanceMetric* metric)
+int GroupsEqualLengthSet::group(DistanceMetric* metric, data_t threshold)
+{
+  reset();
+  this->groupsEqualLength.resize(dataset.getItemLength(), NULL);
+
+  int numberOfGroups = 0;
+
+  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
-    reset();
-    this->groupsEqualLength.resize(dataset.getItemLength(), NULL);
-
-    int count = 0;
-
-    this->groupsEqualLength[0] = new GroupsEqualLength(dataset, 1);
-
-    for (unsigned int i = 1; i < this->groupsEqualLength.size(); i++)
-    { // Don't group zero length.
-        this->groupsEqualLength[i] = new GroupsEqualLength(dataset, i+1);
-        this->groupsEqualLength[i]->genGroups(metric, threshold);
-        count += this->groupsEqualLength[i]->getCount();
-    }
-    
-    return count;
+    this->groupsEqualLength[i] = new GroupsEqualLength(dataset, i);
+    this->groupsEqualLength[i]->genGroups(metric, threshold);
+    numberOfGroups += this->groupsEqualLength[i]->getCount();
   }
+  this->threshold = threshold;
+  return numberOfGroups;
+}
 
-  candidate_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, DistanceMetric* metric)
+candidate_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, DistanceMetric* metric)
+{
+  data_t bsf = INF;
+  int bsfGroup = -1;
+  int bsfLen = -1;
+
+  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
-    data_t bsf = INF;
-    int bsfGroup = -1;
-    int bsfLen = -1;
+    // this finds the best set of groups of a length
+    data_t dist = -1;
 
-    for (int i = 0; i < this->groupsEqualLength.size(); i++)
+    // this looks through each group of a certain length finding the best of those groups and setting dist
+    int g = this->groupsEqualLength[i]->getBestGroup(data, metric, dist, bsf);
+
+    //  by ref
+    std::cout << " post gg " << dist << std::endl;
+
+    if ((dist < bsf) || (bsf == INF))
     {
-      // this finds the best set of groups of a length
-      data_t dist = -1;
-
-      // this looks through each group of a certain length finding the best of those groups and setting dist
-      int g = this->groupsEqualLength[i]->getBestGroup(data, metric, dist, bsf);
-
-      //  by ref
-      std::cout << " post gg " << dist << std::endl;
-
-      if ((dist < bsf) || (bsf == INF))
-      {
-        bsf = dist;
-        bsfGroup = g;
-        bsfLen = i + 1;
-      }
+      bsf = dist;
+      bsfGroup = g;
+      bsfLen = i + 1;
     }
-
-    return this->groupsEqualLength[bsfLen - 1]->getGroup(bsfGroup)->getBestMatch(data, metric);
   }
 
-  void GroupsEqualLengthSet::reset(void)
-  {
-    for (unsigned int i = 0; i < this->groupsEqualLength.size(); i++)
-      delete this->groupsEqualLength[i];
+  return this->groupsEqualLength[bsfLen - 1]->getGroup(bsfGroup)->getBestMatch(data, metric);
+}
 
-    this->groupsEqualLength.clear();
+void GroupsEqualLengthSet::reset(void)
+{
+  for (unsigned int i = 0; i < this->groupsEqualLength.size(); i++) {
+    delete this->groupsEqualLength[i];
   }
 
-  bool GroupsEqualLengthSet::valid(void)
-  {
-    return groupsEqualLength.size() > 0;
-  }
+  this->groupsEqualLength.clear();
+}
 
-} //genex
+bool GroupsEqualLengthSet::grouped(void) const
+{
+  return groupsEqualLength.size() > 0;
+}
+
+} // namespace genex

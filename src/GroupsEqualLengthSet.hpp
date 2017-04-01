@@ -1,5 +1,5 @@
-#ifndef GROUPSEQUALLENGTH_SET_H
-#define GROUPSEQUALLENGTH_SET_H
+#ifndef GROUPS_EQUAL_LENGTH_SET_H
+#define GROUPS_EQUAL_LENGTH_SET_H
 
 #include <vector>
 
@@ -24,8 +24,7 @@ public:
    *  @param dataset the dataset to group
    *  @param threshold the threshold for similarity within a group
    */
-  GroupsEqualLengthSet(const TimeSeriesSet& dataset, data_t threshold=0.5) :
-    dataset(dataset), threshold(threshold) {};
+  GroupsEqualLengthSet(const TimeSeriesSet& dataset) : dataset(dataset) {};
 
   /**
    *  @brief The deconstructor for the GroupsEqualLengthSet
@@ -40,9 +39,10 @@ public:
    *    using the metric to determine similarity
    *
    *  @param metric the metric used to group by
+   *  @param threshold the threshold to be group with
    *  @return the number of groups it creates
    */
-  int group(DistanceMetric* metric);
+  int group(DistanceMetric* metric, data_t threshold);
 
   /**
    *  @brief gets the most similar sequence in the dataset
@@ -60,17 +60,9 @@ public:
   /**
    *  @brief returns true if dataset is grouped
    */
-  bool valid(void);
+  bool grouped(void) const;
 
-  data_t getThreshold(void)
-  {
-    return this->threshold;
-  }
-
-  void setThreshold(data_t threshold)
-  {
-    this->threshold = threshold;
-  }
+  data_t getThreshold(void) const { return this->threshold; }
 
   // TimeSeriesGrouping *getGroup(int length);
   // TimeSeriesGrouping *getFullGroup();
@@ -80,5 +72,5 @@ private:
   const TimeSeriesSet& dataset;
 };
 
-}
-#endif //GROUPSEQUALLENGTH_SET_H
+} // namespace genex
+#endif //GROUPS_EQUAL_LENGTH_SET_H

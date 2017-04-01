@@ -1,5 +1,5 @@
-#ifndef GROUPSEQUALLENGTH_H
-#define GROUPSEQUALLENGTH_H
+#ifndef GROUPS_EQUAL_LENGTH_H
+#define GROUPS_EQUAL_LENGTH_H
 
 #include <vector>
 
@@ -31,17 +31,7 @@ public:
   /**
    * @brief deconstructor for GroupsEqualLength
    */
-  ~GroupsEqualLength()
-  {
-    // clears contents of groups
-    clearGroups();
-
-    // deletes every group
-    for (auto it = groups.begin(); it != groups.end(); ++it)
-    {
-      delete *it;
-    }
-  }
+  ~GroupsEqualLength();
 
   /**
    *  @brief gets the group at a given index
@@ -50,12 +40,6 @@ public:
    *  @return the group
    */
   Group *getGroup(int idx) const;
-
-  /**
-   *  @brief gets all the groups
-   *  @return the vector of groups in this object
-   */
-  std::vector<Group*>& getGroups();
 
   /**
    *  @brief returns the number of groups inside this object
@@ -69,7 +53,7 @@ public:
    *  @param metric the distance metric to use when computing the groups
    *  @param threshold the threshold to use when splitting into new groups
    */
-  void genGroups(DistanceMetric* metric, data_t threshold=0.5);
+  void genGroups(DistanceMetric* metric, data_t threshold);
 
   /**
    *  @brief clears all the contents of all the groups in this object
@@ -91,6 +75,6 @@ private:
   std::vector<Group*> groups;
 };
 
-} //genex
+} // namespace genex
 
-#endif //GROUPSEQUALLENGTH_H
+#endif //GROUPS_EQUAL_LENGTH_H

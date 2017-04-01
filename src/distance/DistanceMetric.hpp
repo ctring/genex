@@ -23,6 +23,7 @@ public:
 class DistanceMetric
 {
 public:
+
   /**
    *  @brief this function must be implemented as a monotonic distance function
    *

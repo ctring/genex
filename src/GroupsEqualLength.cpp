@@ -9,6 +9,17 @@
 
 namespace genex {
 
+GroupsEqualLength::~GroupsEqualLength()
+{
+  // clears contents of groups
+  clearGroups();
+
+  // deletes every group
+  for (auto it = groups.begin(); it != groups.end(); ++it)
+  {
+    delete *it;
+  }
+}
 
 Group* GroupsEqualLength::getGroup(int idx) const
 {
@@ -16,11 +27,6 @@ Group* GroupsEqualLength::getGroup(int idx) const
     throw GenexException("Index is out of range");
   }
   return this->groups[idx];
-}
-
-std::vector<Group*>& GroupsEqualLength::getGroups()
-{
-  return this->groups;
 }
 
 int GroupsEqualLength::getCount(void) const
