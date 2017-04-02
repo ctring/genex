@@ -9,17 +9,14 @@ This project allows you to use warped versions of any distance! This is a powerf
 Brew:
 
 ```bash
-
   brew install cmake
   brew install boost
   brew install readline
-
 ```
 
 Linux:
 
 ```bash
-
   sudo apt-get install cmake
   sudo apt-get install boost
   sudo apt-get install readline
@@ -31,9 +28,7 @@ Build the project. The executable genex will be in the build folder.
 Tests will also be run as part of the build script.
 
 ```bash
-
   ./run.sh
-
 ```
 
 ### adding new distances
@@ -48,7 +43,7 @@ As described in (link to paper), define a non-decreasing distance in terms of a 
 * Each distance must extend the interface (abstract class) `DistanceMetric.hpp`
 * Duplicate a distance function header file to work with
   * rename class and header file and name the header guards
-* If you are creating a complicated distance and you need to cache more than one numeric value, implement a cache as in our `Cosine.cpp` example.
+* If you are creating a complicated distance and you need to cache more than one numeric value, implement a cache as in our `Cosine.hpp` example. This can be done directly in your distance's header file.
 * Implement the `init` function
   * This function determines the first value in the resursive process of calculating a distance
   * Its generally zero and so usually will not need to be changed
@@ -67,8 +62,8 @@ As described in (link to paper), define a non-decreasing distance in terms of a 
 
 #### Add Distance to List
 
-* Add your class to the list of distance `gAllMetric` in the file `src/distance/Distance.cpp`
-* Include the header file you created in this folder as well.
+* Add your class to the list of distances `gAllMetric` in the file `src/distance/Distance.cpp`
+* Include the header file you created in this file as well.
 
 #### finished
 
