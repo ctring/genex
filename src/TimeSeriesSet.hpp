@@ -99,11 +99,19 @@ public:
    */
   TimeSeries getTimeSeries(int index, int start, int end) const;
 
-private:
+  /**
+   *  @brief normalizes the timeseries set
+   *
+   *  @return the min and max of the dataset
+   */
+  std::pair<data_t, data_t> normalize(void);
 
+protected:
   std::vector<data_t*> data;
   int itemLength;
   int itemCount;
+
+private:
   std::string filePath;
 
 };

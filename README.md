@@ -45,14 +45,14 @@ As described in (link to paper), define a non-decreasing distance in terms of a 
   * rename class and header file and name the header guards
 * If you are creating a complicated distance and you need to cache more than one numeric value, implement a cache as in our `Cosine.hpp` example. This can be done directly in your distance's header file.
 * Implement the `init` function
-  * This function determines the first value in the resursive process of calculating a distance
+  * This function determines the first value in the recursive process of calculating a distance
   * Its generally zero and so usually will not need to be changed
   * Note: remember to return a new cache, not just a number
 * Implement the `reduce` function
   * This is the critical part of the process
   * As defined in the `DistanceMetric.hpp` interface, its inputs must be a `Cache c`, `data_t x`, `data_t y`. It must calculate the distance between `x` and `y` and then store whatever information necessary to compute the distance given `c` in a new cache and return it.
   * You can implement the pointwise distance separately from the reduce function, but its not necessary (as a helper function.) Some of our examples do so.
-  * Note: remeber return a new cache with the new calculated values
+  * Note: remember return a new cache with the new calculated values
 * Implement the `norm` function
   * There are two critical pieces to this function
     * (a) it normalizes distance as you wish it to (divide by n, 2, etc)

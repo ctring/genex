@@ -133,4 +133,92 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index) const
   return this->getTimeSeries(index, 0, this->itemLength);
 }
 
+std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
+{
+  int length = this->getItemLength() * this->getItemCount();
+
+  if ( !length )
+  {
+    throw GenexException("No data.");
+  }
+
+  // TODO: use library instead. Why * instead of vector?
+  // auto minAndMax = std::minmax(this->data);
+  // data_t diff = *minAndMax.first - *minAndMax.second;
+ 
+  // find min and max in 1.5 comparisons per element
+  data_t MIN = INF;
+  data_t MAX = -INF;
+  int unsigned i;
+  
+  for (int ts = 0; ts < this->itemCount; ts++)
+  {
+    data_t x, y, z;
+    i = (length % 2 != 0);
+    // start at 0 if even, 1 if odd
+    if (length % 2 != 0)
+    {
+      if (data[ts][i] < MIN)
+      {
+        data[ts][i] = MIN;
+      } 
+      else if (data[ts][i] > MIN)
+      {
+        data[ts][i] = MAX;
+      }
+    }
+
+    for (; i < this->itemLength-1; i+=2) 
+    {
+      x = data[ts][i];
+      y = data[ts][i+1];
+      if ( x > y )
+      {
+        z = y;
+        y = x;
+        x = z;
+      }
+      if ( y > MAX )
+      {
+        MAX = y;
+      }
+      if ( x < MIN )
+      {
+        MIN = x;
+      }
+    }
+  }
+
+  data_t diff = MAX - MIN;
+
+  // do not divide by zero
+  if (diff == 0.0)
+  {
+    if (MAX != 0)
+    {
+      // zero out data (use memset instead...)
+      for (int ts = 0; ts < this->itemCount; ts++)
+      {
+        for (i = 0; i < this->itemLength; i++)
+        {
+          data[ts][i] = 0;
+        }
+      }
+    }
+  }
+  else
+  {
+    // normalize
+    for (int ts = 0; ts < this->itemCount; ts++)
+    {
+      for (i = 0; i < this->itemLength; i++)
+      {
+        data[ts][i] = (data[ts][i] - MIN)/ diff;
+      }
+    }
+  }
+
+  return std::make_pair(MIN, MAX);
+}
+
 } // namespace genex

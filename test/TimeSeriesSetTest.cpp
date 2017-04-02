@@ -18,6 +18,7 @@ struct MockDataset
   std::string uneven_rows = "dataset/test/uneven_rows.txt";
   std::string text_only = "dataset/test/test_text_only.txt";
   std::string very_big = "dataset/test/very_big_value.txt";
+  std::string test_5_10_space = "dataset/test/test_5_10_space.txt";
 } data;
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )
@@ -122,4 +123,19 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_omit_rows_and_columns )
   TimeSeries ts = tsSet.getTimeSeries(0);
   BOOST_TEST( ts[0] == 2.656250000 );
   BOOST_TEST( ts[ts.getLength() - 1] == 2.537109375);
+}
+
+BOOST_AUTO_TEST_CASE( normalize, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_5_10_space, 10, 0, " ");
+  std::pair<data_t, data_t> min_max = tsSet.normalize();
+  BOOST_TEST( min_max.first == 1 );
+  BOOST_TEST( min_max.second == 11 );
+
+  TimeSeries t = tsSet.getTimeSeries(0);
+  for(int i = 0; i < tsSet.getItemLength(); i++)
+  {
+    BOOST_TEST( t[i] == (i)/10.0 );
+  }
 }
