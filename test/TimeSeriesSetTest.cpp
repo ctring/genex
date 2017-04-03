@@ -5,6 +5,8 @@
 #include "TimeSeriesSet.hpp"
 #include "Exception.hpp"
 #include "TimeSeries.hpp"
+#include "distance/Euclidean.hpp"
+
 
 #define TOLERANCE 1e-9
 
@@ -19,6 +21,7 @@ struct MockDataset
   std::string text_only = "dataset/test/test_text_only.txt";
   std::string very_big = "dataset/test/very_big_value.txt";
   std::string test_5_10_space = "dataset/test/test_5_10_space.txt";
+  std::string test_3_10_space = "dataset/test/test_3_10_space.txt";
 } data;
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )
@@ -138,4 +141,22 @@ BOOST_AUTO_TEST_CASE( normalize, *boost::unit_test::tolerance(TOLERANCE) )
   {
     BOOST_TEST( t[i] == (i)/10.0 );
   }
+}
+
+BOOST_AUTO_TEST_CASE( normalize_exception )
+{
+  TimeSeriesSet tsSet;
+  BOOST_CHECK_THROW(tsSet.normalize(), GenexException); // no data to normalize
+}
+
+BOOST_AUTO_TEST_CASE( get_distance_between, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_3_10_space, 10, 0, " ");
+  DistanceMetric* metric = new Euclidean();
+  data_t dist = tsSet.distanceBetween(0,0,10, tsSet.getTimeSeries(0), metric);
+  BOOST_TEST( dist == 0 );
+
+  dist = tsSet.distanceBetween(1,0,10, tsSet.getTimeSeries(0), metric);
+  BOOST_TEST( dist == (1.0 / 10.0) );
 }

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "TimeSeries.hpp"
+#include "distance/DistanceMetric.hpp"
 
 namespace genex {
 
@@ -103,8 +104,30 @@ public:
    *  @brief normalizes the timeseries set
    *
    *  @return the min and max of the dataset
+   *  @throws exception when there is no data in the set
    */
   std::pair<data_t, data_t> normalize(void);
+
+  /**
+    *  @brief Calculate the distance between a subsequence of a series in this dataset to
+    *   input timeseries
+    *
+    *  @param idx indexs which time series this subsequence belongs to
+    *  @param start where in the time series the subsequence starts
+    *  @param length how long the timeseries is
+    *  @param other the other time series we are comparing against
+    * 
+    *  @note this used to be in groupable, but there is no reason to not be here
+    *
+    *  @return the calculated distance. If the arguments are invalid we throw an exception
+    */
+  data_t distanceBetween(int idx, int start, int length,
+      const TimeSeries& other, DistanceMetric *metric);
+
+  /**
+   *  @brief a set is valid if it contains data (valid for grouping)
+   */
+  bool valid(void);
 
 protected:
   std::vector<data_t*> data;

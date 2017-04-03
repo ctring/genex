@@ -6,6 +6,8 @@
 #include <cstring>
 #include <boost/tokenizer.hpp>
 
+#include "distance/Distance.hpp"
+#include "distance/DistanceMetric.hpp"
 #include "Exception.hpp"
 
 namespace genex {
@@ -139,7 +141,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
 
   if ( !length )
   {
-    throw GenexException("No data.");
+    throw GenexException("No data to normalize");
   }
 
   // TODO: use library instead. Why * instead of vector?
@@ -219,6 +221,17 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   }
 
   return std::make_pair(MIN, MAX);
+}
+
+bool TimeSeriesSet::valid(void)
+{
+    return this->data.size() > 0;
+}
+
+data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
+         const TimeSeries& other, DistanceMetric* metric)
+{
+  return distance::generalWarpedDistance(metric, this->getTimeSeries(idx, start, start + length), other, INF);
 }
 
 } // namespace genex

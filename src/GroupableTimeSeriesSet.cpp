@@ -4,15 +4,35 @@
 
 namespace genex {
 
-//normalize is part of timeseriesset now
+int GroupableTimeSeriesSet::groupAllLengths(DistanceMetric* metric, data_t threshold)
+{
+  if (!this->valid()) 
+  {
+    throw GenexException("No data to group.");
+  }
 
-// int GroupableTimeSeriesSet::groupAllLengths(DistanceMetric* metric, data_t threshold);
+  // clear old groups
+  resetGrouping();
 
-// void GroupableTimeSeriesSet::resetGrouping(void);
+  this->groupsAllLengthSet = new GroupsEqualLengthSet(*this);
+  int cntGroups = this->groupsAllLengthSet->group(metric, threshold);
+    
+  return cntGroups;
+}
 
-// data_t GroupableTimeSeriesSet::distanceBetween(int idx, int start, int length,
-//         const TimeSeries& other, DistanceMetric *metric);
+void GroupableTimeSeriesSet::resetGrouping(void)
+{
+  delete this->groupsAllLengthSet;
+  this->groupsAllLengthSet = nullptr;
+}
 
-// candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& other, DistanceMetric* metric);
+candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& query, DistanceMetric* metric)
+{
+  if (this->groupsAllLengthSet) //not nullptr
+  {
+    return this->groupsAllLengthSet->getBestMatch(query, metric);
+  }
+  throw GenexException("Dataset is not grouped.");
+}
 
 } // namespace genex
