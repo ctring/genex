@@ -47,7 +47,7 @@ dataset_info_t GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
 
 void GenexAPI::unloadDataset(int index)
 {
-  _checkDatasetIndex(index);
+  this->_checkDatasetIndex(index);
 
   delete loadedDatasets[index];
   loadedDatasets[index] = nullptr;
@@ -75,7 +75,7 @@ int GenexAPI::getDatasetCount()
 
 dataset_info_t GenexAPI::getDatasetInfo(int index)
 {
-  _checkDatasetIndex(index);
+  this->_checkDatasetIndex(index);
 
   GroupableTimeSeriesSet* dataset = this->loadedDatasets[index];
   return dataset_info_t(index,

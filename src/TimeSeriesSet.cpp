@@ -150,7 +150,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   data_t MIN = INF;
   data_t MAX = -INF;
   unsigned int i;
-  
+
   // find min and max in 1.5 comparisons per element
   for (int ts = 0; ts < this->itemCount; ts++)
   {
@@ -162,17 +162,17 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
       if (data[ts][0] < MIN)
       {
         MIN = data[ts][0];
-      } 
+      }
       if (data[ts][0] > MAX)
       {
         MAX = data[ts][0];
       }
     }
 
-    for (; i < this->itemLength-1; i+=2) 
+    for (; i < this->itemLength - 1; i += 2)
     {
       x = data[ts][i];
-      y = data[ts][i+1];
+      y = data[ts][i + 1];
       if ( x > y )
       {
         z = y;
@@ -222,9 +222,9 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   return std::make_pair(MIN, MAX);
 }
 
-bool TimeSeriesSet::valid(void)
+bool TimeSeriesSet::valid()
 {
-    return this->data.size() > 0;
+  return this->data.size() > 0;
 }
 
 data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,

@@ -106,7 +106,7 @@ public:
    *  @return the min and max of the dataset
    *  @throws exception when there is no data in the set
    */
-  std::pair<data_t, data_t> normalize(void);
+  std::pair<data_t, data_t> normalize();
 
   /**
     *  @brief Calculate the distance between a subsequence of a series in this dataset to
@@ -116,7 +116,7 @@ public:
     *  @param start where in the time series the subsequence starts
     *  @param length how long the timeseries is
     *  @param other the other time series we are comparing against
-    * 
+    *
     *  @note this used to be in groupable, but there is no reason to not be here
     *
     *  @return the calculated distance. If the arguments are invalid we throw an exception

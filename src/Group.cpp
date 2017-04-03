@@ -1,6 +1,6 @@
 #include "Group.hpp"
 #include "distance/Distance.hpp"
-#include <iostream> //debug
+
 namespace genex {
 
 Group::~Group()

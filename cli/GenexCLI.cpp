@@ -207,6 +207,7 @@ MAKE_COMMAND(Timer,
   "an additional argument, the current state of timer is printed.  \n"
   "                                                                \n"
   "Usage: timer [on|off]                                             ")
+
 MAKE_COMMAND(GroupDataset,
   {
     if (tooFewArgs(args, 2) || tooManyArgs(args, 4))
@@ -216,7 +217,7 @@ MAKE_COMMAND(GroupDataset,
 
     int index = std::stoi(args[1]);
     genex::data_t threshold = std::stod(args[2]);
-    
+
     std::string metric_name = "euclidean";
 
     // if metric option is present
@@ -244,8 +245,8 @@ MAKE_COMMAND(GroupDataset,
 
   "Usage: group <dataset_index> <threshold> [distance_metric]     \n"
   "  dataset_index   - Index of the dataset being unloaded. Use   \n"
-  "                   'list dataset' to retrieve the list of      \n"
-  "                   loaded datasets.                            \n"
+  "                    'list dataset' to retrieve the list of     \n"
+  "                    loaded datasets.                           \n"
   "  threshold       - Threshold for grouping.                    \n"
   "  distance_metric - The string identifier of a distance metric \n"
   "                    'list metric' to retrieve the list of      \n"
