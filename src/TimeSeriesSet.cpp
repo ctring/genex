@@ -228,7 +228,7 @@ bool TimeSeriesSet::valid()
 }
 
 data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
-         const TimeSeries& other, DistanceMetric* metric)
+         const TimeSeries& other, const DistanceMetric* metric)
 {
   return distance::generalWarpedDistance(metric, this->getTimeSeries(idx, start, start + length), other, INF);
 }

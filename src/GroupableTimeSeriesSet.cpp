@@ -31,7 +31,7 @@ void GroupableTimeSeriesSet::resetGrouping()
   this->groupsAllLengthSet = nullptr;
 }
 
-candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& query, DistanceMetric* metric) const
+candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& query, const DistanceMetric* metric) const
 {
   if (this->groupsAllLengthSet) //not nullptr
   {

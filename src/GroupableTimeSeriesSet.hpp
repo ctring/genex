@@ -44,7 +44,7 @@ public:
    * @return a struct containing the closest TimeSeries and the distance between them
    * @throws exception if dataset is not grouped
    */
-  candidate_time_series_t getBestMatch(const TimeSeries& other, DistanceMetric* metric) const;
+  candidate_time_series_t getBestMatch(const TimeSeries& other, const DistanceMetric* metric) const;
 
 private:
   GroupsEqualLengthSet* groupsAllLengthSet = nullptr;

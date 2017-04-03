@@ -27,7 +27,7 @@ int GroupsEqualLengthSet::group(const DistanceMetric* metric, data_t threshold)
   return numberOfGroups;
 }
 
-candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, DistanceMetric* metric)
+candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, const DistanceMetric* metric)
 {
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;

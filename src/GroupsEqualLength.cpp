@@ -67,7 +67,7 @@ void GroupsEqualLength::genGroups(const DistanceMetric* metric, data_t threshold
 }
 
 candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
-                                                  DistanceMetric* metric,
+                                                  const DistanceMetric* metric,
                                                   data_t dropout) const
 {
   data_t bestSoFarDist = dropout;

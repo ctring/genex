@@ -55,7 +55,7 @@ public:
    *  @param metric the metric that determines the distance between ts
    *  @param dropout the dropout optimization param
    */
-  candidate_group_t getBestGroup(const TimeSeries& query, DistanceMetric* metric, data_t dropout) const;
+  candidate_group_t getBestGroup(const TimeSeries& query, const DistanceMetric* metric, data_t dropout) const;
 
   /**
    *  @return a group with given index
