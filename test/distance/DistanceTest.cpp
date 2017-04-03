@@ -145,17 +145,21 @@ BOOST_AUTO_TEST_CASE( gwd_different_distances, *boost::unit_test::tolerance(TOLE
 
 BOOST_AUTO_TEST_CASE( get_distance_metric, *boost::unit_test::tolerance(TOLERANCE) )
 {
-   const DistanceMetric * d = distance::getDistanceMetric("euclidean");
-   Cache* cache = d->init();
-   data_t a = d->dist(100.0, 110.0);
-   BOOST_TEST( a == 100 );
+  MockData data;
+  TimeSeries ts_for_function_call{data.dat_3, 0, 0, 1};
+  const DistanceMetric * d = distance::getDistanceMetric("euclidean");
+  Cache* cache = d->init();
+  data_t a = d->norm(d->reduce(cache, 100.0, 110.0), ts_for_function_call,ts_for_function_call);
+  BOOST_TEST( a == 10 );
 
-   const DistanceMetric * d_2 = distance::getDistanceMetric("manhattan");
-   Cache* cache_2 = d_2->init();
-   data_t e = d_2->dist(100.0, 110.0);
+  const DistanceMetric * d_2 = distance::getDistanceMetric("manhattan");
+  Cache* cache_2 = d_2->init();
+  data_t e = d_2->norm(d_2->reduce(cache_2, 100.0, 110.0), ts_for_function_call, ts_for_function_call);
 
-   BOOST_TEST( e == 10 );
-   delete cache_2;
+  BOOST_TEST( e == 10 );
+
+  delete cache_2;
+  delete cache;
 }
 
 BOOST_AUTO_TEST_CASE( distance_metric_not_found )

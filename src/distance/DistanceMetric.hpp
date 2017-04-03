@@ -40,17 +40,6 @@ class DistanceMetric
 public:
 
   /**
-   *  @brief this function must be implemented as a monotonic distance function
-   *
-   *  This function returns the distance between to supplied points x_1 and x_2.
-   *
-   *  @param x_1 is data_t, a point (ie, x_j from time series x)
-   *  @param x_2 is data_t, a point (ie, y_j from time series y)
-   *  @return the distance between these two points using this metric
-   */
-  virtual data_t dist(data_t x_1, data_t x_2) const = 0;
-
-  /**
    *  @brief this function returns the initial value of the reduce chain.
    *
    *  @return the inital value for reduce

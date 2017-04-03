@@ -75,7 +75,10 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // Fastpath for base intervals.
   if (m == 1 && n == 1)
   {
-    return metric->dist(a[0], b[0]);
+    Cache* init = metric->init();
+    Cache* result = metric->reduce(init, a[0], b[0]);
+    delete init;
+    return metric->norm(result, a, b);
   }
 
   // create cost matrix
