@@ -108,6 +108,13 @@ std::vector<distance_metric_info_t> GenexAPI::getAllDistanceMetricInfo()
   return info;
 }
 
+int GenexAPI::groupDataset(int index,  data_t threshold, std::string metric_name)
+{
+  const DistanceMetric* metric = distance::getDistanceMetric(metric_name);
+  this->_checkDatasetIndex(index);
+  return this->loadedDatasets[index]->groupAllLengths(metric, threshold);
+}
+
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)

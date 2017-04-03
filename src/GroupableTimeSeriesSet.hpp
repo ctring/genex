@@ -21,7 +21,7 @@ public:
     *
     *  @return the number of groups created
     */
-  int groupAllLengths(DistanceMetric* metric, data_t threshold);
+  int groupAllLengths(const DistanceMetric* metric, data_t threshold);
 
   /**
     *  @brief deletes and clears the groups

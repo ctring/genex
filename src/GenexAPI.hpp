@@ -101,6 +101,16 @@ public:
    */
   std::vector<distance_metric_info_t> getAllDistanceMetricInfo();
 
+  /**
+   *  @brief groups the dataset
+   *
+   *  @param the index of the dataset to use
+   *  @param metric the distance metric to use when grouping the data
+   *  @param threshold the threshold to use when creating the group
+   *  @return the number of groups created
+   */ 
+  int groupDataset(int idx, data_t threshold, std::string metric_name);
+   
 private:
   void _checkDatasetIndex(int index);
 

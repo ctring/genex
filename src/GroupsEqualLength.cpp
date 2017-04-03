@@ -32,7 +32,7 @@ int GroupsEqualLength::getNumberOfGroups(void) const
   return this->groups.size();
 }
 
-void GroupsEqualLength::genGroups(DistanceMetric* metric, data_t threshold)
+void GroupsEqualLength::genGroups(const DistanceMetric* metric, data_t threshold)
 {
   for (int start = 0; start < this->subTimeSeriesCount; start++)
   {

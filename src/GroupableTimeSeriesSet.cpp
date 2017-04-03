@@ -4,7 +4,7 @@
 
 namespace genex {
 
-int GroupableTimeSeriesSet::groupAllLengths(DistanceMetric* metric, data_t threshold)
+int GroupableTimeSeriesSet::groupAllLengths(const DistanceMetric* metric, data_t threshold)
 {
   if (!this->valid()) 
   {

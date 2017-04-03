@@ -83,3 +83,18 @@ BOOST_AUTO_TEST_CASE( api_get_dataset_info )
   api.unloadDataset(1);
   BOOST_CHECK_THROW( api.getDatasetInfo(1), GenexException );
 }
+
+BOOST_AUTO_TEST_CASE( api_group )
+{
+  GenexAPI api;
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+ 
+  int count_1 = api.groupDataset(0, 0.5, "euclidean");
+  int count_2 = api.groupDataset(0, 0.5, "chebyshev");
+  BOOST_TEST( count_1 > 20 );
+  BOOST_TEST( count_2 > 20 );
+  BOOST_CHECK_THROW( api.groupDataset(1, 0.5, "euclidean"), GenexException ); // no dataset 1 loaded
+  BOOST_CHECK_THROW( api.groupDataset(0, 0.5, "oracle"), GenexException ); //no magical distance
+}
+
+

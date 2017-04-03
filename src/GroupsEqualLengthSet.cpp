@@ -10,7 +10,7 @@
 
 namespace genex {
 
-int GroupsEqualLengthSet::group(DistanceMetric* metric, data_t threshold)
+int GroupsEqualLengthSet::group(const DistanceMetric* metric, data_t threshold)
 {
   reset();
   this->groupsEqualLength.resize(dataset.getItemLength() + 1, NULL);

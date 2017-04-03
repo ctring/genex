@@ -42,7 +42,7 @@ public:
    *  @param threshold the threshold to be group with
    *  @return the number of groups it creates
    */
-  int group(DistanceMetric* metric, data_t threshold);
+  int group(const DistanceMetric* metric, data_t threshold);
 
   /**
    *  @brief gets the most similar sequence in the dataset

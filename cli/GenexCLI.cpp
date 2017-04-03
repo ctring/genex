@@ -207,7 +207,50 @@ MAKE_COMMAND(Timer,
   "an additional argument, the current state of timer is printed.  \n"
   "                                                                \n"
   "Usage: timer [on|off]                                             ")
+MAKE_COMMAND(GroupDataset,
+  {
+    if (tooFewArgs(args, 2) || tooManyArgs(args, 4))
+    {
+      return false;
+    }
 
+    int index = std::stoi(args[1]);
+    genex::data_t threshold = std::stod(args[2]);
+    
+    std::string metric_name = "euclidean";
+
+    // if metric option is present
+    if (args.size() == 4)
+    {
+      metric_name = args[3];
+    }
+    int count = -1;
+    try
+    {
+      count = gGenexAPI.groupDataset(index, threshold, metric_name);
+    }
+    catch (genex::GenexException& e)
+    {
+      std::cout << "Error! " << e.what() << std::endl;
+      return false;
+    }
+
+    std::cout << "Dataset " << index << " is now grouped" << std::endl;
+    std::cout << "Number of Groups: " << count << std::endl;
+    return true;
+  },
+
+  "Group a dataset in memory",
+
+  "Usage: group <dataset_index> <threshold> [distance_metric]     \n"
+  "  dataset_index   - Index of the dataset being unloaded. Use   \n"
+  "                   'list dataset' to retrieve the list of      \n"
+  "                   loaded datasets.                            \n"
+  "  threshold       - Threshold for grouping.                    \n"
+  "  distance_metric - The string identifier of a distance metric \n"
+  "                    'list metric' to retrieve the list of      \n"
+  "                    loaded metrics. Default to euclidean.        "
+  )
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
  *
@@ -219,7 +262,8 @@ std::map<std::string, Command*> commands = {
   {"load", &cmdLoadDataset},
   {"unload", &cmdUnloadDataset},
   {"list", &cmdList},
-  {"timer", &cmdTimer}
+  {"timer", &cmdTimer},
+  {"group", &cmdGroupDataset}
 };
 
 /**************************************************************************/
