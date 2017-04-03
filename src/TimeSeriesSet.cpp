@@ -147,26 +147,25 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   // TODO: use library instead. Why * instead of vector?
   // auto minAndMax = std::minmax(this->data);
   // data_t diff = *minAndMax.first - *minAndMax.second;
- 
-  // find min and max in 1.5 comparisons per element
   data_t MIN = INF;
   data_t MAX = -INF;
-  int unsigned i;
+  unsigned int i;
   
+  // find min and max in 1.5 comparisons per element
   for (int ts = 0; ts < this->itemCount; ts++)
   {
     data_t x, y, z;
-    i = (length % 2 != 0);
+
     // start at 0 if even, 1 if odd
-    if (length % 2 != 0)
+    if ((i = (length % 2 != 0)))
     {
-      if (data[ts][i] < MIN)
+      if (data[ts][0] < MIN)
       {
-        data[ts][i] = MIN;
+        MIN = data[ts][0];
       } 
-      else if (data[ts][i] > MIN)
+      if (data[ts][0] > MAX)
       {
-        data[ts][i] = MAX;
+        MAX = data[ts][0];
       }
     }
 

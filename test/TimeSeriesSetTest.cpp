@@ -7,6 +7,7 @@
 #include "TimeSeries.hpp"
 #include "distance/Euclidean.hpp"
 
+#include <iostream>
 
 #define TOLERANCE 1e-9
 
@@ -22,6 +23,7 @@ struct MockDataset
   std::string very_big = "dataset/test/very_big_value.txt";
   std::string test_5_10_space = "dataset/test/test_5_10_space.txt";
   std::string test_3_10_space = "dataset/test/test_3_10_space.txt";
+  std::string test_3_11_space = "dataset/test/test_3_11_space.txt";
 } data;
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )
@@ -140,6 +142,27 @@ BOOST_AUTO_TEST_CASE( normalize, *boost::unit_test::tolerance(TOLERANCE) )
   for(int i = 0; i < tsSet.getItemLength(); i++)
   {
     BOOST_TEST( t[i] == (i)/10.0 );
+  }
+}
+
+BOOST_AUTO_TEST_CASE( normalize_2, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_3_11_space, 11, 0, " ");
+  std::pair<data_t, data_t> min_max = tsSet.normalize();
+  BOOST_TEST( min_max.first == 1 );
+  BOOST_TEST( min_max.second == 21 );
+
+  TimeSeries t = tsSet.getTimeSeries(0);
+  for(int i = 0; i < tsSet.getItemLength(); i++)
+  {
+    BOOST_TEST( t[i] == (i)/20.0 );
+  }
+
+  TimeSeries t_2 = tsSet.getTimeSeries(2);
+  for(int i = 0; i < tsSet.getItemLength(); i++)
+  {
+    BOOST_TEST( t_2[i] == (i + 10)/20.0 );
   }
 }
 
