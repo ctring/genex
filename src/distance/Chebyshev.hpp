@@ -16,20 +16,6 @@ namespace genex {
 class Chebyshev : public DistanceMetric
 {
 
-class ChebyshevCache : public Cache {
-  public:
-    data_t val = 0;
-    ChebyshevCache(data_t val) : val(val) {};
-    bool lessThan(const Cache* other) const
-    {
-      if(const ChebyshevCache* c = dynamic_cast<const ChebyshevCache*>(other))
-      {
-        return val < c->val;
-      }
-      throw GenexException("Incorrect cache type");
-    }
-};
-
 public:
   data_t dist(data_t x_1, data_t x_2) const
   {
@@ -38,21 +24,21 @@ public:
 
   Cache* init() const
   {
-    return new ChebyshevCache(-INF);
+    return new DefaultCache(-INF);
   }
 
   Cache* reduce(const Cache* prev, const data_t x_1, const data_t x_2) const
   {
-    if (const ChebyshevCache* c = dynamic_cast<const ChebyshevCache*>(prev))
+    if (const DefaultCache* c = dynamic_cast<const DefaultCache*>(prev))
     {
-      return new ChebyshevCache(std::max(c->val, dist(x_1, x_2)));
+      return new DefaultCache(std::max(c->val, dist(x_1, x_2)));
     }
     throw GenexException("Incorrect cache type");
   }
 
   data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    if (const ChebyshevCache* c = dynamic_cast<const ChebyshevCache*>(total))
+    if (const DefaultCache* c = dynamic_cast<const DefaultCache*>(total))
     {
       return c->val;
     }

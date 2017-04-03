@@ -13,20 +13,6 @@ namespace genex {
 // This class is example of an implemented DistanceMetric
 class Euclidean : public DistanceMetric
 {
-  class EuclideanCache : public Cache {
-    public:
-      data_t val = 0;
-      EuclideanCache(data_t val) : val(val) {};
-      bool lessThan(const Cache* other) const
-      {
-        if(const EuclideanCache* c = dynamic_cast<const EuclideanCache*>(other))
-        {
-          return val < c->val;
-        }
-        throw GenexException("Incorrect cache type");
-      }
-  };
-
 public:
   data_t dist(data_t x_1, data_t x_2) const
   {
@@ -35,22 +21,21 @@ public:
 
   Cache* init() const
   {
-    return new EuclideanCache(0.0);
+    return new DefaultCache(0.0);
   }
 
   Cache* reduce(const Cache* prev, data_t x_1, data_t x_2) const
   {
-    if (const EuclideanCache* c = dynamic_cast<const EuclideanCache *>(prev))
+    if (const DefaultCache* c = dynamic_cast<const DefaultCache *>(prev))
     {
-      return new EuclideanCache(sqrt(pow(c->val, 2) + dist(x_1, x_2)));
+      return new DefaultCache(sqrt(pow(c->val, 2) + dist(x_1, x_2)));
     }
     throw GenexException("Incorrect cache type.");
   }
 
   data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    // const EuclideanCache* c = CAST_TO(EuclidieanCache, total)
-    if (const EuclideanCache* c = dynamic_cast<const EuclideanCache *>(total))
+    if (const DefaultCache* c = dynamic_cast<const DefaultCache *>(total))
     {
       return (c->val) / t.getLength();
     }

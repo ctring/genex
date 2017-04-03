@@ -14,20 +14,6 @@ namespace genex {
 class Manhattan : public DistanceMetric
 {
 
-  class ManhattanCache : public Cache {
-    public:
-      data_t val = 0;
-      ManhattanCache(data_t val) : val(val) {};
-      bool lessThan(const Cache* other) const
-      {
-        if(const ManhattanCache* c = dynamic_cast<const ManhattanCache*>(other))
-        {
-          return val < c->val;
-        }
-        throw GenexException("Incorrect cache type.");
-      }
-  };
-
 public:
   data_t dist(data_t x_1, data_t x_2) const
   {
@@ -36,21 +22,21 @@ public:
 
   Cache* init() const
   {
-    return new ManhattanCache(0);
+    return new DefaultCache(0);
   }
 
   Cache* reduce(const Cache* prev, const data_t x_1, const data_t x_2) const
   {
-    if(const ManhattanCache* c = dynamic_cast<const ManhattanCache*>(prev))
+    if(const DefaultCache* c = dynamic_cast<const DefaultCache*>(prev))
     {
-      return new ManhattanCache(c->val + dist(x_1, x_2));
+      return new DefaultCache(c->val + dist(x_1, x_2));
     }
     throw GenexException("Invalid cache type.");
   }
 
   data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    if(const ManhattanCache* c = dynamic_cast<const ManhattanCache*>(total))
+    if(const DefaultCache* c = dynamic_cast<const DefaultCache*>(total))
     {
       return (c->val / t.getLength());
     }
