@@ -30,7 +30,6 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
 
   GroupsEqualLengthSet gSet(tsSet);
   gSet.group(metric, 0.5);
-
   candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0, 0, 10), metric);
   BOOST_TEST((best.dist) == 0);
   best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10), metric);

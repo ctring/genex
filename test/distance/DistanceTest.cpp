@@ -47,8 +47,8 @@ BOOST_AUTO_TEST_CASE( general_distance, *boost::unit_test::tolerance(TOLERANCE) 
   TimeSeries ts_1(data.dat_1, 0, 0, 5);
   TimeSeries ts_2(data.dat_2, 0, 0, 5);
 
-  // data_t total_1 = distance::generalDistance(data.euclidean_dist, ts_1, ts_2);
-  // BOOST_TEST( total_1, 2.0 );
+  data_t total_1 = distance::generalDistance(data.euclidean_dist, ts_1, ts_2);
+  BOOST_TEST( total_1, 2.0 );
 
   data_t total_2 = distance::generalDistance(data.manhattan_dist, ts_1, ts_2);
   BOOST_TEST( total_2, 2.0 );

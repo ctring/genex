@@ -89,6 +89,11 @@ public:
   /**
    * ...
    */
+  data_t warpDistanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
+
+  /**
+   * ...
+   */
   candidate_time_series_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric) const;
 
   /**

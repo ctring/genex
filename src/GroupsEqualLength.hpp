@@ -45,8 +45,9 @@ public:
    *
    *  @param metric the distance metric to use when computing the groups
    *  @param threshold the threshold to use when splitting into new groups
+   *  @return number of generated groups
    */
-  void genGroups(const DistanceMetric* metric, data_t threshold);
+  int genGroups(const DistanceMetric* metric, data_t threshold);
 
   /**
    *  @brief gets the group closest to a query (measured from the centroid)

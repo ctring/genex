@@ -27,6 +27,11 @@ void Group::addMember(int index, int start)
 
 data_t Group::distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
 {
+  return distance::generalDistance(metric, this->centroid, query);//, dropout);
+}
+
+data_t Group::warpDistanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
+{
   return distance::generalWarpedDistance(metric, this->centroid, query, dropout);
 }
 

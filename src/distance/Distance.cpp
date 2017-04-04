@@ -222,7 +222,8 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
  */
 data_t generalDistance(const DistanceMetric* metric,
                        const TimeSeries& x_1,
-                       const TimeSeries& x_2)
+                       const TimeSeries& x_2,
+                       data_t dropout)
 {
   if (x_1.getLength() != x_2.getLength())
   {
@@ -231,20 +232,25 @@ data_t generalDistance(const DistanceMetric* metric,
 
   Cache* total = metric->init();
   Cache* curr;
+  bool dropped = false;
 
   for(int i = 0; i < x_1.getLength(); i++)
   {
     curr = metric->reduce(total, x_1[i], x_2[i]);
     delete total;
     total = curr;
+    if (metric->norm(total, x_1, x_2) >= dropout)
+    {
+      dropped = true;
+      break;
+    }
   }
 
-  data_t result = metric->norm(total, x_1, x_2);
+  data_t result = dropped ? INF : metric->norm(total, x_1, x_2);
   delete total;
 
   return result;
 }
-
 
 } // namespace distance
 } // namespace genex

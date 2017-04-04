@@ -16,7 +16,6 @@ public:
 
   /**
    *  @brief Destructor
-   *
    */
   ~GroupableTimeSeriesSet();
 

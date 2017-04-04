@@ -20,8 +20,8 @@ int GroupsEqualLengthSet::group(const DistanceMetric* metric, data_t threshold)
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
     this->groupsEqualLength[i] = new GroupsEqualLength(dataset, i);
-    this->groupsEqualLength[i]->genGroups(metric, threshold);
-    numberOfGroups += this->groupsEqualLength[i]->getNumberOfGroups();
+    int noOfGenerated = this->groupsEqualLength[i]->genGroups(metric, threshold);
+    numberOfGroups += noOfGenerated;
   }
   this->threshold = threshold;
   return numberOfGroups;

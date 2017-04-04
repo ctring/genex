@@ -48,7 +48,8 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
  */
 data_t generalDistance(const DistanceMetric* metric,
                        const TimeSeries& x_1,
-                       const TimeSeries& x_2);
+                       const TimeSeries& x_2,
+                       data_t dropout=INF);
 
 } // namespace distance
 } // namespace genex
