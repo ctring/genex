@@ -29,20 +29,14 @@ public:
 
   Cache* reduce(const Cache* prev, const data_t x_1, const data_t x_2) const
   {
-    if (const DefaultCache* c = dynamic_cast<const DefaultCache*>(prev))
-    {
-      return new DefaultCache(std::max(c->val, dist(x_1, x_2)));
-    }
-    throw GenexException("Incorrect cache type");
+    const DefaultCache* c = castCache<DefaultCache>(prev);
+    return new DefaultCache(std::max(c->val, dist(x_1, x_2)));
   }
 
   data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    if (const DefaultCache* c = dynamic_cast<const DefaultCache*>(total))
-    {
-      return c->val;
-    }
-    throw GenexException("Incorrect cache type");
+    const DefaultCache* c = castCache<DefaultCache>(total);
+    return c->val;
   }
 
   std::string getName() const

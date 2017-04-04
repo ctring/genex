@@ -14,7 +14,7 @@ struct MockData
   data_t dat_2[5] = {11, 2, 3, 4, 5};
 };
 
-BOOST_AUTO_TEST_CASE( time_series_length, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( euclidean_with_norm, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
   TimeSeries ts_1 {data.dat_1, 0, 0, 5};

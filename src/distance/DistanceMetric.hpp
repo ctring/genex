@@ -15,18 +15,28 @@ public:
 };
 
 class DefaultCache : public Cache {
-    public:
-      data_t val = 0;
-      DefaultCache(data_t val) : val(val) {};
-      bool lessThan(const Cache* other) const
-      {
-        if(const DefaultCache* c = dynamic_cast<const DefaultCache*>(other))
-        {
-          return val < c->val;
-        }
-        throw GenexException("Incorrect cache type");
-      }
-  };
+public:
+  data_t val = 0;
+  DefaultCache(data_t val) : val(val) {};
+  bool lessThan(const Cache* other) const
+  {
+    if(const DefaultCache* c = dynamic_cast<const DefaultCache*>(other))
+    {
+      return val < c->val;
+    }
+    throw GenexException("Incorrect cache type");
+  }
+};
+
+template<typename T>
+const T* castCache(const Cache* cache)
+{
+  const T* casted = dynamic_cast<const T*>(cache);
+  if (casted == nullptr) {
+    throw GenexException("Invalid cache type");
+  }
+  return casted;
+}
 
 /**
  *  @brief this is an abstract class that defines an API for distance metrics

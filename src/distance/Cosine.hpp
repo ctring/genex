@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <math.h>       /* sqrt */
 
 #include "TimeSeries.hpp"
 #include "distance/DistanceMetric.hpp"
@@ -43,22 +42,16 @@ public:
 
   Cache* reduce(const Cache* prev, const data_t x_1, const data_t x_2) const
   {
-    if(const CosineCache* c = dynamic_cast<const CosineCache*>(prev))
-    {
-      return new CosineCache(c->sumSqX1 + pow(x_1, 2), 
-                             c->sumSqX2 + pow(x_2, 2),
-                             c->sumX1X2 + x_1 * x_2);
-    }
-    throw GenexException("Invalid cache type.");
+    const CosineCache* c = castCache<CosineCache>(prev);
+    return new CosineCache(c->sumSqX1 + pow(x_1, 2),
+                           c->sumSqX2 + pow(x_2, 2),
+                           c->sumX1X2 + x_1 * x_2);
   }
 
   data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    if(const CosineCache* c = dynamic_cast<const CosineCache*>(total))
-    {
-      return c->sumX1X2 / (sqrt(c->sumSqX1) * sqrt(c->sumSqX2));
-    }
-    throw GenexException("Invalid cache type.");
+    const CosineCache* c = castCache<CosineCache>(total);
+    return c->sumX1X2 / (sqrt(c->sumSqX1) * sqrt(c->sumSqX2));
   }
 
   std::string getName() const
