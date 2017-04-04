@@ -210,7 +210,7 @@ MAKE_COMMAND(Timer,
 
 MAKE_COMMAND(GroupDataset,
   {
-    if (tooFewArgs(args, 2) || tooManyArgs(args, 4))
+    if (tooFewArgs(args, 3) || tooManyArgs(args, 4))
     {
       return false;
     }
