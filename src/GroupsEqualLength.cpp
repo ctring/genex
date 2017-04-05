@@ -34,7 +34,7 @@ int GroupsEqualLength::getNumberOfGroups(void) const
 
 int GroupsEqualLength::genGroups(const DistanceMetric* metric, data_t threshold)
 {
-  std::cout << "Generating groups of length: " << this->length << ". Sub-TS count: " << this->subTimeSeriesCount << std::endl;
+  //std::cout << "Generating groups of length: " << this->length << ". Sub-TS count: " << this->subTimeSeriesCount << std::endl;
   for (int start = 0; start < this->subTimeSeriesCount; start++)
   {
     for (int idx = 0; idx < dataset.getItemCount(); idx++)
@@ -63,7 +63,7 @@ int GroupsEqualLength::genGroups(const DistanceMetric* metric, data_t threshold)
       this->groups[bestSoFarIndex]->addMember(idx, start);
     }
   }
-  std::cout << "Finished grouping of length " << this->length << ": " << this->getNumberOfGroups() << " groups" << std::endl;
+  //std::cout << "Finished grouping of length " << this->length << ": " << this->getNumberOfGroups() << " groups" << std::endl;
 
   return this->getNumberOfGroups();
   //if we care about order:

@@ -13,6 +13,7 @@
 #include "distance/Manhattan.hpp"
 #include "distance/Chebyshev.hpp"
 #include "distance/Cosine.hpp"
+#include "distance/AltEuclidean.hpp"
 
 #include <iostream>
 
@@ -27,7 +28,8 @@ static std::vector<const DistanceMetric*> gAllMetric =
     new Euclidean(),
     new Manhattan(),
     new Chebyshev(),
-    new Cosine()
+    new Cosine(),
+    new AltEuclidean()
   };
 
 ////////////////////////////////////////////////////////////////////////////////

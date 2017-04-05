@@ -40,7 +40,7 @@ public:
    *
    *  @return count of this group
    */
-  int getCount(void) const { return this->count; }
+  int getCount() const { return this->count; }
 
   /**
    *  @brief adds a sequence to the centroid's sum of value
