@@ -60,6 +60,9 @@ BOOST_AUTO_TEST_CASE( general_distance, *boost::unit_test::tolerance(TOLERANCE) 
 BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
+  TimeSeries ts_1{data.dat_1, 0, 0, 1};
+  TimeSeries ts_2{data.dat_2, 0, 0, 1};
+
   TimeSeries ts_3{data.dat_3, 0, 0, 2};
   TimeSeries ts_4{data.dat_4, 0, 0, 5};
 
@@ -72,6 +75,9 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   Euclidean* euclidean_dist = new Euclidean();
   Manhattan* manhattan_dist = new Manhattan();
   Chebyshev* chebyshev_dist = new Chebyshev();
+
+  data_t total_0 = distance::generalWarpedDistance(data.euclidean_dist, ts_1, ts_2, INF);
+  BOOST_TEST( total_0 == 10.0 );
 
   data_t total_1 = distance::generalWarpedDistance(data.euclidean_dist, ts_3, ts_4, INF);
   BOOST_TEST( total_1 == 0.0 );
