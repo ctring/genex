@@ -35,7 +35,7 @@ static std::vector<const DistanceMetric*> gAllMetric =
 ////////////////////////////////////////////////////////////////////////////////
 /////**********          no need to make changes below!          **********/////
 ////////////////////////////////////////////////////////////////////////////////
-const Cache* minCache(const Cache* c1, const Cache* c2)
+Cache* minCache(Cache* c1, Cache* c2)
 {
   return c1->lessThan(c2) ? c1 : c2;
 }
@@ -79,10 +79,10 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // Fastpath for base intervals.
   if (m == 1 && n == 1)
   {
-    Cache* init = metric->init();
-    Cache* result = metric->reduce(init, a[0], b[0]);
-    delete init;
-    return metric->norm(result, a, b);
+    Cache* result = metric->reduce(metric->init(), a[0], b[0], false);
+    data_t normalizedResult = metric->norm(result, a, b);
+    delete result;
+    return normalizedResult;
   }
 
   // create cost matrix
@@ -97,9 +97,7 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   }
   #endif
 
-  Cache* init = metric->init();
-  cost[0][0] = metric->reduce(init, a[0], b[0]);
-  delete init;
+  cost[0][0] = metric->reduce(metric->init(), a[0], b[0], false);
 
   #if 0
   trace[0][0] = std::make_pair(-1, -1);
@@ -108,7 +106,7 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // calculate first column
   for(int i = 1; i < m; i++)
   {
-      cost[i][0] = metric->reduce(cost[i-1][0], a[i], b[0]);
+      cost[i][0] = metric->reduce(cost[i-1][0], a[i], b[0], true);
       #if 0
       trace[i][0] = std::make_pair(i - 1, 0);
       #endif
@@ -117,7 +115,7 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // calculate first row
   for(int j = 1; j < n; j++)
   {
-    cost[0][j] = metric->reduce(cost[0][j-1], a[0], b[j]);
+    cost[0][j] = metric->reduce(cost[0][j-1], a[0], b[j], true);
     #if 0
     trace[0][j] = std::make_pair(0, j - 1);
     #endif
@@ -129,12 +127,12 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // fill matrix. If using dropout, keep tabs on min cost per row.
   for(int i = 1; i < m; i++)
   {
-    const Cache* bestSoFar = cost[i][0];
+    Cache* bestSoFar = cost[i][0];
     for(int j = 1; j < n; j++)
     {
-      const Cache* g1 = minCache(cost[i-1][j], cost[i][j-1]);
-      const Cache* mp = minCache(g1, cost[i-1][j-1]);
-      cost[i][j] = metric->reduce(mp, a[i], b[j]);
+      Cache* g1 = minCache(cost[i-1][j], cost[i][j-1]);
+      Cache* mp = minCache(g1, cost[i-1][j-1]);
+      cost[i][j] = metric->reduce(mp, a[i], b[j], true);
       bestSoFar = minCache(bestSoFar, cost[i][j]);
     }
 
@@ -233,14 +231,11 @@ data_t generalDistance(const DistanceMetric* metric,
   }
 
   Cache* total = metric->init();
-  Cache* curr;
   bool dropped = false;
 
   for(int i = 0; i < x_1.getLength(); i++)
   {
-    curr = metric->reduce(total, x_1[i], x_2[i]);
-    delete total;
-    total = curr;
+    total = metric->reduce(total, x_1[i], x_2[i], false);
     if (metric->norm(total, x_1, x_2) >= dropout)
     {
       dropped = true;

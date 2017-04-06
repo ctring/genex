@@ -27,16 +27,18 @@ public:
     return new DefaultCache(-INF);
   }
 
-  Cache* reduce(const Cache* prev, const data_t x_1, const data_t x_2) const
+  Cache* reduce(Cache* prev, const data_t x_1, const data_t x_2, bool copy) const
   {
-    const DefaultCache* c = castCache<DefaultCache>(prev);
-    return new DefaultCache(std::max(c->val, dist(x_1, x_2)));
+    DefaultCache* a = createInCache<DefaultCache>(prev);
+    DefaultCache* new_a = createOutCache<DefaultCache>(a, copy);
+    new_a->val = std::max(a->val, dist(x_1, x_2));
+    return new_a;
   }
 
-  data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    const DefaultCache* c = castCache<DefaultCache>(total);
-    return c->val;
+    DefaultCache* a = createInCache<DefaultCache>(total);
+    return a->val;
   }
 
   std::string getName() const

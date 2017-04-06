@@ -152,12 +152,12 @@ BOOST_AUTO_TEST_CASE( get_distance_metric, *boost::unit_test::tolerance(TOLERANC
   TimeSeries ts_for_function_call{data.dat_3, 0, 0, 1};
   const DistanceMetric * d = distance::getDistanceMetric("euclidean");
   Cache* cache = d->init();
-  data_t a = d->norm(d->reduce(cache, 100.0, 110.0), ts_for_function_call,ts_for_function_call);
+  data_t a = d->norm(d->reduce(cache, 100.0, 110.0, false), ts_for_function_call,ts_for_function_call);
   BOOST_TEST( a == 10 );
 
   const DistanceMetric * d_2 = distance::getDistanceMetric("manhattan");
   Cache* cache_2 = d_2->init();
-  data_t e = d_2->norm(d_2->reduce(cache_2, 100.0, 110.0), ts_for_function_call, ts_for_function_call);
+  data_t e = d_2->norm(d_2->reduce(cache_2, 100.0, 110.0, false), ts_for_function_call, ts_for_function_call);
 
   BOOST_TEST( e == 10 );
 
@@ -173,6 +173,6 @@ BOOST_AUTO_TEST_CASE( distance_metric_not_found )
 BOOST_AUTO_TEST_CASE( incompatible_cache )
 {
   MockData data;
-  const Cache* cosineCache = data.cosine_dist->init();
-  BOOST_CHECK_THROW( data.euclidean_dist->reduce(cosineCache, 0, 0), GenexException );
+  Cache* cosineCache = data.cosine_dist->init();
+  BOOST_CHECK_THROW( data.euclidean_dist->reduce(cosineCache, 0, 0, false), GenexException );
 }

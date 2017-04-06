@@ -24,7 +24,7 @@ BOOST_AUTO_TEST_CASE( cosine_test, *boost::unit_test::tolerance(TOLERANCE)  )
   Cache* total = dist.init();
 
   for (int i = 0; i < ts_1.getLength(); i++) {
-    total = dist.reduce(total, ts_1[i], ts_2[i]);
+    total = dist.reduce(total, ts_1[i], ts_2[i], false);
   }
 
   BOOST_TEST( dist.norm(total, ts_1, ts_2), 0.94 );

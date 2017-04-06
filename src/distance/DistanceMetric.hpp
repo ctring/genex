@@ -17,7 +17,8 @@ public:
 class DefaultCache : public Cache {
 public:
   data_t val = 0;
-  DefaultCache(data_t val) : val(val) {};
+  DefaultCache() {}
+  DefaultCache(data_t val) : val(val) {}
   bool lessThan(const Cache* other) const
   {
     if(const DefaultCache* c = dynamic_cast<const DefaultCache*>(other))
@@ -29,13 +30,22 @@ public:
 };
 
 template<typename T>
-const T* castCache(const Cache* cache)
+T* createInCache(Cache* cache)
 {
-  const T* casted = dynamic_cast<const T*>(cache);
+  T* casted = dynamic_cast<T*>(cache);
   if (casted == nullptr) {
     throw GenexException("Invalid cache type");
   }
   return casted;
+}
+
+template<typename T>
+T* createOutCache(T* cache, bool copy)
+{
+  if (copy) {
+    return new T();
+  }
+  return cache;
 }
 
 /**
@@ -59,8 +69,8 @@ public:
   /**
    *  @brief this function is the individual recursion of the distance for
    *
-   *  This function is used as part of the general dynammic timewarping recursive
-   *  step. For example:
+   *  This function is used as part of the general point-wise distance as well as
+   *  the dynammic time-warping distance. For example:
    *
    *  dist(points 1 through n for two timeseries) = (x_1_1 - x_2_1)^2 + ... + (x_1_n - x_2_n)^2
    *  dist(points 1 through n - 1) = a
@@ -71,7 +81,7 @@ public:
    *  @param x_2 is a data point from the other of the timeseries
    *  @return the distance between the previous and rest (defined recursively)
    */
-  virtual Cache* reduce(const Cache* prev, data_t x_1, data_t x_2) const = 0;
+  virtual Cache* reduce(Cache* prev, data_t x_1, data_t x_2, bool copy) const = 0;
 
   /**
    *  @brief returns the normalized distance between two timeseries
@@ -86,7 +96,7 @@ public:
    *  @param x_2 is the other of the two TimeSeries between which distance is being found
    *  @return the normalized total distance between two time series
    */
-  virtual data_t norm(const Cache* total, const TimeSeries& t_1, const TimeSeries& t_2) const = 0;
+  virtual data_t norm(Cache* total, const TimeSeries& t_1, const TimeSeries& t_2) const = 0;
 
   /**
    *  @return the name of the distance

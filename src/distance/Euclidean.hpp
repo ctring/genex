@@ -24,15 +24,17 @@ public:
     return new DefaultCache(0.0);
   }
 
-  Cache* reduce(const Cache* prev, data_t x_1, data_t x_2) const
+  Cache* reduce(Cache* prev, data_t x_1, data_t x_2, bool copy) const
   {
-    const DefaultCache* c = castCache<DefaultCache>(prev);
-    return new DefaultCache(sqrt(pow(c->val, 2) + dist(x_1, x_2)));
+    DefaultCache* a = createInCache<DefaultCache>(prev);
+    DefaultCache* new_a = createOutCache<DefaultCache>(a, copy);
+    new_a->val = sqrt(pow(a->val, 2) + dist(x_1, x_2));
+    return new_a;
   }
 
-  data_t norm(const Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    const DefaultCache* c = castCache<DefaultCache>(total);
+    DefaultCache* c = createInCache<DefaultCache>(total);
     return (c->val) / t.getLength();
   }
 
