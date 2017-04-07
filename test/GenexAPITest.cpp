@@ -5,6 +5,8 @@
 #include "GenexAPI.hpp"
 #include "Exception.hpp"
 
+#include "Group.hpp"
+
 using namespace genex;
 
 struct MockDataset
@@ -97,4 +99,26 @@ BOOST_AUTO_TEST_CASE( api_group )
   BOOST_CHECK_THROW( api.groupDataset(0, 0.5, "oracle"), GenexException ); //no magical distance
 }
 
+BOOST_AUTO_TEST_CASE( api_match )
+{
+  GenexAPI api;
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+
+  int count_1 = api.groupDataset(0, 0.5, "euclidean");
+
+  candidate_time_series_t best_1 = api.getBestMatch(0, 0, 0);
+  candidate_time_series_t best_2 = api.getBestMatch(0, 1, 0);
+  candidate_time_series_t best_3 = api.getBestMatch(0, 1, 1);
+  candidate_time_series_t best_4 = api.getBestMatch(0, 1, 0, 5, 10);
+
+  BOOST_TEST(best_1.dist == 0.0);
+  BOOST_TEST(best_2.dist == 0.0);
+  BOOST_TEST(best_3.dist == 0.0);
+  BOOST_TEST(best_4.dist == 0.0);
+
+  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 0), GenexException ); // dataset not grouped
+  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 35), GenexException ); // not that many ts in dataset
+  BOOST_CHECK_THROW( api.getBestMatch(1, 0, 1, 100, 125), GenexException ); // not that big ts in dataset
+}
 

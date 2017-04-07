@@ -120,6 +120,20 @@ public:
    */
   int getLength() const { return this->length; }
 
+  /**
+   *  @brief gets the index of the data - used for displaying information via the api
+   *  
+   *  @return the index of the data from its timeseries
+   */
+  int getIndex() const { return this->index; }
+
+  /**
+   *  @brief gets the start of the data - used for displaying information via the api
+   *  
+   *  @return the start of the data from its timeseries
+   */
+  int getStart() const { return this->start; }
+
 protected:
   data_t* data;
 

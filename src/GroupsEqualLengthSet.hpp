@@ -47,10 +47,10 @@ public:
   /**
    *  @brief gets the most similar sequence in the dataset
    *
-   *  @param metric the metric to warp by
+   *  @param query gets most similar sequence to the query
    *  @return the best match in the dataset
    */
-  candidate_time_series_t getBestMatch(const TimeSeries& data, const DistanceMetric* metric);
+  candidate_time_series_t getBestMatch(const TimeSeries& query);
 
   /**
    *  @brief clears the groups
@@ -70,6 +70,7 @@ private:
   data_t threshold;
   std::vector<GroupsEqualLength*> groupsEqualLength;
   const TimeSeriesSet& dataset;
+  const DistanceMetric* metric;
 };
 
 } // namespace genex

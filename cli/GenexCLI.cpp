@@ -252,6 +252,60 @@ MAKE_COMMAND(GroupDataset,
   "                    'list metric' to retrieve the list of      \n"
   "                    loaded metrics. Default to euclidean.        "
   )
+
+MAKE_COMMAND(Match,
+  {
+    if (tooFewArgs(args, 4) || tooManyArgs(args, 8))
+    {
+      return false;
+    }
+
+    int db_index = std::stoi(args[1]);
+    int  q_index = std::stoi(args[2]);
+    int ts_index = std::stoi(args[3]);
+    int start = 0;
+    int end = -1;
+
+    if (args.size() > 4)
+    {
+      start = std::stoi(args[4]);
+      end = std::stoi(args[5]);
+    }
+
+    try
+    {
+      if (end == -1)
+      {
+        genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index);
+        std::cout << "Best Match is timeseries " << best.data.getIndex() << " with distance " << best.dist << " starting at " << best.data.getStart() <<" with length " << best.data.getLength() << std::endl;
+      }
+      else
+      {
+        genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
+        std::cout << "Best Match is timeseries " << best.data.getIndex() << " with distance " << best.dist << " starting at " << best.data.getStart() <<" with length " << best.data.getLength() << std::endl;
+      }
+    }
+    catch (genex::GenexException& e)
+    {
+      std::cout << "Error! " << e.what() << std::endl;
+      return false;
+    }
+    return true;
+  },
+
+  "Find the best match of a time series",
+
+  "Usage: match <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
+  "  dataset_index   - Index of loaded dataset to get the result from. \n"
+  "                    Use 'list dataset' to retrieve the list of     \n"
+  "                    loaded datasets.                           \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query \n"
+  "  ts_index        - Index of the query \n"
+  "  start           - The start location of the query in the timeseries \n"
+  "                    if omitted, will default to 0.\n"
+  "  end             - The end location of the query in the timeseries \n"
+  )
+
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
  *
@@ -264,7 +318,8 @@ std::map<std::string, Command*> commands = {
   {"unload", &cmdUnloadDataset},
   {"list", &cmdList},
   {"timer", &cmdTimer},
-  {"group", &cmdGroupDataset}
+  {"group", &cmdGroupDataset},
+  {"match", &cmdMatch}
 };
 
 /**************************************************************************/

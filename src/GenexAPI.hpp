@@ -110,7 +110,20 @@ public:
    *  @return the number of groups created
    */ 
   int groupDataset(int idx, data_t threshold, std::string metric_name);
-   
+
+  /**
+   *  @brief gets the best match in a dataset
+   *
+   *  @param result_idx the index of the result dataset
+   *  @param query_idx the index of the query dataset
+   *  @param index the index of the timeseries in the query dataset
+   *  @param start the start of the index
+   *  @param end the end of the index
+   *  @return best match in the dataset
+   */ 
+  candidate_time_series_t getBestMatch(int result_idx, int query_idx, int index, int start, int end);
+  candidate_time_series_t getBestMatch(int result_idx, int query_idx, int index);
+
 private:
   void _checkDatasetIndex(int index);
 

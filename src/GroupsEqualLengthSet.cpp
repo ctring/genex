@@ -14,7 +14,7 @@ int GroupsEqualLengthSet::group(const DistanceMetric* metric, data_t threshold)
 {
   reset();
   this->groupsEqualLength.resize(dataset.getItemLength() + 1, NULL);
-
+  
   int numberOfGroups = 0;
 
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
@@ -23,18 +23,20 @@ int GroupsEqualLengthSet::group(const DistanceMetric* metric, data_t threshold)
     int noOfGenerated = this->groupsEqualLength[i]->genGroups(metric, threshold);
     numberOfGroups += noOfGenerated;
   }
+  
+  this->metric = metric;//save metric for getting best match
   this->threshold = threshold;
   return numberOfGroups;
 }
 
-candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data, const DistanceMetric* metric)
+candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data)
 {
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
     // this looks through each group of a certain length finding the best of those groups
-    candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(data, metric, bestSoFarDist);
+    candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(data, this->metric, bestSoFarDist);
 
     if (candidate.second < bestSoFarDist)
     {

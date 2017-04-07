@@ -115,6 +115,24 @@ int GenexAPI::groupDataset(int index,  data_t threshold, std::string metric_name
   return this->loadedDatasets[index]->groupAllLengths(metric, threshold);
 }
 
+candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index)
+{
+  this->_checkDatasetIndex(result_idx);
+  this->_checkDatasetIndex(query_idx);
+
+  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
+  return loadedDatasets[result_idx]->getBestMatch(query);
+}
+
+candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index, int start, int end)
+{
+  this->_checkDatasetIndex(result_idx);
+  this->_checkDatasetIndex(query_idx);
+
+  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
+  return loadedDatasets[result_idx]->getBestMatch(query);
+}
+
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
