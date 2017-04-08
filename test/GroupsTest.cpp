@@ -46,7 +46,11 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), timeSeriesCount );
   BOOST_CHECK( tsSet.getFilePath() == data.test_5_10_space );
 
-  Group g(tsSet, memberLength);
+  std::vector<std::vector<group_membership_t>> memberMap =
+    std::vector<std::vector<group_membership_t>>(tsSet.getItemCount(),
+                                                 std::vector<group_membership_t>(tsSet.getItemLength()));
+  Group g(0, memberLength, tsSet, memberMap);
+
   const GroupCentroid& c = g.getCentroid();
 
   // test initial centroid is all zeros
@@ -86,7 +90,12 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_10_space, timeSeriesCount, 0, " ");
 
-  Group g(tsSet, memberLength);
+  std::vector<std::vector<group_membership_t>> memberMap =
+    std::vector<std::vector<group_membership_t>>(tsSet.getItemCount(),
+                                                 std::vector<group_membership_t>(tsSet.getItemLength()));
+
+
+  Group g(0, memberLength, tsSet, memberMap);
   g.addMember(2, 0);
   g.addMember(0, 0);
   TimeSeries t = tsSet.getTimeSeries(1,0,memberLength);

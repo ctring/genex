@@ -9,6 +9,14 @@
 
 namespace genex {
 
+GroupsEqualLength::GroupsEqualLength(const TimeSeriesSet& dataset, int length)
+ : dataset(dataset), length(length)
+{
+  this->subTimeSeriesCount = dataset.getItemLength() - length + 1;
+  this->memberMap = std::vector<std::vector<group_membership_t>>(dataset.getItemCount(),
+    std::vector<group_membership_t>(this->subTimeSeriesCount));
+}
+
 GroupsEqualLength::~GroupsEqualLength()
 {
   for (unsigned int i = 0; i < groups.size(); i++)
@@ -32,7 +40,7 @@ int GroupsEqualLength::getNumberOfGroups(void) const
   return this->groups.size();
 }
 
-int GroupsEqualLength::genGroups(const DistanceMetric* metric, data_t threshold)
+int GroupsEqualLength::generateGroups(const DistanceMetric* metric, data_t threshold)
 {
   //std::cout << "Generating groups of length: " << this->length << ". Sub-TS count: " << this->subTimeSeriesCount << std::endl;
   for (int start = 0; start < this->subTimeSeriesCount; start++)
@@ -57,7 +65,8 @@ int GroupsEqualLength::genGroups(const DistanceMetric* metric, data_t threshold)
       if (bestSoFar > threshold / 2 || this->groups.size() == 0)
       {
         bestSoFarIndex = this->groups.size();
-        this->groups.push_back(new Group(dataset, length));
+        int newGroupIndex = this->groups.size();
+        this->groups.push_back(new Group(newGroupIndex, this->length, this->dataset, this->memberMap));
       }
 
       this->groups[bestSoFarIndex]->addMember(idx, start);

@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
 
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 0 );
 
-  groups.genGroups( metric, 0.5 );
+  groups.generateGroups( metric, 0.5 );
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 1 );
 }
 
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE( groups_equal_length_different, *boost::unit_test::toleranc
 
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 0 );
 
-  groups.genGroups( metric, 0.5 );
+  groups.generateGroups( metric, 0.5 );
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 2);
 }
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE( groups_best_group, *boost::unit_test::tolerance(TOLERANCE)
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
 
   GroupsEqualLength groups(tsSet, 10);
-  groups.genGroups( metric, 0.5 );
+  groups.generateGroups( metric, 0.5 );
   BOOST_CHECK_EQUAL( groups.getGroup(0), groups.getBestGroup(tsSet.getTimeSeries(1,0,10), metric, INF).first);
   BOOST_CHECK_EQUAL( groups.getGroup(0), groups.getBestGroup(tsSet.getTimeSeries(1,0,9), metric, INF).first);
   BOOST_CHECK_EQUAL( groups.getGroup(0), groups.getBestGroup(tsSet.getTimeSeries(1,0,8), metric, INF).first);

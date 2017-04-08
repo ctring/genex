@@ -23,11 +23,7 @@ public:
    *  @param dataset the dataset that the class creates groups for
    *  @param length the length of each time series in each group
    */
-  GroupsEqualLength(const TimeSeriesSet& dataset, int length) :
-    dataset(dataset), length(length)
-  {
-    this->subTimeSeriesCount = dataset.getItemLength() - length + 1;
-  }
+  GroupsEqualLength(const TimeSeriesSet& dataset, int length);
 
   /**
    * @brief deconstructor for GroupsEqualLength
@@ -47,7 +43,7 @@ public:
    *  @param threshold the threshold to use when splitting into new groups
    *  @return number of generated groups
    */
-  int genGroups(const DistanceMetric* metric, data_t threshold);
+  int generateGroups(const DistanceMetric* metric, data_t threshold);
 
   /**
    *  @brief gets the group closest to a query (measured from the centroid)
@@ -67,6 +63,7 @@ private:
   int length, subTimeSeriesCount;
   const TimeSeriesSet& dataset;
   std::vector<Group*> groups;
+  std::vector<std::vector<group_membership_t>> memberMap;
 };
 
 } // namespace genex

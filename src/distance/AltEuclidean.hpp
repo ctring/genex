@@ -29,7 +29,7 @@ public:
     DefaultCache* a = createInCache<DefaultCache>(prev);
     DefaultCache* new_a = createOutCache<DefaultCache>(a, copy);
 
-    new_a->val = sqrt(pow(a->val, 2) + dist(x_1, x_2));
+    new_a->val = a->val + dist(x_1, x_2);
 
     return new_a;
   }
@@ -37,7 +37,7 @@ public:
   data_t norm(Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
     DefaultCache* a = createInCache<DefaultCache>(total);
-    return (a->val) / sqrt(std::max(t.getLength(), t_2.getLength()) - 1);
+    return sqrt(a->val) / sqrt(std::max(t.getLength(), t_2.getLength()) - 1);
   }
 
   std::string getName() const

@@ -10,6 +10,13 @@
 namespace genex {
 
 /**
+ *  In context of a group, a member is represented by the index of a whole time
+ *  series in a dataset and the starting position. These two numbers make up the
+ *  'coordinate' of a member
+ */
+typedef std::pair<int, int> member_coord_t;
+
+/**
  *  @brief a struct pairing a dist with a time series
  *
  */
@@ -22,16 +29,17 @@ struct candidate_time_series_t
 };
 
 /**
- *  @brief a node structure, used for identifying membership of a
- *    timeseries and pointer to the next
- *
+ *  @brief a structure, used for identifying membership of a sub-time-series and
+ *         the sub-time-series right before it in a group
  */
-struct node_t
+struct group_membership_t
 {
-  int index, start;
-  node_t* next;
+  member_coord_t prev;
+  int groupIndex;
 
-  node_t(int index, int start, node_t* next) : index(index), start(start), next(next) {};
+  group_membership_t() {}
+  group_membership_t(int groupIndex, member_coord_t prev)
+    : groupIndex(groupIndex), prev(prev) {}
 };
 
 /**
@@ -45,14 +53,16 @@ public:
   /**
    *  @brief constructor for Group
    *
-   *  @param data a pointer the timeseries set that this is a group from
-   *  @param length the length of the sequences in this set
    */
-  Group(const TimeSeriesSet& dataset, int memberLength)
-  : count(0), dataset(dataset), memberLength(memberLength), centroid(memberLength)
-  {};
-
-  ~Group();
+  Group(int groupIndex, int memberLength, const TimeSeriesSet& dataset,
+    std::vector<std::vector<group_membership_t>>& memberMap) :
+    groupIndex(groupIndex),
+    memberLength(memberLength),
+    dataset(dataset),
+    memberMap(memberMap),
+    centroid(memberLength),
+    lastMemberCoord(std::make_pair(-1, -1)),
+    count(0) {}
 
   /**
    *  @brief adds a member to the group
@@ -113,8 +123,11 @@ public:
 
 private:
   const TimeSeriesSet& dataset;
+  std::vector<std::vector<group_membership_t>>& memberMap;
 
-  node_t* lastMember = nullptr;
+  int groupIndex;
+
+  member_coord_t lastMemberCoord;
 
   int memberLength;
   int count;

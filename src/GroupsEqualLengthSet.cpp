@@ -14,16 +14,16 @@ int GroupsEqualLengthSet::group(const DistanceMetric* metric, data_t threshold)
 {
   reset();
   this->groupsEqualLength.resize(dataset.getItemLength() + 1, NULL);
-  
+
   int numberOfGroups = 0;
 
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
     this->groupsEqualLength[i] = new GroupsEqualLength(dataset, i);
-    int noOfGenerated = this->groupsEqualLength[i]->genGroups(metric, threshold);
+    int noOfGenerated = this->groupsEqualLength[i]->generateGroups(metric, threshold);
     numberOfGroups += noOfGenerated;
   }
-  
+
   this->metric = metric;//save metric for getting best match
   this->threshold = threshold;
   return numberOfGroups;
