@@ -60,7 +60,7 @@ As described in (link to paper), define a non-decreasing distance in terms of a 
   * There is room to experiment here. As defined in the `DistanceMetric.hpp`, its inputs are references to both TimeSeries you are finding the distance between and the total distance so far saved into a Cache. A good starting point is computing the raw distance from Cache and dividing by the average of the lengths between the timeseries.
   * Note: return a data_t
 
-#### Add Distance to List
+#### add distance to list
 
 * Add your class to the list of distances `gAllMetric` in the file `src/distance/Distance.cpp`
 * Include the header file you created in this file as well.
@@ -75,8 +75,12 @@ See notes on how to run the CLI below.
 
 ### additional notes
 
-We define a type - data_t - a floating point number with precision that you can change dependent on your needs. All functions are documented, but please feel free to reach out to us if you think you have a question.
+We define a type data_t as a floating point number with precision that you can change dependent on your needs.
 
 ### pull requests
 
 We're exited to see others implement their own distance functions and add those distances to our (currently small) library of distances. To do this, please document your work using doxygen style and add tests to `test/distance`.
+
+### contact
+
+All functions are documented, but if any issues come up please reach out to us at genex@wpi.edu.
