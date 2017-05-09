@@ -67,6 +67,7 @@ int GroupsEqualLength::generateGroups(const DistanceMetric* metric, data_t thres
         bestSoFarIndex = this->groups.size();
         int newGroupIndex = this->groups.size();
         this->groups.push_back(new Group(newGroupIndex, this->length, this->dataset, this->memberMap));
+        this->groups[bestSoFarIndex]->setCentroid(idx, start);
       }
 
       this->groups[bestSoFarIndex]->addMember(idx, start);

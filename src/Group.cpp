@@ -10,7 +10,12 @@ void Group::addMember(int tsIndex, int tsStart)
   this->lastMemberCoord = std::make_pair(tsIndex, tsStart);
 
   TimeSeries newMember = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
-  this->centroid.addTimeSeries(newMember);
+}
+
+void Group::setCentroid(int tsIndex, int tsStart)
+{
+  TimeSeries cen = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
+  this->centroid.addTimeSeries(cen);
 }
 
 data_t Group::distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)

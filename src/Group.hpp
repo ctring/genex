@@ -73,6 +73,14 @@ public:
   void addMember(int index, int start);
 
   /**
+   *  @brief set the centroid of the group
+   *
+   *  @param seq which sequence the member is from
+   *  @param start where the member starts in the data
+   */
+  void setCentroid(int index, int start);
+
+  /**
    *  @brief gets the length of each sequence in the group
    *
    *  @return length of this group
