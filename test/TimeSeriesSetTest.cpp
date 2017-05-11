@@ -181,5 +181,5 @@ BOOST_AUTO_TEST_CASE( get_distance_between, *boost::unit_test::tolerance(TOLERAN
   BOOST_TEST( dist == 0 );
 
   dist = tsSet.distanceBetween(1,0,10, tsSet.getTimeSeries(0), metric);
-  BOOST_TEST( dist == (1.0 / 10.0) );
+  BOOST_TEST( dist == sqrt(1.0 / 9.0) );
 }

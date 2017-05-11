@@ -15,9 +15,9 @@ BOOST_AUTO_TEST_CASE( chebdist, *boost::unit_test::tolerance(TOLERANCE) )
    TimeSeries ts_1 {NULL, 0, 0, 2};
    TimeSeries ts_2 {NULL, 0, 0, 2};
 
-   Cache* first = d.init(); //-INF new Cache(50);
-   Cache* second = d.reduce(first, 50.0, 0, false);
-   Cache* third = d.reduce(second, 20.0, 10.0, false);
+   data_t* first = d.init(); //-INF
+   data_t* second = d.reduce(first, first, 50.0, 0);
+   data_t* third = d.reduce(second, second, 20.0, 10.0);
    data_t c = d.norm(third, ts_1, ts_2);
 
    delete third;

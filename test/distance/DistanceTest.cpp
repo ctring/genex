@@ -60,8 +60,8 @@ BOOST_AUTO_TEST_CASE( general_distance, *boost::unit_test::tolerance(TOLERANCE) 
 BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  TimeSeries ts_1{data.dat_1, 0, 0, 1};
-  TimeSeries ts_2{data.dat_2, 0, 0, 1};
+  TimeSeries ts_1{data.dat_1, 0, 0, 2};
+  TimeSeries ts_2{data.dat_2, 0, 0, 2};
 
   TimeSeries ts_3{data.dat_3, 0, 0, 2};
   TimeSeries ts_4{data.dat_4, 0, 0, 5};
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   BOOST_TEST( total_3 == 0.0 );
 
   data_t total_4 = distance::generalWarpedDistance(data.euclidean_dist, ts_5, ts_6, INF);
-  BOOST_TEST( total_4 == 1.0/4.0 );
+  BOOST_TEST( total_4 == sqrt(1.0/3.0) );
 
   data_t total_5 = distance::generalWarpedDistance(data.manhattan_dist, ts_5, ts_6, INF);
   BOOST_TEST( total_5 == 1.0/4.0 );
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   BOOST_TEST( total_6 == 1.0 );
 
   data_t total_7 = distance::generalWarpedDistance(data.euclidean_dist, ts_11, ts_12, INF);
-  data_t result_7 = (sqrt(12.0)/7.0);
+  data_t result_7 = (sqrt(12.0/6.0));
   BOOST_TEST( total_7 == result_7 );
 
   data_t total_8 = distance::generalWarpedDistance(data.manhattan_dist, ts_11, ts_12, INF);
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_CASE( gwd_different_distances, *boost::unit_test::tolerance(TOLE
   TimeSeries ts_10{data.dat_10, 0, 0, 6};
 
   data_t total_1 = distance::generalWarpedDistance(data.euclidean_dist, ts_9, ts_10, INF);
-  BOOST_TEST( total_1 == 3.0/6.0 );
+  BOOST_TEST( total_1 == sqrt(9.0/5.0) );
 
   data_t total_2 = distance::generalWarpedDistance(data.manhattan_dist, ts_9, ts_10, INF);
   BOOST_TEST( total_2 == 7.0/6.0 );
@@ -155,17 +155,18 @@ BOOST_AUTO_TEST_CASE( gwd_different_distances, *boost::unit_test::tolerance(TOLE
 BOOST_AUTO_TEST_CASE( get_distance_metric, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  TimeSeries ts_for_function_call{data.dat_3, 0, 0, 1};
+  TimeSeries ts_for_function_call{data.dat_3, 0, 0, 2};
   const DistanceMetric * d = distance::getDistanceMetric("euclidean");
-  Cache* cache = d->init();
-  data_t a = d->norm(d->reduce(cache, 100.0, 110.0, false), ts_for_function_call,ts_for_function_call);
+  data_t* cache = d->init();
+  data_t a = d->norm(d->reduce(cache, cache, 100.0, 110.0), ts_for_function_call,ts_for_function_call);
+
   BOOST_TEST( a == 10 );
 
   const DistanceMetric * d_2 = distance::getDistanceMetric("manhattan");
-  Cache* cache_2 = d_2->init();
-  data_t e = d_2->norm(d_2->reduce(cache_2, 100.0, 110.0, false), ts_for_function_call, ts_for_function_call);
+  data_t* cache_2 = d_2->init();
+  data_t e = d_2->norm(d_2->reduce(cache_2, cache_2, 100.0, 110.0), ts_for_function_call, ts_for_function_call);
 
-  BOOST_TEST( e == 10 );
+  BOOST_TEST( e == 5 );
 
   delete cache_2;
   delete cache;
@@ -176,9 +177,3 @@ BOOST_AUTO_TEST_CASE( distance_metric_not_found )
   BOOST_CHECK_THROW( distance::getDistanceMetric("oracle"), GenexException );
 }
 
-BOOST_AUTO_TEST_CASE( incompatible_cache )
-{
-  MockData data;
-  Cache* cosineCache = data.cosine_dist->init();
-  BOOST_CHECK_THROW( data.euclidean_dist->reduce(cosineCache, 0, 0, false), GenexException );
-}

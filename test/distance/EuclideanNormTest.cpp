@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE "Test Euclidean Normalization class"
 
 #include <boost/test/unit_test.hpp>
+#include <cmath>
 
 #include "distance/Euclidean.hpp"
 
@@ -21,13 +22,13 @@ BOOST_AUTO_TEST_CASE( euclidean_with_norm, *boost::unit_test::tolerance(TOLERANC
   TimeSeries ts_2 {data.dat_2, 0, 0, 5};
   Euclidean dist;
 
-  Cache* total = dist.init();
+  data_t* total = dist.init();
 
   for (int i = 0; i < ts_1.getLength(); i++) {
-    total = dist.reduce(total, ts_1[i], ts_2[i], false);
+    dist.reduce(total, total, ts_1[i], ts_2[i]);
   }
 
-  BOOST_TEST( dist.norm(total, ts_1, ts_2) == 2.0 );
+  BOOST_TEST( dist.norm(total, ts_1, ts_2) == 5.0 );
 
   delete total;
 }

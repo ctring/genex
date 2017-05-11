@@ -60,6 +60,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
   }
 
   g.addMember(0, 0);
+  g.setCentroid(0, 0);
 
   //checking if centroid is updated
   BOOST_CHECK_EQUAL( g.getCount(), 1 );
@@ -70,12 +71,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
 
   g.addMember(1, 0);
 
-  //checking if centroid is updated
   BOOST_CHECK_EQUAL( g.getCount(), 2 );
-  for (int i = 0; i < memberLength; i++)
-  {
-    BOOST_TEST( c[i] == data.centroid_1[i] );
-  }
 }
 
 BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERANCE) )
@@ -101,5 +97,5 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   TimeSeries t = tsSet.getTimeSeries(1,0,memberLength);
   BOOST_TEST(t[0] == 1.0);
   candidate_time_series_t best = g.getBestMatch(t, &metric);
-  BOOST_TEST(best.dist == 1.0/10.0);
+  BOOST_TEST(best.dist == sqrt(1.0/9.0));
 }

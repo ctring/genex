@@ -9,8 +9,6 @@
 namespace genex {
 namespace distance {
 
-const Cache* minCache(const Cache* c1, const Cache* c2);
-
 /**
  *  @brief returns the an object representing a distance metric
  *

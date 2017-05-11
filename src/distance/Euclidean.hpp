@@ -2,7 +2,6 @@
 #define GENEX_SRC_EUCLIDEAN_H
 
 #include <cmath>
-#include <math.h>       /* sqrt */
 
 #include "TimeSeries.hpp"
 #include "distance/DistanceMetric.hpp"
@@ -19,23 +18,22 @@ public:
     return pow(x_1 - x_2, 2);
   }
 
-  Cache* init() const
+  data_t* init() const
   {
-    return new DefaultCache(0.0);
+    data_t* newData = new data_t;
+    *newData = 0;
+    return newData;
   }
 
-  Cache* reduce(Cache* prev, data_t x_1, data_t x_2, bool copy) const
+  data_t* reduce(data_t* next, data_t* prev, data_t x_1, data_t x_2) const
   {
-    DefaultCache* a = createInCache<DefaultCache>(prev);
-    DefaultCache* new_a = createOutCache<DefaultCache>(a, copy);
-    new_a->val = sqrt(pow(a->val, 2) + dist(x_1, x_2));
-    return new_a;
+    *next = *prev + dist(x_1, x_2);
+    return next;
   }
 
-  data_t norm(Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(data_t* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    DefaultCache* c = createInCache<DefaultCache>(total);
-    return (c->val) / t.getLength();
+    return sqrt((*total) / (std::max(t.getLength(), t_2.getLength()) - 1));
   }
 
   std::string getName() const
@@ -45,7 +43,7 @@ public:
 
   std::string getDescription() const
   {
-    return "Description of Euclidiean distance";
+    return "Description of Euclidean distance";
   }
 };
 

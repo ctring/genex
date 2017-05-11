@@ -13,48 +13,25 @@ namespace genex {
 //This class is an example of an implemented DistanceMetric
 class Cosine : public DistanceMetric
 {
-  class CosineCache : public Cache {
-  public:
-    data_t sumSqX1 = 0;
-    data_t sumSqX2 = 0;
-    data_t sumX1X2 = 0;
-
-    CosineCache() {}
-    CosineCache(data_t sumSqX1, data_t sumSqX2, data_t sumX1X2) :
-      sumSqX1(sumSqX1), sumSqX2(sumSqX2), sumX1X2(sumX1X2) {}
-
-    bool lessThan(const Cache* other) const
-    {
-      if(const CosineCache* c = dynamic_cast<const CosineCache*>(other))
-      {
-        data_t me = sumX1X2 / sqrt(sumSqX1) * sqrt(sumSqX2);
-        data_t you = c->sumX1X2 / (sqrt(c->sumSqX1) * sqrt(c->sumSqX2));
-        return me < you;
-      }
-      throw GenexException("Incorrect cache type");
-    }
-  };
-
 public:
-  Cache* init() const
+  data_t* init() const
   {
-    return new CosineCache(0,0,0);
+    data_t* newData = new data_t[3];
+    newData[0] = newData[1] = newData[2] = 0;
+    return newData;
   }
 
-  Cache* reduce(Cache* prev, const data_t x_1, const data_t x_2, bool copy) const
+  data_t* reduce(data_t* next, data_t* prev, const data_t x_1, const data_t x_2) const
   {
-    CosineCache* a = createInCache<CosineCache>(prev);
-    CosineCache* new_a = createOutCache<CosineCache>(a, copy);
-    new_a->sumSqX1 = a->sumSqX1 + pow(x_1, 2);
-    new_a->sumSqX2 = a->sumSqX2 + pow(x_2, 2);
-    new_a->sumX1X2 = a->sumX1X2 + x_1 * x_2;
-    return new_a;
+    next[0] = prev[0] + pow(x_1, 2);
+    next[1] = prev[1] + pow(x_2, 2);
+    next[2] = prev[2] + x_1 * x_2;
+    return next;
   }
 
-  data_t norm(Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(data_t* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    CosineCache* c = createInCache<CosineCache>(total);
-    return c->sumX1X2 / (sqrt(c->sumSqX1) * sqrt(c->sumSqX2));
+    return total[2] / (sqrt(total[0] * total[1]));
   }
 
   std::string getName() const

@@ -22,23 +22,22 @@ public:
     return std::abs(x_1 - x_2);
   }
 
-  Cache* init() const
+  data_t* init() const
   {
-    return new DefaultCache(-INF);
+    data_t* newData = new data_t;
+    *newData = -INF;
+    return newData;
   }
 
-  Cache* reduce(Cache* prev, const data_t x_1, const data_t x_2, bool copy) const
+  data_t* reduce(data_t* next, data_t* prev, const data_t x_1, const data_t x_2) const
   {
-    DefaultCache* a = createInCache<DefaultCache>(prev);
-    DefaultCache* new_a = createOutCache<DefaultCache>(a, copy);
-    new_a->val = std::max(a->val, dist(x_1, x_2));
-    return new_a;
+    *next = std::max(*prev, dist(x_1, x_2));
+    return next;
   }
 
-  data_t norm(Cache* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(data_t* total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    DefaultCache* a = createInCache<DefaultCache>(total);
-    return a->val;
+    return *total;
   }
 
   std::string getName() const

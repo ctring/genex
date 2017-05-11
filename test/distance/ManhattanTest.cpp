@@ -15,9 +15,9 @@ BOOST_AUTO_TEST_CASE( mandist, *boost::unit_test::tolerance(TOLERANCE) )
    TimeSeries ts_2 {NULL, 0, 0, 2};
 
    data_t a = d.dist(100.0, 110.0);
-   Cache* prev = d.init(); //0
-   Cache* first  = d.reduce(prev, 60.0, 10.0, false); //50
-   Cache* second = d.reduce(first, 15.0, 5.0, false);
+   data_t* prev = d.init(); //0
+   data_t* first  = d.reduce(prev, prev, 60.0, 10.0); //50
+   data_t* second = d.reduce(first, first, 15.0, 5.0);
    data_t c = d.norm(second, ts_1, ts_2);
 
    delete second;

@@ -1,7 +1,5 @@
-#include "distance/Distance.hpp"
-#include "Exception.hpp"
-
 #include <map>
+#include <vector>
 
 #include "Exception.hpp"
 #include "distance/DistanceMetric.hpp"
@@ -13,7 +11,6 @@
 #include "distance/Manhattan.hpp"
 #include "distance/Chebyshev.hpp"
 #include "distance/Cosine.hpp"
-#include "distance/AltEuclidean.hpp"
 
 #include <iostream>
 
@@ -28,18 +25,12 @@ static std::vector<const DistanceMetric*> gAllMetric =
     new Euclidean(),
     new Manhattan(),
     new Chebyshev(),
-    new Cosine(),
-    new AltEuclidean()
+    new Cosine()
   };
 
 ////////////////////////////////////////////////////////////////////////////////
 /////**********          no need to make changes below!          **********/////
 ////////////////////////////////////////////////////////////////////////////////
-Cache* minCache(Cache* c1, Cache* c2)
-{
-  return c1->lessThan(c2) ? c1 : c2;
-}
-
 static std::map<std::string, const DistanceMetric*> gAllMetricMap;
 
 void _initializeAllMetricMap()
@@ -79,15 +70,16 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // Fastpath for base intervals.
   if (m == 1 && n == 1)
   {
-    Cache* result = metric->reduce(metric->init(), a[0], b[0], false);
+    data_t* result = metric->init();
+    metric->reduce(result, result, a[0], b[0]);
     data_t normalizedResult = metric->norm(result, a, b);
     delete result;
     return normalizedResult;
   }
 
   // create cost matrix
-  //Cache** cost = allocate2DArray<data_t>(m, n);
-  std::vector< std::vector< Cache* > > cost(m, std::vector<Cache*>(n));
+  std::vector< std::vector< data_t* >> cost(m, std::vector<data_t*>(n));
+  std::vector< std::vector< data_t >> ncost(m, std::vector<data_t>(n));
 
   #if 0
   auto trace = new std::pair<data_t, data_t>*[m]; // For tracing warping
@@ -97,7 +89,9 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   }
   #endif
 
-  cost[0][0] = metric->reduce(metric->init(), a[0], b[0], false);
+  cost[0][0] = metric->init();
+  metric->reduce(cost[0][0], cost[0][0], a[0], b[0]);
+  ncost[0][0] = metric->norm(cost[0][0], a, b);
 
   #if 0
   trace[0][0] = std::make_pair(-1, -1);
@@ -106,16 +100,18 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   // calculate first column
   for(int i = 1; i < m; i++)
   {
-      cost[i][0] = metric->reduce(cost[i-1][0], a[i], b[0], true);
-      #if 0
-      trace[i][0] = std::make_pair(i - 1, 0);
-      #endif
+    cost[i][0] = metric->reduce(metric->init(), cost[i-1][0], a[i], b[0]);
+    ncost[i][0] = metric->norm(cost[i][0], a, b);
+    #if 0
+    trace[i][0] = std::make_pair(i - 1, 0);
+    #endif
   }
 
   // calculate first row
   for(int j = 1; j < n; j++)
   {
-    cost[0][j] = metric->reduce(cost[0][j-1], a[0], b[j], true);
+    cost[0][j] = metric->reduce(metric->init(), cost[0][j-1], a[0], b[j]);
+    ncost[0][j] = metric->norm(cost[0][j], a, b);
     #if 0
     trace[0][j] = std::make_pair(0, j - 1);
     #endif
@@ -124,19 +120,29 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   data_t result;
   bool dropped = false;
 
-  // fill matrix. If using dropout, keep tabs on min cost per row.
   for(int i = 1; i < m; i++)
   {
-    Cache* bestSoFar = cost[i][0];
+    data_t bestSoFar = ncost[i][0];
     for(int j = 1; j < n; j++)
     {
-      Cache* g1 = minCache(cost[i-1][j], cost[i][j-1]);
-      Cache* mp = minCache(g1, cost[i-1][j-1]);
-      cost[i][j] = metric->reduce(mp, a[i], b[j], true);
-      bestSoFar = minCache(bestSoFar, cost[i][j]);
+      data_t* minPrev = nullptr;
+      if (ncost[i-1][j-1] < ncost[i][j-1] && ncost[i-1][j-1] < ncost[i-1][j])
+      {
+        minPrev = cost[i-1][j-1];
+      }
+      else if (ncost[i][j-1] < ncost[i-1][j])
+      {
+        minPrev = cost[i][j-1];
+      }
+      else {
+        minPrev = cost[i-1][j];
+      }
+      cost[i][j] = metric->reduce(metric->init(), minPrev, a[i], b[j]);
+      ncost[i][j] = metric->norm(cost[i][j], a, b);
+      bestSoFar = std::min(bestSoFar, ncost[i][j]);
     }
 
-    if (metric->norm(bestSoFar, a, b) > dropout)  //short circuit calculation.
+    if (bestSoFar > dropout)
     {
       dropped = true;
       break;
@@ -149,7 +155,7 @@ data_t generalWarpedDistance(const DistanceMetric* metric,
   }
   else
   {
-    result = metric->norm(cost[m - 1][n - 1], a, b);
+    result = ncost[m - 1][n - 1];
   }
 
   //deallocate2Darray(cost, m);
@@ -227,15 +233,15 @@ data_t generalDistance(const DistanceMetric* metric,
 {
   if (x_1.getLength() != x_2.getLength())
   {
-    throw GenexException("Two time series must have the same length for general distance (pairwise)");
+    throw GenexException("Two time series must have the same length for pairwise distance");
   }
 
-  Cache* total = metric->init();
+  data_t* total = metric->init();
   bool dropped = false;
 
   for(int i = 0; i < x_1.getLength(); i++)
   {
-    total = metric->reduce(total, x_1[i], x_2[i], false);
+    metric->reduce(total, total, x_1[i], x_2[i]);
     if (metric->norm(total, x_1, x_2) >= dropout)
     {
       dropped = true;
