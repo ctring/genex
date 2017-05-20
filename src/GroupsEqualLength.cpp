@@ -14,8 +14,7 @@ GroupsEqualLength::GroupsEqualLength(const TimeSeriesSet& dataset, int length)
  : dataset(dataset), length(length)
 {
   this->subTimeSeriesCount = dataset.getItemLength() - length + 1;
-  this->memberMap = std::vector<std::vector<group_membership_t>>(dataset.getItemCount(),
-    std::vector<group_membership_t>(this->subTimeSeriesCount));
+  this->memberMap = std::vector<group_membership_t>(dataset.getItemCount() * this->subTimeSeriesCount);
 }
 
 GroupsEqualLength::~GroupsEqualLength()
@@ -67,7 +66,8 @@ int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t thre
       {
         bestSoFarIndex = this->groups.size();
         int newGroupIndex = this->groups.size();
-        this->groups.push_back(new Group(newGroupIndex, this->length, this->dataset, this->memberMap));
+        this->groups.push_back(new Group(newGroupIndex, this->length, this->subTimeSeriesCount,
+                                         this->dataset, this->memberMap));
         this->groups[bestSoFarIndex]->setCentroid(idx, start);
       }
 

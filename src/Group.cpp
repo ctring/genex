@@ -6,7 +6,8 @@ namespace genex {
 void Group::addMember(int tsIndex, int tsStart)
 {
   this->count++;
-  this->memberMap[tsIndex][tsStart] = group_membership_t(this->groupIndex, this->lastMemberCoord);
+  this->memberMap[tsIndex * this->subTimeSeriesCount + tsStart] =
+    group_membership_t(this->groupIndex, this->lastMemberCoord);
   this->lastMemberCoord = std::make_pair(tsIndex, tsStart);
 
   TimeSeries newMember = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
@@ -44,7 +45,7 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
       bestSoFarMember = currentMemberCoord;
     }
 
-    currentMemberCoord = this->memberMap[currIndex][currStart].prev;
+    currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;
   }
 
   int bestIndex = bestSoFarMember.first;

@@ -65,7 +65,7 @@ private:
   int length, subTimeSeriesCount;
   const TimeSeriesSet& dataset;
   std::vector<Group*> groups;
-  std::vector<std::vector<group_membership_t>> memberMap;
+  std::vector<group_membership_t> memberMap;
 };
 
 } // namespace genex

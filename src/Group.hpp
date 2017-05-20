@@ -54,10 +54,11 @@ public:
    *  @brief constructor for Group
    *
    */
-  Group(int groupIndex, int memberLength, const TimeSeriesSet& dataset,
-    std::vector<std::vector<group_membership_t>>& memberMap) :
+  Group(int groupIndex, int memberLength, int subTimeSeriesCount, const TimeSeriesSet& dataset,
+    std::vector<group_membership_t>& memberMap) :
     groupIndex(groupIndex),
     memberLength(memberLength),
+    subTimeSeriesCount(subTimeSeriesCount),
     dataset(dataset),
     memberMap(memberMap),
     centroid(memberLength),
@@ -131,13 +132,14 @@ public:
 
 private:
   const TimeSeriesSet& dataset;
-  std::vector<std::vector<group_membership_t>>& memberMap;
+  std::vector<group_membership_t>& memberMap;
 
   int groupIndex;
 
   member_coord_t lastMemberCoord;
 
   int memberLength;
+  int subTimeSeriesCount;
   int count;
 
   GroupCentroid centroid;
