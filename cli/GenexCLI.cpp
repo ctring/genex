@@ -150,7 +150,7 @@ MAKE_COMMAND(List,
       }
     }
     else if (args[1] == "metric") {
-      std::vector<genex::distance_metric_info_t> infos = gGenexAPI.getAllDistanceMetricInfo();
+      std::vector<genex::distance_info_t> infos = gGenexAPI.getAllDistanceInfo();
       for (const auto& i : infos)
       {
         std::cout << " " << std::setw(10) << i.name << "\t" << i.description << std::endl;

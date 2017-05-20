@@ -1,16 +1,14 @@
 #ifndef GENEX_SRC_MANHATTAN_H
 #define GENEX_SRC_MANHATTAN_H
 
-#include <iostream>
 #include <cmath>
 
 #include "TimeSeries.hpp"
-#include "distance/DistanceMetric.hpp"
 #include "Exception.hpp"
 
 namespace genex {
 
-class Manhattan : public DistanceMetric
+class Manhattan
 {
 
 public:
@@ -19,33 +17,22 @@ public:
     return std::abs(x_1 - x_2);
   }
 
-  data_t* init() const
+  data_t init() const
   {
-    data_t* newData = new data_t;
-    *newData = 0;
-    return newData;
+    return 0;
   }
 
-  data_t* reduce(data_t* next, data_t* prev, const data_t x_1, const data_t x_2) const
+  data_t reduce(data_t next, data_t prev, const data_t x_1, const data_t x_2) const
   {
-    *next = *prev + dist(x_1, x_2);
-    return next;
+    return prev + dist(x_1, x_2);
   }
 
-  data_t norm(data_t* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(data_t total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    return (*total / t.getLength());
+    return (total / t.getLength());
   }
 
-  std::string getName() const
-  {
-    return "manhattan";
-  }
-
-  std::string getDescription() const
-  {
-    return "Description of Manhattan distance";
-  }
+  void clean(data_t x) {}
 };
 
 } // namespace genex

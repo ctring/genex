@@ -6,6 +6,7 @@
 #include "TimeSeries.hpp"
 #include "Group.hpp"
 #include "Exception.hpp"
+#include "distance/Distance.hpp"
 
 namespace genex {
 
@@ -40,7 +41,7 @@ int GroupsEqualLength::getNumberOfGroups(void) const
   return this->groups.size();
 }
 
-int GroupsEqualLength::generateGroups(const DistanceMetric* metric, data_t threshold)
+int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t threshold)
 {
   //std::cout << "Generating groups of length: " << this->length << ". Sub-TS count: " << this->subTimeSeriesCount << std::endl;
   for (int start = 0; start < this->subTimeSeriesCount; start++)
@@ -54,7 +55,7 @@ int GroupsEqualLength::generateGroups(const DistanceMetric* metric, data_t thres
 
       for (unsigned int i = 0; i < groups.size(); i++)
       {
-        data_t dist = this->groups[i]->distanceFromCentroid(query, metric, bestSoFar);
+        data_t dist = this->groups[i]->distanceFromCentroid(query, pairwiseDistance, bestSoFar);
         if (dist < bestSoFar)
         {
           bestSoFar = dist;
@@ -81,7 +82,7 @@ int GroupsEqualLength::generateGroups(const DistanceMetric* metric, data_t thres
 }
 
 candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
-                                                  const DistanceMetric* metric,
+                                                  const dist_t warpedDistance,
                                                   data_t dropout) const
 {
   data_t bestSoFarDist = dropout;
@@ -89,7 +90,7 @@ candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
 
   for (unsigned int i = 0; i < groups.size(); i++) {
 
-      data_t dist = groups[i]->warpDistanceFromCentroid(query, metric, bestSoFarDist);
+      data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
 
       if (dist < bestSoFarDist) {
         bestSoFarDist = dist;

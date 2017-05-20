@@ -7,7 +7,6 @@
 #include <boost/tokenizer.hpp>
 
 #include "distance/Distance.hpp"
-#include "distance/DistanceMetric.hpp"
 #include "Exception.hpp"
 
 namespace genex {
@@ -228,9 +227,10 @@ bool TimeSeriesSet::valid()
 }
 
 data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
-         const TimeSeries& other, const DistanceMetric* metric)
+         const TimeSeries& other, const std::string& distance_name)
 {
-  return distance::generalWarpedDistance(metric, this->getTimeSeries(idx, start, start + length), other, INF);
+  const dist_t distance = getDistance(distance_name);
+  return distance(this->getTimeSeries(idx, start, start + length), other, INF);
 }
 
 } // namespace genex

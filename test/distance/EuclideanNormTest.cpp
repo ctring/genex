@@ -22,13 +22,13 @@ BOOST_AUTO_TEST_CASE( euclidean_with_norm, *boost::unit_test::tolerance(TOLERANC
   TimeSeries ts_2 {data.dat_2, 0, 0, 5};
   Euclidean dist;
 
-  data_t* total = dist.init();
+  data_t total = dist.init();
 
   for (int i = 0; i < ts_1.getLength(); i++) {
-    dist.reduce(total, total, ts_1[i], ts_2[i]);
+    total = dist.reduce(total, total, ts_1[i], ts_2[i]);
   }
 
   BOOST_TEST( dist.norm(total, ts_1, ts_2) == 5.0 );
 
-  delete total;
+  dist.clean(total);
 }

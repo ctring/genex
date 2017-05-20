@@ -1,19 +1,15 @@
 #ifndef GENEX_SRC_CHEBYSHEV_H
 #define GENEX_SRC_CHEBYSHEV_H
 
-#include <iostream>
-#include <limits>
 #include <cmath>
-#include <algorithm>
 
 #include "TimeSeries.hpp"
-#include "distance/DistanceMetric.hpp"
 #include "Exception.hpp"
 
 namespace genex {
 
 //This class is an example of an implemented DistanceMetric
-class Chebyshev : public DistanceMetric
+class Chebyshev
 {
 
 public:
@@ -22,33 +18,23 @@ public:
     return std::abs(x_1 - x_2);
   }
 
-  data_t* init() const
+  data_t init() const
   {
-    data_t* newData = new data_t;
-    *newData = -INF;
-    return newData;
+    return -INF;
   }
 
-  data_t* reduce(data_t* next, data_t* prev, const data_t x_1, const data_t x_2) const
+  data_t reduce(data_t next, data_t prev, const data_t x_1, const data_t x_2) const
   {
-    *next = std::max(*prev, dist(x_1, x_2));
-    return next;
+    return std::max(prev, dist(x_1, x_2));
   }
 
-  data_t norm(data_t* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(data_t total, const TimeSeries& t, const TimeSeries& t_2) const
   {
-    return *total;
+    return total;
   }
 
-  std::string getName() const
-  {
-    return "chebyshev";
-  }
+  void clean(data_t x) {}
 
-  std::string getDescription() const
-  {
-    return "Description of Chebyshev distance";
-  }
 };
 
 } // namespace genex

@@ -1,17 +1,14 @@
 #ifndef GENEX_SRC_COSINE_H
 #define GENEX_SRC_COSINE_H
 
-#include <iostream>
 #include <cmath>
 
 #include "TimeSeries.hpp"
-#include "distance/DistanceMetric.hpp"
 #include "Exception.hpp"
 
 namespace genex {
 
-//This class is an example of an implemented DistanceMetric
-class Cosine : public DistanceMetric
+class Cosine
 {
 public:
   data_t* init() const
@@ -34,15 +31,10 @@ public:
     return total[2] / (sqrt(total[0] * total[1]));
   }
 
-  std::string getName() const
-  {
-    return "cosine";
+  void clean(data_t* x) {
+    delete[] x;
   }
 
-  std::string getDescription() const
-  {
-    return "Description of Cosine distance";
-  }
 };
 
 } // namespace genex

@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "TimeSeries.hpp"
-#include "distance/DistanceMetric.hpp"
+#include "distance/Distance.hpp"
 
 namespace genex {
 
@@ -122,7 +122,7 @@ public:
     *  @return the calculated distance. If the arguments are invalid we throw an exception
     */
   data_t distanceBetween(int idx, int start, int length,
-      const TimeSeries& other, const DistanceMetric *metric);
+      const TimeSeries& other, const std::string& distance_name);
 
   /**
    *  @brief a set is valid if it contains data (valid for grouping)

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "TimeSeries.hpp"
-#include "distance/DistanceMetric.hpp"
+#include "distance/Distance.hpp"
 #include "Group.hpp"
 
 namespace genex {
@@ -43,7 +43,7 @@ public:
    *  @param threshold the threshold to use when splitting into new groups
    *  @return number of generated groups
    */
-  int generateGroups(const DistanceMetric* metric, data_t threshold);
+  int generateGroups(const dist_t pairwiseDistance, data_t threshold);
 
   /**
    *  @brief gets the group closest to a query (measured from the centroid)
@@ -52,7 +52,9 @@ public:
    *  @param metric the metric that determines the distance between ts
    *  @param dropout the dropout optimization param
    */
-  candidate_group_t getBestGroup(const TimeSeries& query, const DistanceMetric* metric, data_t dropout) const;
+  candidate_group_t getBestGroup(const TimeSeries& query,
+                                 const dist_t warpedDistance,
+                                 data_t dropout) const;
 
   /**
    *  @return a group with given index

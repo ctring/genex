@@ -5,7 +5,7 @@
 
 #include "TimeSeriesSet.hpp"
 #include "GroupCentroid.hpp"
-#include "distance/DistanceMetric.hpp"
+#include "distance/Distance.hpp"
 
 namespace genex {
 
@@ -102,17 +102,17 @@ public:
    *  @param dropout upper bound for early stopping
    *  @return the distance between the data and the centroid using the metric
    */
-  data_t distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
+  data_t distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout);
 
   /**
    * ...
    */
-  data_t warpDistanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout);
+  data_t warpDistanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout);
 
   /**
    * ...
    */
-  candidate_time_series_t getBestMatch(const TimeSeries& query, const DistanceMetric* metric) const;
+  candidate_time_series_t getBestMatch(const TimeSeries& query, const dist_t distance) const;
 
   /**
    *  @brief gets the centroid of the group

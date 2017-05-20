@@ -16,12 +16,12 @@ BOOST_AUTO_TEST_CASE( eucdist, *boost::unit_test::tolerance(TOLERANCE) )
 
    data_t a = d.dist(100.0, 110.0);
 
-   data_t* first = d.init();
-   data_t* second = d.reduce(first, first, 4.0, 0.0);
-   data_t* third = d.reduce(second, second, 7.0, 10.0);
+   data_t first = d.init();
+   data_t second = d.reduce(first, first, 4.0, 0.0);
+   data_t third = d.reduce(second, second, 7.0, 10.0);
    data_t c = d.norm(third, ts_1, ts_2);
 
-   delete third;
+   d.clean(third);
 
    BOOST_TEST( a == 100 );
    BOOST_TEST( c == 5.0 );

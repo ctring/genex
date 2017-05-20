@@ -6,7 +6,7 @@
 #include "GroupsEqualLength.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
-#include "distance/DistanceMetric.hpp"
+#include "distance/Distance.hpp"
 #include "Group.hpp"
 
 namespace genex {
@@ -42,7 +42,7 @@ public:
    *  @param threshold the threshold to be group with
    *  @return the number of groups it creates
    */
-  int group(const DistanceMetric* metric, data_t threshold);
+  int group(const std::string& distance_name, data_t threshold);
 
   /**
    *  @brief gets the most similar sequence in the dataset
@@ -70,7 +70,8 @@ private:
   data_t threshold;
   std::vector<GroupsEqualLength*> groupsEqualLength;
   const TimeSeriesSet& dataset;
-  const DistanceMetric* metric;
+  dist_t pairwiseDistance;
+  dist_t warpedDistance;
 };
 
 } // namespace genex

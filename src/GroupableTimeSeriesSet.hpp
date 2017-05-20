@@ -3,6 +3,7 @@
 
 #include "TimeSeriesSet.hpp"
 #include "GroupsEqualLengthSet.hpp"
+#include "distance/Distance.hpp"
 
 namespace genex {
 
@@ -27,7 +28,7 @@ public:
    *
    *  @return the number of groups created
    */
-  int groupAllLengths(const DistanceMetric* metric, data_t threshold);
+  int groupAllLengths(const std::string& distance_name, data_t threshold);
 
   /**
     *  @brief deletes and clears the groups

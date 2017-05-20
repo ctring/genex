@@ -97,22 +97,21 @@ std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
   return info;
 }
 
-std::vector<distance_metric_info_t> GenexAPI::getAllDistanceMetricInfo()
+std::vector<distance_info_t> GenexAPI::getAllDistanceInfo()
 {
-  std::vector<const DistanceMetric*> allMetric = distance::getAllDistanceMetrics();
-  std::vector<distance_metric_info_t> info;
-  for (auto metric : allMetric)
+  const std::vector<std::string>& allDistanceName = getAllDistanceName();
+  std::vector<distance_info_t> info;
+  for (auto name : allDistanceName)
   {
-    info.push_back(distance_metric_info_t(metric->getName(), metric->getDescription()));
+    info.push_back(distance_info_t(name, ""));
   }
   return info;
 }
 
-int GenexAPI::groupDataset(int index,  data_t threshold, std::string metric_name)
+int GenexAPI::groupDataset(int index,  data_t threshold, const std::string& distance_name)
 {
-  const DistanceMetric* metric = distance::getDistanceMetric(metric_name);
   this->_checkDatasetIndex(index);
-  return this->loadedDatasets[index]->groupAllLengths(metric, threshold);
+  return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold);
 }
 
 candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index)

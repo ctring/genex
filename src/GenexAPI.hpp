@@ -26,9 +26,9 @@ struct dataset_info_t
 /**
  * A struct holding general information of a distance metric
  */
-struct distance_metric_info_t
+struct distance_info_t
 {
-  distance_metric_info_t(std::string name, std::string description) :
+  distance_info_t(std::string name, std::string description) :
     name(name), description(description) {}
   std::string name;
   std::string description;
@@ -99,7 +99,7 @@ public:
   /**
    *  @return a vector of names of available distance metrics
    */
-  std::vector<distance_metric_info_t> getAllDistanceMetricInfo();
+  std::vector<distance_info_t> getAllDistanceInfo();
 
   /**
    *  @brief groups the dataset
@@ -108,8 +108,8 @@ public:
    *  @param metric the distance metric to use when grouping the data
    *  @param threshold the threshold to use when creating the group
    *  @return the number of groups created
-   */ 
-  int groupDataset(int idx, data_t threshold, std::string metric_name);
+   */
+  int groupDataset(int idx, data_t threshold, const std::string& distance_name);
 
   /**
    *  @brief gets the best match in a dataset
@@ -120,7 +120,7 @@ public:
    *  @param start the start of the index
    *  @param end the end of the index
    *  @return best match in the dataset
-   */ 
+   */
   candidate_time_series_t getBestMatch(int result_idx, int query_idx, int index, int start, int end);
   candidate_time_series_t getBestMatch(int result_idx, int query_idx, int index);
 

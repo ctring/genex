@@ -1,6 +1,7 @@
 #include "GroupableTimeSeriesSet.hpp"
 #include "GroupsEqualLengthSet.hpp"
 #include "Exception.hpp"
+#include "distance/Distance.hpp"
 
 namespace genex {
 
@@ -9,7 +10,7 @@ GroupableTimeSeriesSet::~GroupableTimeSeriesSet()
   this->resetGrouping();
 }
 
-int GroupableTimeSeriesSet::groupAllLengths(const DistanceMetric* metric, data_t threshold)
+int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, data_t threshold)
 {
   if (!this->valid())
   {
@@ -20,7 +21,7 @@ int GroupableTimeSeriesSet::groupAllLengths(const DistanceMetric* metric, data_t
   resetGrouping();
 
   this->groupsAllLengthSet = new GroupsEqualLengthSet(*this);
-  int cntGroups = this->groupsAllLengthSet->group(metric, threshold);
+  int cntGroups = this->groupsAllLengthSet->group(distance_name, threshold);
 
   return cntGroups;
 }

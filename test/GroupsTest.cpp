@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "distance/Euclidean.hpp"
+#include "distance/Distance.hpp"
 #include "Exception.hpp"
 #include "Group.hpp"
 
@@ -77,7 +78,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
 BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  Euclidean metric;
+  dist_t distance = warpedDistance<Euclidean, data_t>;
 
   int timeSeriesCount = 3;
   int timeSeriesLengths = 10;
@@ -96,6 +97,6 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   g.addMember(0, 0);
   TimeSeries t = tsSet.getTimeSeries(1,0,memberLength);
   BOOST_TEST(t[0] == 1.0);
-  candidate_time_series_t best = g.getBestMatch(t, &metric);
+  candidate_time_series_t best = g.getBestMatch(t, distance);
   BOOST_TEST(best.dist == sqrt(1.0/9.0));
 }

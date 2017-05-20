@@ -18,17 +18,12 @@ void Group::setCentroid(int tsIndex, int tsStart)
   this->centroid.addTimeSeries(cen);
 }
 
-data_t Group::distanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
+data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout)
 {
-  return distance::generalDistance(metric, this->centroid, query, dropout);
+  return distance(this->centroid, query, dropout);
 }
 
-data_t Group::warpDistanceFromCentroid(const TimeSeries& query, const DistanceMetric* metric, data_t dropout)
-{
-  return distance::generalWarpedDistance(metric, this->centroid, query, dropout);
-}
-
-candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const DistanceMetric* metric) const
+candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_t warpedDistance) const
 {
   member_coord_t currentMemberCoord = this->lastMemberCoord;
 
@@ -41,7 +36,7 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const Dista
     int currStart = currentMemberCoord.second;
 
     TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
-    data_t currentDistance = distance::generalWarpedDistance(metric, query, currentTimeSeries, bestSoFarDist);
+    data_t currentDistance = warpedDistance(query, currentTimeSeries, bestSoFarDist);
 
     if (currentDistance < bestSoFarDist)
     {

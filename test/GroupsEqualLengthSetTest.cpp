@@ -3,7 +3,7 @@
 #include <boost/test/unit_test.hpp>
 #include "GroupsEqualLengthSet.hpp"
 #include "TimeSeriesSet.hpp"
-#include "distance/Euclidean.hpp"
+#include "distance/Distance.hpp"
 #include "Exception.hpp"
 #include "Group.hpp"
 
@@ -21,7 +21,7 @@ struct MockData
 BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
-  DistanceMetric* metric = new Euclidean();
+
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
 
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
   BOOST_CHECK_EQUAL(tsSet.getItemLength(), 10);
 
   GroupsEqualLengthSet gSet(tsSet);
-  gSet.group(metric, 0.5);
+  gSet.group("euclidean", 0.5);
   candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0, 0, 10));
   BOOST_TEST((best.dist) == 0);
   best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10));
