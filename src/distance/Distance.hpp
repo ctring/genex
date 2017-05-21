@@ -207,7 +207,11 @@ data_t pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dro
     throw GenexException("Two time series must have the same length for pairwise distance");
   }
 
-  static DM* metric = new DM();
+  static DM* metric = nullptr;
+  if (metric == nullptr)
+  {
+    metric = new DM();
+  }
 
   T total = metric->init();
   bool dropped = false;
