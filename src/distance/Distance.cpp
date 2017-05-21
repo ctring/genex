@@ -18,48 +18,33 @@
 namespace genex {
 
 /**
- *  Add new distances to this list of pairwise distance
+ *  Add distances to this list
  */
 static std::vector<const dist_t> gAllDistance =
   {
-    pairwiseDistance<Euclidean, data_t>,
-    warpedDistance<Euclidean, data_t>,
-
-    pairwiseDistance<Manhattan, data_t>,
-    warpedDistance<Manhattan, data_t>,
-
-    pairwiseDistance<Chebyshev, data_t>,
-    warpedDistance<Chebyshev, data_t>,
-
-    pairwiseDistance<Cosine, data_t*>,
-    warpedDistance<Cosine, data_t*>,
-
-    pairwiseDistance<Sorensen, data_t*>,
-    warpedDistance<Sorensen, data_t*>
-
+    NEW_DISTANCE(Euclidean, data_t),
+    NEW_DISTANCE(Manhattan, data_t),
+    NEW_DISTANCE(Chebyshev, data_t),
+    NEW_DISTANCE(Cosine, data_t*),
+    NEW_DISTANCE(Sorensen, data_t*)
   };
 
+/**
+ *  Add name of distances to this list
+ */
 static std::vector<std::string> gAllDistanceName =
   {
-    "euclidean",
-    "euclidean_warp",
-
-    "manhattan",
-    "manhattan_warp",
-
-    "chebyshev",
-    "chebyshev_warp",
-
-    "cosine",
-    "cosine_warp",
-
-    "sorensen",
-    "sorensen_warp"
+    NEW_DISTANCE_NAME(euclidean),
+    NEW_DISTANCE_NAME(manhattan),
+    NEW_DISTANCE_NAME(chebyshev),
+    NEW_DISTANCE_NAME(cosine),
+    NEW_DISTANCE_NAME(sorensen)
   };
 
 ////////////////////////////////////////////////////////////////////////////////
 /////**********          no need to make changes below!          **********/////
 ////////////////////////////////////////////////////////////////////////////////
+
 static std::map<std::string, dist_t> gAllDistanceMap;
 
 void _initializeAllDistanceMap()

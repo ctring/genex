@@ -6,6 +6,12 @@
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
+#define NEW_DISTANCE(_class, _type) \
+  pairwiseDistance<_class, _type>,  \
+  warpedDistance<_class, _type>
+
+#define NEW_DISTANCE_NAME(_name) #_name, #_name"_warp"
+
 namespace genex {
 
 typedef data_t (*dist_t)(const TimeSeries&, const TimeSeries&, data_t);
