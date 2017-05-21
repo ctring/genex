@@ -11,6 +11,7 @@
 #include "distance/Chebyshev.hpp"
 #include "distance/Cosine.hpp"
 #include "distance/Distance.hpp"
+#include "distance/Sorensen.hpp"
 
 #include <iostream>
 
@@ -31,7 +32,11 @@ static std::vector<const dist_t> gAllDistance =
     warpedDistance<Chebyshev, data_t>,
 
     pairwiseDistance<Cosine, data_t*>,
-    warpedDistance<Cosine, data_t*>
+    warpedDistance<Cosine, data_t*>,
+
+    pairwiseDistance<Sorensen, data_t*>,
+    warpedDistance<Sorensen, data_t*>
+
   };
 
 static std::vector<std::string> gAllDistanceName =
@@ -46,7 +51,10 @@ static std::vector<std::string> gAllDistanceName =
     "chebyshev_warp",
 
     "cosine",
-    "cosine_warp"
+    "cosine_warp",
+
+    "sorensen",
+    "sorensen_warp"
   };
 
 ////////////////////////////////////////////////////////////////////////////////
