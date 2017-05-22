@@ -15,8 +15,7 @@ void Group::addMember(int tsIndex, int tsStart)
 
 void Group::setCentroid(int tsIndex, int tsStart)
 {
-  TimeSeries cen = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
-  this->centroid.addTimeSeries(cen);
+  this->centroid = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
 }
 
 data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout)

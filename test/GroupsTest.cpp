@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
     std::vector<group_membership_t>(tsSet.getItemCount() * tsSet.getItemLength());
   Group g(0, memberLength, subTimeSeriesCount, tsSet, memberMap);
 
-  const GroupCentroid& c = g.getCentroid();
+  const TimeSeries& c = g.getCentroid();
 
   // test initial centroid is all zeros
   for (int i = 0; i < memberLength; i++)

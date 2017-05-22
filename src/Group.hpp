@@ -4,7 +4,6 @@
 #include "config.hpp"
 
 #include "TimeSeriesSet.hpp"
-#include "GroupCentroid.hpp"
 #include "distance/Distance.hpp"
 
 namespace genex {
@@ -120,7 +119,7 @@ public:
    *
    *  @return values of the centroid
    */
-  const GroupCentroid& getCentroid() const
+  const TimeSeries& getCentroid() const
   {
     return this->centroid;
   }
@@ -142,7 +141,7 @@ private:
   int subTimeSeriesCount;
   int count;
 
-  GroupCentroid centroid;
+  TimeSeries centroid;
 };
 
 } // namespace genex

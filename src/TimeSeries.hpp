@@ -77,7 +77,7 @@ public:
   /**
    *  @brief destructor
    */
-  virtual ~TimeSeries();
+  ~TimeSeries();
 
   /**
    *  @brief get a value of this time series
@@ -87,7 +87,7 @@ public:
    *
    *  @throw GenexException if the index is out of bound
    */
-  virtual const data_t& operator[](int idx) const;
+  const data_t& operator[](int idx) const;
 
   /**
    *  @brief get reference to a value of this time series
@@ -97,7 +97,7 @@ public:
    *
    *  @throw GenexException if the index is out of bound
    */
-  virtual data_t& operator[](int idx);
+  data_t& operator[](int idx);
 
   /**
    *  @brief accumulate data from other time series into this one
@@ -122,14 +122,14 @@ public:
 
   /**
    *  @brief gets the index of the data - used for displaying information via the api
-   *  
+   *
    *  @return the index of the data from its timeseries
    */
   int getIndex() const { return this->index; }
 
   /**
    *  @brief gets the start of the data - used for displaying information via the api
-   *  
+   *
    *  @return the start of the data from its timeseries
    */
   int getStart() const { return this->start; }
