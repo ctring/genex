@@ -13,17 +13,12 @@ TimeSeries::~TimeSeries()
   }
 }
 
-const data_t& TimeSeries::operator[](int idx) const
+data_t& TimeSeries::operator[](int idx) const
 {
   if (idx < 0 || idx >= this->length) {
     throw GenexException("Index is out of range");
   }
   return this->data[start + idx];
-}
-
-data_t& TimeSeries::operator[](int idx)
-{
-  return const_cast<data_t &>(static_cast<const TimeSeries &>(*this)[idx]);
 }
 
 TimeSeries& TimeSeries::operator+=(const TimeSeries& other)

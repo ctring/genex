@@ -130,7 +130,7 @@ public:
   bool valid(void);
 
 protected:
-  std::vector<data_t*> data;
+  data_t* data = nullptr;
   int itemLength;
   int itemCount;
 

@@ -16,6 +16,16 @@ TimeSeriesSet::~TimeSeriesSet()
   this->clearData();
 }
 
+int countNumberOfLines(std::ifstream& f)
+{
+  int lineCount = 0;
+  std::string line;
+  for (lineCount = 0; std::getline(f, line); ++lineCount);
+  f.clear();
+  f.seekg(0);
+  return lineCount;
+}
+
 void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
                              int startCol, const std::string& separators)
 {
@@ -28,7 +38,12 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
     throw GenexException(std::string("Cannot open ") + filePath);
   }
 
-  if (maxNumRow <= 0) { maxNumRow = 999999999; }
+  if (maxNumRow <= 0) {
+    maxNumRow = countNumberOfLines(f);
+  }
+  else {
+    maxNumRow = std::min(maxNumRow, countNumberOfLines(f));
+  }
 
   int length = -1;
   std::string line;
@@ -49,6 +64,9 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
       {
         // If this is the first row, set length of each row to length of this row
         length = std::distance(tokens.begin(), tokens.end());
+        this->data = new data_t[maxNumRow * length];
+        memset(this->data, 0, maxNumRow * length * sizeof(data_t*));
+
       }
       else if (length != std::distance(tokens.begin(), tokens.end()))
       {
@@ -56,8 +74,6 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
         this->clearData();
         throw GenexException("File contains time series with inconsistent lengths");
       }
-
-      data.push_back(new data_t[length - startCol]);
 
       int col = 0;
       for (tokenizer::iterator tok_iter = tokens.begin();
@@ -68,7 +84,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
         {
           try
           {
-            data[row][col - startCol] = (data_t)std::stod(*tok_iter);
+            data[row * length + (col - startCol)] = (data_t)std::stod(*tok_iter);
           }
           catch (const std::invalid_argument& e)
           {
@@ -105,12 +121,8 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
 
 void TimeSeriesSet::clearData()
 {
-  for (int i = 0; i < this->itemCount; i++)
-  {
-    delete[] this->data[i];
-    this->data[i] = nullptr;
-  }
-  this->data.clear();
+  delete[] this->data;
+  this->data = nullptr;
   this->itemCount = 0;
   this->itemLength = 0;
 }
@@ -126,7 +138,7 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
     throw GenexException("Invalid starting or ending position of a time series");
   }
 
-  return TimeSeries(this->data[index], index, start, end);
+  return TimeSeries(this->data + index * this->itemLength, index, start, end);
 }
 
 TimeSeries TimeSeriesSet::getTimeSeries(int index) const
@@ -158,20 +170,20 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
     // start at 0 if even, 1 if odd
     if ((i = (length % 2 != 0)))
     {
-      if (data[ts][0] < MIN)
+      if (data[ts * this->itemLength] < MIN)
       {
-        MIN = data[ts][0];
+        MIN = data[ts * this->itemLength];
       }
-      if (data[ts][0] > MAX)
+      if (data[ts * this->itemLength] > MAX)
       {
-        MAX = data[ts][0];
+        MAX = data[ts * this->itemLength];
       }
     }
 
     for (; i < this->itemLength - 1; i += 2)
     {
-      x = data[ts][i];
-      y = data[ts][i + 1];
+      x = data[ts * this->itemLength + i];
+      y = data[ts * this->itemLength + (i + 1)];
       if ( x > y )
       {
         z = y;
@@ -201,7 +213,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
       {
         for (i = 0; i < this->itemLength; i++)
         {
-          data[ts][i] = 0;
+          data[ts * this->itemLength + i] = 0;
         }
       }
     }
@@ -213,7 +225,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
     {
       for (i = 0; i < this->itemLength; i++)
       {
-        data[ts][i] = (data[ts][i] - MIN)/ diff;
+        data[ts * this->itemLength + i] = (data[ts * this->itemLength + i] - MIN)/ diff;
       }
     }
   }
@@ -223,7 +235,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
 
 bool TimeSeriesSet::valid()
 {
-  return this->data.size() > 0;
+  return this->data != nullptr;
 }
 
 data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
