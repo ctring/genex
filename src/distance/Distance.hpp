@@ -2,7 +2,7 @@
 #define GENERAL_DISTANCE_H
 
 #include <vector>
-
+#include <cmath>
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
@@ -29,6 +29,26 @@ const dist_t getDistance(const std::string& distance_name);
  *  @return a vector of names of available distances
  */
 const std::vector<std::string>& getAllDistanceName();
+
+template <class T> struct hasInverseNorm
+{
+  template <typename U, U> struct helper{};
+  template <typename C>
+  static constexpr decltype(helper<data_t (C::*)(data_t, const TimeSeries&, const TimeSeries&) const,
+                                   &C::inverseNorm>(),
+                            bool()) test(int /* unused */)
+  {
+      return true;
+  }
+
+  template <typename C> static constexpr bool test(...)
+  {
+      return false;
+  }
+
+  // int is used to give the precedence!
+  static constexpr bool value = test<T>(int());
+};
 
 /**
  *  @brief returns the warped distance between two sets of data
@@ -206,7 +226,8 @@ delete[] trace;
  *  @param x_3 the length of the data
  */
 template<typename DM, typename T>
-data_t pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
+typename std::enable_if<!hasInverseNorm<DM>::value, data_t>::type
+pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
 {
   if (x_1.getLength() != x_2.getLength())
   {
@@ -220,12 +241,49 @@ data_t pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dro
   }
 
   T total = metric->init();
+
   bool dropped = false;
 
   for(int i = 0; i < x_1.getLength(); i++)
   {
     total = metric->reduce(total, total, x_1[i], x_2[i]);
     if (metric->norm(total, x_1, x_2) >= dropout)
+    {
+      dropped = true;
+      break;
+    }
+  }
+
+  data_t result = dropped ? INF : metric->norm(total, x_1, x_2);
+  metric->clean(total);
+
+  return result;
+}
+
+template<typename DM, typename T>
+typename std::enable_if<hasInverseNorm<DM>::value, data_t>::type
+pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
+{
+  if (x_1.getLength() != x_2.getLength())
+  {
+    throw GenexException("Two time series must have the same length for pairwise distance");
+  }
+
+  static DM* metric = nullptr;
+  if (metric == nullptr)
+  {
+    metric = new DM();
+  }
+
+  T total = metric->init();
+
+  bool dropped = false;
+  dropout = metric->inverseNorm(dropout, x_1, x_2);
+
+  for(int i = 0; i < x_1.getLength(); i++)
+  {
+    total = metric->reduce(total, total, x_1[i], x_2[i]);
+    if (total >= dropout)
     {
       dropped = true;
       break;
