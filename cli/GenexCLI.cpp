@@ -15,7 +15,7 @@
 #include "config.hpp"
 
 genex::GenexAPI gGenexAPI;
-bool gTimerEnabled = false;
+bool gTimerEnabled = true;
 
 bool tooFewArgs(const std::vector<std::string>& args, int limit)
 {
