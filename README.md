@@ -1,10 +1,10 @@
-# genex
+# Genex
 
-## why
+## Why?
 
 This project allows you to use warped versions of any distance! This is a powerful capability and opens avenues for further research. Furthermore, the underlying structure enables warped distance of more complicated functions to still be useful in a large scale due to its ability to precompute relationships within a time series dataset. Furthermore, the process of adding a new distance and using it is fast and easy (described below).
 
-## install build dependencies
+## Install build dependencies
 
 Brew:
 
@@ -22,7 +22,7 @@ Linux:
   sudo apt-get install readline
 ```
 
-## building the system
+## Building the system
 
 Build the project. The executable genex will be in the build folder.
 Tests will also be run as part of the build script.
@@ -31,13 +31,13 @@ Tests will also be run as part of the build script.
   ./run.sh
 ```
 
-### adding new distances
+## Adding new distances
 
-#### mathematical derivation
+### Mathematical derivation
 
-As described in (link to paper), define a non-decreasing distance in terms of a recursive function. As part of this process you need to define what is neccesary to normalize your result. Furthermore, you need to store the information necessary to compute your distance recursively. These ideas are discussed in detail in the paper and are necessary for moving forward. Concrete *code* examples are given in folder `src/distance/`, and theoretical examples are given here (link to extra).
+As described in `to-be-linked`, define a non-decreasing distance in terms of a recursive function. As part of this process you need to define what is neccesary to normalize your result. Furthermore, you need to store the information necessary to compute your distance recursively. These ideas are discussed in detail in the paper and are necessary for moving forward. Concrete *code* examples are given in folder `src/distance/`, and theoretical examples are given here (link to extra).
 
-#### creating a distance
+### Creating a distance
 
 * Navigate to the folder `src/distance/`
 * Each distance must extend the interface (abstract class) `DistanceMetric.hpp`
@@ -60,27 +60,27 @@ As described in (link to paper), define a non-decreasing distance in terms of a 
   * There is room to experiment here. As defined in the `DistanceMetric.hpp`, its inputs are references to both TimeSeries you are finding the distance between and the total distance so far saved into a Cache. A good starting point is computing the raw distance from Cache and dividing by the average of the lengths between the timeseries.
   * Note: return a data_t
 
-#### add distance to list
+### Add distance to list
 
 * Add your class to the list of distances `gAllMetric` in the file `src/distance/Distance.cpp`
 * Include the header file you created in this file as well.
 
-#### finished
+### Finished
 
 See notes on how to run the CLI below.
 
-### CLI documentation
+## CLI documentation
 
 (currently see source for documented functions)
 
-### additional notes
+## Additional notes
 
 We define a type data_t as a floating point number with precision that you can change dependent on your needs.
 
-### pull requests
+## Pull requests
 
 We're exited to see others implement their own distance functions and add those distances to our (currently small) library of distances. To do this, please document your work using doxygen style and add tests to `test/distance`.
 
-### contact
+## Contact
 
 All functions are documented, but if any issues come up please reach out to us at genex@wpi.edu.
