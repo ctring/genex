@@ -228,7 +228,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
       }
     }
   }
-
+  normalized = true;
   return std::make_pair(MIN, MAX);
 }
 

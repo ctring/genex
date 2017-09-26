@@ -36,6 +36,11 @@ public:
   void resetGrouping();
 
   /**
+    *  @brief check if the dataset is grouped
+    */
+  bool isGrouped();
+
+  /**
    * @brief Finds the best matching subsequence in the dataset
    *
    * @param the timeseries to find the match for

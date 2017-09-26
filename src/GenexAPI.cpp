@@ -81,7 +81,9 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
   return dataset_info_t(index,
                         dataset->getFilePath(),
                         dataset->getItemCount(),
-                        dataset->getItemLength());
+                        dataset->getItemLength(),
+                        dataset->isGrouped(),
+                        dataset->isNormalized());
 }
 
 std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
@@ -106,6 +108,12 @@ std::vector<distance_info_t> GenexAPI::getAllDistanceInfo()
     info.push_back(distance_info_t(name, ""));
   }
   return info;
+}
+
+std::pair<data_t, data_t> GenexAPI::normalizeDataset(int idx)
+{
+  this->_checkDatasetIndex(idx);
+  return this->loadedDatasets[idx]->normalize();
 }
 
 int GenexAPI::groupDataset(int index, data_t threshold, const std::string& distance_name)

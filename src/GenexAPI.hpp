@@ -13,14 +13,19 @@ namespace genex {
  */
 struct dataset_info_t
 {
-  dataset_info_t() : name(""), id(-1), itemCount(0), itemLength(0) {}
-  dataset_info_t(int id, std::string name, int itemCount, int itemLength) :
-    name(name), id(id), itemCount(itemCount), itemLength(itemLength) {}
+  dataset_info_t() : name(""), id(-1), itemCount(0),
+    itemLength(0), isGrouped(false), isNormalized(false) {}
+  dataset_info_t(int id, std::string name, int itemCount, int itemLength,
+                 bool isGrouped, bool isNormalized) :
+    name(name), id(id), itemCount(itemCount), itemLength(itemLength),
+    isGrouped(isGrouped), isNormalized(isNormalized) {}
 
   std::string name;
   int id;
   int itemCount;
   int itemLength;
+  bool isGrouped;
+  bool isNormalized;
 };
 
 /**
@@ -102,11 +107,25 @@ public:
   std::vector<distance_info_t> getAllDistanceInfo();
 
   /**
+   *  @brief normalizes the dataset
+   *
+   *  Each value in the dataset is transformed by the following formula:
+   *    d = (d - min) / (max - min)
+   *  Where min and max are respectively the minimum and maximum values
+   *  across the whole dataset.
+   *
+   *  @param the index of the dataset to be normalized
+   *  @return a pair (min, max) - the minimum and maximum value across
+   *          the whole dataset before being normalized.
+   */
+  std::pair<data_t, data_t> normalizeDataset(int idx);
+
+  /**
    *  @brief groups the dataset
    *
-   *  @param the index of the dataset to use
-   *  @param metric the distance metric to use when grouping the data
+   *  @param the index of the dataset to be grouped
    *  @param threshold the threshold to use when creating the group
+   *  @param distance_name the distance to use when grouping the data
    *  @return the number of groups created
    */
   int groupDataset(int idx, data_t threshold, const std::string& distance_name);

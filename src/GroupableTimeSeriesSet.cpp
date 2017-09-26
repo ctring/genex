@@ -26,6 +26,11 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, da
   return cntGroups;
 }
 
+bool GroupableTimeSeriesSet::isGrouped()
+{
+  return this->groupsAllLengthSet != nullptr;
+}
+
 void GroupableTimeSeriesSet::resetGrouping()
 {
   delete this->groupsAllLengthSet;

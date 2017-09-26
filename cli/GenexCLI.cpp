@@ -143,10 +143,13 @@ MAKE_COMMAND(List,
     if (args[1] == "dataset")
     {
       std::vector<genex::dataset_info_t> infos = gGenexAPI.getAllDatasetInfo();
-      std::cout << "There are " << infos.size() << " loaded datasets" << std::endl;
+      std::cout << "There are " << infos.size() << " loaded datasets" << std::endl << std::endl;
       for (const auto& i : infos)
       {
-        std::cout << "  " << std::setw(4) << i.id << "\t" << i.name << std::endl;
+        std::cout << "  " << std::setw(4) << i.id << " " << i.name;
+        std::cout << "\t" << std::setw(10) << (i.isNormalized ? "Normalized" : "");
+        std::cout << "\t" << std::setw(10) << (i.isGrouped ? "Grouped" : "");
+        std::cout << std::endl;
       }
     }
     else if (args[1] == "distance") {
@@ -254,6 +257,34 @@ MAKE_COMMAND(GroupDataset,
   "                    euclidean.                                   "
   )
 
+  MAKE_COMMAND(NormalizeDataset,
+    {
+      if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
+      {
+        return false;
+      }
+
+      int index = std::stoi(args[1]);
+
+      try {
+        gGenexAPI.normalizeDataset(index);
+      }
+      catch (genex::GenexException& e)
+      {
+        std::cout << "Error! " << e.what() << std::endl;
+        return false;
+      }
+
+      std::cout << "Dataset " << index << " is now normalized" << std::endl;
+      return true;
+    },
+
+    "Normalize a dataset. (Warning: this operation cannot be undone)",
+
+    "Usage: normalize <dataset_index> \n"
+    "  dataset_index   - Index of the dataset to be normalized"
+  )
+
 MAKE_COMMAND(Match,
   {
     if (tooFewArgs(args, 4) || tooManyArgs(args, 8))
@@ -303,7 +334,6 @@ MAKE_COMMAND(Match,
   "  q_dataset_idx   - Same as dataset_index, except for the query \n"
   "  ts_index        - Index of the query \n"
   "  start           - The start location of the query in the timeseries \n"
-  "                    if omitted, will default to 0.\n"
   "  end             - The end location of the query in the timeseries \n"
   )
 
@@ -320,6 +350,7 @@ std::map<std::string, Command*> commands = {
   {"list", &cmdList},
   {"timer", &cmdTimer},
   {"group", &cmdGroupDataset},
+  {"normalize", &cmdNormalizeDataset},
   {"match", &cmdMatch}
 };
 

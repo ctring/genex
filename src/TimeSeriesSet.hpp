@@ -26,7 +26,7 @@ public:
    *  Create a TimeSeriestSet object with is an empty string for name
    */
   TimeSeriesSet()
-    : itemLength(0), itemCount(0) {};
+    : itemLength(0), itemCount(0), normalized(false) {};
 
   /**
    *  @brief destructor
@@ -101,15 +101,24 @@ public:
   TimeSeries getTimeSeries(int index, int start, int end) const;
 
   /**
-   *  @brief normalizes the timeseries set
+   *  @brief normalizes the datset
+   *  Each value in the dataset is transformed by the following formula:
+   *    d = (d - min) / (max - min)
+   *  Where min and max are respectively the minimum and maximum values
+   *  across the whole dataset.
    *
-   *  @return the min and max of the dataset
-   *  @throws exception when there is no data in the set
+   * @return a pair (min, max) - the minimum and maximum value across
+   *          the whole dataset before being normalized.
    */
   std::pair<data_t, data_t> normalize();
 
   /**
-    *  @brief Calculate the distance between a subsequence of a series in this dataset to
+  *  @brief check if the dataset is normalized
+  */
+  bool isNormalized() { return normalized; }
+
+  /**
+    *  @brief calculates the distance between a subsequence of a series in this dataset to
     *   input timeseries
     *
     *  @param idx indexs which time series this subsequence belongs to
@@ -136,7 +145,7 @@ protected:
 
 private:
   std::string filePath;
-
+  bool normalized;
 };
 
 } // namespace genex
