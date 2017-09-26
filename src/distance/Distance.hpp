@@ -157,7 +157,6 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
     result = ncost[m - 1][n - 1];
   }
 
-  //deallocate2Darray(cost, m);
   for(int i = 1; i < m; i++)
   {
     for(int j = 1; j < n; j++)
@@ -168,54 +167,6 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 
   return result;
 }
-
-
-
-#if 0
-//TODO: warping_path
-if (warping_path != NULL)
-{
-  int i = m - 1, j = n - 1;
-  while (i != -1)
-  {
-    warping_path->push_back(make_pair(i, j));
-    int old_i = i, old_j = j;
-    i = trace[old_i][old_j].first;
-    j = trace[old_i][old_j].second;
-  }
-}
-
-// during warping add correct values
-if (warping_path != NULL)
-{
-  vector<data_t> tmp;
-  tmp.push_back(cost[i - 1][j]);
-  tmp.push_back(cost[i][j - 1]);
-  tmp.push_back(cost[i - 1][j - 1]);
-
-  auto mpe = min_element(tmp.begin(), tmp.end());
-  if (mpe == tmp.begin())
-  {
-    trace[i][j] = make_pair(i - 1, j);
-  }
-  else if (mpe == tmp.begin() + 1)
-  {
-    trace[i][j] = make_pair(i, j - 1);
-  }
-  else if (mpe == tmp.begin() + 2)
-  {
-    trace[i][j] = make_pair(i - 1, j - 1);
-  }
-}
-
-// clean up
-for (int i = 0; i < m; i++)
-{
-  delete trace[i];
-}
-
-delete[] trace;
-#endif
 
 /**
  *  @brief returns the distance between two sets of data

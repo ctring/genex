@@ -155,7 +155,6 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
     throw GenexException("No data to normalize");
   }
 
-  // TODO: use library instead. Why * instead of vector?
   // auto minAndMax = std::minmax(this->data);
   // data_t diff = *minAndMax.first - *minAndMax.second;
   data_t MIN = INF;
@@ -233,7 +232,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   return std::make_pair(MIN, MAX);
 }
 
-bool TimeSeriesSet::valid()
+bool TimeSeriesSet::isLoaded()
 {
   return this->data != nullptr;
 }

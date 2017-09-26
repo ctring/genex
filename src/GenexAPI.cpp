@@ -108,7 +108,7 @@ std::vector<distance_info_t> GenexAPI::getAllDistanceInfo()
   return info;
 }
 
-int GenexAPI::groupDataset(int index,  data_t threshold, const std::string& distance_name)
+int GenexAPI::groupDataset(int index, data_t threshold, const std::string& distance_name)
 {
   this->_checkDatasetIndex(index);
   return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold);

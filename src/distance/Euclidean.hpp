@@ -8,7 +8,6 @@
 
 namespace genex {
 
-// This class is example of an implemented DistanceMetric
 class Euclidean
 {
 public:

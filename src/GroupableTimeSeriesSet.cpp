@@ -12,7 +12,7 @@ GroupableTimeSeriesSet::~GroupableTimeSeriesSet()
 
 int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, data_t threshold)
 {
-  if (!this->valid())
+  if (!this->isLoaded())
   {
     throw GenexException("No data to group");
   }

@@ -125,9 +125,9 @@ public:
       const TimeSeries& other, const std::string& distance_name);
 
   /**
-   *  @brief a set is valid if it contains data (valid for grouping)
+   *  @brief check if data is loaded
    */
-  bool valid(void);
+  bool isLoaded(void);
 
 protected:
   data_t* data = nullptr;

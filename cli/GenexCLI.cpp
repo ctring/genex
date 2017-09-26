@@ -149,7 +149,7 @@ MAKE_COMMAND(List,
         std::cout << "  " << std::setw(4) << i.id << "\t" << i.name << std::endl;
       }
     }
-    else if (args[1] == "metric") {
+    else if (args[1] == "distance") {
       std::vector<genex::distance_info_t> infos = gGenexAPI.getAllDistanceInfo();
       for (const auto& i : infos)
       {
@@ -164,9 +164,9 @@ MAKE_COMMAND(List,
     return true;
   },
 
-  "List loaded dataset or available metric",
+  "List loaded dataset or available distance",
 
-  "Usage: list dataset|metric"
+  "Usage: list dataset|distance"
   )
 
 MAKE_COMMAND(Timer,
@@ -218,17 +218,17 @@ MAKE_COMMAND(GroupDataset,
     int index = std::stoi(args[1]);
     genex::data_t threshold = std::stod(args[2]);
 
-    std::string metric_name = "euclidean";
+    std::string distance_name = "euclidean";
 
-    // if metric option is present
+    // if distance option is present
     if (args.size() == 4)
     {
-      metric_name = args[3];
+      distance_name = args[3];
     }
     int count = -1;
     try
     {
-      count = gGenexAPI.groupDataset(index, threshold, metric_name);
+      count = gGenexAPI.groupDataset(index, threshold, distance_name);
     }
     catch (genex::GenexException& e)
     {
@@ -243,14 +243,15 @@ MAKE_COMMAND(GroupDataset,
 
   "Group a dataset in memory",
 
-  "Usage: group <dataset_index> <threshold> [distance_metric]     \n"
+  "Usage: group <dataset_index> <threshold> [distance]     \n"
   "  dataset_index   - Index of the dataset being unloaded. Use   \n"
   "                    'list dataset' to retrieve the list of     \n"
   "                    loaded datasets.                           \n"
   "  threshold       - Threshold for grouping.                    \n"
-  "  distance_metric - The string identifier of a distance metric \n"
-  "                    'list metric' to retrieve the list of      \n"
-  "                    loaded metrics. Default to euclidean.        "
+  "  distance        - The string identifier of a distance. Use   \n"
+  "                    'list distance' to retrieve the list of    \n"
+  "                    loaded distance. Default to point-wise     \n"
+  "                    euclidean.                                   "
   )
 
 MAKE_COMMAND(Match,

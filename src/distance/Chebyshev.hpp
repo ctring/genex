@@ -8,7 +8,6 @@
 
 namespace genex {
 
-//This class is an example of an implemented DistanceMetric
 class Chebyshev
 {
 
