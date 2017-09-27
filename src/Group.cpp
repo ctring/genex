@@ -70,14 +70,13 @@ const std::vector<candidate_time_series_t> Group::intraGroupKNN(
   data_t bestSoFarDist = INF;
   member_coord_t bestSoFarMember;
   member_coord_t currentMemberCoord = this->lastMemberCoord;  
-  
+
   while (currentMemberCoord.first != -1)
   {
     int currIndex = currentMemberCoord.first;
     int currStart = currentMemberCoord.second;
 
     TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
-    
     if (k > 0) // directly add to best 
     {
       data_t currentDistance = warpedDistance(query, currentTimeSeries, INF);
@@ -92,7 +91,7 @@ const std::vector<candidate_time_series_t> Group::intraGroupKNN(
     { 
       bestSoFarDist = bestSoFar.front().dist;
       data_t currentDistance = warpedDistance(query, currentTimeSeries, bestSoFarDist); 
-                        
+
       if (currentDistance < bestSoFarDist) 
       { 
         bestSoFar.pop_back();        
