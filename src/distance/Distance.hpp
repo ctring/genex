@@ -6,11 +6,13 @@
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
+#define DTW_SUFFIX "_dtw"
+
 #define NEW_DISTANCE(_class, _type) \
   pairwiseDistance<_class, _type>,  \
   warpedDistance<_class, _type>
 
-#define NEW_DISTANCE_NAME(_name) #_name, #_name"_warp"
+#define NEW_DISTANCE_NAME(_name) #_name, #_name"_dtw"
 
 namespace genex {
 
@@ -30,6 +32,10 @@ const dist_t getDistance(const std::string& distance_name);
  */
 const std::vector<std::string>& getAllDistanceName();
 
+/**
+ *  Check if a class has the method InverseNorm using compile-time introspection.
+ *  https://jguegant.github.io/blogs/tech/sfinae-introduction.html
+ */
 template <class T> struct hasInverseNorm
 {
   template <typename U, U> struct helper{};

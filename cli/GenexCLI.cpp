@@ -251,10 +251,10 @@ MAKE_COMMAND(GroupDataset,
   "                    'list dataset' to retrieve the list of     \n"
   "                    loaded datasets.                           \n"
   "  threshold       - Threshold for grouping.                    \n"
-  "  distance        - The string identifier of a distance. Use   \n"
+  "  distance        - The string identifier of a distance. This  \n"
+  "                    string must not end with '_dtw'. Use       \n"
   "                    'list distance' to retrieve the list of    \n"
-  "                    loaded distance. Default to point-wise     \n"
-  "                    euclidean.                                   "
+  "                    loaded distance. Default to euclidean.     \n"
   )
 
   MAKE_COMMAND(NormalizeDataset,
@@ -309,12 +309,20 @@ MAKE_COMMAND(Match,
       if (end == -1)
       {
         genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index);
-        std::cout << "Best Match is timeseries " << best.data.getIndex() << " with distance " << best.dist << " starting at " << best.data.getStart() <<" with length " << best.data.getLength() << std::endl;
+        std::cout << "Best Match is timeseries " << best.data.getIndex()
+                  << " with distance " << best.dist
+                  << " starting at " << best.data.getStart()
+                  << " with length " << best.data.getLength()
+                  << std::endl;
       }
       else
       {
         genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
-        std::cout << "Best Match is timeseries " << best.data.getIndex() << " with distance " << best.dist << " starting at " << best.data.getStart() <<" with length " << best.data.getLength() << std::endl;
+        std::cout << "Best Match is timeseries " << best.data.getIndex()
+                  << " with distance " << best.dist
+                  << " starting at " << best.data.getStart()
+                  << " with length " << best.data.getLength()
+                  << std::endl;
       }
     }
     catch (genex::GenexException& e)

@@ -15,8 +15,8 @@ int GroupsEqualLengthSet::group(const std::string& distance_name, data_t thresho
   reset();
 
   this->pairwiseDistance = getDistance(distance_name);
-  this->warpedDistance   = getDistance(distance_name + "_warp");
-  this->threshold = threshold;
+  this->warpedDistance   = getDistance(distance_name + DTW_SUFFIX);
+  this->threshold        = threshold;
   this->groupsEqualLength.resize(dataset.getItemLength() + 1, NULL);
 
   int numberOfGroups = 0;
