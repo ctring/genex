@@ -61,7 +61,7 @@ public:
 
   int interLevelKNN(const TimeSeries& query, 
     const dist_t warpedDistance, 
-    std::priority_queue<group_index_t, std::vector<group_index_t>, pless<group_index_t>>& bestSoFar, 
+    std::vector<group_index_t>* bestSoFar, 
     int k);
   
   /**

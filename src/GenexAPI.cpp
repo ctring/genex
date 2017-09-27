@@ -159,8 +159,6 @@ std::vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, 
   return loadedDatasets[result_idx]->kNN(query, k);
 }
 
-
-
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)

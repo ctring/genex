@@ -1,8 +1,9 @@
 #include "Group.hpp"
 
+#include <iostream> // debug
+
 #include <vector>
-#include <functional>
-#include <queue>
+#include <algorithm>
 
 #include "TimeSeries.hpp"
 #include "distance/Distance.hpp"
@@ -31,7 +32,6 @@ data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t distanc
 
 candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_t warpedDistance) const
 {
-  // TODO: warpedDistance should be bestSoFarDist?
   member_coord_t currentMemberCoord = this->lastMemberCoord;
 
   data_t bestSoFarDist = INF;
@@ -62,17 +62,15 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
   return best;
 }
 
-const std::priority_queue<candidate_time_series_t, std::vector<candidate_time_series_t>, 
-    pless<candidate_time_series_t>>& Group::intraGroupKNN(const TimeSeries& query, int k, const dist_t warpedDistance) const
+const std::vector<candidate_time_series_t> Group::intraGroupKNN(
+    const TimeSeries& query, int k, const dist_t warpedDistance) const
 {
-  std::priority_queue<candidate_time_series_t, std::vector<candidate_time_series_t>, 
-    pless<candidate_time_series_t>> bestSoFar;
+  std::vector<candidate_time_series_t> bestSoFar;
 
   data_t bestSoFarDist = INF;
   member_coord_t bestSoFarMember;
-  
   member_coord_t currentMemberCoord = this->lastMemberCoord;  
-
+  
   while (currentMemberCoord.first != -1)
   {
     int currIndex = currentMemberCoord.first;
@@ -80,22 +78,29 @@ const std::priority_queue<candidate_time_series_t, std::vector<candidate_time_se
 
     TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
     
-    if (k > 0) // add to best 
+    if (k > 0) // directly add to best 
     {
       data_t currentDistance = warpedDistance(query, currentTimeSeries, INF);
-      bestSoFar.push(candidate_time_series_t(currentTimeSeries, currentDistance));
-      k -= 1;
-    }
-    else //
-    {
-      bestSoFarDist = bestSoFar.top().dist;
-      data_t currentDistance = 3.4; //warpedDistance(query, currentTimeSeries, bestSoFarDist);
-      if (currentDistance < bestSoFarDist) 
-      {
-        bestSoFar.push(candidate_time_series_t(currentTimeSeries, currentDistance));
+      bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDistance));
+      k -= 1;      
+      if (k == 0) {
+        // Heapify exactly once when the heap is filled.
+        std::make_heap(bestSoFar.begin(), bestSoFar.end());
       }
-      bestSoFar.pop(); // remove worst
     }
+    else // heap is full, keep only best k'
+    { 
+      bestSoFarDist = bestSoFar.front().dist;
+      data_t currentDistance = warpedDistance(query, currentTimeSeries, bestSoFarDist); 
+                        
+      if (currentDistance < bestSoFarDist) 
+      { 
+        bestSoFar.pop_back();        
+        bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDistance));
+        std::push_heap(bestSoFar.begin(), bestSoFar.end());
+      } 
+    }
+    currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
   }
   return bestSoFar;
 }

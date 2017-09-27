@@ -1,8 +1,6 @@
 #ifndef GROUP_HPP
 #define GROUP_HPP
 
-#include <queue>
-#include <functional>
 #include "config.hpp"
 
 #include "TimeSeries.hpp"   // INF
@@ -70,12 +68,6 @@ struct group_membership_t
    {
        return dist < rhs.dist;
    }
- };
-
- template<typename Type, typename Compare = std::less<Type> >
- struct pless : public std::binary_function<Type, Type, bool> {
-     bool operator()(const Type x, const Type y) const
-         { return Compare()(x, y); }
  };
 
 /**
@@ -161,10 +153,24 @@ public:
     return this->centroid;
   }
 
+  /**
+   *  @brief gets all the members in a group
+   *
+   *  @return the TimeSeries for each value in the group.
+   */
   const std::vector<TimeSeries> getMembers() const;
-  const std::priority_queue<candidate_time_series_t, std::vector<candidate_time_series_t>, 
-      pless<candidate_time_series_t>>& intraGroupKNN(const TimeSeries& query, int k, const dist_t warpedDistance) const;
-      
+
+  /**
+   *  @brief performs necessary KNN operations a group
+   *
+   *  @param query to find similar to
+   *  @param k is the adjusted k, how many neighbors to find within the group.
+   *  @param warpedDistance to be used for the distance metric
+   *  @return neighbors
+   */
+  const std::vector<candidate_time_series_t> intraGroupKNN(
+      const TimeSeries& query, int k, const dist_t warpedDistance) const;
+  
   //TODO
   //candidate_time_series_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
   //vector<candidate_time_series_t> getSeasonal(int);

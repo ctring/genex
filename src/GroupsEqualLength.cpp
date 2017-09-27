@@ -1,8 +1,7 @@
 #include "GroupsEqualLength.hpp"
 
 #include <vector>
-#include <functional>
-#include <queue>
+#include <algorithm>
 
 #include <iostream> //debug
 
@@ -32,7 +31,7 @@ GroupsEqualLength::~GroupsEqualLength()
 
 const Group* GroupsEqualLength::getGroup(int idx) const
 {
-  if (idx < 0 || idx >= this->length) {
+  if (idx < 0 || idx >= this->getNumberOfGroups()) {
     throw GenexException("Index is out of range");
   }
   return this->groups[idx];
@@ -103,34 +102,39 @@ candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
 }
 
 int GroupsEqualLength::interLevelKNN(const TimeSeries& query, 
-  const dist_t warpedDistance, 
-  std::priority_queue<group_index_t, std::vector<group_index_t>, pless<group_index_t>>& bestSoFar, 
-  int k)
+    const dist_t warpedDistance, 
+    std::vector<group_index_t>* bestSoFar,
+    int k)
 {
   for (unsigned int i = 0; i < groups.size(); i++) {
-      if (k <= 0) // if heap is full, handle switch.
+      if (k <= 0) // if heap is full, keep only sum-k groups
       {
-        data_t bestSoFarDist = bestSoFar.top().dist;
+        data_t bestSoFarDist = bestSoFar->front().dist;
         data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
         if (dist < bestSoFarDist) {
           int membersAdded = groups[i]->getCount();
-          bestSoFar.push(group_index_t(this->length, i, membersAdded, dist));
-          k += membersAdded;
-          std::cout<<"Better"<<std::endl;          
+          bestSoFar->push_back(group_index_t(this->length, i, membersAdded, dist));
+          std::push_heap(bestSoFar->begin(), bestSoFar->end());
+          k -= membersAdded;
           // If the worst (furthest) group can be removed, with keeping at least k elements
           // tracked, remove it.
-          while(k - bestSoFar.top().members <= 0) { 
-            k -= bestSoFar.top().members;            
-            bestSoFar.pop();
+          while(k + bestSoFar->front().members <= 0) { 
+            k += bestSoFar->front().members;
+            std::pop_heap(bestSoFar->begin(), bestSoFar->end());
+            bestSoFar->pop_back();
           }
-        } else { std::cout<<"Worse"<<std::endl; }
+        }
       }
-      else // directly add to heap.
+      else // heap is not full, directly add to heap.
       {
-        std::cout<<"Direct"<<std::endl;
         int membersAdded = groups[i]->getCount();        
         data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, INF);
-        bestSoFar.push(group_index_t(this->length, i, membersAdded, dist));
+        bestSoFar->push_back(group_index_t(this->length, i, membersAdded, dist));
+        k -= membersAdded;
+        if (k <= 0) {
+          // heapify the heap exactly once when it becomes full.
+          std::make_heap(bestSoFar->begin(), bestSoFar->end());          
+        }
       }
   }
   return k;
