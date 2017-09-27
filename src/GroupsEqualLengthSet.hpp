@@ -2,7 +2,6 @@
 #define GROUPS_EQUAL_LENGTH_SET_H
 
 #include <vector>
-
 #include "GroupsEqualLength.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
@@ -51,6 +50,8 @@ public:
    *  @return the best match in the dataset
    */
   candidate_time_series_t getBestMatch(const TimeSeries& query);
+
+  std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
 
   /**
    *  @brief clears the groups

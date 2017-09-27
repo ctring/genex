@@ -1,8 +1,11 @@
 #include "GroupsEqualLength.hpp"
 
 #include <vector>
+#include <functional>
+#include <queue>
 
 #include <iostream> //debug
+
 #include "TimeSeries.hpp"
 #include "Group.hpp"
 #include "Exception.hpp"
@@ -97,6 +100,40 @@ candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
   }
 
   return std::make_pair(bestSoFarGroup, bestSoFarDist);
+}
+
+int GroupsEqualLength::interLevelKNN(const TimeSeries& query, 
+  const dist_t warpedDistance, 
+  std::priority_queue<group_index_t, std::vector<group_index_t>, pless<group_index_t>>& bestSoFar, 
+  int k)
+{
+  for (unsigned int i = 0; i < groups.size(); i++) {
+      if (k <= 0) // if heap is full, handle switch.
+      {
+        data_t bestSoFarDist = bestSoFar.top().dist;
+        data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
+        if (dist < bestSoFarDist) {
+          int membersAdded = groups[i]->getCount();
+          bestSoFar.push(group_index_t(this->length, i, membersAdded, dist));
+          k += membersAdded;
+          std::cout<<"Better"<<std::endl;          
+          // If the worst (furthest) group can be removed, with keeping at least k elements
+          // tracked, remove it.
+          while(k - bestSoFar.top().members <= 0) { 
+            k -= bestSoFar.top().members;            
+            bestSoFar.pop();
+          }
+        } else { std::cout<<"Worse"<<std::endl; }
+      }
+      else // directly add to heap.
+      {
+        std::cout<<"Direct"<<std::endl;
+        int membersAdded = groups[i]->getCount();        
+        data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, INF);
+        bestSoFar.push(group_index_t(this->length, i, membersAdded, dist));
+      }
+  }
+  return k;
 }
 
 

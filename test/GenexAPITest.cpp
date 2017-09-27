@@ -2,6 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "TimeSeries.hpp"
 #include "GenexAPI.hpp"
 #include "Exception.hpp"
 
@@ -16,6 +17,14 @@ struct MockDataset
   std::string not_exist = "unicorn_santa_magic_halting_problem_solution";
   std::string uneven_rows = "dataset/test/uneven_rows.txt";
 } data;
+
+const bool timeSeriesEqual(const TimeSeries& a, const TimeSeries& b)
+{
+  return a.getLength() == b.getLength() 
+      && a.getStart() == b.getStart()
+      && a.getIndex() == b.getIndex();
+
+}
 
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
@@ -122,3 +131,31 @@ BOOST_AUTO_TEST_CASE( api_match )
   BOOST_CHECK_THROW( api.getBestMatch(1, 0, 1, 100, 125), GenexException ); // not that big ts in dataset
 }
 
+
+BOOST_AUTO_TEST_CASE( api_knn )
+{
+  GenexAPI api;
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+
+  int count_1 = api.groupDataset(0, 0.5, "euclidean");
+
+  std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 1);
+  // std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 1);
+  // std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 1);
+  // std::vector<TimeSeries> best_4 = api.kNN(0, 1, 0, 5, 10, 1);
+
+  candidate_time_series_t expected_1 = api.getBestMatch(0, 0, 0);
+  // candidate_time_series_t expected_2 = api.getBestMatch(0, 1, 0);
+  // candidate_time_series_t expected_3 = api.getBestMatch(0, 1, 1);
+  // candidate_time_series_t expected_4 = api.getBestMatch(0, 1, 0, 5, 10);
+
+  BOOST_CHECK_EQUAL( best_1.size(), 1 );
+  // BOOST_CHECK_EQUAL( best_2.size(), 1 );
+  // BOOST_CHECK_EQUAL( best_3.size(), 1 );
+  // BOOST_CHECK_EQUAL( best_4.size(), 1 );
+  
+  // BOOST_CHECK_THROW( api.kNN(1, 0, 0, 1), GenexException ); // dataset not grouped
+  // BOOST_CHECK_THROW( api.kNN(1, 0, 35, 1), GenexException ); // not that many ts in dataset
+  // BOOST_CHECK_THROW( api.kNN(1, 0, 1, 100, 125, 1), GenexException ); // not that big ts in dataset
+}

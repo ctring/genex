@@ -3,6 +3,8 @@
 
 #include "TimeSeriesSet.hpp"
 #include "GroupsEqualLengthSet.hpp"
+#include <vector>
+
 #include "distance/Distance.hpp"
 
 namespace genex {
@@ -51,6 +53,8 @@ public:
    */
   candidate_time_series_t getBestMatch(const TimeSeries& other) const;
 
+  std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
+  
 private:
   GroupsEqualLengthSet* groupsAllLengthSet = nullptr;
 };

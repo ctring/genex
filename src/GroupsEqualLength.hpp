@@ -2,10 +2,13 @@
 #define GROUPS_EQUAL_LENGTH_H
 
 #include <vector>
+#include <functional>
+#include <queue>
 
 #include "TimeSeries.hpp"
 #include "distance/Distance.hpp"
 #include "Group.hpp"
+
 
 namespace genex {
 
@@ -56,6 +59,11 @@ public:
                                  const dist_t warpedDistance,
                                  data_t dropout) const;
 
+  int interLevelKNN(const TimeSeries& query, 
+    const dist_t warpedDistance, 
+    std::priority_queue<group_index_t, std::vector<group_index_t>, pless<group_index_t>>& bestSoFar, 
+    int k);
+  
   /**
    *  @return a group with given index
    */

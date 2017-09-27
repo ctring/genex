@@ -1,8 +1,11 @@
 #ifndef GROUP_HPP
 #define GROUP_HPP
 
+#include <queue>
+#include <functional>
 #include "config.hpp"
 
+#include "TimeSeries.hpp"   // INF
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
@@ -24,6 +27,10 @@ struct candidate_time_series_t
   TimeSeries data;
   data_t dist;
 
+  bool operator<(const candidate_time_series_t& rhs) const 
+  {
+      return dist < rhs.dist;
+  }
   candidate_time_series_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {};
 };
 
@@ -40,6 +47,36 @@ struct group_membership_t
   group_membership_t(int groupIndex, member_coord_t prev)
     : groupIndex(groupIndex), prev(prev) {}
 };
+
+/**
+ *  @brief a structure, used for identifying a group 
+ *
+ *  {@link memberLength} and {@link index} allow this group to be identified.
+ *  @members is used for tracking the correct number of groups
+ *  @dist is the distance from a query to the group's representative.
+ */
+ struct group_index_t
+ {
+   int length;
+   int index;
+   int members;
+   data_t dist;
+
+   group_index_t(int length, int index, int members, data_t dist) 
+      : length(length), index(index), members(members), 
+          dist(dist) {};
+
+   bool operator<(const group_index_t& rhs) const 
+   {
+       return dist < rhs.dist;
+   }
+ };
+
+ template<typename Type, typename Compare = std::less<Type> >
+ struct pless : public std::binary_function<Type, Type, bool> {
+     bool operator()(const Type x, const Type y) const
+         { return Compare()(x, y); }
+ };
 
 /**
  *  @brief a group of similar time series
@@ -124,6 +161,10 @@ public:
     return this->centroid;
   }
 
+  const std::vector<TimeSeries> getMembers() const;
+  const std::priority_queue<candidate_time_series_t, std::vector<candidate_time_series_t>, 
+      pless<candidate_time_series_t>>& intraGroupKNN(const TimeSeries& query, int k, const dist_t warpedDistance) const;
+      
   //TODO
   //candidate_time_series_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
   //vector<candidate_time_series_t> getSeasonal(int);

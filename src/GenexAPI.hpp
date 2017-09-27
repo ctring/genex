@@ -5,6 +5,7 @@
 #include <string>
 
 #include "GroupableTimeSeriesSet.hpp"
+#include "TimeSeries.hpp"
 
 namespace genex {
 
@@ -140,9 +141,16 @@ public:
    *  @param end the end of the index
    *  @return best match in the dataset
    */
-  candidate_time_series_t getBestMatch(int result_idx, int query_idx, int index, int start, int end);
-  candidate_time_series_t getBestMatch(int result_idx, int query_idx, int index);
+  candidate_time_series_t getBestMatch(
+      int result_idx, int query_idx, int index, int start, int end);
+  candidate_time_series_t getBestMatch(
+    int result_idx, int query_idx, int index);
 
+  std::vector<TimeSeries> kNN(
+      int result_idx, int query_idx, int index, int start, int end, int k);
+  std::vector<TimeSeries> kNN(
+      int result_idx, int query_idx, int index, int k);
+  
 private:
   void _checkDatasetIndex(int index);
 

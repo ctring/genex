@@ -140,6 +140,27 @@ candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->getBestMatch(query);
 }
 
+
+std::vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int k)
+{
+  this->_checkDatasetIndex(result_idx);
+  this->_checkDatasetIndex(query_idx);
+
+  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
+  return loadedDatasets[result_idx]->kNN(query, k);
+}
+
+std::vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int start, int end, int k)
+{
+  this->_checkDatasetIndex(result_idx);
+  this->_checkDatasetIndex(query_idx);
+
+  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
+  return loadedDatasets[result_idx]->kNN(query, k);
+}
+
+
+
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
