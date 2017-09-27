@@ -94,9 +94,10 @@ const std::vector<candidate_time_series_t> Group::intraGroupKNN(
 
       if (currentDistance < bestSoFarDist) 
       { 
-        bestSoFar.pop_back();        
         bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDistance));
         std::push_heap(bestSoFar.begin(), bestSoFar.end());
+        std::pop_heap(bestSoFar.begin(), bestSoFar.end());
+        bestSoFar.pop_back();
       } 
     }
     currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
