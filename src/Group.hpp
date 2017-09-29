@@ -75,8 +75,8 @@ public:
   /**
    *  @brief set the centroid of the group
    *
-   *  @param seq which sequence the member is from
-   *  @param start where the member starts in the data
+   *  @param index index of sequence the centroid is from
+   *  @param start where the centroid starts in the data
    */
   void setCentroid(int index, int start);
 

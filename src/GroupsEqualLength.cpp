@@ -42,7 +42,6 @@ int GroupsEqualLength::getNumberOfGroups(void) const
 
 int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t threshold)
 {
-  //std::cout << "Generating groups of length: " << this->length << ". Sub-TS count: " << this->subTimeSeriesCount << std::endl;
   for (int start = 0; start < this->subTimeSeriesCount; start++)
   {
     for (int idx = 0; idx < dataset.getItemCount(); idx++)
@@ -74,7 +73,6 @@ int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t thre
       this->groups[bestSoFarIndex]->addMember(idx, start);
     }
   }
-  //std::cout << "Finished grouping of length " << this->length << ": " << this->getNumberOfGroups() << " groups" << std::endl;
 
   return this->getNumberOfGroups();
   //if we care about order:

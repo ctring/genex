@@ -39,7 +39,7 @@ public:
   /**
    *  @brief generates all the groups for the timeseries of this length
    *
-   *  @param metric the distance metric to use when computing the groups
+   *  @param pairwiseDistance the distance to use when computing the groups
    *  @param threshold the threshold to use when splitting into new groups
    *  @return number of generated groups
    */
