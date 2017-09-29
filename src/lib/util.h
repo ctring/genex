@@ -1,11 +1,15 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include "TimeSeries.hpp"
+
+using namespace genex;
+
 /// Data structure for sorting the query
 class Index
 {
  public:
-    double value;
+    data_t value;
     int    index;
 
     int diff(Index &other);
@@ -13,7 +17,7 @@ class Index
   
 };
 
-void printArray(double *x, int len);
+void printArray(data_t *x, int len);
 void error(int id);
 
 

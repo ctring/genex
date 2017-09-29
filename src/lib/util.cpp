@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include <cmath>
 
+using namespace genex;
+
 /// Print function for debugging
-void printArray(double *x, int len)
+void printArray(data_t *x, int len)
 {
     for(int i=0; i<len; i++)
         printf(" %6.2lf",x[i]);

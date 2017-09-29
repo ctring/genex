@@ -3,16 +3,20 @@
 #include "lib/deque.h"
 #include "lib/util.h"
 
+#include "TimeSeries.hpp"
+
 #include <cstdio>
 
 #define min(x,y) ((x)<(y)?(x):(y))
 #define max(x,y) ((x)>(y)?(x):(y))
 #define dist(x,y) ((x-y)*(x-y))
 
+using namespace genex;
+
 /// Finding the envelop of min and max value for LB_Keogh
 /// Implementation idea is intoruduced by Danial Lemire in his paper
 /// "Faster Retrieval with a Two-Pass Dynamic-Time-Warping Lower Bound", Pattern Recognition 42(9), 2009.
-void lower_upper_lemire(double *t, int len, int r, double *l, double *u)
+void lower_upper_lemire(data_t *t, int len, int r, data_t *l, data_t *u)
 {
     deque du(2*r + 2);
     deque dl(2*r + 2);
@@ -61,31 +65,31 @@ void lower_upper_lemire(double *t, int len, int r, double *l, double *u)
 /// However, because of z-normalization the top and bottom cannot give siginifant benefits.
 /// And using the first and last points can be computed in constant time.
 /// The prunning power of LB_Kim is non-trivial, especially when the query is not long, say in length 128.
-double lb_kim_hierarchy(double *t, double *q, int j, int len, double mean, double std, double bsf)
+data_t lb_kim_hierarchy(data_t *t, data_t *q, int j, int len, data_t mean, data_t std, data_t bsf)
 {
     /// 1 point at front and back
-    double d, lb;
-    double x0 = (t[j] - mean) / std;
-    double y0 = (t[(len-1+j)] - mean) / std;
+    data_t d, lb;
+    data_t x0 = (t[j] - mean) / std;
+    data_t y0 = (t[(len-1+j)] - mean) / std;
     lb = dist(x0,q[0]) + dist(y0,q[len-1]);
     if (lb >= bsf)   return lb;
 
     /// 2 points at front
-    double x1 = (t[(j+1)] - mean) / std;
+    data_t x1 = (t[(j+1)] - mean) / std;
     d = min(dist(x1,q[0]), dist(x0,q[1]));
     d = min(d, dist(x1,q[1]));
     lb += d;
     if (lb >= bsf)   return lb;
 
     /// 2 points at back
-    double y1 = (t[(len-2+j)] - mean) / std;
+    data_t y1 = (t[(len-2+j)] - mean) / std;
     d = min(dist(y1,q[len-1]), dist(y0, q[len-2]) );
     d = min(d, dist(y1,q[len-2]));
     lb += d;
     if (lb >= bsf)   return lb;
 
     /// 3 points at front
-    double x2 = (t[(j+2)] - mean) / std;
+    data_t x2 = (t[(j+2)] - mean) / std;
     d = min(dist(x0,q[2]), dist(x1, q[2]));
     d = min(d, dist(x2,q[2]));
     d = min(d, dist(x2,q[1]));
@@ -94,7 +98,7 @@ double lb_kim_hierarchy(double *t, double *q, int j, int len, double mean, doubl
     if (lb >= bsf)   return lb;
 
     /// 3 points at back
-    double y2 = (t[(len-3+j)] - mean) / std;
+    data_t y2 = (t[(len-3+j)] - mean) / std;
     d = min(dist(y0,q[len-3]), dist(y1, q[len-3]));
     d = min(d, dist(y2,q[len-3]));
     d = min(d, dist(y2,q[len-2]));
@@ -113,10 +117,10 @@ double lb_kim_hierarchy(double *t, double *q, int j, int len, double mean, doubl
 /// t     : a circular array keeping the current data.
 /// j     : index of the starting location in t
 /// cb    : (output) current bound at each position. It will be used later for early abandoning in DTW.
-double lb_keogh_cumulative(int* order, double *t, double *uo, double *lo, double *cb, int j, int len, double mean, double std, double best_so_far)
+data_t lb_keogh_cumulative(int* order, data_t *t, data_t *uo, data_t *lo, data_t *cb, int j, int len, data_t mean, data_t std, data_t best_so_far)
 {
-    double lb = 0;
-    double x, d;
+    data_t lb = 0;
+    data_t x, d;
 
     for (int i = 0; i < len && lb < best_so_far; i++)
     {
@@ -140,10 +144,10 @@ double lb_keogh_cumulative(int* order, double *t, double *uo, double *lo, double
 /// qo: sorted query
 /// cb: (output) current bound at each position. Used later for early abandoning in DTW.
 /// l,u: lower and upper envelop of the current data
-double lb_keogh_data_cumulative(int* order, double *tz, double *qo, double *cb, double *l, double *u, int len, double mean, double std, double best_so_far)
+data_t lb_keogh_data_cumulative(int* order, data_t *tz, data_t *qo, data_t *cb, data_t *l, data_t *u, int len, data_t mean, data_t std, data_t best_so_far)
 {
-    double lb = 0;
-    double uu,ll,d;
+    data_t lb = 0;
+    data_t uu,ll,d;
 
     for (int i = 0; i < len && lb < best_so_far; i++)
     {
@@ -166,20 +170,20 @@ double lb_keogh_data_cumulative(int* order, double *tz, double *qo, double *cb, 
 /// A,B: data and query, respectively
 /// cb : cummulative bound used for early abandoning
 /// r  : size of Sakoe-Chiba warpping band
-double dtw(double* A, double* B, double *cb, int m, int r, double bsf)
+data_t dtw(data_t* A, data_t* B, data_t *cb, int m, int r, data_t bsf)
 {
 
-    double *cost;
-    double *cost_prev;
-    double *cost_tmp;
+    data_t *cost;
+    data_t *cost_prev;
+    data_t *cost_tmp;
     int i,j,k;
-    double x,y,z,min_cost;
+    data_t x,y,z,min_cost;
 
     /// Instead of using matrix of size O(m^2) or O(mr), we will reuse two array of size O(r).
-    cost = (double*)malloc(sizeof(double)*(2*r+1));
+    cost = (data_t*)malloc(sizeof(data_t)*(2*r+1));
     for(k=0; k<2*r+1; k++)    cost[k]=INF_TRILLION;
 
-    cost_prev = (double*)malloc(sizeof(double)*(2*r+1));
+    cost_prev = (data_t*)malloc(sizeof(data_t)*(2*r+1));
     for(k=0; k<2*r+1; k++)    cost_prev[k]=INF_TRILLION;
 
     for (i=0; i<m; i++)
@@ -228,7 +232,7 @@ double dtw(double* A, double* B, double *cb, int m, int r, double bsf)
     k--;
 
     /// the DTW distance is in the last cell in the matrix of size O(m^2) or at the middle of our array.
-    double final_dtw = cost_prev[k];
+    data_t final_dtw = cost_prev[k];
     free(cost);
     free(cost_prev);
     return final_dtw;
@@ -239,21 +243,21 @@ int calculate(const char *dataPath, const char *queryPath, int queryLength, int 
 {
     FILE *fp;            /// data file pointer
     FILE *qp;            /// query file pointer
-    double bsf;          /// best-so-far
-    double *t, *q;       /// data array and query array
+    data_t bsf;          /// best-so-far
+    data_t *t, *q;       /// data array and query array
     int *order;          ///new order of the query
-    double *u, *l, *qo, *uo, *lo,*tz,*cb, *cb1, *cb2,*u_d, *l_d;
+    data_t *u, *l, *qo, *uo, *lo,*tz,*cb, *cb1, *cb2,*u_d, *l_d;
 
 
-    double d;
+    data_t d;
     long long i , j;
-    double ex , ex2 , mean, std;
+    data_t ex , ex2 , mean, std;
     int m=-1;
     long long loc = 0;
-    double t1,t2;
+    data_t t1,t2;
     int kim = 0,keogh = 0, keogh2 = 0;
-    double dist=0, lb_kim=0, lb_k=0, lb_k2=0;
-    double *buffer, *u_buff, *l_buff;
+    data_t dist=0, lb_kim=0, lb_k=0, lb_k2=0;
+    data_t *buffer, *u_buff, *l_buff;
     Index *Q_tmp;
 
     int EPOCH = 100000;
@@ -269,16 +273,16 @@ int calculate(const char *dataPath, const char *queryPath, int queryLength, int 
         error(2);
 
     /// malloc everything here
-    q = (double *)malloc(sizeof(double)*m);
+    q = (data_t *)malloc(sizeof(data_t)*m);
     if( q == NULL )
         error(1);
-    qo = (double *)malloc(sizeof(double)*m);
+    qo = (data_t *)malloc(sizeof(data_t)*m);
     if( qo == NULL )
         error(1);
-    uo = (double *)malloc(sizeof(double)*m);
+    uo = (data_t *)malloc(sizeof(data_t)*m);
     if( uo == NULL )
         error(1);
-    lo = (double *)malloc(sizeof(double)*m);
+    lo = (data_t *)malloc(sizeof(data_t)*m);
     if( lo == NULL )
         error(1);
 
@@ -290,51 +294,51 @@ int calculate(const char *dataPath, const char *queryPath, int queryLength, int 
     if( Q_tmp == NULL )
         error(1);
 
-    u = (double *)malloc(sizeof(double)*m);
+    u = (data_t *)malloc(sizeof(data_t)*m);
     if( u == NULL )
         error(1);
 
-    l = (double *)malloc(sizeof(double)*m);
+    l = (data_t *)malloc(sizeof(data_t)*m);
     if( l == NULL )
         error(1);
 
-    cb = (double *)malloc(sizeof(double)*m);
+    cb = (data_t *)malloc(sizeof(data_t)*m);
     if( cb == NULL )
         error(1);
 
-    cb1 = (double *)malloc(sizeof(double)*m);
+    cb1 = (data_t *)malloc(sizeof(data_t)*m);
     if( cb1 == NULL )
         error(1);
 
-    cb2 = (double *)malloc(sizeof(double)*m);
+    cb2 = (data_t *)malloc(sizeof(data_t)*m);
     if( cb2 == NULL )
         error(1);
 
-    u_d = (double *)malloc(sizeof(double)*m);
+    u_d = (data_t *)malloc(sizeof(data_t)*m);
     if( u == NULL )
         error(1);
 
-    l_d = (double *)malloc(sizeof(double)*m);
+    l_d = (data_t *)malloc(sizeof(data_t)*m);
     if( l == NULL )
         error(1);
 
-    t = (double *)malloc(sizeof(double)*m*2);
+    t = (data_t *)malloc(sizeof(data_t)*m*2);
     if( t == NULL )
         error(1);
 
-    tz = (double *)malloc(sizeof(double)*m);
+    tz = (data_t *)malloc(sizeof(data_t)*m);
     if( tz == NULL )
         error(1);
 
-    buffer = (double *)malloc(sizeof(double)*EPOCH);
+    buffer = (data_t *)malloc(sizeof(data_t)*EPOCH);
     if( buffer == NULL )
         error(1);
 
-    u_buff = (double *)malloc(sizeof(double)*EPOCH);
+    u_buff = (data_t *)malloc(sizeof(data_t)*EPOCH);
     if( u_buff == NULL )
         error(1);
 
-    l_buff = (double *)malloc(sizeof(double)*EPOCH);
+    l_buff = (data_t *)malloc(sizeof(data_t)*EPOCH);
     if( l_buff == NULL )
         error(1);
 
@@ -444,7 +448,7 @@ int calculate(const char *dataPath, const char *queryPath, int queryLength, int 
                 /// t is a circular array for keeping current data
                 t[i%m] = d;
 
-                /// Double the size for avoiding using modulo "%" operator
+                /// data_t the size for avoiding using modulo "%" operator
                 t[(i%m)+m] = d;
 
                 /// Start the task when there are more than m-1 points in the current chunk
@@ -557,9 +561,9 @@ int calculate(const char *dataPath, const char *queryPath, int queryLength, int 
 
     /// printf is just easier for formating ;)
     printf("\n");
-    printf("Pruned by LB_Kim    : %6.2f%%\n", ((double) kim / i)*100);
-    printf("Pruned by LB_Keogh  : %6.2f%%\n", ((double) keogh / i)*100);
-    printf("Pruned by LB_Keogh2 : %6.2f%%\n", ((double) keogh2 / i)*100);
-    printf("DTW Calculation     : %6.2f%%\n", 100-(((double)kim+keogh+keogh2)/i*100));
+    printf("Pruned by LB_Kim    : %6.2f%%\n", ((data_t) kim / i)*100);
+    printf("Pruned by LB_Keogh  : %6.2f%%\n", ((data_t) keogh / i)*100);
+    printf("Pruned by LB_Keogh2 : %6.2f%%\n", ((data_t) keogh2 / i)*100);
+    printf("DTW Calculation     : %6.2f%%\n", 100-(((data_t)kim+keogh+keogh2)/i*100));
     return 0;
 }
