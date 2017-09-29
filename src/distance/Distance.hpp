@@ -72,7 +72,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 
   static DM* metric = new DM();
 
-  // Fastpath for base intervals.
+  // Fastpath for base intervals
   if (m == 1 && n == 1)
   {
     T result = metric->init();
@@ -86,21 +86,21 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   std::vector< std::vector< T >> cost(m, std::vector< T >(n));
   std::vector< std::vector< data_t >> ncost(m, std::vector<data_t>(n));
 
-  #if 0
+/*
   auto trace = new std::pair<data_t, data_t>*[m]; // For tracing warping
   for (int i = 0; i < m; i++)
   {
       trace[i] = new std::pair<data_t, data_t>[n];
   }
-  #endif
+*/
 
   cost[0][0] = metric->init();
   cost[0][0] = metric->reduce(cost[0][0], cost[0][0], a[0], b[0]);
   ncost[0][0] = metric->norm(cost[0][0], a, b);
 
-  #if 0
+/*
   trace[0][0] = std::make_pair(-1, -1);
-  #endif
+*/
 
   // calculate first column
   for(int i = 1; i < m; i++)
@@ -108,9 +108,9 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
     cost[i][0] = metric->init();
     cost[i][0] = metric->reduce(cost[i][0], cost[i-1][0], a[i], b[0]);
     ncost[i][0] = metric->norm(cost[i][0], a, b);
-    #if 0
+/*
     trace[i][0] = std::make_pair(i - 1, 0);
-    #endif
+*/
   }
 
   // calculate first row
@@ -119,9 +119,9 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
     cost[0][j] = metric->init();
     cost[0][j] = metric->reduce(cost[0][j], cost[0][j-1], a[0], b[j]);
     ncost[0][j] = metric->norm(cost[0][j], a, b);
-    #if 0
+/*
     trace[0][j] = std::make_pair(0, j - 1);
-    #endif
+*/
   }
 
   data_t result;
@@ -175,12 +175,8 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 }
 
 /**
- *  @brief returns the distance between two sets of data
- *
- *  @param metric the distance metric to use
- *  @param x_1 one of the time series
- *  @param x_2 the other of the time series
- *  @param x_3 the length of the data
+ * Calculates pairwise distance between two time series. This function is enabled if the given
+ * distance metric class DM does not have the 'hasInverseNorm' function.
  */
 template<typename DM, typename T>
 typename std::enable_if<!hasInverseNorm<DM>::value, data_t>::type
@@ -217,6 +213,10 @@ pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
   return result;
 }
 
+/**
+ * Calculates pairwise distance between two time series. This function is enabled if the given
+ * distance metric class DM has the 'hasInverseNorm' function.
+ */
 template<typename DM, typename T>
 typename std::enable_if<hasInverseNorm<DM>::value, data_t>::type
 pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
