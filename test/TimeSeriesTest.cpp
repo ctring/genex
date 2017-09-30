@@ -14,6 +14,21 @@ struct MockData
   data_t dat[7] = {1, 2, 3, 4, 5, 6, 7};
   data_t dat2[7] = {-1, 4, 5, 3, 1.5, 6, -5};
   data_t sum[7] = {0, 6, 8, 7, 6.5, 12, 2};
+
+  data_t dat2Upper3[7] = {4, 5, 5, 5, 6, 6, 6};
+  data_t dat2Lower3[7] = {-1, -1, 3, 1.5, 1.5, -5, -5};
+  
+  data_t dat2Upper5[7] = {5, 5, 5, 6, 6, 6, 6};
+  data_t dat2Lower5[7] = {-1, -1, -1, 1.5, -5, -5, -5};
+
+  data_t dat2Upper7[7] = {5, 5, 6, 6, 6, 6, 6};
+  data_t dat2Lower7[7] = {-1, -1, -1, -5, -5, -5, -5};
+
+  data_t dat2Upper9[7] = {5, 6, 6, 6, 6, 6, 6};
+  data_t dat2Lower9[7] = {-1, -1, -5, -5, -5, -5, -5};
+
+  data_t dat2Upper13[7] = {6, 6, 6, 6, 6, 6, 6};
+  data_t dat2Lower13[7] = {-5, -5, -5, -5, -5, -5, -5};
 };
 
 BOOST_AUTO_TEST_CASE( time_series_length )
@@ -48,5 +63,51 @@ BOOST_AUTO_TEST_CASE( time_series_addition, *boost::unit_test::tolerance(TOLERAN
   for (int i = 0; i < ts1.getLength(); i++)
   {
     BOOST_TEST( ts1[i] == data.sum[i] );
+  }
+}
+
+BOOST_AUTO_TEST_CASE( time_series_keogh_upper_lower, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  MockData data;
+  TimeSeries ts(data.dat2, 7);
+
+  TimeSeries::warpingBandRatio = 0.4;
+  ts.generateKeoghLU();
+  for (int i = 0; i < ts.getLength(); i++)
+  {
+    BOOST_TEST( data.dat2Upper3[i] == ts.getKeoghUpper()[i] );
+    BOOST_TEST( data.dat2Lower3[i] == ts.getKeoghLower()[i] );
+  }
+
+  TimeSeries::warpingBandRatio = 0.7;  
+  ts.generateKeoghLU();
+  for (int i = 0; i < ts.getLength(); i++)
+  {
+    BOOST_TEST( data.dat2Upper5[i] == ts.getKeoghUpper()[i] );
+    BOOST_TEST( data.dat2Lower5[i] == ts.getKeoghLower()[i] );
+  }
+
+  TimeSeries::warpingBandRatio = 0.9;
+  ts.generateKeoghLU();
+  for (int i = 0; i < ts.getLength(); i++)
+  {
+    BOOST_TEST( data.dat2Upper7[i] == ts.getKeoghUpper()[i] );
+    BOOST_TEST( data.dat2Lower7[i] == ts.getKeoghLower()[i] );
+  }
+
+  TimeSeries::warpingBandRatio = 1.0;
+  ts.generateKeoghLU();
+  for (int i = 0; i < ts.getLength(); i++)
+  {
+    BOOST_TEST( data.dat2Upper9[i] == ts.getKeoghUpper()[i] );
+    BOOST_TEST( data.dat2Lower9[i] == ts.getKeoghLower()[i] );
+  }
+
+  TimeSeries::warpingBandRatio = 2.0;
+  ts.generateKeoghLU();
+  for (int i = 0; i < ts.getLength(); i++)
+  {
+    BOOST_TEST( data.dat2Upper13[i] == ts.getKeoghUpper()[i] );
+    BOOST_TEST( data.dat2Lower13[i] == ts.getKeoghLower()[i] );
   }
 }

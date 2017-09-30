@@ -1,5 +1,6 @@
 #include <map>
 #include <vector>
+#include <iostream>
 
 #include "Exception.hpp"
 
@@ -12,8 +13,6 @@
 #include "distance/Cosine.hpp"
 #include "distance/Distance.hpp"
 #include "distance/Sorensen.hpp"
-
-#include <iostream>
 
 namespace genex {
 
@@ -30,7 +29,7 @@ static std::vector<const dist_t> gAllDistance =
   };
 
 /**
- *  Add name of distances to this list
+ *  Add names to this list corresponding to the distances in the above list
  */
 static std::vector<std::string> gAllDistanceName =
   {
@@ -71,6 +70,11 @@ const dist_t getDistance(const std::string& distance_name)
 const std::vector<std::string>& getAllDistanceName()
 {
   return gAllDistanceName;
+}
+
+const dist_t cascadeDistance()
+{
+  return 0;
 }
 
 } // namespace genex

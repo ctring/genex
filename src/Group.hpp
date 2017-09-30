@@ -124,22 +124,17 @@ public:
   int getCount(void) const { return this->count;  }
 
   /**
-   *  @brief returns the distance between the centroid and the data
+   *  @brief returns the distance between the centroid and the query
    *
-   *  @param data the data to be finding the distance to
-   *  @param metric the distance metric to use
+   *  @param query the query to be finding the distance to
+   *  @param pairwiseDistance the pairwise distance to use
    *  @param dropout upper bound for early stopping
-   *  @return the distance between the data and the centroid using the metric
+   *  @return the distance between the query and the centroid
    */
-  data_t distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout);
+  data_t distanceFromCentroid(const TimeSeries& query, const dist_t pairwiseDistance, data_t dropout);
 
   /**
-   * ...
-   */
-  data_t warpDistanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout);
-
-  /**
-   * ...
+   *
    */
   candidate_time_series_t getBestMatch(const TimeSeries& query, const dist_t distance) const;
 

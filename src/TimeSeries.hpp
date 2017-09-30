@@ -31,6 +31,9 @@ class TimeSeries
 {
 public:
 
+  // Sakoe-Chiba warping band size versus time series length ratio
+  static double warpingBandRatio;
+
   /**
    *  @brief constructor for TimeSeries
    *
@@ -40,7 +43,7 @@ public:
    *  @param end ending position of this time series
    */
   TimeSeries(data_t *data, int index, int start, int end)
-    : data(data), index(index), start(start), end(end), isOwnerOfData(false) {
+    : data(data), index(index), start(start), end(end), keoghCacheValid(false), isOwnerOfData(false) {
       this->length = end - start;
     };
 
@@ -124,15 +127,28 @@ public:
    */
   int getStart() const { return this->start; }
 
-protected:
-  data_t* data;
+  /**
+   * @brief generates the upper and lower envelope used in Keogh lower bound calculation
+   * @param bandSize size of the Sakoe-Chiba warpping band
+   */
+  void generateKeoghLU();
+
+  const data_t* getKeoghLower();
+  const data_t* getKeoghUpper();
 
 private:
-  int isOwnerOfData;
+
+  data_t* data;
+  bool isOwnerOfData;
   int index;
   int start;
   int end;
   int length;
+
+  bool keoghCacheValid = false;
+  data_t* keoghLower = NULL;
+  data_t* keoghUpper = NULL;
+
 };
 
 } // namespace genex

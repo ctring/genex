@@ -53,6 +53,9 @@ void lower_upper_lemire(data_t *t, int len, int r, data_t *l, data_t *u)
     {
         u[i-r-1] = t[du.front()];
         l[i-r-1] = t[dl.front()];
+        if (i - r - 1 < 0) {
+            printf("Ohhh\n");
+        }
         if (i-du.front() >= 2*r + 1)
             du.pop_front();
         if (i-dl.front() >= 2*r + 1)

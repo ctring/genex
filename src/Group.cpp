@@ -25,9 +25,9 @@ void Group::setCentroid(int tsIndex, int tsStart)
   this->centroid = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
 }
 
-data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout)
+data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t pairwiseDistance, data_t dropout)
 {
-  return distance(this->centroid, query, dropout);
+  return pairwiseDistance(this->centroid, query, dropout);
 }
 
 candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_t warpedDistance) const
@@ -120,6 +120,5 @@ const std::vector<TimeSeries> Group::getMembers() const
   }
   return members;
 }
-
 
 } // namespace genex
