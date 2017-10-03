@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( euclidean_with_norm, *boost::unit_test::tolerance(TOLERANC
     total = dist.reduce(total, total, ts_1[i], ts_2[i]);
   }
 
-  BOOST_TEST( dist.norm(total, ts_1, ts_2) == 5.0 );
+  BOOST_TEST( dist.norm(total, ts_1, ts_2) == sqrt(100.0 / 5) );
 
   dist.clean(total);
 }

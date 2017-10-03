@@ -77,7 +77,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   {
     T result = metric->init();
     result = metric->reduce(result, result, a[0], b[0]);
-    data_t normalizedResult = metric->norm(result, a, b);
+    data_t normalizedResult = metric->normDTW(result, a, b);
     metric->clean(result);
     return normalizedResult;
   }
@@ -96,7 +96,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 
   cost[0][0] = metric->init();
   cost[0][0] = metric->reduce(cost[0][0], cost[0][0], a[0], b[0]);
-  ncost[0][0] = metric->norm(cost[0][0], a, b);
+  ncost[0][0] = metric->normDTW(cost[0][0], a, b);
 
 /*
   trace[0][0] = std::make_pair(-1, -1);
@@ -107,7 +107,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   {
     cost[i][0] = metric->init();
     cost[i][0] = metric->reduce(cost[i][0], cost[i-1][0], a[i], b[0]);
-    ncost[i][0] = metric->norm(cost[i][0], a, b);
+    ncost[i][0] = metric->normDTW(cost[i][0], a, b);
 /*
     trace[i][0] = std::make_pair(i - 1, 0);
 */
@@ -118,7 +118,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   {
     cost[0][j] = metric->init();
     cost[0][j] = metric->reduce(cost[0][j], cost[0][j-1], a[0], b[j]);
-    ncost[0][j] = metric->norm(cost[0][j], a, b);
+    ncost[0][j] = metric->normDTW(cost[0][j], a, b);
 /*
     trace[0][j] = std::make_pair(0, j - 1);
 */
@@ -143,7 +143,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
       }
       cost[i][j] = metric->init();
       cost[i][j] = metric->reduce(cost[i][j], minPrev, a[i], b[j]);
-      ncost[i][j] = metric->norm(cost[i][j], a, b);
+      ncost[i][j] = metric->normDTW(cost[i][j], a, b);
       bestSoFar = std::min(bestSoFar, ncost[i][j]);
     }
 

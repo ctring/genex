@@ -24,5 +24,5 @@ BOOST_AUTO_TEST_CASE( eucdist, *boost::unit_test::tolerance(TOLERANCE) )
    d.clean(third);
 
    BOOST_TEST( a == 100 );
-   BOOST_TEST( c == 5.0 );
+   BOOST_TEST( c == sqrt(25.0 / 2) );
 }

@@ -25,9 +25,14 @@ public:
     return next;
   }
 
-  data_t norm(data_t* total, const TimeSeries& t, const TimeSeries& t_2) const
+  data_t norm(data_t* total, const TimeSeries& t_1, const TimeSeries& t_2) const
   {
     return total[0] / total[1];
+  }
+
+  data_t normDTW(data_t* total, const TimeSeries& t_1, const TimeSeries& t_2) const
+  {
+    return norm(total, t_1, t_2);
   }
 
   void clean(data_t* x) {

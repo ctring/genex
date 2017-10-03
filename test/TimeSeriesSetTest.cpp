@@ -179,6 +179,6 @@ BOOST_AUTO_TEST_CASE( get_distance_between, *boost::unit_test::tolerance(TOLERAN
   data_t dist = tsSet.distanceBetween(0,0,10, tsSet.getTimeSeries(0), "euclidean");
   BOOST_TEST( dist == 0 );
 
-  dist = tsSet.distanceBetween(1,0,10, tsSet.getTimeSeries(0), "euclidean");
-  BOOST_TEST( dist == sqrt(1.0 / 9.0) );
+  dist = tsSet.distanceBetween(1, 0, 10, tsSet.getTimeSeries(0), "euclidean");
+  BOOST_TEST( dist == sqrt(1.0 / 10.0) );
 }

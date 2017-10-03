@@ -98,5 +98,5 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   TimeSeries t = tsSet.getTimeSeries(1,0,memberLength);
   BOOST_TEST(t[0] == 1.0);
   candidate_time_series_t best = g.getBestMatch(t, distance);
-  BOOST_TEST(best.dist == sqrt(1.0/9.0));
+  BOOST_TEST(best.dist == sqrt(1.0)/(2 * 10.0));
 }
