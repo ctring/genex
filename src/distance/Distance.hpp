@@ -14,6 +14,12 @@
 
 #define NEW_DISTANCE_NAME(_name) #_name, #_name"_dtw"
 
+using std::min;
+using std::make_pair;
+using std::string;
+using std::vector;
+using std::pair;
+
 namespace genex {
 
 typedef data_t (*dist_t)(const TimeSeries&, const TimeSeries&, data_t);
@@ -27,12 +33,12 @@ extern double warpingBandRatio;
  *  @return an object containing methods of the requested distance metric
  *  @throw GenexException if no distance with given name is found
  */
-const dist_t getDistance(const std::string& distance_name);
+const dist_t getDistance(const string& distance_name);
 
 /**
  *  @return a vector of names of available distances
  */
-const std::vector<std::string>& getAllDistanceName();
+const vector<string>& getAllDistanceName();
 
 /**
  *  Check if a class has the method InverseNorm using compile-time introspection.
@@ -71,7 +77,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
   int m = a.getLength();
   int n = b.getLength();
-  int r = calculateWarpingBandSize(std::min(m, n), warpingBandRatio);
+  int r = calculateWarpingBandSize(min(m, n), warpingBandRatio);
   
   static DM* metric = new DM();
 
@@ -86,14 +92,14 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   }
 
   // create cost matrix
-  std::vector< std::vector< T >> cost(m, std::vector< T >(n));
-  std::vector< std::vector< data_t >> ncost(m, std::vector<data_t>(n));
+  vector< vector< T >> cost(m, vector< T >(n));
+  vector< vector< data_t >> ncost(m, vector<data_t>(n));
 
 /*
-  auto trace = new std::pair<data_t, data_t>*[m]; // For tracing warping
+  auto trace = new pair<data_t, data_t>*[m]; // For tracing warping
   for (int i = 0; i < m; i++)
   {
-      trace[i] = new std::pair<data_t, data_t>[n];
+      trace[i] = new pair<data_t, data_t>[n];
   }
 */
 
@@ -102,7 +108,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   ncost[0][0] = metric->normDTW(cost[0][0], a, b);
 
 /*
-  trace[0][0] = std::make_pair(-1, -1);
+  trace[0][0] = make_pair(-1, -1);
 */
 
   // calculate first column
@@ -112,7 +118,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
     cost[i][0] = metric->reduce(cost[i][0], cost[i-1][0], a[i], b[0]);
     ncost[i][0] = metric->normDTW(cost[i][0], a, b);
 /*
-    trace[i][0] = std::make_pair(i - 1, 0);
+    trace[i][0] = make_pair(i - 1, 0);
 */
   }
 
@@ -123,7 +129,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
     cost[0][j] = metric->reduce(cost[0][j], cost[0][j-1], a[0], b[j]);
     ncost[0][j] = metric->normDTW(cost[0][j], a, b);
 /*
-    trace[0][j] = std::make_pair(0, j - 1);
+    trace[0][j] = make_pair(0, j - 1);
 */
   }
 
@@ -147,7 +153,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
       cost[i][j] = metric->init();
       cost[i][j] = metric->reduce(cost[i][j], minPrev, a[i], b[j]);
       ncost[i][j] = metric->normDTW(cost[i][j], a, b);
-      bestSoFar = std::min(bestSoFar, ncost[i][j]);
+      bestSoFar = min(bestSoFar, ncost[i][j]);
     }
 
     if (bestSoFar > dropout)

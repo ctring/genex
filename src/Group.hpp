@@ -7,6 +7,8 @@
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
+using std::vector;
+
 namespace genex {
 
 /**
@@ -83,7 +85,7 @@ public:
    *
    */
   Group(int groupIndex, int memberLength, int subTimeSeriesCount, const TimeSeriesSet& dataset,
-    std::vector<group_membership_t>& memberMap) :
+    vector<group_membership_t>& memberMap) :
     groupIndex(groupIndex),
     memberLength(memberLength),
     subTimeSeriesCount(subTimeSeriesCount),
@@ -153,7 +155,7 @@ public:
    *
    *  @return the TimeSeries for each value in the group.
    */
-  const std::vector<TimeSeries> getMembers() const;
+  const vector<TimeSeries> getMembers() const;
 
   /**
    *  @brief performs necessary KNN operations a group
@@ -163,7 +165,7 @@ public:
    *  @param warpedDistance to be used for the distance metric
    *  @return neighbors
    */
-  const std::vector<candidate_time_series_t> intraGroupKNN(
+  const vector<candidate_time_series_t> intraGroupKNN(
       const TimeSeries& query, int k, const dist_t warpedDistance) const;
   
   //TODO
@@ -173,7 +175,7 @@ public:
 
 private:
   const TimeSeriesSet& dataset;
-  std::vector<group_membership_t>& memberMap;
+  vector<group_membership_t>& memberMap;
 
   int groupIndex;
 

@@ -7,6 +7,8 @@
 #include "TimeSeries.hpp"
 #include "distance/Distance.hpp"
 
+using std::string;
+
 namespace genex {
 
 /**
@@ -52,7 +54,7 @@ public:
    *
    *  @throw GenexException if cannot read from the given file
    */
-  void loadData(const std::string& filePath, int maxNumRow, int startCol, const std::string& separator);
+  void loadData(const string& filePath, int maxNumRow, int startCol, const string& separator);
 
   /**
    * @brief clears all data
@@ -78,7 +80,7 @@ public:
    *
    * @return file path of the dataset
    */
-  const std::string& getFilePath() const { return this->filePath; }
+  const string& getFilePath() const { return this->filePath; }
 
   /**
    * @brief gets a whole time series
@@ -131,7 +133,7 @@ public:
     *  @return the calculated distance. If the arguments are invalid we throw an exception
     */
   data_t distanceBetween(int idx, int start, int length,
-      const TimeSeries& other, const std::string& distance_name);
+      const TimeSeries& other, const string& distance_name);
 
   /**
    *  @brief check if data is loaded
@@ -144,7 +146,7 @@ protected:
   int itemCount;
 
 private:
-  std::string filePath;
+  string filePath;
   bool normalized;
 };
 

@@ -15,12 +15,15 @@
 #include "distance/Distance.hpp"
 #include "distance/Sorensen.hpp"
 
+using std::string;
+using std::vector;
+
 namespace genex {
 
 /**
  *  Add distances to this list
  */
-static std::vector<const dist_t> gAllDistance =
+static vector<const dist_t> gAllDistance =
   {
     NEW_DISTANCE(Euclidean, data_t),
     NEW_DISTANCE(Manhattan, data_t),
@@ -32,7 +35,7 @@ static std::vector<const dist_t> gAllDistance =
 /**
  *  Add names to this list corresponding to the distances in the above list
  */
-static std::vector<std::string> gAllDistanceName =
+static vector<string> gAllDistanceName =
   {
     NEW_DISTANCE_NAME(euclidean),
     NEW_DISTANCE_NAME(manhattan),
@@ -45,7 +48,7 @@ static std::vector<std::string> gAllDistanceName =
 /////**********          no need to make changes below!          **********/////
 ////////////////////////////////////////////////////////////////////////////////
 
-static std::map<std::string, dist_t> gAllDistanceMap;
+static std::map<string, dist_t> gAllDistanceMap;
 
 void _initializeAllDistanceMap()
 {
@@ -58,17 +61,17 @@ void _initializeAllDistanceMap()
   }
 }
 
-const dist_t getDistance(const std::string& distance_name)
+const dist_t getDistance(const string& distance_name)
 {
   _initializeAllDistanceMap();
   if (gAllDistanceMap.find(distance_name) == gAllDistanceMap.end())
   {
-    throw GenexException(std::string("Cannot find distance with name: ") + distance_name);
+    throw GenexException(string("Cannot find distance with name: ") + distance_name);
   }
   return gAllDistanceMap[distance_name];
 }
 
-const std::vector<std::string>& getAllDistanceName()
+const vector<string>& getAllDistanceName()
 {
   return gAllDistanceName;
 }

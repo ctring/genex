@@ -7,6 +7,9 @@
 #include "GroupableTimeSeriesSet.hpp"
 #include "TimeSeries.hpp"
 
+using std::string;
+using std::vector;
+
 namespace genex {
 
 /**
@@ -16,12 +19,12 @@ struct dataset_info_t
 {
   dataset_info_t() : name(""), id(-1), itemCount(0),
     itemLength(0), isGrouped(false), isNormalized(false) {}
-  dataset_info_t(int id, std::string name, int itemCount, int itemLength,
+  dataset_info_t(int id, string name, int itemCount, int itemLength,
                  bool isGrouped, bool isNormalized) :
     name(name), id(id), itemCount(itemCount), itemLength(itemLength),
     isGrouped(isGrouped), isNormalized(isNormalized) {}
 
-  std::string name;
+  string name;
   int id;
   int itemCount;
   int itemLength;
@@ -34,10 +37,10 @@ struct dataset_info_t
  */
 struct distance_info_t
 {
-  distance_info_t(std::string name, std::string description) :
+  distance_info_t(string name, string description) :
     name(name), description(description) {}
-  std::string name;
-  std::string description;
+  string name;
+  string description;
 };
 
 class GenexAPI
@@ -69,8 +72,8 @@ public:
    *
    *  @throw GenexException if cannot read from the given file
    */
-  dataset_info_t loadDataset(const std::string& filePath, int maxNumRow,
-                             int startCol, const std::string& separators);
+  dataset_info_t loadDataset(const string& filePath, int maxNumRow,
+                             int startCol, const string& separators);
 
   /**
    *  @brief unloads a dataset at given index
@@ -100,12 +103,12 @@ public:
   /**
    *  @return a vector of information of loaded dataset
    */
-  std::vector<dataset_info_t> getAllDatasetInfo();
+  vector<dataset_info_t> getAllDatasetInfo();
 
   /**
    *  @return a vector of names of available distance metrics
    */
-  std::vector<distance_info_t> getAllDistanceInfo();
+  vector<distance_info_t> getAllDistanceInfo();
 
   /**
    *  @brief normalizes the dataset
@@ -129,7 +132,7 @@ public:
    *  @param distance_name the distance to use when grouping the data
    *  @return the number of groups created
    */
-  int groupDataset(int idx, data_t threshold, const std::string& distance_name);
+  int groupDataset(int idx, data_t threshold, const string& distance_name);
 
   /**
    *  @brief gets the best match in a dataset
@@ -146,15 +149,15 @@ public:
   candidate_time_series_t getBestMatch(
     int result_idx, int query_idx, int index);
 
-  std::vector<TimeSeries> kNN(
+  vector<TimeSeries> kNN(
       int result_idx, int query_idx, int index, int start, int end, int k);
-  std::vector<TimeSeries> kNN(
+  vector<TimeSeries> kNN(
       int result_idx, int query_idx, int index, int k);
   
 private:
   void _checkDatasetIndex(int index);
 
-  std::vector<GroupableTimeSeriesSet*> loadedDatasets;
+  vector<GroupableTimeSeriesSet*> loadedDatasets;
   int datasetCount = 0;
 };
 

@@ -9,6 +9,8 @@
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
 
+using std::string;
+
 namespace genex {
 
 TimeSeriesSet::~TimeSeriesSet()
@@ -19,15 +21,15 @@ TimeSeriesSet::~TimeSeriesSet()
 int countNumberOfLines(std::ifstream& f)
 {
   int lineCount = 0;
-  std::string line;
+  string line;
   for (lineCount = 0; std::getline(f, line); ++lineCount);
   f.clear();
   f.seekg(0);
   return lineCount;
 }
 
-void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
-                             int startCol, const std::string& separators)
+void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
+                             int startCol, const string& separators)
 {
   this->clearData();
 
@@ -35,7 +37,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
   if (!f.is_open())
   {
     f.close();
-    throw GenexException(std::string("Cannot open ") + filePath);
+    throw GenexException(string("Cannot open ") + filePath);
   }
 
   if (maxNumRow <= 0) {
@@ -46,7 +48,7 @@ void TimeSeriesSet::loadData(const std::string& filePath, int maxNumRow,
   }
 
   int length = -1;
-  std::string line;
+  string line;
   boost::char_separator<char> sep(separators.c_str());
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
 
@@ -238,7 +240,7 @@ bool TimeSeriesSet::isLoaded()
 }
 
 data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
-         const TimeSeries& other, const std::string& distance_name)
+         const TimeSeries& other, const string& distance_name)
 {
   const dist_t distance = getDistance(distance_name);
   return distance(this->getTimeSeries(idx, start, start + length), other, INF);

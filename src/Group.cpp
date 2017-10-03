@@ -8,6 +8,8 @@
 #include "TimeSeries.hpp"
 #include "distance/Distance.hpp"
 
+using std::vector;
+
 namespace genex {
 
 void Group::addMember(int tsIndex, int tsStart)
@@ -62,10 +64,10 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
   return best;
 }
 
-const std::vector<candidate_time_series_t> Group::intraGroupKNN(
+const vector<candidate_time_series_t> Group::intraGroupKNN(
     const TimeSeries& query, int k, const dist_t warpedDistance) const
 {
-  std::vector<candidate_time_series_t> bestSoFar;
+  vector<candidate_time_series_t> bestSoFar;
 
   data_t bestSoFarDist = INF;
   member_coord_t bestSoFarMember;
@@ -105,9 +107,9 @@ const std::vector<candidate_time_series_t> Group::intraGroupKNN(
   return bestSoFar;
 }
 
-const std::vector<TimeSeries> Group::getMembers() const
+const vector<TimeSeries> Group::getMembers() const
 {
-  std::vector<TimeSeries> members;
+  vector<TimeSeries> members;
   member_coord_t currentMemberCoord = this->lastMemberCoord;
   while (currentMemberCoord.first != -1)
   {

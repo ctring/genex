@@ -9,6 +9,7 @@
 #include "distance/Distance.hpp"
 #include "Group.hpp"
 
+using std::vector;
 
 namespace genex {
 
@@ -61,7 +62,7 @@ public:
 
   int interLevelKNN(const TimeSeries& query, 
     const dist_t warpedDistance, 
-    std::vector<group_index_t>* bestSoFar, 
+    vector<group_index_t>* bestSoFar, 
     int k);
   
   /**
@@ -72,8 +73,8 @@ public:
 private:
   int length, subTimeSeriesCount;
   const TimeSeriesSet& dataset;
-  std::vector<Group*> groups;
-  std::vector<group_membership_t> memberMap;
+  vector<Group*> groups;
+  vector<group_membership_t> memberMap;
 };
 
 } // namespace genex

@@ -4,6 +4,9 @@
 #include "GroupableTimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
+using std::string;
+using std::vector;
+
 namespace genex {
 
 GenexAPI::~GenexAPI()
@@ -11,8 +14,8 @@ GenexAPI::~GenexAPI()
   unloadAllDataset();
 }
 
-dataset_info_t GenexAPI::loadDataset(const std::string& filePath, int maxNumRow,
-                                     int startCol, const std::string& separators)
+dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
+                                     int startCol, const string& separators)
 {
 
   GroupableTimeSeriesSet* newSet = new GroupableTimeSeriesSet();
@@ -86,9 +89,9 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
                         dataset->isNormalized());
 }
 
-std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
+vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
 {
-  std::vector<dataset_info_t> info;
+  vector<dataset_info_t> info;
   for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
   {
     if (loadedDatasets[i] != nullptr)
@@ -99,10 +102,10 @@ std::vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
   return info;
 }
 
-std::vector<distance_info_t> GenexAPI::getAllDistanceInfo()
+vector<distance_info_t> GenexAPI::getAllDistanceInfo()
 {
-  const std::vector<std::string>& allDistanceName = getAllDistanceName();
-  std::vector<distance_info_t> info;
+  const vector<string>& allDistanceName = getAllDistanceName();
+  vector<distance_info_t> info;
   for (auto name : allDistanceName)
   {
     info.push_back(distance_info_t(name, ""));
@@ -116,7 +119,7 @@ std::pair<data_t, data_t> GenexAPI::normalizeDataset(int idx)
   return this->loadedDatasets[idx]->normalize();
 }
 
-int GenexAPI::groupDataset(int index, data_t threshold, const std::string& distance_name)
+int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_name)
 {
   this->_checkDatasetIndex(index);
   return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold);
@@ -140,7 +143,7 @@ candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->getBestMatch(query);
 }
 
-std::vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int k)
+vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int k)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
@@ -149,7 +152,7 @@ std::vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, 
   return loadedDatasets[result_idx]->kNN(query, k);
 }
 
-std::vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int start, int end, int k)
+vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int start, int end, int k)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);

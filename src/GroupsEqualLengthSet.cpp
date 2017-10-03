@@ -10,6 +10,8 @@
 #include "distance/Distance.hpp"
 #include "Group.hpp"
 
+using std::vector;
+
 namespace genex {
 
 int GroupsEqualLengthSet::group(const std::string& distance_name, data_t threshold)
@@ -65,10 +67,10 @@ bool GroupsEqualLengthSet::grouped(void) const
   return groupsEqualLength.size() > 0;
 }
 
-std::vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
+vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
 {
-  std::vector<TimeSeries> best;
-  std::vector<group_index_t> bestSoFar;
+  vector<TimeSeries> best;
+  vector<group_index_t> bestSoFar;
   int kPrime = k;
   
   // process each group of a certain length keeping top sum-k groups
@@ -83,7 +85,7 @@ std::vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
   {
     group_index_t g = bestSoFar.front();
     bestSoFar.erase(bestSoFar.begin());
-    std::vector<candidate_time_series_t> intraResults = 
+    vector<candidate_time_series_t> intraResults = 
         this->groupsEqualLength[g.length]->
             getGroup(g.index)->intraGroupKNN(data, kPrime+g.members, this->warpedDistance);
     // add all of the worst's best to answer
@@ -97,7 +99,7 @@ std::vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
   for (int i = 0; i < bestSoFar.size(); i++)
   {
     group_index_t g = bestSoFar[i];  
-    std::vector<TimeSeries> members = 
+    vector<TimeSeries> members = 
         this->groupsEqualLength[g.length]->getGroup(g.index)->getMembers();
     best.insert(std::end(best), std::begin(members), std::end(members));  
   }
