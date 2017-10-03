@@ -1,6 +1,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "Exception.hpp"
 
@@ -72,8 +73,36 @@ const std::vector<std::string>& getAllDistanceName()
   return gAllDistanceName;
 }
 
-const dist_t cascadeDistance()
+double warpingBandRatio = 0.5;
+
+void setWarpingBandRatio(double ratio) {
+  warpingBandRatio = ratio;
+}
+
+data_t keoghLowerBound(TimeSeries& a, TimeSeries& b, data_t dropout)
 {
+  Euclidean e;
+  int len = std::min(a.getLength(), b.getLength());
+  const data_t* aLower = a.getKeoghLower(warpingBandRatio);
+  const data_t* aUpper = a.getKeoghUpper(warpingBandRatio);
+  data_t lb = 0;
+  data_t idropout = e.inverseNorm(dropout, a, b);
+
+  for (int i = 0; i < len && lb < idropout; i++)
+  {
+    if (b[i] > aUpper[i]) {
+      lb += e.dist(b[i], aUpper[i]);
+    }
+    else if(b[i] < aLower[i]) {
+      lb += e.dist(b[i], aLower[i]);
+    }
+  }
+  return e.norm(lb, a, b);
+}
+
+data_t cascadeDistance(TimeSeries& a, TimeSeries& b, data_t dropout)
+{
+
   return 0;
 }
 

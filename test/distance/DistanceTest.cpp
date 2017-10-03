@@ -2,6 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <cmath>
+#include <iostream>
 
 #include "distance/Euclidean.hpp"
 #include "distance/Chebyshev.hpp"
@@ -40,6 +41,9 @@ struct MockData
 
   data_t dat_11[7] = {4, 3, 5, 3, 5, 3, 4};
   data_t dat_12[7] = {4, 3, 3, 1, 1, 3, 4};
+
+  data_t dat_13[10] = {0, 2, 3, 5, 8, 6, 3, 2, 3, 5};
+  data_t dat_14[7] =  {8, 4, 6, 1, 5, 10, 9};
 };
 
 BOOST_AUTO_TEST_CASE( general_distance, *boost::unit_test::tolerance(TOLERANCE) )
@@ -162,3 +166,14 @@ BOOST_AUTO_TEST_CASE( distance_not_found )
   BOOST_CHECK_THROW( getDistance("oracle"), GenexException );
 }
 
+BOOST_AUTO_TEST_CASE( keogh_lower_bound, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  MockData data;
+  TimeSeries a{data.dat_13, 10};
+  TimeSeries b{data.dat_14, 7};
+
+  setWarpingBandRatio(0.2);
+  data_t klb = keoghLowerBound(a, b, 10);
+
+  BOOST_TEST( klb == sqrt(31.0 / 9) );
+}

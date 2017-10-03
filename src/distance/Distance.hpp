@@ -2,7 +2,7 @@
 #define GENERAL_DISTANCE_H
 
 #include <vector>
-#include <cmath>
+#include <algorithm>
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
@@ -252,6 +252,18 @@ pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
 
   return result;
 }
+
+void setWarpingBandRatio(double ratio);
+
+/**
+ * ...
+ */
+data_t keoghLowerBound(TimeSeries& a, TimeSeries& b, data_t dropout);
+
+/**
+ * ...
+ */
+data_t cascadeDistance(TimeSeries& a, TimeSeries& b, data_t dropout);
 
 } // namespace genex
 
