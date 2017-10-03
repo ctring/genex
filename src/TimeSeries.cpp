@@ -8,7 +8,12 @@
 
 namespace genex {
 
-double TimeSeries::warpingBandRatio = 0.5;
+int calculateWarpingBandSize(int length, double ratio)
+{
+  int bandSize = floor(length * ratio);
+  return std::min(bandSize, length - 1);
+}
+
 
 TimeSeries::~TimeSeries()
 {
@@ -68,11 +73,10 @@ void TimeSeries::generateKeoghLU(double warpingBandRatio)
   keoghLower = new data_t[this->length];
   keoghUpper = new data_t[this->length];
 
-  int clippedBandSize = floor(this->length * warpingBandRatio);
-  clippedBandSize = std::min(clippedBandSize, this->length - 1);
+  int bandSize = calculateWarpingBandSize(this->length, warpingBandRatio);
 
   // Function provided by trillionDTW codebase. See README
-  lower_upper_lemire(this->data, this->length, clippedBandSize,
+  lower_upper_lemire(this->data, this->length, bandSize,
                      this->keoghLower, this->keoghUpper);
 
   keoghCacheValid = true;

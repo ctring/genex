@@ -18,6 +18,8 @@ namespace genex {
 
 typedef data_t (*dist_t)(const TimeSeries&, const TimeSeries&, data_t);
 
+extern double warpingBandRatio;
+
 /**
  *  @brief returns the an object representing a distance metric
  *
@@ -69,7 +71,8 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
   int m = a.getLength();
   int n = b.getLength();
-
+  int r = calculateWarpingBandSize(std::min(m, n), warpingBandRatio);
+  
   static DM* metric = new DM();
 
   // Fastpath for base intervals

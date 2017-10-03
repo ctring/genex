@@ -15,6 +15,8 @@ typedef float data_t;
 typedef double data_t;
 #endif
 
+int calculateWarpingBandSize(int length, double ratio);
+
 /**
  *  @brief header of a time series
  *
@@ -30,9 +32,6 @@ typedef double data_t;
 class TimeSeries
 {
 public:
-
-  // Sakoe-Chiba warping band size versus time series length ratio
-  static double warpingBandRatio;
 
   /**
    *  @brief constructor for TimeSeries
