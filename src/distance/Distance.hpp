@@ -15,6 +15,7 @@
 #define NEW_DISTANCE_NAME(_name) #_name, #_name"_dtw"
 
 using std::min;
+using std::max;
 using std::make_pair;
 using std::string;
 using std::vector;
@@ -77,7 +78,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
   int m = a.getLength();
   int n = b.getLength();
-  int r = calculateWarpingBandSize(min(m, n), warpingBandRatio);
+  int r = calculateWarpingBandSize(max(m, n), warpingBandRatio);
   
   static DM* metric = new DM();
 
@@ -95,42 +96,28 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   vector< vector< T >> cost(m, vector< T >(n));
   vector< vector< data_t >> ncost(m, vector<data_t>(n));
 
-/*
-  auto trace = new pair<data_t, data_t>*[m]; // For tracing warping
-  for (int i = 0; i < m; i++)
-  {
-      trace[i] = new pair<data_t, data_t>[n];
-  }
-*/
+  // Preset this in case this cell is never reached due to the warping
+  // band constraint
+  ncost[m - 1][n - 1] = INF;
 
   cost[0][0] = metric->init();
   cost[0][0] = metric->reduce(cost[0][0], cost[0][0], a[0], b[0]);
   ncost[0][0] = metric->normDTW(cost[0][0], a, b);
 
-/*
-  trace[0][0] = make_pair(-1, -1);
-*/
-
   // calculate first column
-  for(int i = 1; i < m; i++)
+  for(int i = 1; i < min(2*r + 1, m); i++)
   {
     cost[i][0] = metric->init();
     cost[i][0] = metric->reduce(cost[i][0], cost[i-1][0], a[i], b[0]);
     ncost[i][0] = metric->normDTW(cost[i][0], a, b);
-/*
-    trace[i][0] = make_pair(i - 1, 0);
-*/
   }
 
   // calculate first row
-  for(int j = 1; j < n; j++)
+  for(int j = 1; j < min(2*r + 1, n); j++)
   {
     cost[0][j] = metric->init();
     cost[0][j] = metric->reduce(cost[0][j], cost[0][j-1], a[0], b[j]);
     ncost[0][j] = metric->normDTW(cost[0][j], a, b);
-/*
-    trace[0][j] = make_pair(0, j - 1);
-*/
   }
 
   data_t result;
@@ -138,15 +125,18 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 
   for(int i = 1; i < m; i++)
   {
-    data_t bestSoFar = ncost[i][0];
-    for(int j = 1; j < n; j++)
+    data_t bestSoFar = INF;
+    for(int j = max(i - r, 1); j <= min(i + r, n - 1); j++)
     {
+      data_t ij1  = (i - r <= j-1 && j-1 <= i + r) ? ncost[i][j-1] : INF;
+      data_t i1j1 = ncost[i-1][j-1];
+      data_t i1j  = (j - r <= i-1 && i-1 <= j + r) ? ncost[i-1][j] : INF;
       T minPrev = cost[i-1][j];
-      if (ncost[i-1][j-1] < ncost[i][j-1] && ncost[i-1][j-1] < ncost[i-1][j])
+      if (i1j1 < ij1 && i1j1 < i1j)
       {
         minPrev = cost[i-1][j-1];
       }
-      else if (ncost[i][j-1] < ncost[i-1][j])
+      else if (ij1 < i1j)
       {
         minPrev = cost[i][j-1];
       }

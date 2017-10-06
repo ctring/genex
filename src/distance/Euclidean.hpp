@@ -38,7 +38,7 @@ public:
 
   data_t inverseNorm(data_t dropout, const TimeSeries& t_1, const TimeSeries& t_2) const
   {
-    return dropout * dropout * (t_1.getLength() - 1);
+    return dropout * dropout * std::max(t_1.getLength(), t_2.getLength());
   }
 
   void clean(data_t x) {}

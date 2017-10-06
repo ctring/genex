@@ -76,7 +76,7 @@ const vector<string>& getAllDistanceName()
   return gAllDistanceName;
 }
 
-double warpingBandRatio = 0.5;
+double warpingBandRatio = 0.1;
 
 void setWarpingBandRatio(double ratio) {
   warpingBandRatio = ratio;
