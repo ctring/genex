@@ -32,7 +32,7 @@ GroupsEqualLength::~GroupsEqualLength()
 const Group* GroupsEqualLength::getGroup(int idx) const
 {
   if (idx < 0 || idx >= this->getNumberOfGroups()) {
-    throw GenexException("Index is out of range");
+    throw GenexException("Group index is out of range");
   }
   return this->groups[idx];
 }

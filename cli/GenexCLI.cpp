@@ -342,7 +342,7 @@ MAKE_COMMAND(Match,
   "  q_dataset_idx   - Same as dataset_index, except for the query \n"
   "  ts_index        - Index of the query \n"
   "  start           - The start location of the query in the timeseries \n"
-  "  end             - The end location of the query in the timeseries \n"
+  "  end             - The end location of the query in the timeseries (this point is not included)\n"
   )
 
   MAKE_COMMAND(KNN,
@@ -406,7 +406,7 @@ MAKE_COMMAND(Match,
       "  q_dataset_idx   - Same as dataset_index, except for the query \n"
       "  ts_index        - Index of the query \n"
       "  start           - The start location of the query in the timeseries \n"
-      "  end             - The end location of the query in the timeseries \n"
+      "  end             - The end location of the query in the timeseries (this point is not included)\n"
       "  k               - The number of neigbors \n"
       )   
 /**************************************************************************
