@@ -82,4 +82,13 @@ void TimeSeries::generateKeoghLU(double warpingBandRatio) const
   keoghCacheValid = true;
 }
 
+void TimeSeries::printData() const
+{
+  std::cout << this->index << " [" << this->start << ", " << this->end << "] ";
+  for (int i = 0; i < length; i++) {
+    std::cout << data[i] << " ";
+  }
+  std::cout << std::endl;
+}
+
 } // namespace genex

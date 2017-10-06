@@ -583,13 +583,17 @@ int main (int argc, char *argv[])
       {
         quit = processLine(line);
       }
+      catch (genex::GenexException& e)
+      {
+        std::cout << "Error! " << e.what() << std::endl;
+      }
       catch (std::logic_error& e)
       {
         std::cout << "Error! Cannot convert some value to numeric" << std::endl;
       }
       catch (...)
       {
-        std::cout << "Error! Unknown but most likely memory problem. Exitting..." << std::endl;
+        std::cout << "Error! Unknown error" << std::endl;
         quit = true;
       }
       std::cout << std::endl;

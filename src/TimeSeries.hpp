@@ -4,6 +4,7 @@
 #include "config.hpp"
 #include <string>
 #include <limits>
+#include <iostream>
 
 #define INF std::numeric_limits<data_t>::infinity()
 
@@ -128,6 +129,8 @@ public:
 
   const data_t* getKeoghLower(double warpingBandRatio) const;
   const data_t* getKeoghUpper(double warpingBandRatio) const;
+
+  void printData() const;
 
 private:
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <algorithm>
-
+#include <cmath>
 #include <iostream> //debug
 
 #include "TimeSeries.hpp"
@@ -85,15 +85,14 @@ candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
 {
   data_t bestSoFarDist = dropout;
   const Group* bestSoFarGroup = nullptr;
-
+  std::cout << "Current group count = " << groups.size() << std::endl;
   for (unsigned int i = 0; i < groups.size(); i++) {
 
-      data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
-
-      if (dist < bestSoFarDist) {
-        bestSoFarDist = dist;
-        bestSoFarGroup = groups[i];
-      }
+    data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
+    if (dist < bestSoFarDist) {
+      bestSoFarDist = dist;
+      bestSoFarGroup = groups[i];
+    }
   }
 
   return std::make_pair(bestSoFarGroup, bestSoFarDist);

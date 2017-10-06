@@ -178,12 +178,13 @@ data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dro
 
 data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
-  data_t lb = kimLowerBound(a, b, dropout);
-  if (lb >= dropout) {
-    return INF;
-  }
+  // Temporarily disable this because the code seems to be problematic
+  // data_t lb = kimLowerBound(a, b, dropout);
+  // if (lb >= dropout) {
+  //   return INF;
+  // }
 
-  lb = crossKeoghLowerBound(a, b, dropout);
+  data_t lb = crossKeoghLowerBound(a, b, dropout);
   if (lb >= dropout) {
     return INF;
   }

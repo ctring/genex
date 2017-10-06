@@ -1,5 +1,6 @@
 #include "GroupsEqualLengthSet.hpp"
 #include "GroupsEqualLength.hpp"
+#include <cmath>
 #include <sstream>
 #include <functional>
 #include <queue>
@@ -39,23 +40,24 @@ int GroupsEqualLengthSet::group(const std::string& distance_name, data_t thresho
   return numberOfGroups;
 }
 
-candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& data)
+candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& query)
 {
+  if (query.getLength() <= 1) {
+    throw GenexException("Length of query must be larger than 1");
+  }
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
   {
     // this looks through each group of a certain length finding the best of those groups
-    candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(data, this->warpedDistance, bestSoFarDist);
-
+    candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
     if (candidate.second < bestSoFarDist)
     {
       bestSoFarGroup = candidate.first;
       bestSoFarDist = candidate.second;
     }
   }
-
-  return bestSoFarGroup->getBestMatch(data, this->warpedDistance);
+  return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
 }
 
 void GroupsEqualLengthSet::reset(void)

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include "TimeSeries.hpp"
 #include "Exception.hpp"
 
@@ -152,7 +153,6 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
       break;
     }
   }
-
   if (dropped)
   {
     result = INF;
