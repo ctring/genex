@@ -77,8 +77,6 @@ int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t thre
   }
 
   return this->getNumberOfGroups();
-  //if we care about order:
-  //std::sort(groups.begin(), groups.end(), &_group_gt_op);
 }
 
 candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,

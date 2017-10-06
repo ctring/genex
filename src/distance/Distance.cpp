@@ -17,6 +17,8 @@
 
 using std::string;
 using std::vector;
+using std::min;
+using std::max;
 
 namespace genex {
 
@@ -82,10 +84,69 @@ void setWarpingBandRatio(double ratio) {
   warpingBandRatio = ratio;
 }
 
-data_t keoghLowerBound(TimeSeries& a, TimeSeries& b, data_t dropout)
+data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
   Euclidean e;
-  int len = std::min(a.getLength(), b.getLength());
+  int al = a.getLength();
+  int bl = b.getLength();
+  int l = min(al, bl);
+
+  if (l == 0) {
+    return 0;
+  }
+
+  if (l == 1) {
+    return e.dist(a[0], b[0]);
+  }
+
+  double lb = 0;
+
+  lb += e.dist(a[0], b[0]);
+  lb += e.dist(a[al - 1], b[bl - 1]);
+  if (lb >= dropout) {
+    return INF;
+  }
+
+  lb += min(min(e.dist(a[0], b[1]),
+                e.dist(a[1], b[1])),
+                e.dist(a[1], b[0]));
+  if (lb >= dropout) {
+    return INF;
+  }
+
+  lb += min(min(e.dist(a[al-1], b[bl-2]),
+                e.dist(a[al-2], b[bl-2])),
+                e.dist(a[al-2], b[bl-1]));
+  if (lb >= dropout) {
+    return INF;
+  }
+
+  if (l == 4) {
+    return lb;
+  }
+
+  lb += min(min(min(e.dist(a[0], b[2]),
+                    e.dist(a[1], b[2])),
+                min(e.dist(a[2], b[2]),
+                    e.dist(a[2], b[1]))),
+            e.dist(a[2], b[0]));
+
+  if (lb >= dropout) {
+    return INF;
+  }
+
+  lb += min(min(min(e.dist(a[al-1], b[bl-3]),
+                    e.dist(a[al-2], b[bl-3])),
+                min(e.dist(a[al-3], b[bl-3]),
+                    e.dist(a[al-3], b[bl-2]))),
+            e.dist(a[al-3], b[bl-1]));
+  return lb;
+}
+
+data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
+{
+  Euclidean e;
+  int len = min(a.getLength(), b.getLength());
   const data_t* aLower = a.getKeoghLower(warpingBandRatio);
   const data_t* aUpper = a.getKeoghUpper(warpingBandRatio);
   data_t lb = 0;
@@ -103,10 +164,31 @@ data_t keoghLowerBound(TimeSeries& a, TimeSeries& b, data_t dropout)
   return e.norm(lb, a, b);
 }
 
-data_t cascadeDistance(TimeSeries& a, TimeSeries& b, data_t dropout)
+data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
+  data_t lb = keoghLowerBound(a, b, dropout);
 
-  return 0;
+  if (lb >= dropout) {
+    return INF;
+  }
+  else {
+    return max(lb, keoghLowerBound(b, a, dropout));
+  }
+}
+
+data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
+{
+  data_t lb = kimLowerBound(a, b, dropout);
+  if (lb >= dropout) {
+    return INF;
+  }
+
+  lb = crossKeoghLowerBound(a, b, dropout);
+  if (lb >= dropout) {
+    return INF;
+  }
+
+  return warpedDistance<Euclidean, data_t>(a, b, dropout);
 }
 
 } // namespace genex

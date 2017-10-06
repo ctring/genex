@@ -126,8 +126,8 @@ public:
    */
   int getStart() const { return this->start; }
 
-  const data_t* getKeoghLower(double warpingBandRatio);
-  const data_t* getKeoghUpper(double warpingBandRatio);
+  const data_t* getKeoghLower(double warpingBandRatio) const;
+  const data_t* getKeoghUpper(double warpingBandRatio) const;
 
 private:
 
@@ -138,16 +138,16 @@ private:
   int end;
   int length;
 
-  bool keoghCacheValid = false;
-  data_t* keoghLower = NULL;
-  data_t* keoghUpper = NULL;
-  double cachedWarpingBandRatio;
+  mutable bool keoghCacheValid = false;
+  mutable data_t* keoghLower = NULL;
+  mutable data_t* keoghUpper = NULL;
+  mutable double cachedWarpingBandRatio;
 
   /**
    * @brief generates the upper and lower envelope used in Keogh lower bound calculation
    * @param bandSize size of the Sakoe-Chiba warpping band
    */
-  void generateKeoghLU(double warpingBandRatio);
+  void generateKeoghLU(double warpingBandRatio) const;
 
 };
 

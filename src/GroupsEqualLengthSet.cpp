@@ -19,7 +19,12 @@ int GroupsEqualLengthSet::group(const std::string& distance_name, data_t thresho
   reset();
 
   this->pairwiseDistance = getDistance(distance_name);
-  this->warpedDistance   = getDistance(distance_name + DTW_SUFFIX);
+  if (distance_name == "euclidean") {
+    this->warpedDistance = cascadeDistance;
+  }
+  else {
+    this->warpedDistance = getDistance(distance_name + DTW_SUFFIX);
+  }
   this->threshold        = threshold;
   this->groupsEqualLength.resize(dataset.getItemLength() + 1, NULL);
 

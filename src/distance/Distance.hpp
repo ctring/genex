@@ -257,12 +257,14 @@ void setWarpingBandRatio(double ratio);
 /**
  * ...
  */
-data_t keoghLowerBound(TimeSeries& a, TimeSeries& b, data_t dropout);
+data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout);
+data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout);
+data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout);
 
 /**
  * ...
  */
-data_t cascadeDistance(TimeSeries& a, TimeSeries& b, data_t dropout);
+data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout);
 
 } // namespace genex
 

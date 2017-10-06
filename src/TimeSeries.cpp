@@ -47,7 +47,7 @@ TimeSeries& TimeSeries::operator+=(const TimeSeries& other)
   return *this;
 }
 
-const data_t* TimeSeries::getKeoghLower(double warpingBandRatio)
+const data_t* TimeSeries::getKeoghLower(double warpingBandRatio) const
 {
   if (!keoghCacheValid || warpingBandRatio != cachedWarpingBandRatio) {
     this->generateKeoghLU(warpingBandRatio);
@@ -56,7 +56,7 @@ const data_t* TimeSeries::getKeoghLower(double warpingBandRatio)
   return keoghLower;
 }
 
-const data_t* TimeSeries::getKeoghUpper(double warpingBandRatio)
+const data_t* TimeSeries::getKeoghUpper(double warpingBandRatio) const
 {
   if (!keoghCacheValid || warpingBandRatio != cachedWarpingBandRatio) {
     this->generateKeoghLU(warpingBandRatio);
@@ -65,7 +65,7 @@ const data_t* TimeSeries::getKeoghUpper(double warpingBandRatio)
   return keoghUpper;
 }
 
-void TimeSeries::generateKeoghLU(double warpingBandRatio)
+void TimeSeries::generateKeoghLU(double warpingBandRatio) const
 {
   delete[] keoghLower;
   delete[] keoghUpper;
