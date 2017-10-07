@@ -31,7 +31,8 @@ struct candidate_time_series_t
   {
       return dist < rhs.dist;
   }
-  candidate_time_series_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {};
+  candidate_time_series_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {}
+  candidate_time_series_t() : data(0), dist(0) {}
 };
 
 /**

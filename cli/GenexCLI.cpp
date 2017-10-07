@@ -14,6 +14,18 @@
 
 #include "config.hpp"
 
+#define TIME_COMMAND(_command)                                          \
+  chrono::time_point<chrono::system_clock> __start_time, __end_time;    \
+  __start_time = chrono::system_clock::now();                           \
+  _command                                                              \
+  __end_time = chrono::system_clock::now();                             \
+  if (gTimerEnabled)                                                    \
+  {                                                                     \
+    chrono::duration<float> elapsed_seconds = __end_time - __start_time;\
+    cout << "Command executed in ";                                     \
+    cout << setprecision(4) << elapsed_seconds.count() << "s" << endl;  \
+  }
+
 using namespace std;
 
 genex::GenexAPI gGenexAPI;
@@ -70,17 +82,10 @@ MAKE_COMMAND(LoadDataset,
     string separators = args.size() > 4 ? args[4] : " ";
 
     genex::dataset_info_t info;
-    try
-    {
-      info = gGenexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
-    }
-    catch (genex::GenexException& e)
-    {
-      cout << "Error! " << e.what() << endl;
-      return false;
-    }
+    
+    info = gGenexAPI.loadDataset(filePath, maxNumRow, startCol, separators);
 
-    cout << "Dataset loaded                    " << endl
+    cout << "Dataset loaded                         " << endl
               << "  Name:        " << info.name       << endl
               << "  ID:          " << info.id         << endl
               << "  Item count:  " << info.itemCount  << endl
@@ -113,15 +118,7 @@ MAKE_COMMAND(UnloadDataset,
 
     int index = stoi(args[1]);
 
-    try
-    {
-      gGenexAPI.unloadDataset(index);
-    }
-    catch (genex::GenexException& e)
-    {
-      cout << "Error! " << e.what() << endl;
-      return false;
-    }
+    gGenexAPI.unloadDataset(index);
 
     cout << "Dataset " << index << " is unloaded" << endl;
     return true;
@@ -231,15 +228,9 @@ MAKE_COMMAND(GroupDataset,
       distance_name = args[3];
     }
     int count = -1;
-    try
-    {
+    TIME_COMMAND(
       count = gGenexAPI.groupDataset(index, threshold, distance_name);
-    }
-    catch (genex::GenexException& e)
-    {
-      cout << "Error! " << e.what() << endl;
-      return false;
-    }
+    )
 
     cout << "Dataset " << index << " is now grouped" << endl;
     cout << "Number of Groups: " << count << endl;
@@ -296,14 +287,7 @@ MAKE_COMMAND(NormalizeDataset,
 
     int index = stoi(args[1]);
 
-    try {
-      gGenexAPI.normalizeDataset(index);
-    }
-    catch (genex::GenexException& e)
-    {
-      cout << "Error! " << e.what() << endl;
-      return false;
-    }
+    gGenexAPI.normalizeDataset(index);
 
     cout << "Dataset " << index << " is now normalized" << endl;
     return true;
@@ -334,32 +318,24 @@ MAKE_COMMAND(Match,
       end = stoi(args[5]);
     }
 
-    try
-    {
+    genex::candidate_time_series_t best;
+    TIME_COMMAND(
       if (end == -1)
       {
-        genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index);
-        cout << "Best Match is timeseries " << best.data.getIndex()
-                  << " with distance " << best.dist
-                  << " starting at " << best.data.getStart()
-                  << " with length " << best.data.getLength()
-                  << endl;
+        best = gGenexAPI.getBestMatch(db_index, q_index, ts_index);
       }
       else
       {
-        genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
-        cout << "Best Match is timeseries " << best.data.getIndex()
-                  << " with distance " << best.dist
-                  << " starting at " << best.data.getStart()
-                  << " with length " << best.data.getLength()
-                  << endl;
+        best = gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
       }
-    }
-    catch (genex::GenexException& e)
-    {
-      cout << "Error! " << e.what() << endl;
-      return false;
-    }
+    )
+
+    cout << "Best Match is timeseries " << best.data.getIndex()
+    << " starting at " << best.data.getStart()
+    << " with length " << best.data.getLength()
+    << ". Distance = " << best.dist    
+    << endl;
+
     return true;
   },
 
@@ -400,9 +376,8 @@ MAKE_COMMAND(KNN,
       k = stoi(args[4]);  
     }
 
-    try
-    {
-      vector<genex::TimeSeries> results;
+    vector<genex::TimeSeries> results;
+    TIME_COMMAND(
       if (end == -1)
       {
         results = gGenexAPI.kNN(db_index, q_index, ts_index, k);
@@ -411,18 +386,13 @@ MAKE_COMMAND(KNN,
       {
         results = gGenexAPI.kNN(db_index, q_index, ts_index, start, end, k); 
       }
-      for (int i = 0; i < results.size(); i++)
-      {
-        cout << "Timeseries " << results[i].getIndex()
-                  << " at " << results[i].getStart()
-                  << " with length " << results[i].getLength()
-                  << endl; 
-      }
-    }
-    catch (genex::GenexException& e)
-    {
-      cout << "Error! " << e.what() << endl;
-      return false;
+    )
+
+    for (int i = 0; i < results.size(); i++) {
+      cout << "Timeseries " << results[i].getIndex()
+                << " at " << results[i].getStart()
+                << " with length " << results[i].getLength()
+                << endl; 
     }
     return true;
   },
@@ -549,18 +519,7 @@ bool processLine(const string& line)
       cout << "Error! Cannot find command: " << args[0] << endl;
     }
     else {
-      chrono::time_point<chrono::system_clock> start, end;
-      start = chrono::system_clock::now();
-
-      bool success = commands[args[0]]->doCommand(args);
-
-      end = chrono::system_clock::now();
-      if (gTimerEnabled && success)
-      {
-        chrono::duration<float> elapsed_seconds = end - start;
-        cout << endl << "Command executed in ";
-        cout << setprecision(4) << elapsed_seconds.count() << "s" << endl;
-      }
+      commands[args[0]]->doCommand(args);
     }
   }
 
