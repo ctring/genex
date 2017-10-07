@@ -96,8 +96,10 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
   int kPrime = k;
   
   // process each group of a certain length keeping top sum-k groups
-  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
+  vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
+  for (unsigned int io = 0; io < order.size(); io++) 
   {
+    int i = order[io];
     kPrime = this->localLengthGroupSpace[i]->
         interLevelKSim(query, this->warpedDistance, &bestSoFar, kPrime);
   }
