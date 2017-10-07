@@ -50,7 +50,7 @@ int GlobalGroupSpace::group(const string& distance_name, data_t threshold)
   reset();
   this->loadDistance(distance_name);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
-
+  this->threshold = threshold;
   int numberOfGroups = 0;
 
   for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
@@ -89,10 +89,10 @@ bool GlobalGroupSpace::grouped(void) const
   return localLengthGroupSpace.size() > 0;
 }
 
-vector<TimeSeries> GlobalGroupSpace::kNN(const TimeSeries& data, int k)
+std::vector<candidate_time_series_t> GlobalGroupSpace::kNN(const TimeSeries& data, int k)
 {
-  vector<TimeSeries> best;
-  vector<group_index_t> bestSoFar;
+  std::vector<candidate_time_series_t> best;
+  std::vector<group_index_t> bestSoFar;
   int kPrime = k;
   
   // process each group of a certain length keeping top sum-k groups
@@ -113,17 +113,20 @@ vector<TimeSeries> GlobalGroupSpace::kNN(const TimeSeries& data, int k)
     // add all of the worst's best to answer
     for (int i = 0; i < intraResults.size(); ++i) 
     {
-      best.push_back(intraResults[i].data);
+      best.push_back(intraResults[i]);
     }
   }
-  
   // add all timeseries in the *better* groups 
-  for (int i = 0; i < bestSoFar.size(); i++)
+  for (unsigned int i = 0; i < bestSoFar.size(); i++)
   {
     group_index_t g = bestSoFar[i];  
     vector<TimeSeries> members = 
         this->localLengthGroupSpace[g.length]->getGroup(g.index)->getMembers();
-    best.insert(std::end(best), std::begin(members), std::end(members));  
+    std::vector<candidate_time_series_t> withBounds;
+    for (unsigned int i = 0; i < members.size(); i++) {
+      withBounds.push_back(candidate_time_series_t(members[i], g.dist + this->threshold));
+    }
+    best.insert(std::end(best), std::begin(withBounds), std::end(withBounds));  
   }
 
   // clean up

@@ -110,7 +110,7 @@ candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& q
   throw GenexException("Dataset is not grouped");
 }
 
-std::vector<TimeSeries> GroupableTimeSeriesSet::kNN(const TimeSeries& query, int k)
+std::vector<candidate_time_series_t> GroupableTimeSeriesSet::kNN(const TimeSeries& query, int k)
 {
   if (this->groupsAllLengthSet) //not nullptr
   {

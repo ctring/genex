@@ -420,7 +420,7 @@ MAKE_COMMAND(KNN,
       k = stoi(args[4]);  
     }
 
-    vector<genex::TimeSeries> results;
+    vector<genex::candidate_time_series_t> results;
     TIME_COMMAND(
       if (end == -1)
       {
@@ -431,28 +431,30 @@ MAKE_COMMAND(KNN,
         results = gGenexAPI.kNN(db_index, q_index, ts_index, start, end, k); 
       }
     )
-
-    for (int i = 0; i < results.size(); i++) {
-      cout << "Timeseries " << results[i].getIndex()
-                << " at " << results[i].getStart()
-                << " with length " << results[i].getLength()
-                << endl; 
+    for (int i = 0; i < results.size(); i++)
+    {
+      std::cout << "Timeseries " << results[i].data.getIndex()
+                << " at " << results[i].data.getStart()
+                << " with length " << results[i].data.getLength()
+                << " - dist <=: " << results[i].dist 
+                << std::endl; 
     }
+
     return true;
   },
 
-  "Perform knn on a time series",
-  
-    "Usage: knn <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
-    "  dataset_index   - Index of loaded dataset to get the result from. \n"
-    "                    Use 'list dataset' to retrieve the list of     \n"
-    "                    loaded datasets.                           \n"
-    "  q_dataset_idx   - Same as dataset_index, except for the query \n"
-    "  ts_index        - Index of the query \n"
-    "  start           - The start location of the query in the timeseries \n"
-    "  end             - The end location of the query in the timeseries (this point is not included)\n"
-    "  k               - The number of neigbors \n"
-    )
+  "Perform knn on a time series. Provides a bound of dist to the query for each result. The distance is <= the dist provided.",
+
+  "Usage: knn <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
+  "  dataset_index   - Index of loaded dataset to get the result from. \n"
+  "                    Use 'list dataset' to retrieve the list of     \n"
+  "                    loaded datasets.                           \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query \n"
+  "  ts_index        - Index of the query \n"
+  "  start           - The start location of the query in the timeseries \n"
+  "  end             - The end location of the query in the timeseries (this point is not included)\n"
+  "  k               - The number of neigbors \n"
+  )  
       
 MAKE_COMMAND(kExhaustive,
   {

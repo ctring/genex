@@ -58,7 +58,16 @@ public:
    */
   candidate_time_series_t getBestMatch(const TimeSeries& other) const;
 
-  std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
+  /**
+   * @brief Finds k similar timeseries.
+   *
+   * @param the timeseries to find the matches for
+   * @param the number of time series to look for.
+   *
+   * @return a vector of struct containing the closest TimeSeries and the distance between them
+   * @throws exception if dataset is not grouped
+   */
+  std::vector<candidate_time_series_t> kNN(const TimeSeries& data, int k);
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;

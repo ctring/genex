@@ -58,7 +58,7 @@ public:
    */
   candidate_time_series_t getBestMatch(const TimeSeries& query);
 
-  std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
+  std::vector<candidate_time_series_t> kNN(const TimeSeries& data, int k);
 
   void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
   int loadGroups(std::ifstream &fin);
@@ -74,6 +74,7 @@ private:
   const TimeSeriesSet& dataset;
   dist_t pairwiseDistance;
   dist_t warpedDistance;
+  data_t threshold;
   std::string distanceName;
 
   void loadDistance(const std::string& distanceName);

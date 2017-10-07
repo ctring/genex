@@ -81,6 +81,7 @@ public:
    * @brief Copy assignment operator and copy constructor
    */
   TimeSeries& operator=(const TimeSeries& other) = default;
+  TimeSeries& operator=(TimeSeries& other) = default;  
   TimeSeries(const TimeSeries& other) = default;
 
   /**

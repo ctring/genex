@@ -153,11 +153,11 @@ BOOST_AUTO_TEST_CASE( api_knn_k_1 )
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-  api.setWarpingBandRatio(1.0);
-  std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 1);
-  std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 1);
-  std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 1);
-  std::vector<TimeSeries> best_4 = api.kNN(0, 1, 0, 5, 10, 1);
+  api.setWarpingBandRatio(1.0);  
+  std::vector<candidate_time_series_t> best_1 = api.kNN(0, 0, 0, 1);
+  std::vector<candidate_time_series_t> best_2 = api.kNN(0, 1, 0, 1);
+  std::vector<candidate_time_series_t> best_3 = api.kNN(0, 1, 1, 1);
+  std::vector<candidate_time_series_t> best_4 = api.kNN(0, 1, 0, 5, 10, 1);
 
   candidate_time_series_t expected_1 = api.getBestMatch(0, 0, 0);
   candidate_time_series_t expected_2 = api.getBestMatch(0, 1, 0);
@@ -169,10 +169,10 @@ BOOST_AUTO_TEST_CASE( api_knn_k_1 )
   BOOST_CHECK_EQUAL( best_3.size(), 1 );
   BOOST_CHECK_EQUAL( best_4.size(), 1 );
   
-  BOOST_TEST(timeSeriesEqual(best_1[0], expected_1.data));
-  BOOST_TEST(timeSeriesEqual(best_2[0], expected_2.data));
-  BOOST_TEST(timeSeriesEqual(best_3[0], expected_3.data));
-  BOOST_TEST(timeSeriesEqual(best_4[0], expected_4.data));
+  BOOST_TEST(timeSeriesEqual(best_1[0].data, expected_1.data));
+  BOOST_TEST(timeSeriesEqual(best_2[0].data, expected_2.data));
+  BOOST_TEST(timeSeriesEqual(best_3[0].data, expected_3.data));
+  BOOST_TEST(timeSeriesEqual(best_4[0].data, expected_4.data));
   
   BOOST_CHECK_THROW( api.kNN(1, 0, 0, 1), GenexException ); // dataset not grouped
   BOOST_CHECK_THROW( api.kNN(1, 0, 35, 1), GenexException ); // not that many ts in dataset
@@ -186,12 +186,11 @@ BOOST_AUTO_TEST_CASE( api_knn_k_2 )
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-  api.setWarpingBandRatio(1.0);
-  
-  std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 2);
-  std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 2);
-  std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 2);
-  std::vector<TimeSeries> best_4 = api.kNN(0, 1, 0, 5, 10, 2);
+  api.setWarpingBandRatio(1.0);  
+  std::vector<candidate_time_series_t> best_1 = api.kNN(0, 0, 0, 2);
+  std::vector<candidate_time_series_t> best_2 = api.kNN(0, 1, 0, 2);
+  std::vector<candidate_time_series_t> best_3 = api.kNN(0, 1, 1, 2);
+  std::vector<candidate_time_series_t> best_4 = api.kNN(0, 1, 0, 5, 10, 2);
 
   candidate_time_series_t expected_1 = api.getBestMatch(0, 0, 0);
   candidate_time_series_t expected_2 = api.getBestMatch(0, 1, 0);
@@ -216,12 +215,12 @@ BOOST_AUTO_TEST_CASE( api_knn_k_4 )
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-  api.setWarpingBandRatio(1.0);
-  
-  std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 4);
-  std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 4);
-  std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 4);
-  std::vector<TimeSeries> best_4 = api.kNN(0, 1, 0, 4, 10, 4);
+ 
+  api.setWarpingBandRatio(1.0); 
+  std::vector<candidate_time_series_t> best_1 = api.kNN(0, 0, 0, 4);
+  std::vector<candidate_time_series_t> best_2 = api.kNN(0, 1, 0, 4);
+  std::vector<candidate_time_series_t> best_3 = api.kNN(0, 1, 1, 4);
+  std::vector<candidate_time_series_t> best_4 = api.kNN(0, 1, 0, 4, 10, 4);
 
   candidate_time_series_t expected_1 = api.getBestMatch(0, 0, 0);
   candidate_time_series_t expected_2 = api.getBestMatch(0, 1, 0);
