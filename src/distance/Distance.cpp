@@ -78,15 +78,16 @@ const vector<string>& getAllDistanceName()
   return gAllDistanceName;
 }
 
-double warpingBandRatio = 0.1;
+double warpingBandRatio = 1.0;
 
 void setWarpingBandRatio(double ratio) {
   warpingBandRatio = ratio;
 }
 
+Euclidean _euc;
+
 data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
-  Euclidean e;
   int al = a.getLength();
   int bl = b.getLength();
   int l = min(al, bl);
@@ -96,27 +97,27 @@ data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   }
 
   if (l == 1) {
-    return e.dist(a[0], b[0]);
+    return _euc.dist(a[0], b[0]);
   }
 
   double lb = 0;
 
-  lb += e.dist(a[0], b[0]);
-  lb += e.dist(a[al - 1], b[bl - 1]);
+  lb += _euc.dist(a[0], b[0]);
+  lb += _euc.dist(a[al - 1], b[bl - 1]);
   if (lb >= dropout) {
     return INF;
   }
 
-  lb += min(min(e.dist(a[0], b[1]),
-                e.dist(a[1], b[1])),
-                e.dist(a[1], b[0]));
+  lb += min(min(_euc.dist(a[0], b[1]),
+                _euc.dist(a[1], b[1])),
+                _euc.dist(a[1], b[0]));
   if (lb >= dropout) {
     return INF;
   }
 
-  lb += min(min(e.dist(a[al-1], b[bl-2]),
-                e.dist(a[al-2], b[bl-2])),
-                e.dist(a[al-2], b[bl-1]));
+  lb += min(min(_euc.dist(a[al-1], b[bl-2]),
+                _euc.dist(a[al-2], b[bl-2])),
+                _euc.dist(a[al-2], b[bl-1]));
   if (lb >= dropout) {
     return INF;
   }
@@ -125,54 +126,52 @@ data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
     return lb;
   }
 
-  lb += min(min(min(e.dist(a[0], b[2]),
-                    e.dist(a[1], b[2])),
-                min(e.dist(a[2], b[2]),
-                    e.dist(a[2], b[1]))),
-            e.dist(a[2], b[0]));
+  lb += min(min(min(_euc.dist(a[0], b[2]),
+                    _euc.dist(a[1], b[2])),
+                min(_euc.dist(a[2], b[2]),
+                    _euc.dist(a[2], b[1]))),
+            _euc.dist(a[2], b[0]));
 
   if (lb >= dropout) {
     return INF;
   }
 
-  lb += min(min(min(e.dist(a[al-1], b[bl-3]),
-                    e.dist(a[al-2], b[bl-3])),
-                min(e.dist(a[al-3], b[bl-3]),
-                    e.dist(a[al-3], b[bl-2]))),
-            e.dist(a[al-3], b[bl-1]));
+  lb += min(min(min(_euc.dist(a[al-1], b[bl-3]),
+                    _euc.dist(a[al-2], b[bl-3])),
+                min(_euc.dist(a[al-3], b[bl-3]),
+                    _euc.dist(a[al-3], b[bl-2]))),
+            _euc.dist(a[al-3], b[bl-1]));
   return lb;
 }
 
-data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
+data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t idropout)
 {
-  Euclidean e;
+
   int len = min(a.getLength(), b.getLength());
   const data_t* aLower = a.getKeoghLower(warpingBandRatio);
   const data_t* aUpper = a.getKeoghUpper(warpingBandRatio);
   data_t lb = 0;
-  data_t idropout = e.inverseNorm(dropout, a, b);
 
-  for (int i = 0; i < len && lb < idropout; i++)
+  for (int i = 0; i < len && lb < idropout * idropout; i++)
   {
     if (b[i] > aUpper[i]) {
-      lb += e.dist(b[i], aUpper[i]);
+      lb += _euc.dist(b[i], aUpper[i]);
     }
     else if(b[i] < aLower[i]) {
-      lb += e.dist(b[i], aLower[i]);
+      lb += _euc.dist(b[i], aLower[i]);
     }
   }
-  return e.norm(lb, a, b);
+  return _euc.normDTW(lb, a, b);
 }
 
-data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
+data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t idropout)
 {
-  data_t lb = keoghLowerBound(a, b, dropout);
-
-  if (lb >= dropout) {
+  data_t lb = keoghLowerBound(a, b, idropout);
+  if (lb >= idropout) {
     return INF;
   }
   else {
-    return max(lb, keoghLowerBound(b, a, dropout));
+    return max(lb, keoghLowerBound(b, a, idropout));
   }
 }
 
@@ -184,8 +183,10 @@ data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   //   return INF;
   // }
 
-  data_t lb = crossKeoghLowerBound(a, b, dropout);
-  if (lb >= dropout) {
+  data_t idropout = dropout * 2 * max(a.getLength(), b.getLength());
+  
+  data_t lb = crossKeoghLowerBound(a, b, idropout);
+  if (lb >= idropout) {
     return INF;
   }
 

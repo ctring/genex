@@ -85,7 +85,6 @@ candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
 {
   data_t bestSoFarDist = dropout;
   const Group* bestSoFarGroup = nullptr;
-  std::cout << "Current group count = " << groups.size() << std::endl;
   for (unsigned int i = 0; i < groups.size(); i++) {
 
     data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);

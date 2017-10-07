@@ -172,5 +172,5 @@ BOOST_AUTO_TEST_CASE( keogh_lower_bound, *boost::unit_test::tolerance(TOLERANCE)
   setWarpingBandRatio(0.2);
   data_t klb = keoghLowerBound(a, b, 10);
 
-  BOOST_TEST( klb == sqrt(31.0 / 10) );
+  BOOST_TEST( klb == sqrt(31.0) / (2 * 10) );
 }
