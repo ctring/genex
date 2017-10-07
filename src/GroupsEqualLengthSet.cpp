@@ -12,6 +12,8 @@
 #include "Group.hpp"
 
 using std::vector;
+using std::cout;
+using std::endl;
 
 namespace genex {
 

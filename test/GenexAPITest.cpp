@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE( api_knn_k_1 )
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-
+  api.setWarpingBandRatio(1.0);
   std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 1);
   std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 1);
   std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 1);
@@ -182,7 +182,8 @@ BOOST_AUTO_TEST_CASE( api_knn_k_2 )
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
 
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-
+  api.setWarpingBandRatio(1.0);
+  
   std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 2);
   std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 2);
   std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 2);
@@ -211,7 +212,8 @@ BOOST_AUTO_TEST_CASE( api_knn_k_4 )
   api.loadDataset(data.test_10_20_space, 5, 0, " ");
   
   int count_1 = api.groupDataset(0, 0.5, "euclidean");
-
+  api.setWarpingBandRatio(1.0);
+  
   std::vector<TimeSeries> best_1 = api.kNN(0, 0, 0, 4);
   std::vector<TimeSeries> best_2 = api.kNN(0, 1, 0, 4);
   std::vector<TimeSeries> best_3 = api.kNN(0, 1, 1, 4);

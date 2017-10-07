@@ -125,6 +125,11 @@ int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_n
   return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold);
 }
 
+void GenexAPI::setWarpingBandRatio(double ratio)
+{
+  genex::setWarpingBandRatio(ratio);
+}
+
 candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index)
 {
   this->_checkDatasetIndex(result_idx);

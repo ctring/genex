@@ -134,6 +134,9 @@ public:
    */
   int groupDataset(int idx, data_t threshold, const string& distance_name);
 
+
+  void setWarpingBandRatio(double ratio);
+
   /**
    *  @brief gets the best match in a dataset
    *

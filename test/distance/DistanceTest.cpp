@@ -77,6 +77,8 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   TimeSeries ts_11{data.dat_11, 0, 0, 7};
   TimeSeries ts_12{data.dat_12, 0, 0, 7};
 
+  setWarpingBandRatio(1.0);
+
   data_t total_0 = data.euclidean_warped_dist(ts_1, ts_2, INF);
   BOOST_TEST( total_0 == sqrt(100.0) / (2 * 2) );
 

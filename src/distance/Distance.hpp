@@ -26,9 +26,7 @@ namespace genex {
 
 typedef data_t (*dist_t)(const TimeSeries&, const TimeSeries&, data_t);
 
-extern double warpingBandRatio;
-
-int calculateWarpingBandSize(int length, double ratio);
+int calculateWarpingBandSize(int length);
 void setWarpingBandRatio(double ratio);
   
 /**
@@ -82,7 +80,7 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
   int m = a.getLength();
   int n = b.getLength();
-  int r = calculateWarpingBandSize(max(m, n), warpingBandRatio);
+  int r = calculateWarpingBandSize(max(m, n));
   
   static DM* metric = new DM();
 

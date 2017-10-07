@@ -78,15 +78,15 @@ const vector<string>& getAllDistanceName()
   return gAllDistanceName;
 }
 
-double warpingBandRatio = 1.0;
+double warpingBandRatio = 0.1;
 
 void setWarpingBandRatio(double ratio) {
   warpingBandRatio = ratio;
 }
 
-int calculateWarpingBandSize(int length, double ratio)
+int calculateWarpingBandSize(int length)
 {
-  int bandSize = floor(length * ratio);
+  int bandSize = floor(length * warpingBandRatio);
   return std::min(bandSize, length - 1);
 }
 
@@ -154,7 +154,7 @@ data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t idropout
 {
 
   int len = min(a.getLength(), b.getLength());
-  int warpingBand = calculateWarpingBandSize(max(a.getLength(), b.getLength()), warpingBandRatio);
+  int warpingBand = calculateWarpingBandSize(max(a.getLength(), b.getLength()));
   const data_t* aLower = a.getKeoghLower(warpingBand);
   const data_t* aUpper = a.getKeoghUpper(warpingBand);
   data_t lb = 0;

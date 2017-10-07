@@ -54,9 +54,12 @@ BOOST_AUTO_TEST_CASE( groups_best_group, *boost::unit_test::tolerance(TOLERANCE)
   dist_t distance = warpedDistance<Euclidean, data_t>;
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
-
+  
   GroupsEqualLength groups(tsSet, 10);
   groups.generateGroups( distance, 0.5 );
+
+  setWarpingBandRatio(1.0);
+
   BOOST_CHECK_EQUAL( groups.getGroup(0), groups.getBestGroup(tsSet.getTimeSeries(1,0,10), distance, INF).first);
   BOOST_CHECK_EQUAL( groups.getGroup(0), groups.getBestGroup(tsSet.getTimeSeries(1,0,9), distance, INF).first);
   BOOST_CHECK_EQUAL( groups.getGroup(0), groups.getBestGroup(tsSet.getTimeSeries(1,0,8), distance, INF).first);
