@@ -453,6 +453,73 @@ MAKE_COMMAND(KNN,
     "  end             - The end location of the query in the timeseries (this point is not included)\n"
     "  k               - The number of neigbors \n"
     )
+      
+MAKE_COMMAND(kExhaustive,
+  {
+    if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
+    {
+      return false;
+    }
+
+    int db_index = std::stoi(args[1]);
+    int  q_index = std::stoi(args[2]);
+    int ts_index = std::stoi(args[3]);
+    int start = 0;
+    int end = -1;
+    int k;
+
+    if (args.size() > 5)
+    {
+      start = std::stoi(args[4]);
+      end = std::stoi(args[5]);
+      k = std::stoi(args[6]);
+    }
+    else 
+    {
+      k = std::stoi(args[4]);        
+    }
+
+    try
+    {
+      std::vector<genex::candidate_time_series_t> results;
+      if (end == -1)
+      {
+        results = gGenexAPI.kExhaustiveSearch(db_index, q_index, ts_index, k);
+      }
+      else
+      {
+        results = gGenexAPI.kExhaustiveSearch(db_index, q_index, ts_index, start, end, k); 
+      }
+      for (int i = 0; i < results.size(); i++)
+      {
+        std::cout << "Timeseries " << results[i].data.getIndex()
+                  << " at " << results[i].data.getStart()
+                  << " with length " << results[i].data.getLength()
+                  << " - dist: " << results[i].dist 
+                  << std::endl; 
+
+      }
+    }
+    catch (genex::GenexException& e)
+    {
+      std::cout << "Error! " << e.what() << std::endl;
+      return false;
+    }
+    return true;
+  },
+
+  "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
+  
+    "Usage: kExhaustive <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
+    "  dataset_index   - Index of loaded dataset to get the result from. \n"
+    "                    Use 'list dataset' to retrieve the list of     \n"
+    "                    loaded datasets.                           \n"
+    "  q_dataset_idx   - Same as dataset_index, except for the query \n"
+    "  ts_index        - Index of the query \n"
+    "  start           - The start location of the query in the timeseries \n"
+    "  end             - The end location of the query in the timeseries \n"
+    "  k               - The number of neigbors \n"
+    )   
 
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
@@ -472,7 +539,8 @@ map<string, Command*> commands = {
   {"loadGroup", &cmdLoadGroup},  
   {"normalize", &cmdNormalizeDataset},
   {"match", &cmdMatch},
-  {"knn", &cmdKNN}
+  {"knn", &cmdKNN},
+  {"kExhaustive", &cmdkExhaustive}
 };
 
 /**************************************************************************/
