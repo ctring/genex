@@ -184,6 +184,24 @@ vector<TimeSeries> GenexAPI::kNN(int result_idx, int query_idx, int index, int s
   return loadedDatasets[result_idx]->kNN(query, k);
 }
 
+std::vector<candidate_time_series_t> GenexAPI::kExhaustiveSearch(int result_idx, int query_idx, int index, int k)
+{
+  this->_checkDatasetIndex(result_idx);
+  this->_checkDatasetIndex(query_idx);
+
+  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
+  return loadedDatasets[result_idx]->kExhaustiveSearch(query, k);
+}
+
+std::vector<candidate_time_series_t> GenexAPI::kExhaustiveSearch(int result_idx, int query_idx, int index, int start, int end, int k)
+{
+  this->_checkDatasetIndex(result_idx);
+  this->_checkDatasetIndex(query_idx);
+
+  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
+  return loadedDatasets[result_idx]->kExhaustiveSearch(query, k);
+}
+
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)

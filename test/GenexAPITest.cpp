@@ -35,6 +35,10 @@ const bool containsTimeSeries(const std::vector<TimeSeries> a, const TimeSeries&
   return std::any_of(a.begin(), a.end(), [&b](TimeSeries i){return timeSeriesEqual(i,b);});
 }
 
+const bool containsTimeSeries(const std::vector<candidate_time_series_t> a, const TimeSeries& b)
+{
+  return std::any_of(a.begin(), a.end(), [&b](candidate_time_series_t i){return timeSeriesEqual(i.data,b);});
+}
 
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
@@ -199,10 +203,10 @@ BOOST_AUTO_TEST_CASE( api_knn_k_2 )
   BOOST_CHECK_EQUAL( best_3.size(), 2 );
   BOOST_CHECK_EQUAL( best_4.size(), 2 );
   
-  BOOST_TEST(timeSeriesEqual(best_1[1], expected_1.data));
-  BOOST_TEST(timeSeriesEqual(best_2[1], expected_2.data));
-  BOOST_TEST(timeSeriesEqual(best_3[1], expected_3.data));
-  BOOST_TEST(timeSeriesEqual(best_4[1], expected_4.data));
+  BOOST_TEST(containsTimeSeries(best_1, expected_1.data));
+  BOOST_TEST(containsTimeSeries(best_2, expected_2.data));
+  BOOST_TEST(containsTimeSeries(best_3, expected_3.data));
+  BOOST_TEST(containsTimeSeries(best_4, expected_4.data));
 }
 
 BOOST_AUTO_TEST_CASE( api_knn_k_4 )
@@ -234,3 +238,62 @@ BOOST_AUTO_TEST_CASE( api_knn_k_4 )
   BOOST_TEST(containsTimeSeries(best_3, expected_3.data));
   BOOST_TEST(containsTimeSeries(best_4, expected_4.data));
  }
+
+
+BOOST_AUTO_TEST_CASE( api_kx_k_1 )
+{
+  GenexAPI api;
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+  api.loadDataset(data.test_10_20_space, 5, 0, " ");
+  
+  int count_1 = api.groupDataset(0, 0.5, "euclidean");
+
+  std::vector<candidate_time_series_t> best_1 = api.kExhaustiveSearch(0, 0, 0, 1);
+  std::vector<candidate_time_series_t> best_2 = api.kExhaustiveSearch(0, 1, 0, 1);
+  std::vector<candidate_time_series_t> best_3 = api.kExhaustiveSearch(0, 1, 1, 1);
+  std::vector<candidate_time_series_t> best_4 = api.kExhaustiveSearch(0, 1, 0, 5, 10, 1);
+
+  candidate_time_series_t expected_1 = api.getBestMatch(0, 0, 0);
+  candidate_time_series_t expected_2 = api.getBestMatch(0, 1, 0);
+  candidate_time_series_t expected_3 = api.getBestMatch(0, 1, 1);
+  candidate_time_series_t expected_4 = api.getBestMatch(0, 1, 0, 5, 10);
+
+  BOOST_CHECK_EQUAL( best_1.size(), 1 );
+  BOOST_CHECK_EQUAL( best_2.size(), 1 );
+  BOOST_CHECK_EQUAL( best_3.size(), 1 );
+  BOOST_CHECK_EQUAL( best_4.size(), 1 );
+  
+  BOOST_TEST(timeSeriesEqual(best_1[0].data, expected_1.data));
+  BOOST_TEST(timeSeriesEqual(best_2[0].data, expected_2.data));
+  BOOST_TEST(timeSeriesEqual(best_3[0].data, expected_3.data));
+  BOOST_TEST(timeSeriesEqual(best_4[0].data, expected_4.data));
+ }
+
+ BOOST_AUTO_TEST_CASE( api_kx_k_4 )
+ {
+   GenexAPI api;
+   api.loadDataset(data.test_10_20_space, 5, 0, " ");
+   api.loadDataset(data.test_10_20_space, 5, 0, " ");
+   
+   int count_1 = api.groupDataset(0, 0.5, "euclidean");
+ 
+   std::vector<candidate_time_series_t> best_1 = api.kExhaustiveSearch(0, 0, 0, 4);
+   std::vector<candidate_time_series_t> best_2 = api.kExhaustiveSearch(0, 1, 0, 4);
+   std::vector<candidate_time_series_t> best_3 = api.kExhaustiveSearch(0, 1, 1, 4);
+   std::vector<candidate_time_series_t> best_4 = api.kExhaustiveSearch(0, 1, 0, 5, 10, 4);
+ 
+   candidate_time_series_t expected_1 = api.getBestMatch(0, 0, 0);
+   candidate_time_series_t expected_2 = api.getBestMatch(0, 1, 0);
+   candidate_time_series_t expected_3 = api.getBestMatch(0, 1, 1);
+   candidate_time_series_t expected_4 = api.getBestMatch(0, 1, 0, 5, 10);
+ 
+   BOOST_CHECK_EQUAL( best_1.size(), 4 );
+   BOOST_CHECK_EQUAL( best_2.size(), 4 );
+   BOOST_CHECK_EQUAL( best_3.size(), 4 );
+   BOOST_CHECK_EQUAL( best_4.size(), 4 );
+   
+   BOOST_TEST(containsTimeSeries(best_1, expected_1.data));
+   BOOST_TEST(containsTimeSeries(best_2, expected_2.data));
+   BOOST_TEST(containsTimeSeries(best_3, expected_3.data));
+   BOOST_TEST(containsTimeSeries(best_4, expected_4.data));
+  }

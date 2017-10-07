@@ -182,3 +182,11 @@ BOOST_AUTO_TEST_CASE( get_distance_between, *boost::unit_test::tolerance(TOLERAN
   dist = tsSet.distanceBetween(1, 0, 10, tsSet.getTimeSeries(0), "euclidean");
   BOOST_TEST( dist == sqrt(1.0 / 10.0) );
 }
+
+BOOST_AUTO_TEST_CASE( basic_k_exhaustive )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_3_10_space, 20, 0, " ");
+  std::vector<candidate_time_series_t> best = tsSet.kExhaustiveSearch(tsSet.getTimeSeries(0), 1);
+  BOOST_TEST( best[0].dist == 0.0 );
+}

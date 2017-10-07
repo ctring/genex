@@ -19,23 +19,6 @@ namespace genex {
 typedef std::pair<int, int> member_coord_t;
 
 /**
- *  @brief a struct pairing a dist with a time series
- *
- */
-struct candidate_time_series_t
-{
-  TimeSeries data;
-  data_t dist;
-
-  bool operator<(const candidate_time_series_t& rhs) const 
-  {
-      return dist < rhs.dist;
-  }
-  candidate_time_series_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {}
-  candidate_time_series_t() : data(0), dist(0) {}
-};
-
-/**
  *  @brief a structure, used for identifying membership of a sub-time-series and
  *         the sub-time-series right before it in a group
  */

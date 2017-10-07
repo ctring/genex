@@ -138,6 +138,16 @@ public:
       const TimeSeries& other, const string& distance_name);
 
   /**
+   * @brief Exhaustively searches through timeseries set for k similar time series.
+   * 
+   * @param query to search for
+   * @param k - number of time series to find
+   *  
+   * @vector vector of candidates with exact distance from query.
+   */
+  std::vector<candidate_time_series_t> kExhaustiveSearch(const TimeSeries& query, int k); 
+      
+  /**
    *  @brief check if data is loaded
    */
   bool isLoaded(void);

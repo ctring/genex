@@ -169,7 +169,7 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
 {
   int length = this->getItemLength() * this->getItemCount();
 
-  if ( !length )
+  if (!length)
   {
     throw GenexException("No data to normalize");
   }
@@ -257,10 +257,61 @@ bool TimeSeriesSet::isLoaded()
 }
 
 data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
-         const TimeSeries& other, const string& distance_name)
+    const TimeSeries& other, const std::string& distance_name)
 {
   const dist_t distance = getDistance(distance_name);
   return distance(this->getTimeSeries(idx, start, start + length), other, INF);
+}
+
+std::vector<candidate_time_series_t> TimeSeriesSet::kExhaustiveSearch(
+  const TimeSeries& query, int k)
+{
+  std::vector<candidate_time_series_t> bestSoFar;
+  const std::string& distance_name = "euclidean";
+  dist_t warpedDistance = getDistance(distance_name + DTW_SUFFIX);
+  data_t bestSoFarDist, currentDist;
+  int timeSeriesLength = getItemLength();
+  int numberTimeSeries = getItemCount();
+  
+  // iterate through every timeseries
+  for (int idx = 0; idx < numberTimeSeries; idx++) 
+  {
+    // iterate through every length of interval
+    for (int intervalLength = 2; intervalLength <= timeSeriesLength;
+        intervalLength++) 
+    {
+      // iterate through all interval window lengths
+      for (int start = 0; start <= timeSeriesLength - intervalLength; 
+            start++) 
+      {                  
+        TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);
+        if (k > 0) {
+          currentDist = warpedDistance(query, currentTimeSeries, INF);
+          bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
+          // std::cout << "first " << currentDist << std::endl;          
+          k--;
+          if (k == 0) {
+            // Heapify exactly once when the heap is filled.
+            std::make_heap(bestSoFar.begin(), bestSoFar.end());
+          }   
+        } 
+        else
+        {
+          bestSoFarDist = bestSoFar.front().dist;
+          currentDist = warpedDistance(query, currentTimeSeries, INF);          
+          // std::cout << "best " << bestSoFarDist << ", current " << currentDist << std::endl;
+          if (currentDist < bestSoFarDist) 
+          { 
+            bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
+            std::push_heap(bestSoFar.begin(), bestSoFar.end());
+            std::pop_heap(bestSoFar.begin(), bestSoFar.end());
+            bestSoFar.pop_back();
+          } 
+        }
+      }
+    }
+  }
+  return bestSoFar;
 }
 
 } // namespace genex

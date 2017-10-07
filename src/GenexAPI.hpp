@@ -156,11 +156,39 @@ public:
   candidate_time_series_t getBestMatch(
     int result_idx, int query_idx, int index);
 
-  vector<TimeSeries> kNN(
+
+  /**
+   *  @brief gets k similar TimeSeries to the query.
+   *
+   *  @param result_idx the index of the result dataset
+   *  @param query_idx the index of the query dataset
+   *  @param index the index of the timeseries in the query dataset
+   *  @param start the start of the index
+   *  @param end the end of the index
+   *  @param k the number of similar time series to find
+   *  @return k similar time series
+   */
+  std::vector<TimeSeries> kNN(
       int result_idx, int query_idx, int index, int start, int end, int k);
-  vector<TimeSeries> kNN(
+  std::vector<TimeSeries> kNN(
       int result_idx, int query_idx, int index, int k);
-  
+
+ /**
+   *  @brief gets k similar TimeSeries to the query, exhaustively.
+   *
+   *  @param result_idx the index of the result dataset
+   *  @param query_idx the index of the query dataset
+   *  @param index the index of the timeseries in the query dataset
+   *  @param start the start of the index
+   *  @param end the end of the index
+   *  @param k the number of similar time series to find
+   *  @return k similar time series
+   */
+  std::vector<candidate_time_series_t> kExhaustiveSearch(
+    int result_idx, int query_idx, int index, int start, int end, int k);
+  std::vector<candidate_time_series_t> kExhaustiveSearch(
+    int result_idx, int query_idx, int index, int k);
+
 private:
   void _checkDatasetIndex(int index);
 

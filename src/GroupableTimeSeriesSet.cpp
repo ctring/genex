@@ -2,6 +2,7 @@
 #include "GlobalGroupSpace.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
+#include <iostream>
 
 #include <fstream>
 

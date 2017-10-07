@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE "Test GroupableTimeSeriesSet class"
 
+#include <vector>
 #include <boost/test/unit_test.hpp>
 
 #include "GroupableTimeSeriesSet.hpp"
