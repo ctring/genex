@@ -1,12 +1,14 @@
 #ifndef GROUPS_EQUAL_LENGTH_SET_H
 #define GROUPS_EQUAL_LENGTH_SET_H
 
-#include <vector>
 #include "GroupsEqualLength.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 #include "Group.hpp"
+
+#include <vector>
+#include <fstream>
 
 namespace genex {
 
@@ -42,7 +44,7 @@ public:
    *  @return the number of groups it creates
    */
   int group(const std::string& distance_name, data_t threshold);
-
+ 
   /**
    *  @brief gets the most similar sequence in the dataset
    *
@@ -52,6 +54,8 @@ public:
   candidate_time_series_t getBestMatch(const TimeSeries& query);
 
   std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
+
+  void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
 
   /**
    *  @brief clears the groups

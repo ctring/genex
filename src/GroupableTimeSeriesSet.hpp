@@ -40,7 +40,9 @@ public:
   /**
     *  @brief check if the dataset is grouped
     */
-  bool isGrouped();
+  bool isGrouped() const;
+
+  void saveGroups(const std::string& path, bool groupSizeOnly) const;
 
   /**
    * @brief Finds the best matching subsequence in the dataset

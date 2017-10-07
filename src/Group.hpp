@@ -7,7 +7,7 @@
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
-using std::vector;
+#include <fstream>
 
 namespace genex {
 
@@ -85,7 +85,7 @@ public:
    *
    */
   Group(int groupIndex, int memberLength, int subTimeSeriesCount, const TimeSeriesSet& dataset,
-    vector<group_membership_t>& memberMap) :
+    std::vector<group_membership_t>& memberMap) :
     groupIndex(groupIndex),
     memberLength(memberLength),
     subTimeSeriesCount(subTimeSeriesCount),
@@ -136,7 +136,7 @@ public:
   data_t distanceFromCentroid(const TimeSeries& query, const dist_t pairwiseDistance, data_t dropout);
 
   /**
-   *
+   *  @brief gets the best match of a query in this group using the given distance
    */
   candidate_time_series_t getBestMatch(const TimeSeries& query, const dist_t distance) const;
 
@@ -155,7 +155,7 @@ public:
    *
    *  @return the TimeSeries for each value in the group.
    */
-  const vector<TimeSeries> getMembers() const;
+  const std::vector<TimeSeries> getMembers() const;
 
   /**
    *  @brief performs necessary KNN operations a group
@@ -165,17 +165,14 @@ public:
    *  @param warpedDistance to be used for the distance metric
    *  @return neighbors
    */
-  const vector<candidate_time_series_t> intraGroupKNN(
+  const std::vector<candidate_time_series_t> intraGroupKNN(
       const TimeSeries& query, int k, const dist_t warpedDistance) const;
   
-  //TODO
-  //candidate_time_series_t getBestDistinctMatch(TimeSeriesIntervalEnvelope query, int warps=-1, double dropout=INF, int qSeq=-1);
-  //vector<candidate_time_series_t> getSeasonal(int);
-  //vector<TimeSeriesInterval> getGroupValues(void);
+  void saveGroup(std::ofstream &fout) const;
 
 private:
   const TimeSeriesSet& dataset;
-  vector<group_membership_t>& memberMap;
+  std::vector<group_membership_t>& memberMap;
 
   int groupIndex;
 

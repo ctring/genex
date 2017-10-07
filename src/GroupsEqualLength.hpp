@@ -70,6 +70,8 @@ public:
    */
   const Group* getGroup(int idx) const;
 
+  void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
+
 private:
   int length, subTimeSeriesCount;
   const TimeSeriesSet& dataset;

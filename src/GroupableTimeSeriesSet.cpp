@@ -3,6 +3,11 @@
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
 
+#include <fstream>
+
+using std::ofstream;
+using std::endl;
+
 namespace genex {
 
 GroupableTimeSeriesSet::~GroupableTimeSeriesSet()
@@ -26,7 +31,7 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, da
   return cntGroups;
 }
 
-bool GroupableTimeSeriesSet::isGrouped()
+bool GroupableTimeSeriesSet::isGrouped() const
 {
   return this->groupsAllLengthSet != nullptr;
 }
@@ -36,6 +41,27 @@ void GroupableTimeSeriesSet::resetGrouping()
   delete this->groupsAllLengthSet;
   this->groupsAllLengthSet = nullptr;
 }
+
+void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) const
+{
+  if (!this->isGrouped()) {
+    throw GenexException("No group found");
+  }
+
+  ofstream fout(path);
+  if (fout)
+  {
+    // Version of the file format and the required dataset dimensions
+    fout << 1 << " " << this->getItemCount() << " " << this->getItemLength() << endl;
+    this->groupsAllLengthSet->saveGroups(fout, groupSizeOnly);
+    fout.close();
+  }
+  else
+  {
+    throw GenexException("Cannot open file");
+  }
+}
+
 
 candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& query) const
 {

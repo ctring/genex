@@ -14,22 +14,24 @@
 
 #include "config.hpp"
 
+using namespace std;
+
 genex::GenexAPI gGenexAPI;
 bool gTimerEnabled = true;
 
-bool tooFewArgs(const std::vector<std::string>& args, int limit)
+bool tooFewArgs(const vector<string>& args, int limit)
 {
   if (args.size() < limit) {
-    std::cout << "Error! Too few arguments" << std::endl;
+    cout << "Error! Too few arguments" << endl;
     return true;
   }
   return false;
 }
 
-bool tooManyArgs(const std::vector<std::string>& args, int limit)
+bool tooManyArgs(const vector<string>& args, int limit)
 {
   if (args.size() > limit) {
-    std::cout << "Error! Too many arguments" << std::endl;
+    cout << "Error! Too many arguments" << endl;
     return true;
   }
   return false;
@@ -62,10 +64,10 @@ MAKE_COMMAND(LoadDataset,
       return false;
     }
 
-    std::string filePath = args[1];
-    int maxNumRow = args.size() > 2 ? std::stoi(args[2]) : 0;
-    int startCol  = args.size() > 3 ? std::stoi(args[3]) : 0;
-    std::string separators = args.size() > 4 ? args[4] : " ";
+    string filePath = args[1];
+    int maxNumRow = args.size() > 2 ? stoi(args[2]) : 0;
+    int startCol  = args.size() > 3 ? stoi(args[3]) : 0;
+    string separators = args.size() > 4 ? args[4] : " ";
 
     genex::dataset_info_t info;
     try
@@ -74,15 +76,15 @@ MAKE_COMMAND(LoadDataset,
     }
     catch (genex::GenexException& e)
     {
-      std::cout << "Error! " << e.what() << std::endl;
+      cout << "Error! " << e.what() << endl;
       return false;
     }
 
-    std::cout << "Dataset loaded                    " << std::endl
-              << "  Name:        " << info.name       << std::endl
-              << "  ID:          " << info.id         << std::endl
-              << "  Item count:  " << info.itemCount  << std::endl
-              << "  Item length: " << info.itemLength << std::endl;
+    cout << "Dataset loaded                    " << endl
+              << "  Name:        " << info.name       << endl
+              << "  ID:          " << info.id         << endl
+              << "  Item count:  " << info.itemCount  << endl
+              << "  Item length: " << info.itemLength << endl;
 
     return true;
   },
@@ -109,7 +111,7 @@ MAKE_COMMAND(UnloadDataset,
       return false;
     }
 
-    int index = std::stoi(args[1]);
+    int index = stoi(args[1]);
 
     try
     {
@@ -117,11 +119,11 @@ MAKE_COMMAND(UnloadDataset,
     }
     catch (genex::GenexException& e)
     {
-      std::cout << "Error! " << e.what() << std::endl;
+      cout << "Error! " << e.what() << endl;
       return false;
     }
 
-    std::cout << "Dataset " << index << " is unloaded" << std::endl;
+    cout << "Dataset " << index << " is unloaded" << endl;
     return true;
   },
 
@@ -142,26 +144,26 @@ MAKE_COMMAND(List,
 
     if (args[1] == "dataset")
     {
-      std::vector<genex::dataset_info_t> infos = gGenexAPI.getAllDatasetInfo();
-      std::cout << "There are " << infos.size() << " loaded datasets" << std::endl << std::endl;
+      vector<genex::dataset_info_t> infos = gGenexAPI.getAllDatasetInfo();
+      cout << "There are " << infos.size() << " loaded datasets" << endl << endl;
       for (const auto& i : infos)
       {
-        std::cout << "  " << std::setw(4) << i.id << " " << i.name;
-        std::cout << "\t" << std::setw(10) << (i.isNormalized ? "Normalized" : "");
-        std::cout << "\t" << std::setw(10) << (i.isGrouped ? "Grouped" : "");
-        std::cout << std::endl;
+        cout << "  " << setw(4) << i.id << " " << i.name;
+        cout << "\t" << setw(10) << (i.isNormalized ? "Normalized" : "");
+        cout << "\t" << setw(10) << (i.isGrouped ? "Grouped" : "");
+        cout << endl;
       }
     }
     else if (args[1] == "distance") {
-      std::vector<genex::distance_info_t> infos = gGenexAPI.getAllDistanceInfo();
+      vector<genex::distance_info_t> infos = gGenexAPI.getAllDistanceInfo();
       for (const auto& i : infos)
       {
-        std::cout << " " << std::setw(10) << i.name << "\t" << i.description << std::endl;
+        cout << " " << setw(10) << i.name << "\t" << i.description << endl;
       }
     }
     else
     {
-      std::cout << "Error! Unknown object: " << args[1] << std::endl;
+      cout << "Error! Unknown object: " << args[1] << endl;
       return false;
     }
     return true;
@@ -180,23 +182,23 @@ MAKE_COMMAND(Timer,
     }
     if (args.size() == 1)
     {
-      std::cout << "Timer is " << (gTimerEnabled ? "ON" : "OFF") << std::endl;
+      cout << "Timer is " << (gTimerEnabled ? "ON" : "OFF") << endl;
     }
     else
     {
       if (args[1] == "on")
       {
         gTimerEnabled = true;
-        std::cout << "Timer is ON" << std::endl;
+        cout << "Timer is ON" << endl;
       }
       else if (args[1] == "off")
       {
         gTimerEnabled = false;
-        std::cout << "Timer is OFF" << std::endl;
+        cout << "Timer is OFF" << endl;
       }
       else
       {
-        std::cout << "Error! Argument for timer must be 'on' or 'off'" << std::endl;
+        cout << "Error! Argument for timer must be 'on' or 'off'" << endl;
         return false;
       }
     }
@@ -218,10 +220,10 @@ MAKE_COMMAND(GroupDataset,
       return false;
     }
 
-    int index = std::stoi(args[1]);
-    genex::data_t threshold = std::stod(args[2]);
+    int index = stoi(args[1]);
+    genex::data_t threshold = stod(args[2]);
 
-    std::string distance_name = "euclidean";
+    string distance_name = "euclidean";
 
     // if distance option is present
     if (args.size() == 4)
@@ -235,18 +237,18 @@ MAKE_COMMAND(GroupDataset,
     }
     catch (genex::GenexException& e)
     {
-      std::cout << "Error! " << e.what() << std::endl;
+      cout << "Error! " << e.what() << endl;
       return false;
     }
 
-    std::cout << "Dataset " << index << " is now grouped" << std::endl;
-    std::cout << "Number of Groups: " << count << std::endl;
+    cout << "Dataset " << index << " is now grouped" << endl;
+    cout << "Number of Groups: " << count << endl;
     return true;
   },
 
   "Group a dataset in memory",
 
-  "Usage: group <dataset_index> <threshold> [distance]     \n"
+  "Usage: group <dataset_index> <threshold> [<distance>]          \n"
   "  dataset_index   - Index of the dataset being unloaded. Use   \n"
   "                    'list dataset' to retrieve the list of     \n"
   "                    loaded datasets.                           \n"
@@ -257,33 +259,61 @@ MAKE_COMMAND(GroupDataset,
   "                    loaded distance. Default to euclidean.     \n"
   )
 
-  MAKE_COMMAND(NormalizeDataset,
+MAKE_COMMAND(SaveGroup,
+  {
+    if (tooFewArgs(args, 3) || tooManyArgs(args, 4))
     {
-      if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
-      {
-        return false;
-      }
+      return false;
+    }
 
-      int index = std::stoi(args[1]);
+    int index = stoi(args[1]);
+    bool groupSizeOnly = false;
+    if (args.size() == 4) {
+      groupSizeOnly = stoi(args[3]);
+    }
 
-      try {
-        gGenexAPI.normalizeDataset(index);
-      }
-      catch (genex::GenexException& e)
-      {
-        std::cout << "Error! " << e.what() << std::endl;
-        return false;
-      }
+    gGenexAPI.saveGroup(index, args[2], groupSizeOnly);
+    cout << "Saved groups of dataset " << index << " to " << args[2] << endl;
 
-      std::cout << "Dataset " << index << " is now normalized" << std::endl;
-      return true;
-    },
+    return true;
+  },
 
-    "Normalize a dataset. (Warning: this operation cannot be undone)",
+  "Save groups of a grouped dataset",
 
-    "Usage: normalize <dataset_index> \n"
-    "  dataset_index   - Index of the dataset to be normalized"
+  "Usage: saveGroup <dataset_index> <path> [<groupSizeOnly>]            \n"
+  "  dataset_index   - Index of the dataset whose groups will be saved. \n"
+  "  path            - Where to save the groups.                        \n"
+  "  groupSizeOnly   - If set to 1, only the sizes of groups are saved  \n"
+  "                    Default is 0.                                    \n"
   )
+
+MAKE_COMMAND(NormalizeDataset,
+  {
+    if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
+    {
+      return false;
+    }
+
+    int index = stoi(args[1]);
+
+    try {
+      gGenexAPI.normalizeDataset(index);
+    }
+    catch (genex::GenexException& e)
+    {
+      cout << "Error! " << e.what() << endl;
+      return false;
+    }
+
+    cout << "Dataset " << index << " is now normalized" << endl;
+    return true;
+  },
+
+  "Normalize a dataset. (Warning: this operation cannot be undone)",
+
+  "Usage: normalize <dataset_index> \n"
+  "  dataset_index   - Index of the dataset to be normalized"
+)
 
 MAKE_COMMAND(Match,
   {
@@ -292,16 +322,16 @@ MAKE_COMMAND(Match,
       return false;
     }
 
-    int db_index = std::stoi(args[1]);
-    int  q_index = std::stoi(args[2]);
-    int ts_index = std::stoi(args[3]);
+    int db_index = stoi(args[1]);
+    int  q_index = stoi(args[2]);
+    int ts_index = stoi(args[3]);
     int start = 0;
     int end = -1;
 
     if (args.size() > 4)
     {
-      start = std::stoi(args[4]);
-      end = std::stoi(args[5]);
+      start = stoi(args[4]);
+      end = stoi(args[5]);
     }
 
     try
@@ -309,25 +339,25 @@ MAKE_COMMAND(Match,
       if (end == -1)
       {
         genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index);
-        std::cout << "Best Match is timeseries " << best.data.getIndex()
+        cout << "Best Match is timeseries " << best.data.getIndex()
                   << " with distance " << best.dist
                   << " starting at " << best.data.getStart()
                   << " with length " << best.data.getLength()
-                  << std::endl;
+                  << endl;
       }
       else
       {
         genex::candidate_time_series_t best = gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
-        std::cout << "Best Match is timeseries " << best.data.getIndex()
+        cout << "Best Match is timeseries " << best.data.getIndex()
                   << " with distance " << best.dist
                   << " starting at " << best.data.getStart()
                   << " with length " << best.data.getLength()
-                  << std::endl;
+                  << endl;
       }
     }
     catch (genex::GenexException& e)
     {
-      std::cout << "Error! " << e.what() << std::endl;
+      cout << "Error! " << e.what() << endl;
       return false;
     }
     return true;
@@ -345,70 +375,71 @@ MAKE_COMMAND(Match,
   "  end             - The end location of the query in the timeseries (this point is not included)\n"
   )
 
-  MAKE_COMMAND(KNN,
+MAKE_COMMAND(KNN,
+  {
+    if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
     {
-      if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
-      {
-        return false;
-      }
-  
-      int db_index = std::stoi(args[1]);
-      int  q_index = std::stoi(args[2]);
-      int ts_index = std::stoi(args[3]);
-      int start = 0;
-      int end = -1;
-      int k;
+      return false;
+    }
 
-      if (args.size() > 5)
-      {
-        start = std::stoi(args[4]);
-        end = std::stoi(args[5]);
-        k = std::stoi(args[6]);
-      }
-      else 
-      {
-        k = std::stoi(args[4]);        
-      }
-  
-      try
-      {
-        std::vector<genex::TimeSeries> results;
-        if (end == -1)
-        {
-          results = gGenexAPI.kNN(db_index, q_index, ts_index, k);
-        }
-        else
-        {
-          results = gGenexAPI.kNN(db_index, q_index, ts_index, start, end, k); 
-        }
-        for (int i = 0; i < results.size(); i++)
-        {
-          std::cout << "Timeseries " << results[i].getIndex()
-                    << " at " << results[i].getStart()
-                    << " with length " << results[i].getLength()
-                    << std::endl; 
-        }
-      }
-      catch (genex::GenexException& e)
-      {
-        std::cout << "Error! " << e.what() << std::endl;
-        return false;
-      }
-      return true;
-    },
+    int db_index = stoi(args[1]);
+    int  q_index = stoi(args[2]);
+    int ts_index = stoi(args[3]);
+    int start = 0;
+    int end = -1;
+    int k;
 
-    "Perform knn on a time series",
-    
-      "Usage: knn <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
-      "  dataset_index   - Index of loaded dataset to get the result from. \n"
-      "                    Use 'list dataset' to retrieve the list of     \n"
-      "                    loaded datasets.                           \n"
-      "  q_dataset_idx   - Same as dataset_index, except for the query \n"
-      "  ts_index        - Index of the query \n"
-      "  start           - The start location of the query in the timeseries \n"
-      "  end             - The end location of the query in the timeseries (this point is not included)\n"
-      "  k               - The number of neigbors \n"
-      )   
+    if (args.size() > 5)
+    {
+      start = stoi(args[4]);
+      end = stoi(args[5]);
+      k = stoi(args[6]);
+    }
+    else
+    {
+      k = stoi(args[4]);  
+    }
+
+    try
+    {
+      vector<genex::TimeSeries> results;
+      if (end == -1)
+      {
+        results = gGenexAPI.kNN(db_index, q_index, ts_index, k);
+      }
+      else
+      {
+        results = gGenexAPI.kNN(db_index, q_index, ts_index, start, end, k); 
+      }
+      for (int i = 0; i < results.size(); i++)
+      {
+        cout << "Timeseries " << results[i].getIndex()
+                  << " at " << results[i].getStart()
+                  << " with length " << results[i].getLength()
+                  << endl; 
+      }
+    }
+    catch (genex::GenexException& e)
+    {
+      cout << "Error! " << e.what() << endl;
+      return false;
+    }
+    return true;
+  },
+
+  "Perform knn on a time series",
+  
+    "Usage: knn <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
+    "  dataset_index   - Index of loaded dataset to get the result from. \n"
+    "                    Use 'list dataset' to retrieve the list of     \n"
+    "                    loaded datasets.                           \n"
+    "  q_dataset_idx   - Same as dataset_index, except for the query \n"
+    "  ts_index        - Index of the query \n"
+    "  start           - The start location of the query in the timeseries \n"
+    "  end             - The end location of the query in the timeseries (this point is not included)\n"
+    "  k               - The number of neigbors \n"
+    )
+
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
  *
@@ -416,12 +447,13 @@ MAKE_COMMAND(Match,
  * user input. The value is the cmd<command_name> variable created in step 1.
  **************************************************************************/
 
-std::map<std::string, Command*> commands = {
+map<string, Command*> commands = {
   {"load", &cmdLoadDataset},
   {"unload", &cmdUnloadDataset},
   {"list", &cmdList},
   {"timer", &cmdTimer},
   {"group", &cmdGroupDataset},
+  {"saveGroup", &cmdSaveGroup},
   {"normalize", &cmdNormalizeDataset},
   {"match", &cmdMatch},
   {"knn", &cmdKNN}
@@ -432,59 +464,59 @@ std::map<std::string, Command*> commands = {
 
 #define COUT_HELP_ALIGNMENT 15
 
-const std::string HELP_SUMMARY = "Retrieve a list of commands or get help for a command";
-const std::string HELP_HELP    = "Usage: help [<command_name>]                                \n"
+const string HELP_SUMMARY = "Retrieve a list of commands or get help for a command";
+const string HELP_HELP    = "Usage: help [<command_name>]                                \n"
                                  "  command_name - Name of command to retrieve help about. If \n"
                                  "                 not specified, a list of available commands\n"
                                  "                 is shown instead.                            ";
-const std::string EXIT_SUMMARY = "Terminate the program";
-const std::string EXIT_HELP    = "Usage: Can use either 'exit' or 'quit'";
+const string EXIT_SUMMARY = "Terminate the program";
+const string EXIT_HELP    = "Usage: Can use either 'exit' or 'quit'";
 
-void showHelp(const std::string& command_name)
+void showHelp(const string& command_name)
 {
   if (command_name == "help")
   {
-    std::cout << HELP_SUMMARY << std::endl << HELP_HELP << std::endl;
+    cout << HELP_SUMMARY << endl << HELP_HELP << endl;
   }
   else if (command_name == "exit" || command_name == "quit")
   {
-    std::cout << EXIT_SUMMARY << std::endl << EXIT_HELP << std::endl;
+    cout << EXIT_SUMMARY << endl << EXIT_HELP << endl;
   }
   else if (commands.find(command_name) != commands.end())
   {
     Command* cmd = commands[command_name];
-    std::cout << cmd->getSummary() << std::endl << cmd->getHelp() << std::endl;
+    cout << cmd->getSummary() << endl << cmd->getHelp() << endl;
   }
   else
   {
-    std::cout << "Error! Cannot find help for command: " << command_name << std::endl;
+    cout << "Error! Cannot find help for command: " << command_name << endl;
   }
 }
 
 void showAllHelps()
 {
-  std::cout << "Use 'help <command>' to see help for a command" << std::endl << std::endl;
+  cout << "Use 'help <command>' to see help for a command" << endl << endl;
 
-  std::cout << std::setw(COUT_HELP_ALIGNMENT);
-  std::cout << "help" << HELP_SUMMARY << std::endl;
+  cout << setw(COUT_HELP_ALIGNMENT);
+  cout << "help" << HELP_SUMMARY << endl;
 
-  std::cout << std::setw(COUT_HELP_ALIGNMENT);
-  std::cout << "exit|quit " << EXIT_SUMMARY << std::endl;
+  cout << setw(COUT_HELP_ALIGNMENT);
+  cout << "exit|quit " << EXIT_SUMMARY << endl;
 
-  std::cout << std::endl;
+  cout << endl;
   for (const auto& cmd : commands)
   {
-    std::cout << std::setw(COUT_HELP_ALIGNMENT);
-    std::cout << cmd.first << cmd.second->getSummary() << std::endl;
+    cout << setw(COUT_HELP_ALIGNMENT);
+    cout << cmd.first << cmd.second->getSummary() << endl;
   }
 }
 
-bool processLine(const std::string& line)
+bool processLine(const string& line)
 {
   boost::char_separator<char> sep(" ");
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
   tokenizer tokens(line, sep);
-  std::vector<std::string> args (tokens.begin(), tokens.end());
+  vector<string> args (tokens.begin(), tokens.end());
 
   if (args.size() == 0)
   {
@@ -507,27 +539,27 @@ bool processLine(const std::string& line)
     }
     else
     {
-      std::cout << "Error! Too many arguments for 'help'" << std::endl;
+      cout << "Error! Too many arguments for 'help'" << endl;
     }
   }
   else
   {
     if (commands.find(args[0]) == commands.end())
     {
-      std::cout << "Error! Cannot find command: " << args[0] << std::endl;
+      cout << "Error! Cannot find command: " << args[0] << endl;
     }
     else {
-      std::chrono::time_point<std::chrono::system_clock> start, end;
-      start = std::chrono::system_clock::now();
+      chrono::time_point<chrono::system_clock> start, end;
+      start = chrono::system_clock::now();
 
       bool success = commands[args[0]]->doCommand(args);
 
-      end = std::chrono::system_clock::now();
+      end = chrono::system_clock::now();
       if (gTimerEnabled && success)
       {
-        std::chrono::duration<float> elapsed_seconds = end - start;
-        std::cout << std::endl << "Command executed in ";
-        std::cout << std::setprecision(4) << elapsed_seconds.count() << "s" << std::endl;
+        chrono::duration<float> elapsed_seconds = end - start;
+        cout << endl << "Command executed in ";
+        cout << setprecision(4) << elapsed_seconds.count() << "s" << endl;
       }
     }
   }
@@ -537,7 +569,7 @@ bool processLine(const std::string& line)
 
 bool wantToQuitByEOF()
 {
-  std::cout << std::endl;
+  cout << endl;
   char* raw_line = nullptr;
   do
   {
@@ -558,9 +590,9 @@ int main (int argc, char *argv[])
   char* raw_line;
 
   // Align left
-  std::cout << std::left;
-  std::cout << "Welcome to GENEX!\n"
-               "Use 'help' to see the list of available commands." << std::endl;
+  cout << left;
+  cout << "Welcome to GENEX!\n"
+               "Use 'help' to see the list of available commands." << endl;
 
   while (true)
   {
@@ -577,7 +609,7 @@ int main (int argc, char *argv[])
       {
         add_history(raw_line);
       }
-      std::string line = std::string(raw_line);
+      string line = string(raw_line);
       delete raw_line;
       try
       {
@@ -585,18 +617,18 @@ int main (int argc, char *argv[])
       }
       catch (genex::GenexException& e)
       {
-        std::cout << "Error! " << e.what() << std::endl;
+        cout << "Error! " << e.what() << endl;
       }
-      catch (std::logic_error& e)
+      catch (logic_error& e)
       {
-        std::cout << "Error! Cannot convert some value to numeric" << std::endl;
+        cout << "Error! Cannot convert some value to numeric" << endl;
       }
       catch (...)
       {
-        std::cout << "Error! Unknown error" << std::endl;
+        cout << "Error! Unknown error" << endl;
         quit = true;
       }
-      std::cout << std::endl;
+      cout << endl;
     }
 
     if (quit)

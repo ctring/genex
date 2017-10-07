@@ -5,7 +5,8 @@
 #include <functional>
 #include <queue>
 #include <vector>
-#include <iostream> //debug
+#include <fstream>
+#include <iostream>
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
@@ -16,6 +17,8 @@ using std::max;
 using std::min;
 using std::cout;
 using std::endl;
+using std::ofstream;
+using std::string;
 
 namespace genex {
 
@@ -120,6 +123,16 @@ vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
   // clean up
   return best;
 }
+
+void GroupsEqualLengthSet::saveGroups(ofstream &fout, bool groupSizeOnly) const
+{
+  // Range of lengths
+  fout << 2 << " " << this->groupsEqualLength.size() << endl;
+  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++) {
+    this->groupsEqualLength[i]->saveGroups(fout, groupSizeOnly);
+  }
+}
+
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength)
 {

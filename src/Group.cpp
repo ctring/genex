@@ -1,7 +1,7 @@
 #include "Group.hpp"
 
-#include <iostream> // debug
-
+#include <iostream>
+#include <fstream>
 #include <vector>
 #include <algorithm>
 
@@ -9,6 +9,8 @@
 #include "distance/Distance.hpp"
 
 using std::vector;
+using std::ofstream;
+using std::endl;
 
 namespace genex {
 
@@ -122,6 +124,20 @@ const vector<TimeSeries> Group::getMembers() const
     currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;
   }
   return members;
+}
+
+void Group::saveGroup(ofstream &fout) const
+{
+  fout << this->count << " ";
+  member_coord_t currentMemberCoord = this->lastMemberCoord;
+  while (currentMemberCoord.first != -1)
+  {
+    int currIndex = currentMemberCoord.first;
+    int currStart = currentMemberCoord.second;
+    fout << currIndex << " " << currStart << " ";
+    currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
+  }
+  fout << endl;
 }
 
 } // namespace genex

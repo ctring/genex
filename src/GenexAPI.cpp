@@ -125,6 +125,13 @@ int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_n
   return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold);
 }
 
+void GenexAPI::saveGroup(int index, const string &path, bool groupSizeOnly)
+{
+  this->_checkDatasetIndex(index);
+  this->loadedDatasets[index]->saveGroups(path, groupSizeOnly);
+}
+
+
 void GenexAPI::setWarpingBandRatio(double ratio)
 {
   genex::setWarpingBandRatio(ratio);

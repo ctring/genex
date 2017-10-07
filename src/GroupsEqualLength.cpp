@@ -10,6 +10,10 @@
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
 
+using std::cout;
+using std::ofstream;
+using std::endl;
+
 namespace genex {
 
 GroupsEqualLength::GroupsEqualLength(const TimeSeriesSet& dataset, int length)
@@ -35,6 +39,27 @@ const Group* GroupsEqualLength::getGroup(int idx) const
     throw GenexException("Group index is out of range");
   }
   return this->groups[idx];
+}
+
+void GroupsEqualLength::saveGroups(std::ofstream &fout, bool groupSizeOnly) const 
+{
+  cout << "Saving groups of time series of length: " << this->length << endl;
+  // Number of groups having time series of this length
+  fout << groups.size() << endl;
+  if (groupSizeOnly) {
+    for (unsigned int i = 0; i < groups.size(); i++) 
+    {
+      fout << groups[i]->getCount() << " ";
+    }
+    fout << endl;
+  }
+  else 
+  {
+    for (unsigned int i = 0; i < groups.size(); i++) 
+    {
+      groups[i]->saveGroup(fout);
+    }
+  }
 }
 
 int GroupsEqualLength::getNumberOfGroups(void) const
