@@ -8,12 +8,6 @@
 
 namespace genex {
 
-int calculateWarpingBandSize(int length, double ratio)
-{
-  int bandSize = floor(length * ratio);
-  return std::min(bandSize, length - 1);
-}
-
 
 TimeSeries::~TimeSeries()
 {
@@ -47,25 +41,25 @@ TimeSeries& TimeSeries::operator+=(const TimeSeries& other)
   return *this;
 }
 
-const data_t* TimeSeries::getKeoghLower(double warpingBandRatio) const
+const data_t* TimeSeries::getKeoghLower(int warpingBand) const
 {
-  if (!keoghCacheValid || warpingBandRatio != cachedWarpingBandRatio) {
-    this->generateKeoghLU(warpingBandRatio);
-    cachedWarpingBandRatio = warpingBandRatio;
+  if (!keoghCacheValid || warpingBand != cachedWarpingBand) {
+    this->generateKeoghLU(warpingBand);
+    cachedWarpingBand = warpingBand;
   }
   return keoghLower;
 }
 
-const data_t* TimeSeries::getKeoghUpper(double warpingBandRatio) const
+const data_t* TimeSeries::getKeoghUpper(int warpingBand) const
 {
-  if (!keoghCacheValid || warpingBandRatio != cachedWarpingBandRatio) {
-    this->generateKeoghLU(warpingBandRatio);
-    cachedWarpingBandRatio = warpingBandRatio;
+  if (!keoghCacheValid || warpingBand != cachedWarpingBand) {
+    this->generateKeoghLU(warpingBand);
+    cachedWarpingBand = warpingBand;
   }
   return keoghUpper;
 }
 
-void TimeSeries::generateKeoghLU(double warpingBandRatio) const
+void TimeSeries::generateKeoghLU(int warpingBand) const
 {
   delete[] keoghLower;
   delete[] keoghUpper;
@@ -73,10 +67,10 @@ void TimeSeries::generateKeoghLU(double warpingBandRatio) const
   keoghLower = new data_t[this->length];
   keoghUpper = new data_t[this->length];
 
-  int bandSize = calculateWarpingBandSize(this->length, warpingBandRatio);
+  warpingBand = min(warpingBand, this->length - 1);
 
   // Function provided by trillionDTW codebase. See README
-  lower_upper_lemire(this->data, this->length, bandSize,
+  lower_upper_lemire(this->data, this->length, warpingBand,
                      this->keoghLower, this->keoghUpper);
 
   keoghCacheValid = true;

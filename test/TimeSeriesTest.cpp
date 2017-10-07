@@ -79,37 +79,37 @@ BOOST_AUTO_TEST_CASE( time_series_keogh_upper_lower, *boost::unit_test::toleranc
 
   for (int i = 0; i < ts.getLength(); i++)
   {
-    BOOST_TEST( data.dat2Upper3[i] == ts.getKeoghUpper(0.2)[i] );
-    BOOST_TEST( data.dat2Lower3[i] == ts.getKeoghLower(0.2)[i] );
+    BOOST_TEST( data.dat2Upper3[i] == ts.getKeoghUpper(1)[i] );
+    BOOST_TEST( data.dat2Lower3[i] == ts.getKeoghLower(1)[i] );
   }
 
   for (int i = 0; i < ts.getLength(); i++)
   {
-    BOOST_TEST( data.dat2Upper5[i] == ts.getKeoghUpper(0.3)[i] );
-    BOOST_TEST( data.dat2Lower5[i] == ts.getKeoghLower(0.3)[i] );
+    BOOST_TEST( data.dat2Upper5[i] == ts.getKeoghUpper(2)[i] );
+    BOOST_TEST( data.dat2Lower5[i] == ts.getKeoghLower(2)[i] );
   }
 
   for (int i = 0; i < ts.getLength(); i++)
   {
-    BOOST_TEST( data.dat2Upper7[i] == ts.getKeoghUpper(0.5)[i] );
-    BOOST_TEST( data.dat2Lower7[i] == ts.getKeoghLower(0.5)[i] );
+    BOOST_TEST( data.dat2Upper7[i] == ts.getKeoghUpper(3)[i] );
+    BOOST_TEST( data.dat2Lower7[i] == ts.getKeoghLower(3)[i] );
   }
 
   for (int i = 0; i < ts.getLength(); i++)
   {
-    BOOST_TEST( data.dat2Upper9[i] == ts.getKeoghUpper(0.6)[i] );
-    BOOST_TEST( data.dat2Lower9[i] == ts.getKeoghLower(0.6)[i] );
+    BOOST_TEST( data.dat2Upper9[i] == ts.getKeoghUpper(4)[i] );
+    BOOST_TEST( data.dat2Lower9[i] == ts.getKeoghLower(4)[i] );
   }
 
   for (int i = 0; i < ts.getLength(); i++)
   {
-    BOOST_TEST( data.dat2Upper13[i] == ts.getKeoghUpper(1.0)[i] );
-    BOOST_TEST( data.dat2Lower13[i] == ts.getKeoghLower(1.0)[i] );
+    BOOST_TEST( data.dat2Upper13[i] == ts.getKeoghUpper(6)[i] );
+    BOOST_TEST( data.dat2Lower13[i] == ts.getKeoghLower(6)[i] );
   }
 
   for (int i = 0; i < ts2.getLength(); i++)
   {
-    BOOST_TEST( data.dat3Upper5[i] == ts2.getKeoghUpper(0.2)[i] );
-    BOOST_TEST( data.dat3Lower5[i] == ts2.getKeoghLower(0.2)[i] );    
+    BOOST_TEST( data.dat3Upper5[i] == ts2.getKeoghUpper(2)[i] );
+    BOOST_TEST( data.dat3Lower5[i] == ts2.getKeoghLower(2)[i] );    
   }
 }

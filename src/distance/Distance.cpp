@@ -84,6 +84,12 @@ void setWarpingBandRatio(double ratio) {
   warpingBandRatio = ratio;
 }
 
+int calculateWarpingBandSize(int length, double ratio)
+{
+  int bandSize = floor(length * ratio);
+  return std::min(bandSize, length - 1);
+}
+
 Euclidean _euc;
 
 data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
@@ -148,8 +154,9 @@ data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t idropout
 {
 
   int len = min(a.getLength(), b.getLength());
-  const data_t* aLower = a.getKeoghLower(warpingBandRatio);
-  const data_t* aUpper = a.getKeoghUpper(warpingBandRatio);
+  int warpingBand = calculateWarpingBandSize(max(a.getLength(), b.getLength()), warpingBandRatio);
+  const data_t* aLower = a.getKeoghLower(warpingBand);
+  const data_t* aUpper = a.getKeoghUpper(warpingBand);
   data_t lb = 0;
 
   for (int i = 0; i < len && lb < idropout * idropout; i++)

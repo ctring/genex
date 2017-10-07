@@ -28,6 +28,9 @@ typedef data_t (*dist_t)(const TimeSeries&, const TimeSeries&, data_t);
 
 extern double warpingBandRatio;
 
+int calculateWarpingBandSize(int length, double ratio);
+void setWarpingBandRatio(double ratio);
+  
 /**
  *  @brief returns the an object representing a distance metric
  *
@@ -251,8 +254,6 @@ pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
 
   return result;
 }
-
-void setWarpingBandRatio(double ratio);
 
 /**
  * ...
