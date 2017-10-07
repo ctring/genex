@@ -263,7 +263,7 @@ data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
   return distance(this->getTimeSeries(idx, start, start + length), other, INF);
 }
 
-std::vector<candidate_time_series_t> TimeSeriesSet::kExhaustiveSearch(
+std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   const TimeSeries& query, int k)
 {
   std::vector<candidate_time_series_t> bestSoFar;

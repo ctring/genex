@@ -67,7 +67,7 @@ public:
    * @return a vector of struct containing the closest TimeSeries and the distance between them
    * @throws exception if dataset is not grouped
    */
-  std::vector<candidate_time_series_t> kNN(const TimeSeries& data, int k);
+  std::vector<candidate_time_series_t> kSim(const TimeSeries& data, int k);
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;

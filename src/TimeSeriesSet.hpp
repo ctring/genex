@@ -145,7 +145,7 @@ public:
    *  
    * @vector vector of candidates with exact distance from query.
    */
-  std::vector<candidate_time_series_t> kExhaustiveSearch(const TimeSeries& query, int k); 
+  std::vector<candidate_time_series_t> kSimRaw(const TimeSeries& query, int k); 
       
   /**
    *  @brief check if data is loaded

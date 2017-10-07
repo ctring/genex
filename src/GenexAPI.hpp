@@ -169,9 +169,9 @@ public:
    *  @param k the number of similar time series to find
    *  @return k similar time series
    */
-  std::vector<candidate_time_series_t> kNN(
+  std::vector<candidate_time_series_t> kSim(
       int result_idx, int query_idx, int index, int start, int end, int k);
-  std::vector<candidate_time_series_t> kNN(
+  std::vector<candidate_time_series_t> kSim(
       int result_idx, int query_idx, int index, int k);
 
  /**
@@ -186,9 +186,9 @@ public:
    *  @param k the number of similar time series to find
    *  @return k similar time series
    */
-  std::vector<candidate_time_series_t> kExhaustiveSearch(
+  std::vector<candidate_time_series_t> kSimRaw(
     int result_idx, int query_idx, int index, int start, int end, int k);
-  std::vector<candidate_time_series_t> kExhaustiveSearch(
+  std::vector<candidate_time_series_t> kSimRaw(
     int result_idx, int query_idx, int index, int k);
 
 private:

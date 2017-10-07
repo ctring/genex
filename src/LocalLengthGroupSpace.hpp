@@ -70,7 +70,7 @@ public:
                                  const dist_t warpedDistance,
                                  data_t dropout) const;
 
-  int interLevelKNN(const TimeSeries& query, 
+  int interLevelKSim(const TimeSeries& query, 
     const dist_t warpedDistance, 
     vector<group_index_t>* bestSoFar, 
     int k);

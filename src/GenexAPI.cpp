@@ -166,40 +166,40 @@ candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->getBestMatch(query);
 }
 
-vector<candidate_time_series_t> GenexAPI::kNN(int result_idx, int query_idx, int index, int k)
+vector<candidate_time_series_t> GenexAPI::kSim(int result_idx, int query_idx, int index, int k)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
 
   const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
-  return loadedDatasets[result_idx]->kNN(query, k);
+  return loadedDatasets[result_idx]->kSim(query, k);
 }
 
-vector<candidate_time_series_t> GenexAPI::kNN(int result_idx, int query_idx, int index, int start, int end, int k)
+vector<candidate_time_series_t> GenexAPI::kSim(int result_idx, int query_idx, int index, int start, int end, int k)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
 
   const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->kNN(query, k);
+  return loadedDatasets[result_idx]->kSim(query, k);
 }
 
-vector<candidate_time_series_t> GenexAPI::kExhaustiveSearch(int result_idx, int query_idx, int index, int k)
+vector<candidate_time_series_t> GenexAPI::kSimRaw(int result_idx, int query_idx, int index, int k)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
 
   const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
-  return loadedDatasets[result_idx]->kExhaustiveSearch(query, k);
+  return loadedDatasets[result_idx]->kSimRaw(query, k);
 }
 
-vector<candidate_time_series_t> GenexAPI::kExhaustiveSearch(int result_idx, int query_idx, int index, int start, int end, int k)
+vector<candidate_time_series_t> GenexAPI::kSimRaw(int result_idx, int query_idx, int index, int start, int end, int k)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
 
   const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->kExhaustiveSearch(query, k);
+  return loadedDatasets[result_idx]->kSimRaw(query, k);
 }
 
 void GenexAPI::_checkDatasetIndex(int index)

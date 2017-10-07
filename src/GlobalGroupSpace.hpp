@@ -58,11 +58,16 @@ public:
    */
   candidate_time_series_t getBestMatch(const TimeSeries& query);
 
-  std::vector<candidate_time_series_t> kNN(const TimeSeries& data, int k);
-
+  /**
+   *  @brief find k similar time series to the query
+   *
+   *  @param query gets most similar sequence to the query
+   *  @return the best match in the dataset
+   */
+  std::vector<candidate_time_series_t> kSim(const TimeSeries& query, int k);
+  
   void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
   int loadGroups(std::ifstream &fin);
-
   /**
    *  @brief returns true if dataset is grouped
    */

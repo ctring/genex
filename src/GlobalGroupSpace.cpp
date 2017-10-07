@@ -89,7 +89,7 @@ bool GlobalGroupSpace::grouped(void) const
   return localLengthGroupSpace.size() > 0;
 }
 
-std::vector<candidate_time_series_t> GlobalGroupSpace::kNN(const TimeSeries& data, int k)
+std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& query, int k)
 {
   std::vector<candidate_time_series_t> best;
   std::vector<group_index_t> bestSoFar;
@@ -99,7 +99,7 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kNN(const TimeSeries& dat
   for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
     kPrime = this->localLengthGroupSpace[i]->
-        interLevelKNN(data, this->warpedDistance, &bestSoFar, kPrime);
+        interLevelKSim(query, this->warpedDistance, &bestSoFar, kPrime);
   }
   
   // process top group directly
@@ -109,7 +109,7 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kNN(const TimeSeries& dat
     bestSoFar.erase(bestSoFar.begin());
     vector<candidate_time_series_t> intraResults = 
         this->localLengthGroupSpace[g.length]->
-            getGroup(g.index)->intraGroupKNN(data, kPrime+g.members, this->warpedDistance);
+            getGroup(g.index)->intraGroupKSim(query, kPrime+g.members, this->warpedDistance);
     // add all of the worst's best to answer
     for (int i = 0; i < intraResults.size(); ++i) 
     {

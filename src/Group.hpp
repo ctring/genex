@@ -149,7 +149,7 @@ public:
    *  @param warpedDistance to be used for the distance metric
    *  @return neighbors
    */
-  const std::vector<candidate_time_series_t> intraGroupKNN(
+  const std::vector<candidate_time_series_t> intraGroupKSim(
       const TimeSeries& query, int k, const dist_t warpedDistance) const;
   
   void saveGroup(std::ofstream &fout) const;

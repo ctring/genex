@@ -165,7 +165,7 @@ candidate_group_t LocalLengthGroupSpace::getBestGroup(const TimeSeries& query,
   return std::make_pair(bestSoFarGroup, bestSoFarDist);
 }
 
-int LocalLengthGroupSpace::interLevelKNN(const TimeSeries& query, 
+int LocalLengthGroupSpace::interLevelKSim(const TimeSeries& query, 
     const dist_t warpedDistance, 
     std::vector<group_index_t>* bestSoFar,
     int k)

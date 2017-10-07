@@ -106,7 +106,7 @@ MAKE_COMMAND(LoadDataset,
   "              smaller than this number, all lines are read. (default: 0)\n"
   "  startCol  - Omit all columns before this column. (default: 0)         \n"
   "  separators - A list of characters used to separate values in the file \n"
-  "              (default: <space>)                                          "
+  "              (default: <space>)                                        \n"
   )
 
 MAKE_COMMAND(SaveDataset,
@@ -133,7 +133,7 @@ MAKE_COMMAND(SaveDataset,
   "  dataset_index - Index of the dataset to be saved              \n"
   "  filePath  - Path to the saved file                            \n"
   "  separator - Separator between values in a series              \n"
-  "              (default: <space>)                                  "
+  "              (default: <space>)                                \n"
   )
 
 MAKE_COMMAND(UnloadDataset,
@@ -156,7 +156,7 @@ MAKE_COMMAND(UnloadDataset,
   "Usage: unload <dataset_index>                               \n"
   "  dataset_index  - Index of the dataset being unloaded. Use \n"
   "                   'list dataset' to retrieve the list of   \n"
-  "                   loaded datasets.                           "
+  "                   loaded datasets.                         \n"
   )
 
 MAKE_COMMAND(List,
@@ -235,7 +235,7 @@ MAKE_COMMAND(Timer,
   "the end of its execution. If this command is called without     \n"
   "an additional argument, the current state of timer is printed.  \n"
   "                                                                \n"
-  "Usage: timer [on|off]                                             "
+  "Usage: timer [on|off]                                           \n"
   )
 
 MAKE_COMMAND(GroupDataset,
@@ -339,8 +339,8 @@ MAKE_COMMAND(NormalizeDataset,
 
   "Normalize a dataset. (Warning: this operation cannot be undone)",
 
-  "Usage: normalize <dataset_index> \n"
-  "  dataset_index   - Index of the dataset to be normalized"
+  "Usage: normalize <dataset_index>                           \n"
+  "  dataset_index   - Index of the dataset to be normalized  \n"
 )
 
 MAKE_COMMAND(Match,
@@ -385,17 +385,17 @@ MAKE_COMMAND(Match,
 
   "Find the best match of a time series",
 
-  "Usage: match <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
-  "  dataset_index   - Index of loaded dataset to get the result from. \n"
-  "                    Use 'list dataset' to retrieve the list of     \n"
-  "                    loaded datasets.                           \n"
-  "  q_dataset_idx   - Same as dataset_index, except for the query \n"
-  "  ts_index        - Index of the query \n"
-  "  start           - The start location of the query in the timeseries \n"
+  "Usage: match <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>]                    \n"
+  "  dataset_index   - Index of loaded dataset to get the result from.                             \n"
+  "                    Use 'list dataset' to retrieve the list of                                  \n"
+  "                    loaded datasets.                                                            \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query                                 \n"
+  "  ts_index        - Index of the query                                                          \n"
+  "  start           - The start location of the query in the timeseries                           \n"
   "  end             - The end location of the query in the timeseries (this point is not included)\n"
   )
 
-MAKE_COMMAND(KNN,
+MAKE_COMMAND(kSim,
   {
     if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
     {
@@ -424,13 +424,14 @@ MAKE_COMMAND(KNN,
     TIME_COMMAND(
       if (end == -1)
       {
-        results = gGenexAPI.kNN(db_index, q_index, ts_index, k);
+        results = gGenexAPI.kSim(db_index, q_index, ts_index, k);
       }
       else
       {
-        results = gGenexAPI.kNN(db_index, q_index, ts_index, start, end, k); 
+        results = gGenexAPI.kSim(db_index, q_index, ts_index, start, end, k); 
       }
     )
+
     for (int i = 0; i < results.size(); i++)
     {
       std::cout << "Timeseries " << results[i].data.getIndex()
@@ -443,20 +444,20 @@ MAKE_COMMAND(KNN,
     return true;
   },
 
-  "Perform knn on a time series. Provides a bound of dist to the query for each result. The distance is <= the dist provided.",
+  "Find k similar time series to a query. Provides a bound of dist to the query for each result. The distance is <= the dist provided.",
 
-  "Usage: knn <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
-  "  dataset_index   - Index of loaded dataset to get the result from. \n"
-  "                    Use 'list dataset' to retrieve the list of     \n"
-  "                    loaded datasets.                           \n"
-  "  q_dataset_idx   - Same as dataset_index, except for the query \n"
-  "  ts_index        - Index of the query \n"
-  "  start           - The start location of the query in the timeseries \n"
-  "  end             - The end location of the query in the timeseries (this point is not included)\n"
-  "  k               - The number of neigbors \n"
-  )  
+    "Usage: kSim <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k>                  \n"
+    "  dataset_index   - Index of loaded dataset to get the result from.                              \n"
+    "                    Use 'list dataset' to retrieve the list of                                   \n"
+    "                    loaded datasets.                                                             \n"
+    "  q_dataset_idx   - Same as dataset_index, except for the query                                  \n"
+    "  ts_index        - Index of the query                                                           \n"
+    "  start           - The start location of the query in the timeseries                            \n"
+    "  end             - The end location of the query in the timeseries (this point is not included) \n"
+    "  k               - The number of neigbors                                                       \n"
+    )  
       
-MAKE_COMMAND(kExhaustive,
+MAKE_COMMAND(kSimRaw,
   {
     if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
     {
@@ -486,11 +487,11 @@ MAKE_COMMAND(kExhaustive,
       std::vector<genex::candidate_time_series_t> results;
       if (end == -1)
       {
-        results = gGenexAPI.kExhaustiveSearch(db_index, q_index, ts_index, k);
+        results = gGenexAPI.kSimRaw(db_index, q_index, ts_index, k);
       }
       else
       {
-        results = gGenexAPI.kExhaustiveSearch(db_index, q_index, ts_index, start, end, k); 
+        results = gGenexAPI.kSimRaw(db_index, q_index, ts_index, start, end, k); 
       }
       for (int i = 0; i < results.size(); i++)
       {
@@ -512,15 +513,15 @@ MAKE_COMMAND(kExhaustive,
 
   "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
   
-    "Usage: kExhaustive <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
-    "  dataset_index   - Index of loaded dataset to get the result from. \n"
-    "                    Use 'list dataset' to retrieve the list of     \n"
-    "                    loaded datasets.                           \n"
-    "  q_dataset_idx   - Same as dataset_index, except for the query \n"
-    "  ts_index        - Index of the query \n"
-    "  start           - The start location of the query in the timeseries \n"
-    "  end             - The end location of the query in the timeseries \n"
-    "  k               - The number of neigbors \n"
+    "Usage: kSimRaw <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
+    "  dataset_index   - Index of loaded dataset to get the result from.                \n"
+    "                    Use 'list dataset' to retrieve the list of                     \n"
+    "                    loaded datasets.                                               \n"
+    "  q_dataset_idx   - Same as dataset_index, except for the query                    \n"
+    "  ts_index        - Index of the query                                             \n"
+    "  start           - The start location of the query in the timeseries              \n"
+    "  end             - The end location of the query in the timeseries                \n"
+    "  k               - The number of neigbors                                         \n"
     )   
 
 /**************************************************************************
@@ -541,8 +542,8 @@ map<string, Command*> commands = {
   {"loadGroup", &cmdLoadGroup},  
   {"normalize", &cmdNormalizeDataset},
   {"match", &cmdMatch},
-  {"knn", &cmdKNN},
-  {"kExhaustive", &cmdkExhaustive}
+  {"kSim", &cmdkSim},
+  {"kSimRaw", &cmdkSimRaw}
 };
 
 /**************************************************************************/

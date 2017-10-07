@@ -66,7 +66,7 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
   return best;
 }
 
-const vector<candidate_time_series_t> Group::intraGroupKNN(
+const vector<candidate_time_series_t> Group::intraGroupKSim(
     const TimeSeries& query, int k, const dist_t warpedDistance) const
 {
   vector<candidate_time_series_t> bestSoFar;
