@@ -12,6 +12,8 @@
 #include "Group.hpp"
 
 using std::vector;
+using std::max;
+using std::min;
 using std::cout;
 using std::endl;
 
@@ -49,8 +51,10 @@ candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& que
   }
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;
-  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
-  {
+
+  vector<int> order (generateTraverseOrder(query.getLength(), this->groupsEqualLength.size() - 1));
+  for (unsigned int io = 0; io < order.size(); io++) {
+    int i = order[io];
     // this looks through each group of a certain length finding the best of those groups
     candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
     if (candidate.second < bestSoFarDist)
@@ -115,6 +119,45 @@ vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
 
   // clean up
   return best;
+}
+
+vector<int> generateTraverseOrder(int queryLength, int totalLength)
+{
+  vector<int> order;
+  int low = queryLength - 1;
+  int high = queryLength + 1;
+  bool lowStop = false, highStop = false;
+
+  order.push_back(queryLength);
+  while (!(lowStop && highStop)) {
+    if (low < 2) lowStop = true;
+    if (high > totalLength) highStop = true;
+
+    if (!lowStop) {
+      // queryLength is always larger than low
+      int r = calculateWarpingBandSize(queryLength);
+      if (low + r >= queryLength) {
+        order.push_back(low);
+        low--;
+      }
+      else {
+        lowStop = true;
+      }
+    }
+
+    if (!highStop) {
+      // queryLength is always smaller than high
+      int r = calculateWarpingBandSize(high);
+      if (queryLength + r >= high) {
+        order.push_back(high);
+        high++;
+      }
+      else {
+        highStop = true;
+      }
+    }
+  }
+  return order;
 }
 
 } // namespace genex

@@ -75,5 +75,7 @@ private:
   dist_t warpedDistance;
 };
 
+vector<int> generateTraverseOrder(int queryLength, int totalLength);
+
 } // namespace genex
 #endif //GROUPS_EQUAL_LENGTH_SET_H

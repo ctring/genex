@@ -54,3 +54,11 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
   best = gSet.getBestMatch(ts1);
   BOOST_TEST((best.dist)> 0);
 }
+
+BOOST_AUTO_TEST_CASE( traverse_order )
+{
+  setWarpingBandRatio(0.4);
+  vector<int> order = generateTraverseOrder(3, 7);
+  vector<int> expected = { 3, 2, 4, 5 };
+  BOOST_CHECK_EQUAL_COLLECTIONS(order.begin(), order.end(), expected.begin(), expected.end());
+}
