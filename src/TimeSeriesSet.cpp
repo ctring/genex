@@ -288,7 +288,6 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
         if (k > 0) {
           currentDist = warpedDistance(query, currentTimeSeries, INF);
           bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
-          // std::cout << "first " << currentDist << std::endl;          
           k--;
           if (k == 0) {
             // Heapify exactly once when the heap is filled.
@@ -298,8 +297,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
         else
         {
           bestSoFarDist = bestSoFar.front().dist;
-          currentDist = warpedDistance(query, currentTimeSeries, INF);          
-          // std::cout << "best " << bestSoFarDist << ", current " << currentDist << std::endl;
+          currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);          
           if (currentDist < bestSoFarDist) 
           { 
             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
