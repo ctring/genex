@@ -1,4 +1,4 @@
-#include "GroupsEqualLength.hpp"
+#include "LocalLengthGroupSpace.hpp"
 
 #include <vector>
 #include <algorithm>

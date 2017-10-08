@@ -1,5 +1,5 @@
 #include "GroupableTimeSeriesSet.hpp"
-#include "GroupsEqualLengthSet.hpp"
+#include "GlobalGroupSpace.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
 

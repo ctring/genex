@@ -2,7 +2,7 @@
 #define GROUPABLE_TIME_SERIES_SET_H
 
 #include "TimeSeriesSet.hpp"
-#include "GroupsEqualLengthSet.hpp"
+#include "GlobalGroupSpace.hpp"
 #include <vector>
 
 #include "distance/Distance.hpp"

@@ -1,7 +1,7 @@
 #ifndef GROUPS_EQUAL_LENGTH_SET_H
 #define GROUPS_EQUAL_LENGTH_SET_H
 
-#include "GroupsEqualLength.hpp"
+#include "LocalLengthGroupSpace.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"

@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE "Test GroupsEqualLength class"
 
 #include <boost/test/unit_test.hpp>
-#include "GroupsEqualLengthSet.hpp"
+#include "GlobalGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"

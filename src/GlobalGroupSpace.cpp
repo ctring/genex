@@ -1,5 +1,5 @@
-#include "GroupsEqualLengthSet.hpp"
-#include "GroupsEqualLength.hpp"
+#include "GlobalGroupSpace.hpp"
+#include "LocalLengthGroupSpace.hpp"
 #include <cmath>
 #include <sstream>
 #include <functional>
