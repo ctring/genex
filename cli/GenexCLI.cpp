@@ -534,7 +534,7 @@ bool processLine(const string& line)
   tokenizer tokens(line, sep);
   vector<string> args (tokens.begin(), tokens.end());
 
-  if (args.size() == 0)
+  if (args.size() == 0 || args[0].find("//") == 0)
   {
     return false;
   }

@@ -3,7 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-#include <iostream> //debug
+#include <iostream>
+#include <chrono>
 
 #include "TimeSeries.hpp"
 #include "Group.hpp"
@@ -14,6 +15,9 @@ using std::cout;
 using std::ofstream;
 using std::ifstream;
 using std::endl;
+
+#define LOG_EVERY_S 10
+#define LOG_FREQ  5
 
 namespace genex {
 
@@ -39,12 +43,33 @@ void LocalLengthGroupSpace::reset()
   groups.clear();
 }
 
+std::chrono::time_point<std::chrono::system_clock> _last_time;
+
 int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t threshold)
 {
+  std::chrono::duration<float> elapsed_seconds = std::chrono::system_clock::now() - _last_time;
+  bool doLog = false;
+  if (elapsed_seconds.count() >= LOG_EVERY_S) {
+    doLog = true;
+    _last_time = std::chrono::system_clock::now();
+  }
+  if (doLog) {
+    cout << "Processing time series space of length " << this->length << endl;
+  }
+  int totalTimeSeries = this->subTimeSeriesCount * dataset.getItemCount();
+  int counter = 0;
   for (int start = 0; start < this->subTimeSeriesCount; start++)
   {
     for (int idx = 0; idx < dataset.getItemCount(); idx++)
     {
+      counter++;
+      if (doLog) {
+        if (counter % (totalTimeSeries / LOG_FREQ) == 0) {
+          cout << "  Grouping progress... " << counter << "/" << totalTimeSeries 
+               << " (" << counter*100/totalTimeSeries << "%)" << endl;
+        }
+      }
+
       TimeSeries query = dataset.getTimeSeries(idx, start, start + this->length);
 
       data_t bestSoFar = INF;
