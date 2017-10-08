@@ -14,8 +14,8 @@ using namespace genex;
 struct MockData
 {
   data_t dat[7] = {110, 116, 118, 117, 16.5, 112, 112};
-  std::string test_group_5_10_space = "dataset/test/test_group_5_10_space.txt";
-  std::string test_group_5_10_different_space = "dataset/test/test_group_5_10_different_space.txt";
+  std::string test_group_5_10_space = "datasets/test/test_group_5_10_space.txt";
+  std::string test_group_5_10_different_space = "datasets/test/test_group_5_10_different_space.txt";
 };
 
 BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANCE) )

@@ -11,8 +11,8 @@ using namespace genex;
 
 struct MockDataset
 {
-  std::string test_10_20_space = "dataset/test/test_10_20_space.txt";
-  std::string test_3_10_space = "dataset/test/test_3_10_space.txt";
+  std::string test_10_20_space = "datasets/test/test_10_20_space.txt";
+  std::string test_3_10_space = "datasets/test/test_3_10_space.txt";
 } data;
 
 BOOST_AUTO_TEST_CASE( groupable_time_series_set_load_space )

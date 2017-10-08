@@ -28,8 +28,8 @@ struct MockData
   data_t dat_sim_2[5] = {2, 3, 4, 5, 6};
   data_t dat_diff[5]  = {12, 13, 14, 15};
 
-  std::string test_5_10_space = "dataset/test/test_5_10_space.txt";
-  std::string test_3_10_space = "dataset/test/test_3_10_space.txt";
+  std::string test_5_10_space = "datasets/test/test_5_10_space.txt";
+  std::string test_3_10_space = "datasets/test/test_3_10_space.txt";
 };
 
 BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )

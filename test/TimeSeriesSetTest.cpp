@@ -15,15 +15,15 @@ using namespace genex;
 
 struct MockDataset
 {
-  std::string test_10_20_space = "dataset/test/test_10_20_space.txt";
-  std::string test_15_20_comma = "dataset/test/test_15_20_comma.csv";
+  std::string test_10_20_space = "datasets/test/test_10_20_space.txt";
+  std::string test_15_20_comma = "datasets/test/test_15_20_comma.csv";
   std::string not_exist = "unicorn_santa_magic_halting_problem_solution";
-  std::string uneven_rows = "dataset/test/uneven_rows.txt";
-  std::string text_only = "dataset/test/test_text_only.txt";
-  std::string very_big = "dataset/test/very_big_value.txt";
-  std::string test_5_10_space = "dataset/test/test_5_10_space.txt";
-  std::string test_3_10_space = "dataset/test/test_3_10_space.txt";
-  std::string test_3_11_space = "dataset/test/test_3_11_space.txt";
+  std::string uneven_rows = "datasets/test/uneven_rows.txt";
+  std::string text_only = "datasets/test/test_text_only.txt";
+  std::string very_big = "datasets/test/very_big_value.txt";
+  std::string test_5_10_space = "datasets/test/test_5_10_space.txt";
+  std::string test_3_10_space = "datasets/test/test_3_10_space.txt";
+  std::string test_3_11_space = "datasets/test/test_3_11_space.txt";
 } data;
 
 BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(TOLERANCE) )

@@ -17,10 +17,10 @@ using namespace genex;
 
 struct MockDataset
 {
-  std::string test_10_20_space = "dataset/test/test_10_20_space.txt";
-  std::string test_15_20_comma = "dataset/test/test_15_20_comma.csv";
+  std::string test_10_20_space = "datasets/test/test_10_20_space.txt";
+  std::string test_15_20_comma = "datasets/test/test_15_20_comma.csv";
   std::string not_exist = "unicorn_santa_magic_halting_problem_solution";
-  std::string uneven_rows = "dataset/test/uneven_rows.txt";
+  std::string uneven_rows = "datasets/test/uneven_rows.txt";
 } data;
 
 const bool timeSeriesEqual(const TimeSeries& a, const TimeSeries& b)
