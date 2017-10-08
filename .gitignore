@@ -1,5 +1,7 @@
 # Ignore big datasets
-dataset/big/
+datasets/big/
+datasets/local/
+datasets/UCR/
 
 # Ignore build file contents
 build/*
