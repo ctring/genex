@@ -61,7 +61,7 @@ public:
   std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
   
 private:
-  GroupsEqualLengthSet* groupsAllLengthSet = nullptr;
+  GlobalGroupSpace* groupsAllLengthSet = nullptr;
   data_t threshold;
 };
 

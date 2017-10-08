@@ -27,7 +27,7 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, da
   // clear old groups
   reset();
 
-  this->groupsAllLengthSet = new GroupsEqualLengthSet(*this);
+  this->groupsAllLengthSet = new GlobalGroupSpace(*this);
   int cntGroups = this->groupsAllLengthSet->group(distance_name, threshold);
   this->threshold = threshold;
   return cntGroups;
@@ -90,7 +90,7 @@ int GroupableTimeSeriesSet::loadGroups(const string& path)
     cout << "Saved groups are compatible with the dataset" << endl;
     reset();
     this->threshold = threshold;
-    this->groupsAllLengthSet = new GroupsEqualLengthSet(*this);
+    this->groupsAllLengthSet = new GlobalGroupSpace(*this);
     numberOfGroups = this->groupsAllLengthSet->loadGroups(fin);
   }
   else

@@ -17,19 +17,19 @@ using std::endl;
 
 namespace genex {
 
-GroupsEqualLength::GroupsEqualLength(const TimeSeriesSet& dataset, int length)
+LocalLengthGroupSpace::LocalLengthGroupSpace(const TimeSeriesSet& dataset, int length)
  : dataset(dataset), length(length)
 {
   this->subTimeSeriesCount = dataset.getItemLength() - length + 1;
   this->memberMap = std::vector<group_membership_t>(dataset.getItemCount() * this->subTimeSeriesCount);
 }
 
-GroupsEqualLength::~GroupsEqualLength()
+LocalLengthGroupSpace::~LocalLengthGroupSpace()
 {
   reset();
 }
 
-void GroupsEqualLength::reset()
+void LocalLengthGroupSpace::reset()
 {
   for (unsigned int i = 0; i < groups.size(); i++)
   {
@@ -39,7 +39,7 @@ void GroupsEqualLength::reset()
   groups.clear();
 }
 
-int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t threshold)
+int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t threshold)
 {
   for (int start = 0; start < this->subTimeSeriesCount; start++)
   {
@@ -76,12 +76,12 @@ int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t thre
   return this->getNumberOfGroups();
 }
 
-int GroupsEqualLength::getNumberOfGroups(void) const
+int LocalLengthGroupSpace::getNumberOfGroups(void) const
 {
   return this->groups.size();
 }
 
-const Group* GroupsEqualLength::getGroup(int idx) const
+const Group* LocalLengthGroupSpace::getGroup(int idx) const
 {
   if (idx < 0 || idx >= this->getNumberOfGroups()) {
     throw GenexException("Group index is out of range");
@@ -89,7 +89,7 @@ const Group* GroupsEqualLength::getGroup(int idx) const
   return this->groups[idx];
 }
 
-void GroupsEqualLength::saveGroups(ofstream &fout, bool groupSizeOnly) const 
+void LocalLengthGroupSpace::saveGroups(ofstream &fout, bool groupSizeOnly) const 
 {
   // Number of groups having time series of this length
   fout << groups.size() << endl;
@@ -109,7 +109,7 @@ void GroupsEqualLength::saveGroups(ofstream &fout, bool groupSizeOnly) const
   }
 }
 
-int GroupsEqualLength::loadGroups(ifstream &fin)
+int LocalLengthGroupSpace::loadGroups(ifstream &fin)
 {
   reset();
   int numberOfGroups;
@@ -123,7 +123,7 @@ int GroupsEqualLength::loadGroups(ifstream &fin)
   return numberOfGroups;
 }
 
-candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
+candidate_group_t LocalLengthGroupSpace::getBestGroup(const TimeSeries& query,
   const dist_t warpedDistance,
   data_t dropout) const
 {
@@ -140,7 +140,7 @@ candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
   return std::make_pair(bestSoFarGroup, bestSoFarDist);
 }
 
-int GroupsEqualLength::interLevelKNN(const TimeSeries& query, 
+int LocalLengthGroupSpace::interLevelKNN(const TimeSeries& query, 
     const dist_t warpedDistance, 
     std::vector<group_index_t>* bestSoFar,
     int k)

@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE "Test GroupsEqualLength class"
+#define BOOST_TEST_MODULE "Test LocalLengthGroupSpace class"
 
 #include <boost/test/unit_test.hpp>
 #include "LocalLengthGroupSpace.hpp"
@@ -18,14 +18,14 @@ struct MockData
   std::string test_group_5_10_different_space = "datasets/test/test_group_5_10_different_space.txt";
 };
 
-BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
   dist_t distance = pairwiseDistance<Euclidean, data_t>;
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_space, 5, 0, " ");
 
-  GroupsEqualLength groups(tsSet, 10);
+  LocalLengthGroupSpace groups(tsSet, 10);
 
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 0 );
 
@@ -33,14 +33,14 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 1 );
 }
 
-BOOST_AUTO_TEST_CASE( groups_equal_length_different, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( local_length_group_space_different, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
   dist_t distance = pairwiseDistance<Euclidean, data_t>;
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
 
-  GroupsEqualLength groups(tsSet, 10);
+  LocalLengthGroupSpace groups(tsSet, 10);
 
   BOOST_CHECK_EQUAL( groups.getNumberOfGroups(), 0 );
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE( groups_best_group, *boost::unit_test::tolerance(TOLERANCE)
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
   
-  GroupsEqualLength groups(tsSet, 10);
+  LocalLengthGroupSpace groups(tsSet, 10);
   groups.generateGroups( distance, 0.5 );
 
   setWarpingBandRatio(1.0);

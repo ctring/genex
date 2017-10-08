@@ -24,16 +24,16 @@ using std::string;
 
 namespace genex {
 
-void GroupsEqualLengthSet::reset(void)
+void GlobalGroupSpace::reset(void)
 {
-  for (unsigned int i = 0; i < this->groupsEqualLength.size(); i++) {
-    delete this->groupsEqualLength[i];
-    this->groupsEqualLength[i] = nullptr;
+  for (unsigned int i = 0; i < this->localLengthGroupSpace.size(); i++) {
+    delete this->localLengthGroupSpace[i];
+    this->localLengthGroupSpace[i] = nullptr;
   }
-  this->groupsEqualLength.clear();
+  this->localLengthGroupSpace.clear();
 }
 
-void GroupsEqualLengthSet::loadDistance(const string& distance_name)
+void GlobalGroupSpace::loadDistance(const string& distance_name)
 {
   this->distanceName = distance_name;
   this->pairwiseDistance = getDistance(distance_name);
@@ -45,24 +45,24 @@ void GroupsEqualLengthSet::loadDistance(const string& distance_name)
   }  
 }
 
-int GroupsEqualLengthSet::group(const string& distance_name, data_t threshold)
+int GlobalGroupSpace::group(const string& distance_name, data_t threshold)
 {
   reset();
   this->loadDistance(distance_name);
-  this->groupsEqualLength.resize(dataset.getItemLength() + 1, nullptr);
+  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
 
   int numberOfGroups = 0;
 
-  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
+  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
-    this->groupsEqualLength[i] = new GroupsEqualLength(dataset, i);
-    int noOfGenerated = this->groupsEqualLength[i]->generateGroups(this->pairwiseDistance, threshold);
+    this->localLengthGroupSpace[i] = new LocalLengthGroupSpace(dataset, i);
+    int noOfGenerated = this->localLengthGroupSpace[i]->generateGroups(this->pairwiseDistance, threshold);
     numberOfGroups += noOfGenerated;
   }
   return numberOfGroups;
 }
 
-candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& query)
+candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
 {
   if (query.getLength() <= 1) {
     throw GenexException("Length of query must be larger than 1");
@@ -70,11 +70,11 @@ candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& que
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;
 
-  vector<int> order (generateTraverseOrder(query.getLength(), this->groupsEqualLength.size() - 1));
+  vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
   for (unsigned int io = 0; io < order.size(); io++) {
     int i = order[io];
     // this looks through each group of a certain length finding the best of those groups
-    candidate_group_t candidate = this->groupsEqualLength[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
+    candidate_group_t candidate = this->localLengthGroupSpace[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
     if (candidate.second < bestSoFarDist)
     {
       bestSoFarGroup = candidate.first;
@@ -84,21 +84,21 @@ candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& que
   return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
 }
 
-bool GroupsEqualLengthSet::grouped(void) const
+bool GlobalGroupSpace::grouped(void) const
 {
-  return groupsEqualLength.size() > 0;
+  return localLengthGroupSpace.size() > 0;
 }
 
-vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
+vector<TimeSeries> GlobalGroupSpace::kNN(const TimeSeries& data, int k)
 {
   vector<TimeSeries> best;
   vector<group_index_t> bestSoFar;
   int kPrime = k;
   
   // process each group of a certain length keeping top sum-k groups
-  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++)
+  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
-    kPrime = this->groupsEqualLength[i]->
+    kPrime = this->localLengthGroupSpace[i]->
         interLevelKNN(data, this->warpedDistance, &bestSoFar, kPrime);
   }
   
@@ -108,7 +108,7 @@ vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
     group_index_t g = bestSoFar.front();
     bestSoFar.erase(bestSoFar.begin());
     vector<candidate_time_series_t> intraResults = 
-        this->groupsEqualLength[g.length]->
+        this->localLengthGroupSpace[g.length]->
             getGroup(g.index)->intraGroupKNN(data, kPrime+g.members, this->warpedDistance);
     // add all of the worst's best to answer
     for (int i = 0; i < intraResults.size(); ++i) 
@@ -122,7 +122,7 @@ vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
   {
     group_index_t g = bestSoFar[i];  
     vector<TimeSeries> members = 
-        this->groupsEqualLength[g.length]->getGroup(g.index)->getMembers();
+        this->localLengthGroupSpace[g.length]->getGroup(g.index)->getMembers();
     best.insert(std::end(best), std::begin(members), std::end(members));  
   }
 
@@ -130,17 +130,17 @@ vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
   return best;
 }
 
-void GroupsEqualLengthSet::saveGroups(ofstream &fout, bool groupSizeOnly) const
+void GlobalGroupSpace::saveGroups(ofstream &fout, bool groupSizeOnly) const
 {
   // Range of lengths and distance name
-  fout << 2 << " " << this->groupsEqualLength.size() << endl;
+  fout << 2 << " " << this->localLengthGroupSpace.size() << endl;
   fout << this->distanceName << endl;
-  for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++) {
-    this->groupsEqualLength[i]->saveGroups(fout, groupSizeOnly);
+  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++) {
+    this->localLengthGroupSpace[i]->saveGroups(fout, groupSizeOnly);
   }
 }
 
-int GroupsEqualLengthSet::loadGroups(ifstream &fin)
+int GlobalGroupSpace::loadGroups(ifstream &fin)
 {
   reset();
 
@@ -150,11 +150,11 @@ int GroupsEqualLengthSet::loadGroups(ifstream &fin)
   fin >> lenFrom >> lenTo >> distance;
   boost::trim_right(distance);
   this->loadDistance(distance);
-  this->groupsEqualLength.resize(dataset.getItemLength() + 1, nullptr);  
+  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);  
   for (unsigned int i = lenFrom; i < lenTo; i++) {
-    GroupsEqualLength* gel = new GroupsEqualLength(dataset, i);
+    LocalLengthGroupSpace* gel = new LocalLengthGroupSpace(dataset, i);
     numberOfGroups += gel->loadGroups(fin);
-    this->groupsEqualLength[i] = gel;
+    this->localLengthGroupSpace[i] = gel;
   }
   return numberOfGroups;
 }

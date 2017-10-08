@@ -1,5 +1,5 @@
-#ifndef GROUPS_EQUAL_LENGTH_H
-#define GROUPS_EQUAL_LENGTH_H
+#ifndef LOCAL_LENGTH_GROUP_SPACE_H
+#define LOCAL_LENGTH_GROUP_SPACE_H
 
 #include <vector>
 #include <functional>
@@ -15,11 +15,11 @@ namespace genex {
 
 typedef std::pair<const Group*, data_t> candidate_group_t;
 
-class GroupsEqualLength
+class LocalLengthGroupSpace
 {
 public:
   /**
-   *  @brief constructor for GroupsEqualLength
+   *  @brief constructor for LocalLengthGroupSpace
    *
    *  this class contains all the groups of a given length
    *  for a TimeSeriesSet
@@ -27,12 +27,12 @@ public:
    *  @param dataset the dataset that the class creates groups for
    *  @param length the length of each time series in each group
    */
-  GroupsEqualLength(const TimeSeriesSet& dataset, int length);
+  LocalLengthGroupSpace(const TimeSeriesSet& dataset, int length);
 
   /**
-   * @brief deconstructor for GroupsEqualLength
+   * @brief deconstructor for LocalLengthGroupSpace
    */
-  ~GroupsEqualLength();
+  ~LocalLengthGroupSpace();
 
   void reset();  
 
@@ -84,4 +84,4 @@ private:
 
 } // namespace genex
 
-#endif //GROUPS_EQUAL_LENGTH_H
+#endif //LOCAL_LENGTH_GROUP_SPACE_H

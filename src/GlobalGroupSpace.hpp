@@ -1,5 +1,5 @@
-#ifndef GROUPS_EQUAL_LENGTH_SET_H
-#define GROUPS_EQUAL_LENGTH_SET_H
+#ifndef GLOBAL_GROUP_SPACE_H
+#define GLOBAL_GROUP_SPACE_H
 
 #include "LocalLengthGroupSpace.hpp"
 #include "TimeSeries.hpp"
@@ -15,22 +15,22 @@ namespace genex {
 /**
  *  The set of all groups of equal lengths for a dataset
  */
-class GroupsEqualLengthSet
+class GlobalGroupSpace
 {
 public:
 
   /**
-   *  @brief The constructor for the GroupsEqualLengthSet
+   *  @brief The constructor for the GlobalGroupSpace
    *
    *  @param dataset the dataset to group
    *  @param threshold the threshold for similarity within a group
    */
-  GroupsEqualLengthSet(const TimeSeriesSet& dataset) : dataset(dataset) {};
+  GlobalGroupSpace(const TimeSeriesSet& dataset) : dataset(dataset) {};
 
   /**
-   *  @brief The deconstructor for the GroupsEqualLengthSet
+   *  @brief The deconstructor for the GlobalGroupSpace
    */
-  ~GroupsEqualLengthSet(void)
+  ~GlobalGroupSpace(void)
   {
     reset();
   }
@@ -70,7 +70,7 @@ public:
 
 private:
 
-  std::vector<GroupsEqualLength*> groupsEqualLength;
+  std::vector<LocalLengthGroupSpace*> localLengthGroupSpace;
   const TimeSeriesSet& dataset;
   dist_t pairwiseDistance;
   dist_t warpedDistance;
@@ -82,4 +82,4 @@ private:
 vector<int> generateTraverseOrder(int queryLength, int totalLength);
 
 } // namespace genex
-#endif //GROUPS_EQUAL_LENGTH_SET_H
+#endif //GLOBAL_GROUP_SPACE_H

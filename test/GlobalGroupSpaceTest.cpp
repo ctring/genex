@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE "Test GroupsEqualLength class"
+#define BOOST_TEST_MODULE "Test LocalLengthGroupSpace class"
 
 #include <boost/test/unit_test.hpp>
 #include "GlobalGroupSpace.hpp"
@@ -18,7 +18,7 @@ struct MockData
   std::string test_group_5_10_different_space = "datasets/test/test_group_5_10_different_space.txt";
 };
 
-BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(TOLERANCE) )
 {
   MockData data;
 
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE( groups_equal_length, *boost::unit_test::tolerance(TOLERANC
   BOOST_CHECK_EQUAL(tsSet.getItemCount(), 5);
   BOOST_CHECK_EQUAL(tsSet.getItemLength(), 10);
 
-  GroupsEqualLengthSet gSet(tsSet);
+  GlobalGroupSpace gSet(tsSet);
   gSet.group("euclidean", 0.5);
   candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0, 0, 10));
   BOOST_TEST((best.dist) == 0);
