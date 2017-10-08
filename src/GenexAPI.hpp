@@ -75,6 +75,8 @@ public:
   dataset_info_t loadDataset(const string& filePath, int maxNumRow,
                              int startCol, const string& separators);
 
+  void saveDataset(int index, const string& filePath, char separator);                           
+
   /**
    *  @brief unloads a dataset at given index
    *

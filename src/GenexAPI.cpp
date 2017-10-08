@@ -48,6 +48,12 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
   return this->getDatasetInfo(nextIndex);
 }
 
+void GenexAPI::saveDataset(int index, const string& filePath, char separator)
+{
+  this->_checkDatasetIndex(index);
+  this->loadedDatasets[index]->saveData(filePath, separator);
+}
+
 void GenexAPI::unloadDataset(int index)
 {
   this->_checkDatasetIndex(index);

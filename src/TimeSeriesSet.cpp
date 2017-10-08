@@ -33,7 +33,7 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
 {
   this->clearData();
 
-  std::ifstream f(filePath.c_str());
+  std::ifstream f(filePath);
   if (!f.is_open())
   {
     f.close();
@@ -118,6 +118,23 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
   this->itemLength = length - startCol;
   this->filePath = filePath;
 
+  f.close();
+}
+
+void TimeSeriesSet::saveData(const string& filePath, char separator) const
+{
+  std::ofstream f(filePath);
+  if (!f.is_open())
+  {
+    f.close();
+    throw GenexException(string("Cannot open ") + filePath);
+  }
+  for (int i = 0; i < itemCount; i++) {
+    for (int j = 0; j < itemLength; j++) {
+      f << data[i * itemLength + j] << separator;
+    }
+    f << std::endl;
+  }
   f.close();
 }
 

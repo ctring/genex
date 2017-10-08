@@ -56,6 +56,8 @@ public:
    */
   void loadData(const string& filePath, int maxNumRow, int startCol, const string& separator);
 
+  void saveData(const string& filePath, char separator) const;
+
   /**
    * @brief clears all data
    */

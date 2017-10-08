@@ -105,8 +105,35 @@ MAKE_COMMAND(LoadDataset,
   "              number is non-positive or the number of actual line is    \n"
   "              smaller than this number, all lines are read. (default: 0)\n"
   "  startCol  - Omit all columns before this column. (default: 0)         \n"
-  "  seprators - A list of characters used to separate values in the file  \n"
+  "  separators - A list of characters used to separate values in the file \n"
   "              (default: <space>)                                          "
+  )
+
+MAKE_COMMAND(SaveDataset,
+  {
+    if (tooFewArgs(args, 3) || tooManyArgs(args, 4))
+    {
+      return false;
+    }
+
+    int index = stoi(args[1]);
+    string filePath = args[2];
+    char separator = args.size() == 4 && args[3][0] != '\n' ? args[3][0] : ' ';
+  
+    gGenexAPI.saveDataset(index, filePath, separator);
+
+    cout << "Saved dataset " << index << " to " << filePath << endl;
+
+    return true;
+  },
+
+  "Save a dataset from memory to disk",
+
+  "Usage: save <dataset_index> <filePath> [<separator>]            \n"
+  "  dataset_index - Index of the dataset to be saved              \n"
+  "  filePath  - Path to the saved file                            \n"
+  "  separator - Separator between values in a series              \n"
+  "              (default: <space>)                                  "
   )
 
 MAKE_COMMAND(UnloadDataset,
@@ -208,7 +235,8 @@ MAKE_COMMAND(Timer,
   "the end of its execution. If this command is called without     \n"
   "an additional argument, the current state of timer is printed.  \n"
   "                                                                \n"
-  "Usage: timer [on|off]                                             ")
+  "Usage: timer [on|off]                                             "
+  )
 
 MAKE_COMMAND(GroupDataset,
   {
@@ -219,14 +247,8 @@ MAKE_COMMAND(GroupDataset,
 
     int index = stoi(args[1]);
     genex::data_t threshold = stod(args[2]);
+    string distance_name = args.size() == 4 ? args[3] : "euclidean";
 
-    string distance_name = "euclidean";
-
-    // if distance option is present
-    if (args.size() == 4)
-    {
-      distance_name = args[3];
-    }
     int count = -1;
     TIME_COMMAND(
       count = gGenexAPI.groupDataset(index, threshold, distance_name);
@@ -258,10 +280,7 @@ MAKE_COMMAND(SaveGroup,
     }
 
     int index = stoi(args[1]);
-    bool groupSizeOnly = false;
-    if (args.size() == 4) {
-      groupSizeOnly = stoi(args[3]);
-    }
+    bool groupSizeOnly = args.size() == 4 ? stoi(args[3]) : false;
 
     gGenexAPI.saveGroup(index, args[2], groupSizeOnly);
     cout << "Saved groups of dataset " << index << " to " << args[2] << endl;
@@ -444,6 +463,7 @@ MAKE_COMMAND(KNN,
 
 map<string, Command*> commands = {
   {"load", &cmdLoadDataset},
+  {"save", &cmdSaveDataset},
   {"unload", &cmdUnloadDataset},
   {"list", &cmdList},
   {"timer", &cmdTimer},
