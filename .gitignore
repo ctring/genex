@@ -45,3 +45,6 @@ CTestTestfile.cmake
 .DS_STORE
 .swp*
 .vscode
+
+# Microsoft Office backups
+~$*
