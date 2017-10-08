@@ -4,7 +4,9 @@
 #include "lib/trillionDTW.h"
 
 #include <algorithm>
-#include <iostream> // debug
+#include <iostream>
+#include <iomanip>
+#include <limits>
 
 namespace genex {
 
@@ -76,13 +78,13 @@ void TimeSeries::generateKeoghLU(int warpingBand) const
   keoghCacheValid = true;
 }
 
-void TimeSeries::printData() const
+void TimeSeries::printData(std::ostream &out) const
 {
-  std::cout << this->index << " [" << this->start << ", " << this->end << "] ";
   for (int i = 0; i < length; i++) {
-    std::cout << data[i] << " ";
+    //out << std::setprecision(std::numeric_limits<data_t>::digits10 + 1)
+    out << std::setprecision(17)
+        << data[i] << " ";
   }
-  std::cout << std::endl;
 }
 
 } // namespace genex

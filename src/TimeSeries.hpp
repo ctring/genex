@@ -78,6 +78,27 @@ public:
   }
 
   /**
+   * @brief Copy assignment operator and copy constructor
+   */
+  TimeSeries& operator=(const TimeSeries& other) = default;
+  TimeSeries(const TimeSeries& other) = default;
+
+  /**
+   *  @brief Move constructor
+   */
+  TimeSeries& operator=(TimeSeries&& other)
+  {
+    data = other.data;
+    index = other.index;
+    start = other.start;
+    end = other.end;
+    length = other.length;
+    isOwnerOfData = other.isOwnerOfData;
+    other.data = nullptr;
+    return *this;
+  }
+
+  /**
    *  @brief destructor
    */
   ~TimeSeries();
@@ -130,7 +151,7 @@ public:
   const data_t* getKeoghLower(int warpingBand) const;
   const data_t* getKeoghUpper(int warpingBand) const;
 
-  void printData() const;
+  void printData(std::ostream &out = std::cout) const;
 
 private:
 
