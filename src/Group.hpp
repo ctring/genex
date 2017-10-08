@@ -113,6 +113,16 @@ public:
   void setCentroid(int index, int start);
 
   /**
+   *  @brief gets the centroid of the group
+   *
+   *  @return values of the centroid
+   */
+  const TimeSeries& getCentroid() const
+  {
+    return this->centroid;
+  }
+
+  /**
    *  @brief gets the length of each sequence in the group
    *
    *  @return length of this group
@@ -142,16 +152,6 @@ public:
   candidate_time_series_t getBestMatch(const TimeSeries& query, const dist_t distance) const;
 
   /**
-   *  @brief gets the centroid of the group
-   *
-   *  @return values of the centroid
-   */
-  const TimeSeries& getCentroid() const
-  {
-    return this->centroid;
-  }
-
-  /**
    *  @brief gets all the members in a group
    *
    *  @return the TimeSeries for each value in the group.
@@ -170,6 +170,7 @@ public:
       const TimeSeries& query, int k, const dist_t warpedDistance) const;
   
   void saveGroup(std::ofstream &fout) const;
+  void loadGroup(std::ifstream &fin);
 
 private:
   const TimeSeriesSet& dataset;

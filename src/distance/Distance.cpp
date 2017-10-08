@@ -19,6 +19,8 @@ using std::string;
 using std::vector;
 using std::min;
 using std::max;
+using std::cout;
+using std::endl;
 
 namespace genex {
 
@@ -189,14 +191,11 @@ data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   // if (lb >= dropout) {
   //   return INF;
   // }
-
   data_t idropout = dropout * 2 * max(a.getLength(), b.getLength());
-  
   data_t lb = crossKeoghLowerBound(a, b, idropout);
   if (lb >= idropout) {
     return INF;
   }
-
   return warpedDistance<Euclidean, data_t>(a, b, dropout);
 }
 

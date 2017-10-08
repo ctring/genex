@@ -7,6 +7,8 @@
 
 #include "distance/Distance.hpp"
 
+#define GROUP_FILE_VERSION 1
+
 namespace genex {
 
 /**
@@ -35,7 +37,7 @@ public:
   /**
     *  @brief deletes and clears the groups
     */
-  void resetGrouping();
+  void reset();
 
   /**
     *  @brief check if the dataset is grouped
@@ -43,7 +45,8 @@ public:
   bool isGrouped() const;
 
   void saveGroups(const std::string& path, bool groupSizeOnly) const;
-
+  int loadGroups(const std::string& path);
+  
   /**
    * @brief Finds the best matching subsequence in the dataset
    *
@@ -59,6 +62,7 @@ public:
   
 private:
   GroupsEqualLengthSet* groupsAllLengthSet = nullptr;
+  data_t threshold;
 };
 
 } // namespace genex

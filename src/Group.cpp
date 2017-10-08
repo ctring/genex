@@ -10,6 +10,7 @@
 
 using std::vector;
 using std::ofstream;
+using std::ifstream;
 using std::endl;
 
 namespace genex {
@@ -20,8 +21,6 @@ void Group::addMember(int tsIndex, int tsStart)
   this->memberMap[tsIndex * this->subTimeSeriesCount + tsStart] =
     group_membership_t(this->groupIndex, this->lastMemberCoord);
   this->lastMemberCoord = std::make_pair(tsIndex, tsStart);
-
-  TimeSeries newMember = this->dataset.getTimeSeries(tsIndex, tsStart, tsStart + this->memberLength);
 }
 
 void Group::setCentroid(int tsIndex, int tsStart)
@@ -128,6 +127,10 @@ const vector<TimeSeries> Group::getMembers() const
 
 void Group::saveGroup(ofstream &fout) const
 {
+  // Group count
+  // Group centroid
+  // Members in the group, represented by <index, start> pairs
+  this->centroid.printData(fout); fout << endl;
   fout << this->count << " ";
   member_coord_t currentMemberCoord = this->lastMemberCoord;
   while (currentMemberCoord.first != -1)
@@ -138,6 +141,23 @@ void Group::saveGroup(ofstream &fout) const
     currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
   }
   fout << endl;
+}
+
+void Group::loadGroup(ifstream &fin)
+{
+  int cnt;
+  this->centroid = TimeSeries(this->memberLength);
+
+  for (int i = 0; i < this->memberLength; i++) {
+    fin >> this->centroid[i];
+  }
+
+  fin >> cnt; 
+  int index, start;
+  for (int i = 0; i < cnt; i++) {
+    fin >> index >> start;
+    this->addMember(index, start);
+  }
 }
 
 } // namespace genex

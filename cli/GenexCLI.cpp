@@ -278,6 +278,31 @@ MAKE_COMMAND(SaveGroup,
   "                    Default is 0.                                    \n"
   )
 
+MAKE_COMMAND(LoadGroup,
+  {
+    if (tooFewArgs(args, 3) || tooManyArgs(args, 3))
+    {
+      return false;
+    }
+
+    int index = stoi(args[1]);
+
+    int numGroups = gGenexAPI.loadGroup(index, args[2]);
+    cout << numGroups << " groups loaded for dataset " << index;
+
+    return true;
+  },
+
+  "Load saved groups to a compatible dataset",
+
+  "A dataset is compatible with a saved group file is when the item     \n"
+  "count and item length is the same.                                   \n"
+  "                                                                     \n"
+  "Usage: loadGroup <dataset_index> <path>                              \n"
+  "  dataset_index   - Index of the dataset whose groups will be saved. \n"
+  "  path            - Where to save the groups.                        \n"
+  )
+
 MAKE_COMMAND(NormalizeDataset,
   {
     if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
@@ -424,6 +449,7 @@ map<string, Command*> commands = {
   {"timer", &cmdTimer},
   {"group", &cmdGroupDataset},
   {"saveGroup", &cmdSaveGroup},
+  {"loadGroup", &cmdLoadGroup},  
   {"normalize", &cmdNormalizeDataset},
   {"match", &cmdMatch},
   {"knn", &cmdKNN}

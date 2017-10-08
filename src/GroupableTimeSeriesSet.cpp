@@ -6,13 +6,15 @@
 #include <fstream>
 
 using std::ofstream;
+using std::ifstream;
+using std::cout;
 using std::endl;
 
 namespace genex {
 
 GroupableTimeSeriesSet::~GroupableTimeSeriesSet()
 {
-  this->resetGrouping();
+  this->reset();
 }
 
 int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, data_t threshold)
@@ -23,11 +25,11 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distance_name, da
   }
 
   // clear old groups
-  resetGrouping();
+  reset();
 
   this->groupsAllLengthSet = new GroupsEqualLengthSet(*this);
   int cntGroups = this->groupsAllLengthSet->group(distance_name, threshold);
-
+  this->threshold = threshold;
   return cntGroups;
 }
 
@@ -36,7 +38,7 @@ bool GroupableTimeSeriesSet::isGrouped() const
   return this->groupsAllLengthSet != nullptr;
 }
 
-void GroupableTimeSeriesSet::resetGrouping()
+void GroupableTimeSeriesSet::reset()
 {
   delete this->groupsAllLengthSet;
   this->groupsAllLengthSet = nullptr;
@@ -51,10 +53,12 @@ void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) 
   ofstream fout(path);
   if (fout)
   {
-    // Version of the file format and the required dataset dimensions
-    fout << 1 << " " << this->getItemCount() << " " << this->getItemLength() << endl;
+    // Version of the file format, the threshold and the required dataset dimensions
+    fout << GROUP_FILE_VERSION << " " 
+         << this->threshold << " "
+         << this->getItemCount() << " "
+         << this->getItemLength() << endl;
     this->groupsAllLengthSet->saveGroups(fout, groupSizeOnly);
-    fout.close();
   }
   else
   {
@@ -62,6 +66,39 @@ void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) 
   }
 }
 
+int GroupableTimeSeriesSet::loadGroups(const string& path)
+{
+  int numberOfGroups = 0;
+  ifstream fin(path);
+  if (fin)
+  {
+    int version, grpItemCount, grpItemLength;
+    data_t threshold;
+    fin >> version >> threshold >> grpItemCount >> grpItemLength;
+    if (version != GROUP_FILE_VERSION)
+    {
+      throw GenexException("Incompatible file version");
+    }
+    if (grpItemCount != this->getItemCount())
+    {
+      throw GenexException("Incompatible item count");
+    }
+    if (grpItemLength != this->getItemLength())
+    {
+      throw GenexException("Incompatible item length");
+    }
+    cout << "Saved groups are compatible with the dataset" << endl;
+    reset();
+    this->threshold = threshold;
+    this->groupsAllLengthSet = new GroupsEqualLengthSet(*this);
+    numberOfGroups = this->groupsAllLengthSet->loadGroups(fin);
+  }
+  else
+  {
+    throw GenexException("Cannot open file");
+  }
+  return numberOfGroups;
+}
 
 candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& query) const
 {

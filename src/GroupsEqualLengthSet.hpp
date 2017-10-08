@@ -36,6 +36,11 @@ public:
   }
 
   /**
+   *  @brief clears the groups
+   */
+  void reset(void);
+
+  /**
    *  @brief groups the dataset into groups of equal length
    *    using the metric to determine similarity
    *
@@ -56,27 +61,22 @@ public:
   std::vector<TimeSeries> kNN(const TimeSeries& data, int k);
 
   void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
-
-  /**
-   *  @brief clears the groups
-   */
-  void reset(void);
+  int loadGroups(std::ifstream &fin);
 
   /**
    *  @brief returns true if dataset is grouped
    */
   bool grouped(void) const;
 
-  data_t getThreshold(void) const { return this->threshold; }
-
-  // TimeSeriesGrouping *getGroup(int length);
-  // TimeSeriesGrouping *getFullGroup();
 private:
-  data_t threshold;
+
   std::vector<GroupsEqualLength*> groupsEqualLength;
   const TimeSeriesSet& dataset;
   dist_t pairwiseDistance;
   dist_t warpedDistance;
+  std::string distanceName;
+
+  void loadDistance(const std::string& distanceName);
 };
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength);

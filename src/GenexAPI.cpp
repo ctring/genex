@@ -131,6 +131,11 @@ void GenexAPI::saveGroup(int index, const string &path, bool groupSizeOnly)
   this->loadedDatasets[index]->saveGroups(path, groupSizeOnly);
 }
 
+int GenexAPI::loadGroup(int index, const string& path)
+{
+  this->_checkDatasetIndex(index);
+  return this->loadedDatasets[index]->loadGroups(path);
+}
 
 void GenexAPI::setWarpingBandRatio(double ratio)
 {

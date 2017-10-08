@@ -135,6 +135,7 @@ public:
   int groupDataset(int idx, data_t threshold, const string& distance_name);
 
   void saveGroup(int idx, const string& path, bool groupSizeOnly);
+  int loadGroup(int idx, const string& path);
 
   void setWarpingBandRatio(double ratio);
 

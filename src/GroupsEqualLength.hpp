@@ -34,12 +34,22 @@ public:
    */
   ~GroupsEqualLength();
 
+  void reset();  
+
   /**
    *  @brief returns the number of groups inside this object
    *  @return the number of groups
    */
   int getNumberOfGroups(void) const;
 
+   /**
+   *  @return a group with given index
+   */
+  const Group* getGroup(int idx) const;
+  
+  void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
+  int loadGroups(std::ifstream &fin);
+  
   /**
    *  @brief generates all the groups for the timeseries of this length
    *
@@ -64,14 +74,7 @@ public:
     const dist_t warpedDistance, 
     vector<group_index_t>* bestSoFar, 
     int k);
-  
-  /**
-   *  @return a group with given index
-   */
-  const Group* getGroup(int idx) const;
-
-  void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
-
+    
 private:
   int length, subTimeSeriesCount;
   const TimeSeriesSet& dataset;

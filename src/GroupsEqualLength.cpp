@@ -12,6 +12,7 @@
 
 using std::cout;
 using std::ofstream;
+using std::ifstream;
 using std::endl;
 
 namespace genex {
@@ -25,46 +26,17 @@ GroupsEqualLength::GroupsEqualLength(const TimeSeriesSet& dataset, int length)
 
 GroupsEqualLength::~GroupsEqualLength()
 {
+  reset();
+}
+
+void GroupsEqualLength::reset()
+{
   for (unsigned int i = 0; i < groups.size(); i++)
   {
     delete groups[i];
-    groups[i] = NULL;
+    groups[i] = nullptr;
   }
   groups.clear();
-}
-
-const Group* GroupsEqualLength::getGroup(int idx) const
-{
-  if (idx < 0 || idx >= this->getNumberOfGroups()) {
-    throw GenexException("Group index is out of range");
-  }
-  return this->groups[idx];
-}
-
-void GroupsEqualLength::saveGroups(std::ofstream &fout, bool groupSizeOnly) const 
-{
-  cout << "Saving groups of time series of length: " << this->length << endl;
-  // Number of groups having time series of this length
-  fout << groups.size() << endl;
-  if (groupSizeOnly) {
-    for (unsigned int i = 0; i < groups.size(); i++) 
-    {
-      fout << groups[i]->getCount() << " ";
-    }
-    fout << endl;
-  }
-  else 
-  {
-    for (unsigned int i = 0; i < groups.size(); i++) 
-    {
-      groups[i]->saveGroup(fout);
-    }
-  }
-}
-
-int GroupsEqualLength::getNumberOfGroups(void) const
-{
-  return this->groups.size();
 }
 
 int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t threshold)
@@ -104,14 +76,60 @@ int GroupsEqualLength::generateGroups(const dist_t pairwiseDistance, data_t thre
   return this->getNumberOfGroups();
 }
 
+int GroupsEqualLength::getNumberOfGroups(void) const
+{
+  return this->groups.size();
+}
+
+const Group* GroupsEqualLength::getGroup(int idx) const
+{
+  if (idx < 0 || idx >= this->getNumberOfGroups()) {
+    throw GenexException("Group index is out of range");
+  }
+  return this->groups[idx];
+}
+
+void GroupsEqualLength::saveGroups(ofstream &fout, bool groupSizeOnly) const 
+{
+  // Number of groups having time series of this length
+  fout << groups.size() << endl;
+  if (groupSizeOnly) {
+    for (unsigned int i = 0; i < groups.size(); i++) 
+    {
+      fout << groups[i]->getCount() << " ";
+    }
+    fout << endl;
+  }
+  else 
+  {
+    for (unsigned int i = 0; i < groups.size(); i++) 
+    {
+      groups[i]->saveGroup(fout);
+    }
+  }
+}
+
+int GroupsEqualLength::loadGroups(ifstream &fin)
+{
+  reset();
+  int numberOfGroups;
+  fin >> numberOfGroups;
+  for (unsigned int i = 0; i < numberOfGroups; i++)
+  {
+    Group* grp = new Group(i, this->length, this->subTimeSeriesCount, this->dataset, this->memberMap);
+    grp->loadGroup(fin);
+    this->groups.push_back(grp);
+  }
+  return numberOfGroups;
+}
+
 candidate_group_t GroupsEqualLength::getBestGroup(const TimeSeries& query,
-                                                  const dist_t warpedDistance,
-                                                  data_t dropout) const
+  const dist_t warpedDistance,
+  data_t dropout) const
 {
   data_t bestSoFarDist = dropout;
   const Group* bestSoFarGroup = nullptr;
   for (unsigned int i = 0; i < groups.size(); i++) {
-
     data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
     if (dist < bestSoFarDist) {
       bestSoFarDist = dist;
@@ -160,6 +178,5 @@ int GroupsEqualLength::interLevelKNN(const TimeSeries& query,
   }
   return k;
 }
-
 
 } // namespace genex

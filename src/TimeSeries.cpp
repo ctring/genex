@@ -81,9 +81,8 @@ void TimeSeries::generateKeoghLU(int warpingBand) const
 void TimeSeries::printData(std::ostream &out) const
 {
   for (int i = 0; i < length; i++) {
-    //out << std::setprecision(std::numeric_limits<data_t>::digits10 + 1)
-    out << std::setprecision(17)
-        << data[i] << " ";
+    out << std::setprecision(std::numeric_limits<data_t>::digits10 + 1)
+        << data[start + i] << " ";
   }
 }
 

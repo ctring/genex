@@ -7,6 +7,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
@@ -18,23 +19,37 @@ using std::min;
 using std::cout;
 using std::endl;
 using std::ofstream;
+using std::ifstream;
 using std::string;
 
 namespace genex {
 
-int GroupsEqualLengthSet::group(const std::string& distance_name, data_t threshold)
+void GroupsEqualLengthSet::reset(void)
 {
-  reset();
+  for (unsigned int i = 0; i < this->groupsEqualLength.size(); i++) {
+    delete this->groupsEqualLength[i];
+    this->groupsEqualLength[i] = nullptr;
+  }
+  this->groupsEqualLength.clear();
+}
 
+void GroupsEqualLengthSet::loadDistance(const string& distance_name)
+{
+  this->distanceName = distance_name;
   this->pairwiseDistance = getDistance(distance_name);
   if (distance_name == "euclidean") {
     this->warpedDistance = cascadeDistance;
   }
   else {
     this->warpedDistance = getDistance(distance_name + DTW_SUFFIX);
-  }
-  this->threshold        = threshold;
-  this->groupsEqualLength.resize(dataset.getItemLength() + 1, NULL);
+  }  
+}
+
+int GroupsEqualLengthSet::group(const string& distance_name, data_t threshold)
+{
+  reset();
+  this->loadDistance(distance_name);
+  this->groupsEqualLength.resize(dataset.getItemLength() + 1, nullptr);
 
   int numberOfGroups = 0;
 
@@ -67,15 +82,6 @@ candidate_time_series_t GroupsEqualLengthSet::getBestMatch(const TimeSeries& que
     }
   }
   return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
-}
-
-void GroupsEqualLengthSet::reset(void)
-{
-  for (unsigned int i = 0; i < this->groupsEqualLength.size(); i++) {
-    delete this->groupsEqualLength[i];
-  }
-
-  this->groupsEqualLength.clear();
 }
 
 bool GroupsEqualLengthSet::grouped(void) const
@@ -126,13 +132,32 @@ vector<TimeSeries> GroupsEqualLengthSet::kNN(const TimeSeries& data, int k)
 
 void GroupsEqualLengthSet::saveGroups(ofstream &fout, bool groupSizeOnly) const
 {
-  // Range of lengths
+  // Range of lengths and distance name
   fout << 2 << " " << this->groupsEqualLength.size() << endl;
+  fout << this->distanceName << endl;
   for (unsigned int i = 2; i < this->groupsEqualLength.size(); i++) {
     this->groupsEqualLength[i]->saveGroups(fout, groupSizeOnly);
   }
 }
 
+int GroupsEqualLengthSet::loadGroups(ifstream &fin)
+{
+  reset();
+
+  int lenFrom, lenTo;
+  int numberOfGroups = 0;
+  string distance;
+  fin >> lenFrom >> lenTo >> distance;
+  boost::trim_right(distance);
+  this->loadDistance(distance);
+  this->groupsEqualLength.resize(dataset.getItemLength() + 1, nullptr);  
+  for (unsigned int i = lenFrom; i < lenTo; i++) {
+    GroupsEqualLength* gel = new GroupsEqualLength(dataset, i);
+    numberOfGroups += gel->loadGroups(fin);
+    this->groupsEqualLength[i] = gel;
+  }
+  return numberOfGroups;
+}
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength)
 {
