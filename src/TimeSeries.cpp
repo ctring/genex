@@ -72,7 +72,7 @@ void TimeSeries::generateKeoghLU(int warpingBand) const
   warpingBand = min(warpingBand, this->length - 1);
 
   // Function provided by trillionDTW codebase. See README
-  lower_upper_lemire(this->data, this->length, warpingBand,
+  lower_upper_lemire(this->data + this->start, this->length, warpingBand,
                      this->keoghLower, this->keoghUpper);
 
   keoghCacheValid = true;

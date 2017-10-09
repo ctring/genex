@@ -200,7 +200,7 @@ pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
   for(int i = 0; i < x_1.getLength(); i++)
   {
     total = metric->reduce(total, total, x_1[i], x_2[i]);
-    if (metric->norm(total, x_1, x_2) >= dropout)
+    if (metric->norm(total, x_1, x_2) > dropout)
     {
       dropped = true;
       break;
@@ -240,7 +240,7 @@ pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
   for(int i = 0; i < x_1.getLength(); i++)
   {
     total = metric->reduce(total, total, x_1[i], x_2[i]);
-    if (total >= dropout)
+    if (total > dropout)
     {
       dropped = true;
       break;
