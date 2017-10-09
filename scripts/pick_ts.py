@@ -28,9 +28,11 @@ if __name__ == '__main__':
                         help='number of sequences to be picked (default: 10).')
     parser.add_argument('--min-length', type=int, default=2,
                         help='minimum length of each sequence (default: 2).')
+    parser.add_argument('--fmt', default='{0} [{1}, {2}]',
+                        help='python format for output (default: {0} [{1}, {2}])')
 
     args = parser.parse_args()
 
     seq = pick_random(args.count, args.length, args.min_length, args.n)
     for s in seq:
-        print('%d [%d, %d]' % (s[0], s[1], s[2]))
+        print(args.fmt.format(s[0], s[1], s[2]))
