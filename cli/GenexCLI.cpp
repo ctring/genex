@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include <boost/tokenizer.hpp>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -422,16 +423,11 @@ MAKE_COMMAND(kSim,
 
     vector<genex::candidate_time_series_t> results;
     TIME_COMMAND(
-      if (end == -1)
-      {
-        results = gGenexAPI.kSim(db_index, q_index, ts_index, k);
-      }
-      else
-      {
-        results = gGenexAPI.kSim(db_index, q_index, ts_index, start, end, k); 
-      }
+      results = end == -1 ? gGenexAPI.kSim(db_index, q_index, ts_index, k):
+                            gGenexAPI.kSim(db_index, q_index, ts_index, start, end, k); 
     )
 
+    std::sort(results.begin(), results.end());
     for (int i = 0; i < results.size(); i++)
     {
       std::cout << "Timeseries " << results[i].data.getIndex()
@@ -482,32 +478,24 @@ MAKE_COMMAND(kSimRaw,
       k = std::stoi(args[4]);        
     }
 
-    try
-    {
-      std::vector<genex::candidate_time_series_t> results;
-      if (end == -1)
-      {
-        results = gGenexAPI.kSimRaw(db_index, q_index, ts_index, k);
-      }
-      else
-      {
-        results = gGenexAPI.kSimRaw(db_index, q_index, ts_index, start, end, k); 
-      }
-      for (int i = 0; i < results.size(); i++)
-      {
-        std::cout << "Timeseries " << results[i].data.getIndex()
-                  << " at " << results[i].data.getStart()
-                  << " with length " << results[i].data.getLength()
-                  << " - dist: " << results[i].dist 
-                  << std::endl; 
+    std::vector<genex::candidate_time_series_t> results;
 
-      }
-    }
-    catch (genex::GenexException& e)
+    TIME_COMMAND(
+      results = end == -1 ? gGenexAPI.kSimRaw(db_index, q_index, ts_index, k) : 
+                            gGenexAPI.kSimRaw(db_index, q_index, ts_index, start, end, k);
+    )
+
+    std::sort(results.begin(), results.end());
+
+    for (int i = 0; i < results.size(); i++)
     {
-      std::cout << "Error! " << e.what() << std::endl;
-      return false;
+      std::cout << "Timeseries " << results[i].data.getIndex()
+                << " at " << results[i].data.getStart()
+                << " with length " << results[i].data.getLength()
+                << " - dist: " << results[i].dist 
+                << std::endl; 
     }
+
     return true;
   },
 
