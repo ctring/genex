@@ -1,49 +1,49 @@
 load ../datasets/UCR/ItalyPowerDemand/ItalyPowerDemand_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/ItalyPowerDemand/ItalyPowerDemand_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/ItalyPowerDemand/ItalyPowerDemand_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/ECG200/ECG200_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/ECG200/ECG200_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/ECG200/ECG200_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/synthetic_control/synthetic_control_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/synthetic_control/synthetic_control_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/synthetic_control/synthetic_control_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/Gun_Point/Gun_Point_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/Gun_Point/Gun_Point_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/Gun_Point/Gun_Point_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/FaceAll/FaceAll_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/FaceAll/FaceAll_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/FaceAll/FaceAll_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/wafer/wafer_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/wafer/wafer_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/wafer/wafer_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/Haptics/Haptics_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/MALLAT/MALLAT_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/MALLAT/MALLAT_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/MALLAT/MALLAT_DATA_GROUPS_0.5
 unload 0
 
 load ../datasets/UCR/StarLightCurves/StarLightCurves_DATA
 group 0 0.5
-saveGroup 0 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA_GROUPS
+saveGroup 0 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA_GROUPS_0.5
 unload 0
