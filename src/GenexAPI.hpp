@@ -152,44 +152,38 @@ public:
    *  @return best match in the dataset
    */
   candidate_time_series_t getBestMatch(
-      int result_idx, int query_idx, int index, int start, int end);
-  candidate_time_series_t getBestMatch(
-    int result_idx, int query_idx, int index);
+      int result_idx, int query_idx, int index, int start = -1, int end = -1);
 
 
   /**
    *  @brief gets k similar TimeSeries to the query. Provides a bound of dist
    *  to the query for each result. The distance is <= the dist provided.
-   *
+   * 
+   *  @param k the number of similar time series to find
    *  @param result_idx the index of the result dataset
    *  @param query_idx the index of the query dataset
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
-   *  @param k the number of similar time series to find
    *  @return k similar time series
    */
   std::vector<candidate_time_series_t> kSim(
-      int result_idx, int query_idx, int index, int start, int end, int k);
-  std::vector<candidate_time_series_t> kSim(
-      int result_idx, int query_idx, int index, int k);
+    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1);
 
  /**
    *  @brief gets k similar TimeSeries to the query, exhaustively.
    *  Provides the exact distance.
-   *
+   * 
+   *  @param k the number of similar time series to find
    *  @param result_idx the index of the result dataset
    *  @param query_idx the index of the query dataset
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
-   *  @param k the number of similar time series to find
    *  @return k similar time series
    */
   std::vector<candidate_time_series_t> kSimRaw(
-    int result_idx, int query_idx, int index, int start, int end, int k);
-  std::vector<candidate_time_series_t> kSimRaw(
-    int result_idx, int query_idx, int index, int k);
+    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1);
 
 private:
   void _checkDatasetIndex(int index);

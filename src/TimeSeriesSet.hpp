@@ -85,24 +85,17 @@ public:
   const string& getFilePath() const { return this->filePath; }
 
   /**
-   * @brief gets a whole time series
-   *
-   * @param index index of the time series in this dataset
-   * @return time series in the time series with given index
-   */
-  TimeSeries getTimeSeries(int index) const;
-
-  /**
    * @brief gets a sub-sequence of a time series
    *
    * @param index index of the time series in this dataset
    * @param start starting position of the time series
-   * @param end   ending position of the time series
+   * @param end   ending position of the time series. Set this and 'start' to
+   *              a negative number to get the whole time series.
    * @return a sub-sequence of a time series in the dataset
    *
    * @throw GenexException if index, start or end is not in intended range
    */
-  TimeSeries getTimeSeries(int index, int start, int end) const;
+  TimeSeries getTimeSeries(int index, int start = -1, int end = -1) const;
 
   /**
    *  @brief normalizes the datset

@@ -148,15 +148,6 @@ void GenexAPI::setWarpingBandRatio(double ratio)
   genex::setWarpingBandRatio(ratio);
 }
 
-candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index)
-{
-  this->_checkDatasetIndex(result_idx);
-  this->_checkDatasetIndex(query_idx);
-
-  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
-  return loadedDatasets[result_idx]->getBestMatch(query);
-}
-
 candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index, int start, int end)
 {
   this->_checkDatasetIndex(result_idx);
@@ -166,16 +157,7 @@ candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->getBestMatch(query);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSim(int result_idx, int query_idx, int index, int k)
-{
-  this->_checkDatasetIndex(result_idx);
-  this->_checkDatasetIndex(query_idx);
-
-  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
-  return loadedDatasets[result_idx]->kSim(query, k);
-}
-
-vector<candidate_time_series_t> GenexAPI::kSim(int result_idx, int query_idx, int index, int start, int end, int k)
+vector<candidate_time_series_t> GenexAPI::kSim(int k, int result_idx, int query_idx, int index, int start, int end)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
@@ -184,16 +166,7 @@ vector<candidate_time_series_t> GenexAPI::kSim(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->kSim(query, k);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSimRaw(int result_idx, int query_idx, int index, int k)
-{
-  this->_checkDatasetIndex(result_idx);
-  this->_checkDatasetIndex(query_idx);
-
-  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index);
-  return loadedDatasets[result_idx]->kSimRaw(query, k);
-}
-
-vector<candidate_time_series_t> GenexAPI::kSimRaw(int result_idx, int query_idx, int index, int start, int end, int k)
+vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);

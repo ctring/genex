@@ -152,17 +152,15 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
   {
     throw GenexException("Invalid time series index");
   }
+  if (start < 0 && end < 0)
+  {
+    return TimeSeries(this->data + index * this->itemLength, index, 0, this->itemLength);
+  }
   if (start < 0 || start >= end || end > this->itemLength)
   {
     throw GenexException("Invalid starting or ending position of a time series");
   }
-
   return TimeSeries(this->data + index * this->itemLength, index, start, end);
-}
-
-TimeSeries TimeSeriesSet::getTimeSeries(int index) const
-{
-  return this->getTimeSeries(index, 0, this->itemLength);
 }
 
 std::pair<data_t, data_t> TimeSeriesSet::normalize(void)

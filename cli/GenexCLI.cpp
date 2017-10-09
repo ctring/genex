@@ -354,7 +354,7 @@ MAKE_COMMAND(Match,
     int db_index = stoi(args[1]);
     int  q_index = stoi(args[2]);
     int ts_index = stoi(args[3]);
-    int start = 0;
+    int start = -1;
     int end = -1;
 
     if (args.size() > 4)
@@ -363,16 +363,9 @@ MAKE_COMMAND(Match,
       end = stoi(args[5]);
     }
 
-    genex::candidate_time_series_t best;
     TIME_COMMAND(
-      if (end == -1)
-      {
-        best = gGenexAPI.getBestMatch(db_index, q_index, ts_index);
-      }
-      else
-      {
-        best = gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
-      }
+      genex::candidate_time_series_t best =
+        gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
     )
 
     cout << "Best Match is timeseries " << best.data.getIndex()
@@ -406,7 +399,7 @@ MAKE_COMMAND(kSim,
     int db_index = stoi(args[1]);
     int  q_index = stoi(args[2]);
     int ts_index = stoi(args[3]);
-    int start = 0;
+    int start = -1;
     int end = -1;
     int k;
 
@@ -421,10 +414,9 @@ MAKE_COMMAND(kSim,
       k = stoi(args[4]);  
     }
 
-    vector<genex::candidate_time_series_t> results;
     TIME_COMMAND(
-      results = end == -1 ? gGenexAPI.kSim(db_index, q_index, ts_index, k):
-                            gGenexAPI.kSim(db_index, q_index, ts_index, start, end, k); 
+      vector<genex::candidate_time_series_t> results =
+        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end); 
     )
 
     std::sort(results.begin(), results.end());
@@ -450,7 +442,7 @@ MAKE_COMMAND(kSim,
     "  ts_index        - Index of the query                                                           \n"
     "  start           - The start location of the query in the timeseries                            \n"
     "  end             - The end location of the query in the timeseries (this point is not included) \n"
-    "  k               - The number of neigbors                                                       \n"
+    "  k               - The number of neigbors                                                         "
     )  
       
 MAKE_COMMAND(kSimRaw,
@@ -478,11 +470,9 @@ MAKE_COMMAND(kSimRaw,
       k = std::stoi(args[4]);        
     }
 
-    std::vector<genex::candidate_time_series_t> results;
-
     TIME_COMMAND(
-      results = end == -1 ? gGenexAPI.kSimRaw(db_index, q_index, ts_index, k) : 
-                            gGenexAPI.kSimRaw(db_index, q_index, ts_index, start, end, k);
+      std::vector<genex::candidate_time_series_t> results = 
+        gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end);
     )
 
     std::sort(results.begin(), results.end());
