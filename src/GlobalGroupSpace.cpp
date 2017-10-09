@@ -89,7 +89,7 @@ bool GlobalGroupSpace::grouped(void) const
   return localLengthGroupSpace.size() > 0;
 }
 
-std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& query, int k)
+std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& query, int k, bool approx)
 {
   std::vector<candidate_time_series_t> best;
   std::vector<group_index_t> bestSoFar;
@@ -129,6 +129,12 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
       withBounds.push_back(candidate_time_series_t(members[i], g.dist + this->threshold));
     }
     best.insert(std::end(best), std::begin(withBounds), std::end(withBounds));  
+  }
+
+  if (!approx) {
+    for (unsigned int i = 0; i < best.size(); i++) {
+      best[i].dist = this->warpedDistance(query, best[i].data, INF);
+    }
   }
 
   // clean up

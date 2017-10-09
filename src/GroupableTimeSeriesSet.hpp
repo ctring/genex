@@ -27,7 +27,7 @@ public:
   /**
    *  @brief groups the datset into similarity groups
    *
-   *  @param metric the metric to use for comparing similarity (distance)
+   *  @param distance_name the distance to use for comparing similarity
    *  @param threshold to use for determing the bound of similarity
    *
    *  @return the number of groups created
@@ -50,8 +50,7 @@ public:
   /**
    * @brief Finds the best matching subsequence in the dataset
    *
-   * @param the timeseries to find the match for
-   * @param the metric to use for finding the distance
+   * @param other the timeseries to find the match for
    *
    * @return a struct containing the closest TimeSeries and the distance between them
    * @throws exception if dataset is not grouped
@@ -61,13 +60,14 @@ public:
   /**
    * @brief Finds k similar timeseries.
    *
-   * @param the timeseries to find the matches for
-   * @param the number of time series to look for.
-   *
+   * @param data the timeseries to find the matches for
+   * @param k the number of time series to look for.
+   * @param approx if true, return the approximated distance, otherwise return the exact distance
+   * 
    * @return a vector of struct containing the closest TimeSeries and the distance between them
    * @throws exception if dataset is not grouped
    */
-  std::vector<candidate_time_series_t> kSim(const TimeSeries& data, int k);
+  std::vector<candidate_time_series_t> kSim(const TimeSeries& data, int k, bool approx);
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;

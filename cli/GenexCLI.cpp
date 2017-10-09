@@ -346,7 +346,7 @@ MAKE_COMMAND(NormalizeDataset,
 
 MAKE_COMMAND(Match,
   {
-    if (tooFewArgs(args, 4) || tooManyArgs(args, 8))
+    if (tooFewArgs(args, 4) || tooManyArgs(args, 6))
     {
       return false;
     }
@@ -391,32 +391,36 @@ MAKE_COMMAND(Match,
 
 MAKE_COMMAND(kSim,
   {
-    if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
+    if (tooFewArgs(args, 5) || tooManyArgs(args, 8))
     {
       return false;
     }
 
-    int db_index = stoi(args[1]);
-    int  q_index = stoi(args[2]);
-    int ts_index = stoi(args[3]);
+    int k = stoi(args[1]);
+    int db_index = stoi(args[2]);
+    int  q_index = stoi(args[3]);
+    int ts_index = stoi(args[4]);
     int start = -1;
     int end = -1;
-    int k;
+    int approx = 1;
 
+    if (args.size() == 5)
+    {
+      approx = stoi(args[5]);
+    }
     if (args.size() > 5)
     {
-      start = stoi(args[4]);
-      end = stoi(args[5]);
-      k = stoi(args[6]);
+      start = stoi(args[5]);
+      end = stoi(args[6]);
     }
-    else
+    if (args.size() > 7)
     {
-      k = stoi(args[4]);  
+      approx = stoi(args[7]);
     }
 
     TIME_COMMAND(
       vector<genex::candidate_time_series_t> results =
-        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end); 
+        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end, approx); 
     )
 
     std::sort(results.begin(), results.end());
@@ -425,7 +429,7 @@ MAKE_COMMAND(kSim,
       std::cout << "Timeseries " << results[i].data.getIndex()
                 << " at " << results[i].data.getStart()
                 << " with length " << results[i].data.getLength()
-                << " - dist <=: " << results[i].dist 
+                << " - dist " << (approx ? "<= " : "= ") << results[i].dist 
                 << std::endl; 
     }
 
@@ -434,7 +438,8 @@ MAKE_COMMAND(kSim,
 
   "Find k similar time series to a query. Provides a bound of dist to the query for each result. The distance is <= the dist provided.",
 
-    "Usage: kSim <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k>                  \n"
+    "Usage: kSim <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] [<approx>]       \n"
+    "  k               - The number of neigbors                                                       \n"    
     "  dataset_index   - Index of loaded dataset to get the result from.                              \n"
     "                    Use 'list dataset' to retrieve the list of                                   \n"
     "                    loaded datasets.                                                             \n"
@@ -442,32 +447,29 @@ MAKE_COMMAND(kSim,
     "  ts_index        - Index of the query                                                           \n"
     "  start           - The start location of the query in the timeseries                            \n"
     "  end             - The end location of the query in the timeseries (this point is not included) \n"
-    "  k               - The number of neigbors                                                         "
+    "  approx          - If set to 1, print the approximated distance. If set to 0, print the exact   \n"
+    "                    distance from the query to the results (might take a bit longer).            \n"
+    "                    (Default is 1)                                                                 "
     )  
       
 MAKE_COMMAND(kSimRaw,
   {
-    if (tooFewArgs(args, 5) || tooManyArgs(args, 9))
+    if (tooFewArgs(args, 5) || tooManyArgs(args, 7))
     {
       return false;
     }
 
-    int db_index = std::stoi(args[1]);
-    int  q_index = std::stoi(args[2]);
-    int ts_index = std::stoi(args[3]);
+    int k = stoi(args[1]);
+    int db_index = stoi(args[2]);
+    int  q_index = stoi(args[3]);
+    int ts_index = stoi(args[4]);
     int start = 0;
     int end = -1;
-    int k;
 
     if (args.size() > 5)
     {
-      start = std::stoi(args[4]);
-      end = std::stoi(args[5]);
-      k = std::stoi(args[6]);
-    }
-    else 
-    {
-      k = std::stoi(args[4]);        
+      start = stoi(args[5]);
+      end = stoi(args[6]);
     }
 
     TIME_COMMAND(
@@ -491,7 +493,8 @@ MAKE_COMMAND(kSimRaw,
 
   "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
   
-    "Usage: kSimRaw <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <k> \n"
+    "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
+    "  k               - The number of neigbors                                         \n"
     "  dataset_index   - Index of loaded dataset to get the result from.                \n"
     "                    Use 'list dataset' to retrieve the list of                     \n"
     "                    loaded datasets.                                               \n"
@@ -499,7 +502,6 @@ MAKE_COMMAND(kSimRaw,
     "  ts_index        - Index of the query                                             \n"
     "  start           - The start location of the query in the timeseries              \n"
     "  end             - The end location of the query in the timeseries                \n"
-    "  k               - The number of neigbors                                         \n"
     )   
 
 /**************************************************************************

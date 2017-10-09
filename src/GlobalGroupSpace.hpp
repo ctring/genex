@@ -62,9 +62,11 @@ public:
    *  @brief find k similar time series to the query
    *
    *  @param query gets most similar sequence to the query
+   *  @param k number of similar time series
+   *  @param approx if true, return the approximated distance, otherwise return the exact distance
    *  @return the best match in the dataset
    */
-  std::vector<candidate_time_series_t> kSim(const TimeSeries& query, int k);
+  std::vector<candidate_time_series_t> kSim(const TimeSeries& query, int k, bool approx);
   
   void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
   int loadGroups(std::ifstream &fin);

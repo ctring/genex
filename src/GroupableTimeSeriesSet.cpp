@@ -110,11 +110,11 @@ candidate_time_series_t GroupableTimeSeriesSet::getBestMatch(const TimeSeries& q
   throw GenexException("Dataset is not grouped");
 }
 
-std::vector<candidate_time_series_t> GroupableTimeSeriesSet::kSim(const TimeSeries& query, int k)
+std::vector<candidate_time_series_t> GroupableTimeSeriesSet::kSim(const TimeSeries& query, int k, bool approx)
 {
   if (this->groupsAllLengthSet) //not nullptr
   {
-    return this->groupsAllLengthSet->kSim(query, k);
+    return this->groupsAllLengthSet->kSim(query, k, approx);
   }
   throw GenexException("Dataset is not grouped");
 }

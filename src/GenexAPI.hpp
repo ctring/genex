@@ -165,10 +165,11 @@ public:
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
+   *  @param approx if true, return the approximated distance, otherwise return the exact distance
    *  @return k similar time series
    */
   std::vector<candidate_time_series_t> kSim(
-    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1);
+    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1, bool approx = 1);
 
  /**
    *  @brief gets k similar TimeSeries to the query, exhaustively.
