@@ -47,8 +47,7 @@ struct group_membership_t
    data_t dist;
 
    group_index_t(int length, int index, int members, data_t dist) 
-      : length(length), index(index), members(members), 
-          dist(dist) {};
+      : length(length), index(index), members(members), dist(dist) {};
 
    bool operator<(const group_index_t& rhs) const 
    {
@@ -139,7 +138,7 @@ public:
    *
    *  @return the TimeSeries for each value in the group.
    */
-  const std::vector<TimeSeries> getMembers() const;
+  std::vector<TimeSeries> getMembers() const;
 
   /**
    *  @brief performs necessary KNN operations a group
@@ -149,7 +148,7 @@ public:
    *  @param warpedDistance to be used for the distance metric
    *  @return neighbors
    */
-  const std::vector<candidate_time_series_t> intraGroupKSim(
+  std::vector<candidate_time_series_t> intraGroupKSim(
       const TimeSeries& query, int k, const dist_t warpedDistance) const;
   
   void saveGroup(std::ofstream &fout) const;

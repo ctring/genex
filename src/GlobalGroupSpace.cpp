@@ -101,7 +101,7 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
   {
     int i = order[io];
     kPrime = this->localLengthGroupSpace[i]->
-        interLevelKSim(query, this->warpedDistance, &bestSoFar, kPrime);
+        interLevelKSim(query, this->warpedDistance, bestSoFar, kPrime);
   }
   
   // process top group directly

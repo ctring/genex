@@ -72,7 +72,7 @@ public:
 
   int interLevelKSim(const TimeSeries& query, 
     const dist_t warpedDistance, 
-    vector<group_index_t>* bestSoFar, 
+    vector<group_index_t> &bestSoFar, 
     int k);
     
 private:

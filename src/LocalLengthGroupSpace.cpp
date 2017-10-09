@@ -166,38 +166,38 @@ candidate_group_t LocalLengthGroupSpace::getBestGroup(const TimeSeries& query,
 }
 
 int LocalLengthGroupSpace::interLevelKSim(const TimeSeries& query, 
-    const dist_t warpedDistance, 
-    std::vector<group_index_t>* bestSoFar,
+    const dist_t warpedDistance,
+    std::vector<group_index_t> &bestSoFar,
     int k)
 {
   for (unsigned int i = 0; i < groups.size(); i++) {
       if (k <= 0) // if heap is full, keep only sum-k groups
       {
-        data_t bestSoFarDist = bestSoFar->front().dist;
+        data_t bestSoFarDist = bestSoFar.front().dist;
         data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
         if (dist < bestSoFarDist) {
           int membersAdded = groups[i]->getCount();
-          bestSoFar->push_back(group_index_t(this->length, i, membersAdded, dist));
-          std::push_heap(bestSoFar->begin(), bestSoFar->end());
+          bestSoFar.push_back(group_index_t(this->length, i, membersAdded, dist));
+          std::push_heap(bestSoFar.begin(), bestSoFar.end());
           k -= membersAdded;
           // If the worst (furthest) group can be removed, with keeping at least k elements
           // tracked, remove it.
-          while(k + bestSoFar->front().members <= 0) { 
-            k += bestSoFar->front().members;
-            std::pop_heap(bestSoFar->begin(), bestSoFar->end());
-            bestSoFar->pop_back();
+          while(k + bestSoFar.front().members <= 0) { 
+            k += bestSoFar.front().members;
+            std::pop_heap(bestSoFar.begin(), bestSoFar.end());
+            bestSoFar.pop_back();
           }
         }
       }
       else // heap is not full, directly add to heap.
       {
-        int membersAdded = groups[i]->getCount();        
+        int membersAdded = groups[i]->getCount();
         data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, INF);
-        bestSoFar->push_back(group_index_t(this->length, i, membersAdded, dist));
+        bestSoFar.push_back(group_index_t(this->length, i, membersAdded, dist));
         k -= membersAdded;
         if (k <= 0) {
           // heapify the heap exactly once when it becomes full.
-          std::make_heap(bestSoFar->begin(), bestSoFar->end());          
+          std::make_heap(bestSoFar.begin(), bestSoFar.end());
         }
       }
   }
