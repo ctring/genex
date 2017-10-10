@@ -404,11 +404,11 @@ MAKE_COMMAND(kSim,
     int end = -1;
     int approx = 1;
 
-    if (args.size() == 5)
+    if (args.size() == 6)
     {
       approx = stoi(args[5]);
     }
-    if (args.size() > 5)
+    else if (args.size() > 6)
     {
       start = stoi(args[5]);
       end = stoi(args[6]);
