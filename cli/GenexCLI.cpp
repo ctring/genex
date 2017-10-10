@@ -536,17 +536,15 @@ MAKE_COMMAND(TestSim,
     std::sort(results.begin(), results.end());
     std::sort(rawResults.begin(), rawResults.end());
     
-    std::cout << "kSim distances:    ";
     for (int i = 0; i < results.size(); i++)
     {
-      std::cout << results[i].dist;
+      std::cout << results[i].dist << ",";
     }
     std::cout << std::endl;
 
-    std::cout << "kSimRaw distances: ";
     for (int i = 0; i < rawResults.size(); i++)
     {
-      std::cout << rawResults[i].dist;
+      std::cout << rawResults[i].dist << ",";
     }
     std::cout << std::endl;
               
