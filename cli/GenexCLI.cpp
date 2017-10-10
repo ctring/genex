@@ -527,7 +527,7 @@ MAKE_COMMAND(TestSim,
     }
 
     std::vector<genex::candidate_time_series_t> results = 
-        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end);
+        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end, false);
     
 
     std::vector<genex::candidate_time_series_t> rawResults = 
