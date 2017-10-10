@@ -465,7 +465,7 @@ MAKE_COMMAND(kSimRaw,
     int db_index = stoi(args[2]);
     int  q_index = stoi(args[3]);
     int ts_index = stoi(args[4]);
-    int start = 0;
+    int start = -1;
     int end = -1;
 
     if (args.size() > 5)
@@ -517,7 +517,7 @@ MAKE_COMMAND(TestSim,
     int db_index = stoi(args[2]);
     int  q_index = stoi(args[3]);
     int ts_index = stoi(args[4]);
-    int start = 0;
+    int start = -1;
     int end = -1;
 
     if (args.size() > 5)
@@ -526,7 +526,6 @@ MAKE_COMMAND(TestSim,
       end = stoi(args[6]);
     }
 
-    
     std::vector<genex::candidate_time_series_t> results = 
         gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end);
     
@@ -545,12 +544,7 @@ MAKE_COMMAND(TestSim,
 
     error = std::sqrt(error / results.size());
 
-    std::cout << "Query in db " << db_index
-              << " from db " << q_index
-              << " indexed at " << ts_index
-              << " from " << start
-              << " to " << end
-              << " results in error: " << error
+    std::cout << "Normalized Error: " << error
               << std::endl; 
               
     return true;
