@@ -32,12 +32,16 @@ if __name__ == '__main__':
                              'Multiple values can be specified (separated by space).')
     parser.add_argument('--n', type=int, default=10,
                         help='number of sequences to be picked (default: 10).')
+    parser.add_argument('--seed', type=int,
+                        help='seed for the random number generator.')
     parser.add_argument('--min-length', type=int, default=2,
                         help='minimum length of each sequence (default: 2).')
     parser.add_argument('--fmt', default='{0} [{1}, {2}]',
                         help='python format for output (default: {0} [{1}, {2}])')
 
     args = parser.parse_args()
+
+    random.seed(args.seed)
 
     seq = pick_random(args.count, args.length, args.min_length, args.n)
     for s in seq:
