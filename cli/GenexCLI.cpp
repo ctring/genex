@@ -16,7 +16,6 @@
 #include "config.hpp"
 
 #define TIME_COMMAND(_command)                                          \
-  chrono::time_point<chrono::system_clock> __start_time, __end_time;    \
   __start_time = chrono::system_clock::now();                           \
   _command                                                              \
   __end_time = chrono::system_clock::now();                             \
@@ -25,12 +24,13 @@
     chrono::duration<float> elapsed_seconds = __end_time - __start_time;\
     cout << "Command executed in ";                                     \
     cout << setprecision(4) << elapsed_seconds.count() << "s" << endl;  \
-  }
+  }                                                                     \
 
 using namespace std;
 
 genex::GenexAPI gGenexAPI;
 bool gTimerEnabled = true;
+chrono::time_point<chrono::system_clock> __start_time, __end_time;
 
 bool tooFewArgs(const vector<string>& args, int limit)
 {
