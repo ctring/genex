@@ -536,16 +536,19 @@ MAKE_COMMAND(TestSim,
     std::sort(results.begin(), results.end());
     std::sort(rawResults.begin(), rawResults.end());
     
-    genex::data_t error = 0;
+    std::cout << "kSim distances:    ";
     for (int i = 0; i < results.size(); i++)
     {
-      error += ((results[i].dist*results[i].dist) - (rawResults[i].dist*rawResults[i].dist));
+      std::cout << results[i].dist;
     }
+    std::cout << std::endl;
 
-    error = std::sqrt(error / results.size());
-
-    std::cout << "Normalized Error: " << error
-              << std::endl; 
+    std::cout << "kSimRaw distances: ";
+    for (int i = 0; i < rawResults.size(); i++)
+    {
+      std::cout << rawResults[i].dist;
+    }
+    std::cout << std::endl;
               
     return true;
   },
