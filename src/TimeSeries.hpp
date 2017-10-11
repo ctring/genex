@@ -152,6 +152,7 @@ public:
   const data_t* getKeoghLower(int warpingBand) const;
   const data_t* getKeoghUpper(int warpingBand) const;
 
+  const data_t* getData() const;
   void printData(std::ostream &out = std::cout) const;
 
 private:

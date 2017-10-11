@@ -29,6 +29,48 @@ int countNumberOfLines(std::ifstream& f)
   return lineCount;
 }
 
+inline int calcPAALength(int srcLength, int n)
+{
+  return (srcLength - 1) / n + 1;
+}
+
+void doPAA(const data_t* source, data_t* dest, int srcLength, int n)
+{
+  data_t sum = 0;
+  int count = 0;
+  int destLength = calcPAALength(srcLength, n);
+  for (int i = 0; i < srcLength; i++)
+  {
+    count++;
+    sum += source[i];
+    if (count == n || i == srcLength - 1) {
+      dest[i / n] = sum / count;
+      sum = 0;
+      count = 0;
+    }
+  }
+}
+
+TimeSeries tsPAA(const TimeSeries& source, int n)
+{
+  data_t sum = 0;
+  int count = 0;
+  int srcLength = source.getLength();
+  int destLength = calcPAALength(srcLength, n);
+  TimeSeries dest(destLength);
+  for (int i = 0; i < srcLength; i++)
+  {
+    count++;
+    sum += source[i];
+    if (count == n || i == srcLength - 1) {
+      dest[i / n] = sum / count;
+      sum = 0;
+      count = 0;
+    }
+  }
+  return dest;
+}
+
 void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
                              int startCol, const string& separators)
 {
@@ -250,33 +292,22 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   return std::make_pair(MIN, MAX);
 }
 
-void TimeSeriesSet::paa(int n)
+void TimeSeriesSet::PAA(int n)
 {
   if (n <= 0) {
     throw GenexException("Block size must be positive");
   }
-  int newItemLength = (this->itemLength - 1) / n + 1;
+  int newItemLength = calcPAALength(this->itemLength, n);
   data_t* new_data = new data_t[this->itemCount * newItemLength];
   for (int ts = 0; ts < this->itemCount; ts++)
   {
-    data_t sum = 0;
-    int count = 0;
-    for (int i = 0; i < this->itemLength; i++)
-    {
-      count++;
-      sum += this->data[ts * this->itemLength + i];
-      if (count == n || i == this->itemLength - 1) {
-        new_data[ts * newItemLength + i / n] = sum / count;
-        sum = 0;
-        count = 0;
-      }
-    }
+    doPAA(this->data + ts * this->itemLength, new_data + ts * newItemLength,
+      this->itemLength, n);
   }
   delete this->data;
   this->data = new_data;
   this->itemLength = newItemLength;
 }
-
 
 bool TimeSeriesSet::isLoaded()
 {
@@ -291,8 +322,11 @@ data_t TimeSeriesSet::distanceBetween(int idx, int start, int length,
 }
 
 std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
-  const TimeSeries& query, int k)
+  const TimeSeries& query, int k, int PAABlock)
 {
+  if (k <= 0) {
+    throw GenexException("K must be positive");
+  }
   std::vector<candidate_time_series_t> bestSoFar;
   const std::string& distance_name = "euclidean";
   dist_t warpedDistance = getDistance(distance_name + DTW_SUFFIX);
@@ -300,8 +334,14 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   int timeSeriesLength = getItemLength();
   int numberTimeSeries = getItemCount();
   
+  TimeSeries PAAQuery(0);
+  if (PAABlock > 0)
+  {
+    PAAQuery = tsPAA(query, PAABlock);
+  }
+
   // iterate through every timeseries
-  for (int idx = 0; idx < numberTimeSeries; idx++) 
+  for (int idx = 0; idx < numberTimeSeries; idx++)
   {
     // iterate through every length of interval
     for (int intervalLength = 2; intervalLength <= timeSeriesLength;
@@ -313,7 +353,14 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
       {                  
         TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);
         if (k > 0) {
-          currentDist = warpedDistance(query, currentTimeSeries, INF);
+          if (PAABlock > 0)
+          {
+            TimeSeries PAACurrentTimeSeries = tsPAA(currentTimeSeries, PAABlock);
+            currentDist = warpedDistance(PAAQuery, PAACurrentTimeSeries, INF);
+          }
+          else {
+            currentDist = warpedDistance(query, currentTimeSeries, INF);
+          }
           bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
           k--;
           if (k == 0) {
@@ -324,7 +371,14 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
         else
         {
           bestSoFarDist = bestSoFar.front().dist;
-          currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);          
+          if (PAABlock > 0)
+          {
+            TimeSeries PAACurrentTimeSeries = tsPAA(currentTimeSeries, PAABlock);
+            currentDist = warpedDistance(PAAQuery, PAACurrentTimeSeries, bestSoFarDist);
+          }
+          else {
+            currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);
+          }
           if (currentDist < bestSoFarDist) 
           { 
             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
@@ -334,6 +388,12 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
           } 
         }
       }
+    }
+  }
+
+  if (PAABlock > 0) {
+    for (unsigned int i = 0; i < bestSoFar.size(); i++) {
+      bestSoFar[i].dist = warpedDistance(query, bestSoFar[i].data, INF);
     }
   }
   std::sort(bestSoFar.begin(), bestSoFar.end());

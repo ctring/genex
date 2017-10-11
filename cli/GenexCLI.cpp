@@ -356,7 +356,7 @@ MAKE_COMMAND(PAA,
     int index = stoi(args[1]);
     int blockSize = stoi(args[2]);
 
-    genex::dataset_info_t info = gGenexAPI.paa(index, blockSize);
+    genex::dataset_info_t info = gGenexAPI.PAA(index, blockSize);
 
     cout << "Dataset PAA-ed                     " << endl
          << "  Name:        " << info.name       << endl
@@ -495,16 +495,25 @@ MAKE_COMMAND(kSimRaw,
     int ts_index = stoi(args[4]);
     int start = -1;
     int end = -1;
+    int PAABlock = 0;
 
-    if (args.size() > 5)
+    if (args.size() == 6)
+    {
+      PAABlock = stoi(args[5]);
+    }
+    if (args.size() == 7)
     {
       start = stoi(args[5]);
       end = stoi(args[6]);
     }
+    if (args.size() == 8)
+    {
+      PAABlock = stoi(args[7]);
+    }
 
     TIME_COMMAND(
       std::vector<genex::candidate_time_series_t> results = 
-        gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end);
+        gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end, PAABlock);
     )
 
     for (int i = 0; i < results.size(); i++)
@@ -521,15 +530,16 @@ MAKE_COMMAND(kSimRaw,
 
   "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
   
-  "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
-  "  k               - The number of neigbors                                         \n"
-  "  dataset_index   - Index of loaded dataset to get the result from.                \n"
-  "                    Use 'list dataset' to retrieve the list of                     \n"
-  "                    loaded datasets.                                               \n"
-  "  q_dataset_idx   - Same as dataset_index, except for the query                    \n"
-  "  ts_index        - Index of the query                                             \n"
-  "  start           - The start location of the query in the timeseries              \n"
-  "  end             - The end location of the query in the timeseries                \n"
+  "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <PAA_block> \n"
+  "  k               - The number of neigbors                                                     \n"
+  "  dataset_index   - Index of loaded dataset to get the result from.                            \n"
+  "                    Use 'list dataset' to retrieve the list of                                 \n"
+  "                    loaded datasets.                                                           \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query                                \n"
+  "  ts_index        - Index of the query                                                         \n"
+  "  start           - The start location of the query in the timeseries                          \n"
+  "  end             - The end location of the query in the timeseries                            \n"
+  "  PAA_block       - Size of PAA block. Set to 0 or negative to disable PAA feature             \n"
   )
 
 #define SEP ","

@@ -78,6 +78,11 @@ void TimeSeries::generateKeoghLU(int warpingBand) const
   keoghCacheValid = true;
 }
 
+const data_t* TimeSeries::getData() const
+{
+  return this->data;
+}
+
 void TimeSeries::printData(std::ostream &out) const
 {
   for (int i = 0; i < length; i++) {

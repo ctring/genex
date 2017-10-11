@@ -185,9 +185,9 @@ public:
    *  @return k similar time series
    */
   std::vector<candidate_time_series_t> kSimRaw(
-    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1);
+    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1, int PAABlockSize = 0);
 
-  dataset_info_t paa(int idx, int n);
+  dataset_info_t PAA(int idx, int n);
 
 private:
   void _checkDatasetIndex(int index);

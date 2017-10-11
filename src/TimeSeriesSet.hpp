@@ -114,7 +114,7 @@ public:
   */
   bool isNormalized() { return normalized; }
 
-  void paa(int n);
+  void PAA(int n);
 
   /**
     *  @brief calculates the distance between a subsequence of a series in this dataset to
@@ -140,7 +140,7 @@ public:
    *  
    * @vector vector of candidates with exact distance from query.
    */
-  std::vector<candidate_time_series_t> kSimRaw(const TimeSeries& query, int k); 
+  std::vector<candidate_time_series_t> kSimRaw(const TimeSeries& query, int k, int PAABlock = 0);
       
   /**
    *  @brief check if data is loaded

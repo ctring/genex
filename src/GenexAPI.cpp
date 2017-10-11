@@ -166,19 +166,19 @@ vector<candidate_time_series_t> GenexAPI::kSim(int k, int h, int result_idx, int
   return loadedDatasets[result_idx]->kSim(query, k, h, approx);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end)
+vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end, int PAABlockSize)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
 
   const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->kSimRaw(query, k);
+  return loadedDatasets[result_idx]->kSimRaw(query, k, PAABlockSize);
 }
 
-dataset_info_t GenexAPI::paa(int idx, int n)
+dataset_info_t GenexAPI::PAA(int idx, int n)
 {
   this->_checkDatasetIndex(idx);
-  this->loadedDatasets[idx]->paa(n);
+  this->loadedDatasets[idx]->PAA(n);
   return this->getDatasetInfo(idx);
 }
 
