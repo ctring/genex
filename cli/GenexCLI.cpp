@@ -1,6 +1,7 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <map>
 #include <vector>
@@ -491,68 +492,97 @@ MAKE_COMMAND(kSimRaw,
 
   "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
   
-    "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
-    "  k               - The number of neigbors                                         \n"
-    "  dataset_index   - Index of loaded dataset to get the result from.                \n"
-    "                    Use 'list dataset' to retrieve the list of                     \n"
-    "                    loaded datasets.                                               \n"
-    "  q_dataset_idx   - Same as dataset_index, except for the query                    \n"
-    "  ts_index        - Index of the query                                             \n"
-    "  start           - The start location of the query in the timeseries              \n"
-    "  end             - The end location of the query in the timeseries                \n"
-    )   
+  "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
+  "  k               - The number of neigbors                                         \n"
+  "  dataset_index   - Index of loaded dataset to get the result from.                \n"
+  "                    Use 'list dataset' to retrieve the list of                     \n"
+  "                    loaded datasets.                                               \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query                    \n"
+  "  ts_index        - Index of the query                                             \n"
+  "  start           - The start location of the query in the timeseries              \n"
+  "  end             - The end location of the query in the timeseries                \n"
+  )
+
+#define SEP ","
+string results_path = "results.txt";
 
 MAKE_COMMAND(TestSim,
   {
-    if (tooFewArgs(args, 5) || tooManyArgs(args, 8))
+    if (args.size() == 2) {
+      results_path = args[1];
+      cout << "Path for result file set to: " << results_path << endl;
+      return true;
+    }
+
+    if (tooFewArgs(args, 6) || tooManyArgs(args, 8))
     {
       return false;
     }
 
     int k = stoi(args[1]);
-    int h = stoi(args[2]);
+    int m = stoi(args[2]);
     int db_index = stoi(args[3]);
     int  q_index = stoi(args[4]);
     int ts_index = stoi(args[5]);
     int start = -1;
     int end = -1;
 
-    if (args.size() > 5)
+    if (args.size() > 6)
     {
       start = stoi(args[6]);
       end = stoi(args[7]);
     }
+    chrono::duration<float> kSimRawTime;
+    chrono::duration<float> kSimTime;
 
-    std::vector<genex::candidate_time_series_t> results = 
-        gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end, false);
-    
-
-    std::vector<genex::candidate_time_series_t> rawResults = 
+    TIME_COMMAND(
+      std::vector<genex::candidate_time_series_t> rawResults =
         gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end);
+    )
+    kSimRawTime = __end_time - __start_time;
 
-    std::sort(results.begin(), results.end());
     std::sort(rawResults.begin(), rawResults.end());
-    
-    for (int i = 0; i < results.size(); i++)
-    {
-      std::cout << results[i].dist << ",";
-    }
-    std::cout << std::endl;
 
-    for (int i = 0; i < rawResults.size(); i++)
-    {
-      std::cout << rawResults[i].dist << ",";
+    ofstream fout(results_path, ios_base::out | ios_base::app );
+    for (int mi = 1; mi <= m; mi++) {
+      int h = mi * k;
+
+      TIME_COMMAND(
+        std::vector<genex::candidate_time_series_t> results =
+          gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end, false);
+      )
+      kSimTime = __end_time - __start_time;
+      
+      std::sort(results.begin(), results.end());
+
+      // Compute the Jaccard metric
+      int overlap = 0;
+      for (int i = 0; i < results.size(); i++) {
+        overlap += abs(results[i].dist - rawResults[i].dist) < 1e-9;
+      }
+      double jaccard = overlap * 1.0 / (results.size() + rawResults.size() - overlap);
+      
+      std::cout << "k = " << k << " h = " << h << " Jaccard = " << jaccard << endl;
+
+      if (fout) {
+        fout << k << SEP << h << SEP << ts_index << SEP << start << SEP << end << SEP 
+             << jaccard << SEP << kSimRawTime.count() << SEP << kSimTime.count() << endl;
+      }
     }
-    std::cout << std::endl;
-              
+    if (fout) {
+      cout << "Results appended to " << results_path << endl;
+    } else {
+      cout << "Cannot open " << results_path << ". Nothing has been saved" << endl;
+    }
     return true;
   },
 
   "For science",
   
-  "Usage: testSim <k> <h> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
+  "Usage: testSim <k> <m> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
   "  k               - The number of neigbors                                             \n"
-  "  h               - The number of time series to examined for kSim                     \n"
+  "  m               - For i = 1..m, an experiment is run with the number of examined     \n"
+  "                    time series (h) to be i*k.                                         \n"
   "  dataset_index   - Index of loaded dataset to get the result from.                    \n"
   "                    Use 'list dataset' to retrieve the list of                         \n"
   "                    loaded datasets.                                                   \n"
@@ -560,7 +590,11 @@ MAKE_COMMAND(TestSim,
   "  ts_index        - Index of the query                                                 \n"
   "  start           - The start location of the query in the timeseries                  \n"
   "  end             - The end location of the query in the timeseries                    \n"
-  )  
+  "                                                                                       \n"
+  "  Note: use testSim <path> to specify where the experiment output will be save.        \n"
+  "  By default, the results will be saved to results.txt in the working directory.         "
+  
+  )
 
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
