@@ -49,3 +49,4 @@ CTestTestfile.cmake
 # Backups
 ~$*
 backup/
+results/
