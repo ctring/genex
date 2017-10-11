@@ -62,12 +62,13 @@ public:
    *
    * @param data the timeseries to find the matches for
    * @param k the number of time series to look for.
+   * @param h the number of time series to examine.
    * @param approx if true, return the approximated distance, otherwise return the exact distance
    * 
    * @return a vector of struct containing the closest TimeSeries and the distance between them
    * @throws exception if dataset is not grouped
    */
-  std::vector<candidate_time_series_t> kSim(const TimeSeries& data, int k, bool approx);
+  std::vector<candidate_time_series_t> kSim(const TimeSeries& data, int k, int h, bool approx);
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;

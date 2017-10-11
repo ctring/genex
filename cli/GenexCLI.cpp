@@ -4,7 +4,6 @@
 #include <iomanip>
 #include <map>
 #include <vector>
-#include <algorithm>
 #include <cmath>
 #include <boost/tokenizer.hpp>
 #include <readline/readline.h>
@@ -422,10 +421,9 @@ MAKE_COMMAND(kSim,
 
     TIME_COMMAND(
       vector<genex::candidate_time_series_t> results =
-        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end, approx); 
+        gGenexAPI.kSim(k, k, db_index, q_index, ts_index, start, end, approx); 
     )
 
-    std::sort(results.begin(), results.end());
     for (int i = 0; i < results.size(); i++)
     {
       std::cout << "Timeseries " << results[i].data.getIndex()
@@ -479,8 +477,6 @@ MAKE_COMMAND(kSimRaw,
         gGenexAPI.kSimRaw(k, db_index, q_index, ts_index, start, end);
     )
 
-    std::sort(results.begin(), results.end());
-
     for (int i = 0; i < results.size(); i++)
     {
       std::cout << "Timeseries " << results[i].data.getIndex()
@@ -508,26 +504,27 @@ MAKE_COMMAND(kSimRaw,
 
 MAKE_COMMAND(TestSim,
   {
-    if (tooFewArgs(args, 5) || tooManyArgs(args, 7))
+    if (tooFewArgs(args, 5) || tooManyArgs(args, 8))
     {
       return false;
     }
 
     int k = stoi(args[1]);
-    int db_index = stoi(args[2]);
-    int  q_index = stoi(args[3]);
-    int ts_index = stoi(args[4]);
+    int h = stoi(args[2]);
+    int db_index = stoi(args[3]);
+    int  q_index = stoi(args[4]);
+    int ts_index = stoi(args[5]);
     int start = -1;
     int end = -1;
 
     if (args.size() > 5)
     {
-      start = stoi(args[5]);
-      end = stoi(args[6]);
+      start = stoi(args[6]);
+      end = stoi(args[7]);
     }
 
     std::vector<genex::candidate_time_series_t> results = 
-        gGenexAPI.kSim(k, db_index, q_index, ts_index, start, end, false);
+        gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end, false);
     
 
     std::vector<genex::candidate_time_series_t> rawResults = 
@@ -551,18 +548,19 @@ MAKE_COMMAND(TestSim,
     return true;
   },
 
-  "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
+  "For science",
   
-    "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
-    "  k               - The number of neigbors                                         \n"
-    "  dataset_index   - Index of loaded dataset to get the result from.                \n"
-    "                    Use 'list dataset' to retrieve the list of                     \n"
-    "                    loaded datasets.                                               \n"
-    "  q_dataset_idx   - Same as dataset_index, except for the query                    \n"
-    "  ts_index        - Index of the query                                             \n"
-    "  start           - The start location of the query in the timeseries              \n"
-    "  end             - The end location of the query in the timeseries                \n"
-    )  
+  "Usage: testSim <k> <h> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] \n"
+  "  k               - The number of neigbors                                             \n"
+  "  h               - The number of time series to examined for kSim                     \n"
+  "  dataset_index   - Index of loaded dataset to get the result from.                    \n"
+  "                    Use 'list dataset' to retrieve the list of                         \n"
+  "                    loaded datasets.                                                   \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query                        \n"
+  "  ts_index        - Index of the query                                                 \n"
+  "  start           - The start location of the query in the timeseries                  \n"
+  "  end             - The end location of the query in the timeseries                    \n"
+  )  
 
 /**************************************************************************
  * Step 2: Add the Command object into the commands map

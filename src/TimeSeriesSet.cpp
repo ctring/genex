@@ -1,5 +1,6 @@
 #include "TimeSeriesSet.hpp"
 
+#include <algorithm>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -307,6 +308,8 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
       }
     }
   }
+  std::sort(bestSoFar.begin(), bestSoFar.end());
+  
   return bestSoFar;
 }
 

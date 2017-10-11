@@ -160,6 +160,7 @@ public:
    *  to the query for each result. The distance is <= the dist provided.
    * 
    *  @param k the number of similar time series to find
+   *  @param h the number of time series to examine
    *  @param result_idx the index of the result dataset
    *  @param query_idx the index of the query dataset
    *  @param index the index of the timeseries in the query dataset
@@ -169,7 +170,7 @@ public:
    *  @return k similar time series
    */
   std::vector<candidate_time_series_t> kSim(
-    int k, int result_idx, int query_idx, int index, int start = -1, int end = -1, bool approx = 1);
+    int k, int h, int result_idx, int query_idx, int index, int start = -1, int end = -1, bool approx = 1);
 
  /**
    *  @brief gets k similar TimeSeries to the query, exhaustively.

@@ -157,13 +157,13 @@ candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, in
   return loadedDatasets[result_idx]->getBestMatch(query);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSim(int k, int result_idx, int query_idx, int index, int start, int end, bool approx)
+vector<candidate_time_series_t> GenexAPI::kSim(int k, int h, int result_idx, int query_idx, int index, int start, int end, bool approx)
 {
   this->_checkDatasetIndex(result_idx);
   this->_checkDatasetIndex(query_idx);
 
   const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->kSim(query, k, approx);
+  return loadedDatasets[result_idx]->kSim(query, k, h, approx);
 }
 
 vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end)
