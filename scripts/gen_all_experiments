@@ -16,7 +16,7 @@ K='1 3 5 7 9 11'
     -k $K -m $MAX_MULTIPLER --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length $MIN_LENGTH
 
 ./gen_ksim_exp.py 1690 131 ../datasets/UCR/FaceAll/FaceAll_DATA ${ST} ksim_FaceAll_${ST}.genex ../results/ksim_FaceAll_${ST}_results.txt \
-    -k $K -m $MAX_MULTIPLER --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length $MIN_LENGTH
+    -k $K -m $MAX_MULTIPLER --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length $MIN_LENGTH
 
 ./gen_ksim_exp.py 4000 128 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA ${ST} ksim_TwoPatterns_${ST}.genex ../results/ksim_TwoPatterns_${ST}_results.txt \
     -k $K -m $MAX_MULTIPLER --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length $MIN_LENGTH
