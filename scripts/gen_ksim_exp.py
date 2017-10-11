@@ -39,6 +39,8 @@ if __name__ == '__main__':
                                    '(number of time series to be examined).')
     parser.add_argument('-n', type=int, default=10,
                         help='number of sequences to be picked (default: 10).')
+    parser.add_argument('--paa', type=int, nargs='+',
+                        help='block sizes for PAA.')
     parser.add_argument('--seed', type=int,
                         help='seed for the random number generator.')
     parser.add_argument('--min-length', type=int, default=2,
@@ -59,8 +61,9 @@ if __name__ == '__main__':
         print('load {}'.format(args.ds_path), file=f)
         print('group 0 {}'.format(args.st), file=f)
         print('testSim {}'.format(args.exp_result_path), file=f)
-        for k in args.k:
-            for s in seq:
-                print('testSim {} {} 0 0 {} {} {}'.format(k, args.m, s[0], s[1], s[2]), 
-                        file=f)
+        for b in args.paa:
+            for k in args.k:
+                for s in seq:
+                    print('testSim {} {} {} 0 0 {} {} {}'.format(k, args.m, b, s[0], s[1], s[2]), 
+                            file=f)
     print('Experiment script is generated at {}'.format(args.exp_path))
