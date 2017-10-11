@@ -250,6 +250,34 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   return std::make_pair(MIN, MAX);
 }
 
+void TimeSeriesSet::paa(int n)
+{
+  if (n <= 0) {
+    throw GenexException("Block size must be positive");
+  }
+  int newItemLength = (this->itemLength - 1) / n + 1;
+  data_t* new_data = new data_t[this->itemCount * newItemLength];
+  for (int ts = 0; ts < this->itemCount; ts++)
+  {
+    data_t sum = 0;
+    int count = 0;
+    for (int i = 0; i < this->itemLength; i++)
+    {
+      count++;
+      sum += this->data[ts * this->itemLength + i];
+      if (count == n || i == this->itemLength - 1) {
+        new_data[ts * newItemLength + i / n] = sum / count;
+        sum = 0;
+        count = 0;
+      }
+    }
+  }
+  delete this->data;
+  this->data = new_data;
+  this->itemLength = newItemLength;
+}
+
+
 bool TimeSeriesSet::isLoaded()
 {
   return this->data != nullptr;

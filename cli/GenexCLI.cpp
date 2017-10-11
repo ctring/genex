@@ -346,6 +346,35 @@ MAKE_COMMAND(NormalizeDataset,
   "  dataset_index   - Index of the dataset to be normalized  \n"
 )
 
+MAKE_COMMAND(PAA,
+  {
+    if (tooFewArgs(args, 3) || tooManyArgs(args, 3))
+    {
+      return false;
+    }
+
+    int index = stoi(args[1]);
+    int blockSize = stoi(args[2]);
+
+    genex::dataset_info_t info = gGenexAPI.paa(index, blockSize);
+
+    cout << "Dataset PAA-ed                     " << endl
+         << "  Name:        " << info.name       << endl
+         << "  ID:          " << info.id         << endl
+         << "  Item count:  " << info.itemCount  << endl
+         << "  Item length: " << info.itemLength << endl;
+    return true;
+  },
+
+  "Perform piecewise aggregate approximation (PAA) on a dataset. "
+  "(Warning: this operation cannot be undone)",
+
+  "Usage: paa <dataset_index> <block_size>                \n"
+  "  dataset_index   - Index of the dataset to be PAA-ed  \n"
+  "  block_size      - Size of a block to aggregate         "
+)
+
+
 MAKE_COMMAND(Match,
   {
     if (tooFewArgs(args, 4) || tooManyArgs(args, 6))
@@ -613,6 +642,7 @@ map<string, Command*> commands = {
   {"saveGroup", &cmdSaveGroup},
   {"loadGroup", &cmdLoadGroup},  
   {"normalize", &cmdNormalizeDataset},
+  {"paa", &cmdPAA},
   {"match", &cmdMatch},
   {"kSim", &cmdkSim},
   {"kSimRaw", &cmdkSimRaw},

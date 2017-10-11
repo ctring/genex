@@ -187,6 +187,8 @@ public:
   std::vector<candidate_time_series_t> kSimRaw(
     int k, int result_idx, int query_idx, int index, int start = -1, int end = -1);
 
+  dataset_info_t paa(int idx, int n);
+
 private:
   void _checkDatasetIndex(int index);
 

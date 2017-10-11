@@ -175,6 +175,14 @@ vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int que
   return loadedDatasets[result_idx]->kSimRaw(query, k);
 }
 
+dataset_info_t GenexAPI::paa(int idx, int n)
+{
+  this->_checkDatasetIndex(idx);
+  this->loadedDatasets[idx]->paa(n);
+  return this->getDatasetInfo(idx);
+}
+
+
 void GenexAPI::_checkDatasetIndex(int index)
 {
   if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)

@@ -114,6 +114,8 @@ public:
   */
   bool isNormalized() { return normalized; }
 
+  void paa(int n);
+
   /**
     *  @brief calculates the distance between a subsequence of a series in this dataset to
     *   input timeseries
