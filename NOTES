@@ -1,4 +1,4 @@
 ./gen_ksim_exp.py 100 96 ../datasets/UCR/ECG200/ECG200_DATA 0.2 ksim_ecg200_0.2.genex ../results/ksim_ecg200_0.2_results.txt -k 1 3 5 7 -m 50 --paa 3 --seed 23 -n 20
 
 Result format:
-k, h, index, start, end, metrics, time for kSimRaw, time for kSim
+k, h, paa, index, start, end, metrics kSim, metrics PAA, time for kSim, time for kSimRaw, time for PAA, [kSim results], [kSimRaw results], [PAA results]

@@ -627,7 +627,7 @@ MAKE_COMMAND(TestSim,
 
       if (fout) {
         fout << k << SEP << h << SEP << block << SEP << ts_index << SEP << start << SEP << end << SEP 
-             << jaccardKSim << SEP << jaccardPAA << SEP << kSimRawTime.count() << SEP << kSimTime.count() << SEP;
+             << jaccardKSim << SEP << jaccardPAA << SEP << kSimTime.count() << SEP << kSimRawTime.count() << SEP << kSimRawPAATime.count() << SEP;
         printResults(fout, results);
         printResults(fout, rawResults);
         printResults(fout, rawPAAResults);
