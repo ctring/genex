@@ -609,7 +609,7 @@ MAKE_COMMAND(TestSim,
     double jaccardPAA  = computeJaccard(rawPAAResults, rawResults);   
 
     ofstream fout(results_path, ios_base::out | ios_base::app );
-    for (int mi = 1; mi <= m; mi++) {
+    for (int mi = 1; mi <= m; mi += 4) {
       int h = mi * k;
 
       TIME_COMMAND(
