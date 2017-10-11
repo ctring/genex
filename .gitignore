@@ -46,5 +46,6 @@ CTestTestfile.cmake
 .swp*
 .vscode
 
-# Microsoft Office backups
+# Backups
 ~$*
+backup/
