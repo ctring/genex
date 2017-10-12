@@ -136,18 +136,25 @@ public:
   int getLength() const { return this->length; }
 
   /**
-   *  @brief gets the index of the data - used for displaying information via the api
+   *  @brief gets the index of the data
    *
    *  @return the index of the data from its timeseries
    */
   int getIndex() const { return this->index; }
 
   /**
-   *  @brief gets the start of the data - used for displaying information via the api
+   *  @brief gets the start of the data
    *
    *  @return the start of the data from its timeseries
    */
   int getStart() const { return this->start; }
+
+  /**
+   *  @brief gets the end of the data
+   *
+   *  @return the end of the data from its timeseries
+   */
+  int getEnd() const { return this->end; }
 
   const data_t* getKeoghLower(int warpingBand) const;
   const data_t* getKeoghUpper(int warpingBand) const;

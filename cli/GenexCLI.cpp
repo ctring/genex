@@ -399,11 +399,9 @@ MAKE_COMMAND(Match,
         gGenexAPI.getBestMatch(db_index, q_index, ts_index, start, end);
     )
 
-    cout << "Best Match is timeseries " << best.data.getIndex()
-    << " starting at " << best.data.getStart()
-    << " with length " << best.data.getLength()
-    << ". Distance = " << best.dist    
-    << endl;
+    cout << "Best Match is timeseries " 
+         << best.data.getIndex() << " [" << best.data.getStart() << ", " << best.data.getEnd() << "] " << endl
+         << "Distance = " << best.dist << endl;
 
     return true;
   },
@@ -456,10 +454,9 @@ MAKE_COMMAND(kSim,
 
     for (int i = 0; i < results.size(); i++)
     {
-      std::cout << "Timeseries " << results[i].data.getIndex()
-                << " at " << results[i].data.getStart()
-                << " with length " << results[i].data.getLength()
-                << " - dist = " << results[i].dist 
+      std::cout << "Timeseries " 
+                << results[i].data.getIndex() << " [" << results[i].data.getStart() << ", " << results[i].data.getEnd() << "] "
+                << "- distance = " << results[i].dist 
                 << std::endl; 
     }
 
@@ -518,10 +515,9 @@ MAKE_COMMAND(kSimRaw,
 
     for (int i = 0; i < results.size(); i++)
     {
-      std::cout << "Timeseries " << results[i].data.getIndex()
-                << " at " << results[i].data.getStart()
-                << " with length " << results[i].data.getLength()
-                << " - dist: " << results[i].dist 
+      std::cout << "Timeseries " 
+                << results[i].data.getIndex() << " [" << results[i].data.getStart() << ", " << results[i].data.getEnd() << "] "
+                << " - dist = " << results[i].dist 
                 << std::endl; 
     }
 
