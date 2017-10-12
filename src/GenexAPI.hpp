@@ -170,7 +170,7 @@ public:
    *  @return k similar time series
    */
   std::vector<candidate_time_series_t> kSim(
-    int k, int h, int result_idx, int query_idx, int index, int start = -1, int end = -1, bool approx = 1);
+    int k, int h, int result_idx, int query_idx, int index, int start = -1, int end = -1);
 
  /**
    *  @brief gets k similar TimeSeries to the query, exhaustively.

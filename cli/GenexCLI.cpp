@@ -433,11 +433,11 @@ MAKE_COMMAND(kSim,
     int ts_index = stoi(args[4]);
     int start = -1;
     int end = -1;
-    int approx = 1;
+    int h = k;
 
     if (args.size() == 6)
     {
-      approx = stoi(args[5]);
+      h = stoi(args[5]);
     }
     else if (args.size() > 6)
     {
@@ -446,12 +446,12 @@ MAKE_COMMAND(kSim,
     }
     if (args.size() > 7)
     {
-      approx = stoi(args[7]);
+      h = stoi(args[7]);
     }
 
     TIME_COMMAND(
       vector<genex::candidate_time_series_t> results =
-        gGenexAPI.kSim(k, k, db_index, q_index, ts_index, start, end, approx); 
+        gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end); 
     )
 
     for (int i = 0; i < results.size(); i++)
@@ -459,7 +459,7 @@ MAKE_COMMAND(kSim,
       std::cout << "Timeseries " << results[i].data.getIndex()
                 << " at " << results[i].data.getStart()
                 << " with length " << results[i].data.getLength()
-                << " - dist " << (approx ? "<= " : "= ") << results[i].dist 
+                << " - dist = " << results[i].dist 
                 << std::endl; 
     }
 
@@ -614,7 +614,7 @@ MAKE_COMMAND(TestSim,
 
       TIME_COMMAND(
         std::vector<genex::candidate_time_series_t> results =
-          gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end, false);
+          gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end);
       )
       kSimTime = __end_time - __start_time;
 
