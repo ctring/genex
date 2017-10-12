@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <limits>
 
@@ -81,6 +82,13 @@ void TimeSeries::generateKeoghLU(int warpingBand) const
 const data_t* TimeSeries::getData() const
 {
   return this->data;
+}
+
+string TimeSeries::getIdentifierString() const
+{
+  std::ostringstream os;
+  os << this->index << " [" << this->start << ", " << this->end << "]";
+  return os.str();
 }
 
 void TimeSeries::printData(std::ostream &out) const

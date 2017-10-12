@@ -160,6 +160,7 @@ public:
   const data_t* getKeoghUpper(int warpingBand) const;
 
   const data_t* getData() const;
+  std::string getIdentifierString() const;
   void printData(std::ostream &out = std::cout) const;
 
 private:

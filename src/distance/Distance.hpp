@@ -128,8 +128,12 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   for(int i = 1; i < m; i++)
   {
     data_t bestSoFar = INF;
-    for(int j = max(i - r, 1); j <= min(i + r, n - 1); j++)
+    for(int j = max(i - r, 0); j <= min(i + r, n - 1); j++)
     {
+      if (j == 0) {
+        bestSoFar = min(bestSoFar, ncost[i][j]);
+        continue;
+      }
       data_t ij1  = (i - r <= j-1 && j-1 <= i + r) ? ncost[i][j-1] : INF;
       data_t i1j1 = ncost[i-1][j-1];
       data_t i1j  = (j - r <= i-1 && i-1 <= j + r) ? ncost[i-1][j] : INF;
@@ -147,7 +151,6 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
       ncost[i][j] = metric->normDTW(cost[i][j], a, b);
       bestSoFar = min(bestSoFar, ncost[i][j]);
     }
-
     if (bestSoFar > dropout)
     {
       dropped = true;
@@ -162,7 +165,6 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   {
     result = ncost[m - 1][n - 1];
   }
-
   for(int i = 1; i < m; i++)
   {
     for(int j = 1; j < n; j++)

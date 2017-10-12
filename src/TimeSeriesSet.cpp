@@ -11,6 +11,8 @@
 #include "Exception.hpp"
 
 using std::string;
+using std::cout;
+using std::endl;
 
 namespace genex {
 
@@ -176,7 +178,7 @@ void TimeSeriesSet::saveData(const string& filePath, char separator) const
     for (int j = 0; j < itemLength; j++) {
       f << data[i * itemLength + j] << separator;
     }
-    f << std::endl;
+    f << endl;
   }
   f.close();
 }
@@ -343,7 +345,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
       // iterate through all interval window lengths
       for (int start = 0; start <= timeSeriesLength - intervalLength; 
             start++) 
-      {                  
+      {
         TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);
         if (k > 0) {
           if (PAABlock > 0)
@@ -359,7 +361,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
           if (k == 0) {
             // Heapify exactly once when the heap is filled.
             std::make_heap(bestSoFar.begin(), bestSoFar.end());
-          }   
+          }
         } 
         else
         {
@@ -372,7 +374,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
           else {
             currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);
           }
-          if (currentDist < bestSoFarDist) 
+          if (currentDist < bestSoFarDist)
           { 
             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
             std::push_heap(bestSoFar.begin(), bestSoFar.end());
