@@ -189,6 +189,10 @@ public:
 
   dataset_info_t PAA(int idx, int n);
 
+  data_t distanceBetween(int ds1, int idx1, int start1, int end1,
+                         int ds2, int idx2, int start2, int end2,
+                         const std::string& distance_name);
+  
 private:
   void _checkDatasetIndex(int index);
 

@@ -182,6 +182,17 @@ dataset_info_t GenexAPI::PAA(int idx, int n)
   return this->getDatasetInfo(idx);
 }
 
+data_t GenexAPI::distanceBetween(int ds1, int idx1, int start1, int end1,
+                                 int ds2, int idx2, int start2, int end2,
+                                 const std::string& distance_name)
+{
+  this->_checkDatasetIndex(ds1);
+  this->_checkDatasetIndex(ds2);
+  TimeSeries ts1 = this->loadedDatasets[ds1]->getTimeSeries(idx1, start1, end1);
+  TimeSeries ts2 = this->loadedDatasets[ds1]->getTimeSeries(idx2, start2, end2);  
+  const dist_t distance = getDistance(distance_name);
+  return distance(ts1, ts2, INF);
+}
 
 void GenexAPI::_checkDatasetIndex(int index)
 {

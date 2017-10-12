@@ -241,6 +241,49 @@ MAKE_COMMAND(Timer,
   "Usage: timer [on|off]                                           \n"
   )
 
+MAKE_COMMAND(Distance,
+  {
+    if (tooFewArgs(args, 9) || tooManyArgs(args, 10))
+    {
+      return false;
+    }
+
+    int ds1 = stoi(args[1]);
+    int idx1 = stoi(args[2]);
+    int start1 = stoi(args[3]);
+    int end1 = stoi(args[4]);
+    int ds2 = stoi(args[5]);
+    int idx2 = stoi(args[6]);
+    int start2 = stoi(args[7]);
+    int end2 = stoi(args[8]);
+    string distance = "euclidean_dtw";
+    if (args.size() == 10)
+    {
+      distance = args[9];
+    }
+    genex::data_t dist = gGenexAPI.distanceBetween(ds1, idx1, start1, end1, ds2, idx2, start2, end2, distance);
+    cout << distance << " distance between " << endl
+         << idx1 << " [" << start1 << ", " << end1 << "] from dataset " << ds1 << endl
+         << idx2 << " [" << start2 << ", " << end2 << "] from dataset " << ds2 << endl
+         << "is " << dist << endl;
+    return true;
+  },
+
+  "Calculate distance between two time series",
+
+  "Usage: distance <dataset1> <index1> <start1> <end1> <dataset2> <index2> <start2> <end2> [<distance>]\n"
+  "  dataset1  -  Index of the first dataset.                                                          \n"
+  "  index1    -  Index of the first time series.                                                      \n"
+  "  start1    -  Starting position of the first time series                                           \n"
+  "  end1      -  Ending position of the first tiem series.                                            \n"
+  "  dataset2  -  Index of the first dataset.                                                          \n"
+  "  index2    -  Index of the first time series.                                                      \n"
+  "  start2    -  Starting position of the first time series                                           \n"
+  "  end2      -  Ending position of the first tiem series.                                            \n"
+  "  distance  -  The string identifier of a distance. Use 'list distance' to retrieve the list of     \n"
+  "               loaded distance. Default to euclidean.                                               \n"
+  )
+
 MAKE_COMMAND(GroupDataset,
   {
     if (tooFewArgs(args, 3) || tooManyArgs(args, 4))
@@ -265,7 +308,7 @@ MAKE_COMMAND(GroupDataset,
   "Group a dataset in memory",
 
   "Usage: group <dataset_index> <threshold> [<distance>]          \n"
-  "  dataset_index   - Index of the dataset being unloaded. Use   \n"
+  "  dataset_index   - Index of the dataset being grouped. Use    \n"
   "                    'list dataset' to retrieve the list of     \n"
   "                    loaded datasets.                           \n"
   "  threshold       - Threshold for grouping.                    \n"
@@ -321,7 +364,7 @@ MAKE_COMMAND(LoadGroup,
   "count and item length is the same.                                   \n"
   "                                                                     \n"
   "Usage: loadGroup <dataset_index> <path>                              \n"
-  "  dataset_index   - Index of the dataset whose groups will be saved. \n"
+  "  dataset_index   - Index of the dataset whose groups will be loaded.\n"
   "  path            - Where to save the groups.                        \n"
   )
 
@@ -517,7 +560,7 @@ MAKE_COMMAND(kSimRaw,
     {
       std::cout << "Timeseries " 
                 << results[i].data.getIndex() << " [" << results[i].data.getStart() << ", " << results[i].data.getEnd() << "] "
-                << " - dist = " << results[i].dist 
+                << "- distance = " << results[i].dist 
                 << std::endl; 
     }
 
@@ -671,6 +714,7 @@ map<string, Command*> commands = {
   {"unload", &cmdUnloadDataset},
   {"list", &cmdList},
   {"timer", &cmdTimer},
+  {"distance", &cmdDistance},
   {"group", &cmdGroupDataset},
   {"saveGroup", &cmdSaveGroup},
   {"loadGroup", &cmdLoadGroup},  
