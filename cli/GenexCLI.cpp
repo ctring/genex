@@ -594,6 +594,28 @@ double computeJaccard(const vector<genex::candidate_time_series_t> &a,
   return overlap * 1.0 / (a.size() + b.size() - overlap);
 }
 
+double computeWeightedJaccard(const vector<genex::candidate_time_series_t> &a,
+                              const vector<genex::candidate_time_series_t> &b)
+{
+  double minSum = 0;
+  double maxSum = 0;
+  for (int i = 0; i < max(a.size(), b.size()); i++) {
+    if (abs(a[i].dist - b[i].dist) < EPS) {
+      minSum += 1;
+      maxSum += 1;
+    }
+    else {
+      minSum += min(a[i].data.getIndex(), b[i].data.getIndex())
+              + min(a[i].data.getStart(), b[i].data.getStart())
+              + min(a[i].data.getLength(), b[i].data.getLength());
+      maxSum += max(a[i].data.getIndex(), b[i].data.getIndex())
+              + max(a[i].data.getStart(), b[i].data.getStart())
+              + max(a[i].data.getLength(), b[i].data.getLength());
+    }
+  }
+  return minSum / maxSum;
+}
+
 void printResults(ofstream &fout, const vector<genex::candidate_time_series_t> &r)
 {
   for (unsigned int i = 0; i < r.size(); i++) {
@@ -645,11 +667,13 @@ MAKE_COMMAND(TestSim,
     )
     kSimRawPAATime = __end_time - __start_time;
 
-    double jaccardPAA  = computeJaccard(rawPAAResults, rawResults);   
+    double jaccardPAA  = computeJaccard(rawPAAResults, rawResults);
+    double wjaccardPAA = computeWeightedJaccard(rawPAAResults, rawResults);
 
     ofstream fout(results_path, ios_base::out | ios_base::app );
-    for (int mi = 1; mi <= m; mi += 4) {
-      int h = mi * k;
+
+    int steps = m / 100;
+    for (int h = 1; h <= m; h += steps) {
 
       TIME_COMMAND(
         std::vector<genex::candidate_time_series_t> results =
@@ -659,14 +683,18 @@ MAKE_COMMAND(TestSim,
 
       // Compute the metrics
       double jaccardKSim = computeJaccard(results, rawResults);
+      double wjaccardKSim = computeWeightedJaccard(results, rawResults);
 
       std::cout << "k = " << k << " h = " << h
                 << " Jaccard_kSim = " << jaccardKSim
-                << " Jaccard_kSimRawPAA = " <<  jaccardPAA << endl;
+                << " WJaccard_KSim = " << wjaccardKSim
+                << " Jaccard_kSimRawPAA = " <<  jaccardPAA
+                << " WJaccard_kSimRawPAA = " << wjaccardPAA << endl;
 
       if (fout) {
         fout << k << SEP << h << SEP << block << SEP << ts_index << SEP << start << SEP << end << SEP 
-             << jaccardKSim << SEP << jaccardPAA << SEP << kSimTime.count() << SEP << kSimRawTime.count() << SEP << kSimRawPAATime.count() << SEP;
+             << jaccardKSim << SEP << wjaccardKSim << SEP << jaccardPAA << SEP << wjaccardPAA << SEP
+             << kSimTime.count() << SEP << kSimRawTime.count() << SEP << kSimRawPAATime.count() << SEP;
         printResults(fout, results);
         printResults(fout, rawResults);
         printResults(fout, rawPAAResults);

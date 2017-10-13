@@ -4,9 +4,11 @@
 #include "config.hpp"
 #include <string>
 #include <limits>
+#include <cmath>
 #include <iostream>
 
 #define INF std::numeric_limits<data_t>::infinity()
+#define EPS 1e-12
 
 namespace genex {
 
@@ -196,7 +198,19 @@ struct candidate_time_series_t
 
   bool operator<(const candidate_time_series_t& rhs) const 
   {
-      return dist < rhs.dist;
+    if (abs(dist - rhs.dist) < EPS)
+    {
+      if (data.getIndex() == rhs.data.getIndex())
+      {
+        if (data.getStart() == rhs.data.getStart())
+        {
+          return data.getLength() < rhs.data.getLength();
+        }
+        return data.getStart() < rhs.data.getStart();
+      }
+      return data.getIndex() < rhs.data.getIndex();
+    }
+    return dist < rhs.dist;
   }
   candidate_time_series_t(const TimeSeries& data, data_t dist) : data(data), dist(dist) {};
   candidate_time_series_t() : data(0), dist(0) {}  
