@@ -82,7 +82,10 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   int n = b.getLength();
   int r = calculateWarpingBandSize(max(m, n));
   
-  static DM* metric = new DM();
+  static DM* metric;
+  if (metric == nullptr) {
+    metric = new DM();
+  }
 
   // Fastpath for base intervals
   if (m == 1 && n == 1)

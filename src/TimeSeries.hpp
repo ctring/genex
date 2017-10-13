@@ -80,26 +80,30 @@ public:
   }
 
   /**
-   * @brief Copy assignment operator and copy constructor
+   * @brief Copy constructor
    */
-  TimeSeries& operator=(const TimeSeries& other) = default;
-  TimeSeries& operator=(TimeSeries& other) = default;  
-  TimeSeries(const TimeSeries& other) = default;
-
-  /**
-   *  @brief Move constructor
-   */
-  TimeSeries& operator=(TimeSeries&& other)
+  TimeSeries(const TimeSeries& other)
   {
-    data = other.data;
+    isOwnerOfData = other.isOwnerOfData;
     index = other.index;
     start = other.start;
     end = other.end;
     length = other.length;
-    isOwnerOfData = other.isOwnerOfData;
-    other.data = nullptr;
-    return *this;
+    if (isOwnerOfData)
+    {
+      this->data = new data_t[length];
+      memcpy(this->data, other.data, length * sizeof(data_t));
+    }
+    else {
+      this->data = other.data;
+    }
   }
+
+  /**
+   *  @brief Copy assignment and move assignment
+   */
+  TimeSeries& operator=(const TimeSeries& other);
+  TimeSeries& operator=(TimeSeries&& other);
 
   /**
    *  @brief destructor
@@ -167,7 +171,7 @@ public:
 
 private:
 
-  data_t* data;
+  data_t* data = nullptr;
   bool isOwnerOfData;
   int index;
   int start;
@@ -175,8 +179,8 @@ private:
   int length;
 
   mutable bool keoghCacheValid = false;
-  mutable data_t* keoghLower = NULL;
-  mutable data_t* keoghUpper = NULL;
+  mutable data_t* keoghLower = nullptr;
+  mutable data_t* keoghUpper = nullptr;
   mutable double cachedWarpingBand;
 
   /**
