@@ -1,0 +1,18 @@
+NUM_EXAMPLE_SMALL=10
+NUM_EXAMPLE_MEDIUM=25
+NUM_EXAMPLE_LARGE=40
+PAA_BLOCK=3
+ST=0.2
+K='15 9 1'
+
+./gen_ksim_exp.py 4000 128 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA ${ST} ksim_TwoPatterns_${ST}.genex ../results/ksim_TwoPatterns_${ST}_results.txt \
+    -k $K -m 5000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 50
+
+./gen_ksim_exp.py 6174 152 ../datasets/UCR/Wafer/Wafer_DATA ${ST} ksim_Wafer_${ST}.genex ../results/ksim_Wafer_${ST}_results.txt \
+    -k $K -m 4000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
+
+./gen_ksim_exp.py 308 1092 ../datasets/UCR/Haptics/Haptics_DATA ${ST} ksim_Haptics_${ST}.genex ../results/ksim_Haptics_${ST}_results.txt \
+    -k $K -m 100 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 400
+
+./gen_ksim_exp.py 2345 1024 ../datasets/UCR/MALLAT/MALLAT_DATA ${ST} ksim_MALLAT_${ST}.genex ../results/ksim_MALLAT_${ST}_results.txt \
+    -k $K -m 100 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 400
