@@ -1,0 +1,34 @@
+load ../datasets/UCR/Haptics/Haptics_DATA
+group 0 0.2
+saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS_0.2
+testSim ../results/ksim_Haptics_0.2_results.txt
+testSim 15 100 3 0 0 284 657 1089
+testSim 15 100 3 0 0 25 410 929
+testSim 15 100 3 0 0 163 90 605
+testSim 15 100 3 0 0 136 153 798
+testSim 15 100 3 0 0 7 59 909
+testSim 15 100 3 0 0 129 355 1003
+testSim 15 100 3 0 0 110 39 951
+testSim 15 100 3 0 0 181 455 1002
+testSim 15 100 3 0 0 298 251 986
+testSim 15 100 3 0 0 113 396 992
+testSim 9 100 3 0 0 284 657 1089
+testSim 9 100 3 0 0 25 410 929
+testSim 9 100 3 0 0 163 90 605
+testSim 9 100 3 0 0 136 153 798
+testSim 9 100 3 0 0 7 59 909
+testSim 9 100 3 0 0 129 355 1003
+testSim 9 100 3 0 0 110 39 951
+testSim 9 100 3 0 0 181 455 1002
+testSim 9 100 3 0 0 298 251 986
+testSim 9 100 3 0 0 113 396 992
+testSim 1 100 3 0 0 284 657 1089
+testSim 1 100 3 0 0 25 410 929
+testSim 1 100 3 0 0 163 90 605
+testSim 1 100 3 0 0 136 153 798
+testSim 1 100 3 0 0 7 59 909
+testSim 1 100 3 0 0 129 355 1003
+testSim 1 100 3 0 0 110 39 951
+testSim 1 100 3 0 0 181 455 1002
+testSim 1 100 3 0 0 298 251 986
+testSim 1 100 3 0 0 113 396 992

@@ -620,7 +620,10 @@ void printResults(ofstream &fout, const vector<genex::candidate_time_series_t> &
 {
   for (unsigned int i = 0; i < r.size(); i++) {
     int end = r[i].data.getStart() + r[i].data.getLength();
-    fout << r[i].dist << SEP << r[i].data.getIndex() << SEP << r[i].data.getStart() << SEP << end << SEP;
+    fout << r[i].dist << SEP << r[i].data.getIndex() << SEP << r[i].data.getStart() << SEP << end;
+    if (i < r.size() - 1) {
+      fout << SEP;
+    }
   }
 }
 
@@ -695,8 +698,8 @@ MAKE_COMMAND(TestSim,
         fout << k << SEP << h << SEP << block << SEP << ts_index << SEP << start << SEP << end << SEP 
              << jaccardKSim << SEP << wjaccardKSim << SEP << jaccardPAA << SEP << wjaccardPAA << SEP
              << kSimTime.count() << SEP << kSimRawTime.count() << SEP << kSimRawPAATime.count() << SEP;
-        printResults(fout, results);
-        printResults(fout, rawResults);
+        printResults(fout, results); fout << SEP;
+        printResults(fout, rawResults); fout << SEP;
         printResults(fout, rawPAAResults);
         fout << endl;
       }
