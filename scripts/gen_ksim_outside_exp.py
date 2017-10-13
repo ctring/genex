@@ -27,7 +27,7 @@ def pick_random(count, length, min_length=2, n=10):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Picks random time series given the '
                                                  'dimension of a dataset.')
-    parser.add_argument('count', type=int, help='number of items in the dataset.')
+    parser.add_argument('count', type=int, help='number of items in the query set.')
     parser.add_argument('length', type=int, help='length of each item in the dataset.')
     parser.add_argument('ds_path', help='path to the dataset used in the experiment')
     parser.add_argument('q_path', help='path to the query file used in the experiment')

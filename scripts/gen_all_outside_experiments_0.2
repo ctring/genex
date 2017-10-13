@@ -5,22 +5,22 @@ PAA_BLOCK=3
 ST=0.2
 K='15 9 1'
 
-./gen_ksim_outside_exp.py 4000 128 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA \
+./gen_ksim_outside_exp.py 1000 128 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA \
     ../datasets/UCR/Two_Patterns/TwoPatterns_QUERY ${ST} \
     ksim_outside_TwoPatterns_${ST}.genex ../results/ksim_outside_TwoPatterns_${ST}_results.txt \
     -k $K -m 325120 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 50
 
-./gen_ksim_outside_exp.py 6174 152 ../datasets/UCR/Wafer/Wafer_DATA \
+./gen_ksim_outside_exp.py 1000 152 ../datasets/UCR/Wafer/Wafer_DATA \
     ../datasets/UCR/Wafer/Wafer_QUERY ${ST} \
     ksim_outside_Wafer_${ST}.genex ../results/ksim_outside_Wafer_${ST}_results.txt \
     -k $K -m 708528 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
 
-./gen_ksim_outside_exp.py 308 1092 ../datasets/UCR/Haptics/Haptics_DATA \
+./gen_ksim_outside_exp.py 155 1092 ../datasets/UCR/Haptics/Haptics_DATA \
     ../datasets/UCR/Haptics/Haptics_QUERY ${ST} \
     ksim_outside_Haptics_${ST}.genex ../results/ksim_outside_Haptics_${ST}_results.txt \
     -k $K -m 1834712 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 400
 
-./gen_ksim_outside_exp.py 2345 1024 ../datasets/UCR/MALLAT/MALLAT_DATA \
+./gen_ksim_outside_exp.py 55 1024 ../datasets/UCR/MALLAT/MALLAT_DATA \
     ../datasets/UCR/MALLAT/MALLAT_QUERY ${ST} \
     ksim_outside_MALLAT_${ST}.genex ../results/ksim_outside_MALLAT_${ST}_results.txt \
     -k $K -m 12282547 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 400

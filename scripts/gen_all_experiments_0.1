@@ -11,7 +11,7 @@ K='15 9 1'
 ./gen_ksim_exp.py 100 96 ../datasets/UCR/ECG200/ECG200_DATA ${ST} ksim_ECG200_${ST}.genex ../results/ksim_ECG200_${ST}_results.txt \
     -k $K -m 10000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 40
 
-./gen_ksim_exp.py 100 96 ../datasets/UCR/synthetic_control/synthetic_control_DATA ${ST} ksim_synthetic_control_${ST}.genex ../results/ksim_synthetic_control_${ST}_results.txt \
+./gen_ksim_exp.py 300 60 ../datasets/UCR/synthetic_control/synthetic_control_DATA ${ST} ksim_synthetic_control_${ST}.genex ../results/ksim_synthetic_control_${ST}_results.txt \
     -k $K -m 10000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 40
 
 ./gen_ksim_exp.py 150 150 ../datasets/UCR/Gun_Point/Gun_Point_DATA ${ST} ksim_Gun_Point_${ST}.genex ../results/ksim_Gun_Point_${ST}_results.txt \
