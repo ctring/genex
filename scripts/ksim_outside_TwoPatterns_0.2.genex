@@ -1,0 +1,35 @@
+load ../datasets/UCR/Two_Patterns/TwoPatterns_DATA
+load ../datasets/UCR/Two_Patterns/TwoPatterns_QUERY
+group 0 0.2
+saveGroup 0 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA_GROUPS_0.2
+testSim ../results/ksim_outside_TwoPatterns_0.2_results.txt
+testSim 15 325120 3 0 1 3699 74 128
+testSim 15 325120 3 0 1 334 46 109
+testSim 15 325120 3 0 1 2120 10 73
+testSim 15 325120 3 0 1 1778 17 95
+testSim 15 325120 3 0 1 99 6 107
+testSim 15 325120 3 0 1 1684 40 118
+testSim 15 325120 3 0 1 1435 4 112
+testSim 15 325120 3 0 1 2356 51 118
+testSim 15 325120 3 0 1 3882 28 116
+testSim 15 325120 3 0 1 1474 45 117
+testSim 9 325120 3 0 1 3699 74 128
+testSim 9 325120 3 0 1 334 46 109
+testSim 9 325120 3 0 1 2120 10 73
+testSim 9 325120 3 0 1 1778 17 95
+testSim 9 325120 3 0 1 99 6 107
+testSim 9 325120 3 0 1 1684 40 118
+testSim 9 325120 3 0 1 1435 4 112
+testSim 9 325120 3 0 1 2356 51 118
+testSim 9 325120 3 0 1 3882 28 116
+testSim 9 325120 3 0 1 1474 45 117
+testSim 1 325120 3 0 1 3699 74 128
+testSim 1 325120 3 0 1 334 46 109
+testSim 1 325120 3 0 1 2120 10 73
+testSim 1 325120 3 0 1 1778 17 95
+testSim 1 325120 3 0 1 99 6 107
+testSim 1 325120 3 0 1 1684 40 118
+testSim 1 325120 3 0 1 1435 4 112
+testSim 1 325120 3 0 1 2356 51 118
+testSim 1 325120 3 0 1 3882 28 116
+testSim 1 325120 3 0 1 1474 45 117

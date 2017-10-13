@@ -6,7 +6,7 @@ ST=0.1
 K='15 9 1'
 
 ./gen_ksim_exp.py 109 24 ../datasets/UCR/ItalyPowerDemand/ItalyPowerDemand_DATA ${ST} ksim_ItalyPowerDemand_${ST}.genex ../results/ksim_ItalyPowerDemand_${ST}_results.txt \
-    -k $K -m 20000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 10
+    -k $K -m 10000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 10
 
 ./gen_ksim_exp.py 100 96 ../datasets/UCR/ECG200/ECG200_DATA ${ST} ksim_ECG200_${ST}.genex ../results/ksim_ECG200_${ST}_results.txt \
     -k $K -m 10000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 40
@@ -15,8 +15,8 @@ K='15 9 1'
     -k $K -m 10000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 40
 
 ./gen_ksim_exp.py 150 150 ../datasets/UCR/Gun_Point/Gun_Point_DATA ${ST} ksim_Gun_Point_${ST}.genex ../results/ksim_Gun_Point_${ST}_results.txt \
-    -k $K -m 4000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
+    -k $K -m 16762 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
 
 ./gen_ksim_exp.py 1690 131 ../datasets/UCR/FaceAll/FaceAll_DATA ${ST} ksim_FaceAll_${ST}.genex ../results/ksim_FaceAll_${ST}_results.txt \
-    -k $K -m 5000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
+    -k $K -m 143904 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
 
