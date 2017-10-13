@@ -676,7 +676,7 @@ MAKE_COMMAND(TestSim,
     ofstream fout(results_path, ios_base::out | ios_base::app );
 
     int steps = m / 100;
-    for (int h = 1; h <= m; h += steps) {
+    for (int h = k; h <= m; h += steps) {
 
       TIME_COMMAND(
         std::vector<genex::candidate_time_series_t> results =
