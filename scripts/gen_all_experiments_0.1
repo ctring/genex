@@ -17,6 +17,11 @@ K='15 9 1'
 ./gen_ksim_exp.py 150 150 ../datasets/UCR/Gun_Point/Gun_Point_DATA ${ST} ksim_Gun_Point_${ST}.genex ../results/ksim_Gun_Point_${ST}_results.txt \
     -k $K -m 16762 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
 
+./gen_ksim_exp.py 760 99 ../datasets/UCR/MedicalImages/MedicalImages_DATA ${ST} ksim_MedicalImages_${ST}.genex ../results/ksim_MedicalImages_${ST}_results.txt \
+    -k $K -m 36868 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
+
 ./gen_ksim_exp.py 1690 131 ../datasets/UCR/FaceAll/FaceAll_DATA ${ST} ksim_FaceAll_${ST}.genex ../results/ksim_FaceAll_${ST}_results.txt \
     -k $K -m 143904 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
 
+./gen_ksim_exp.py 450 455 ../datasets/UCR/50words/50words_DATA ${ST} ksim_50words_${ST}.genex ../results/ksim_50words_${ST}_results.txt \
+    -k $K -m 165233 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60

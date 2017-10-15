@@ -10,8 +10,8 @@ load ../datasets/UCR/MedicalImages/MedicalImages_TEST 0 1 ,
 load ../datasets/UCR/MedicalImages/MedicalImages_TRAIN 0 1 ,
 load ../datasets/UCR/FaceAll/FaceAll_TEST 0 1 ,
 load ../datasets/UCR/FaceAll/FaceAll_TRAIN 0 1 ,
-load ../datasets/UCR/50Words/50Words_TEST 0 1 ,
-load ../datasets/UCR/50Words/50Words_TRAIN 0 1 ,
+load ../datasets/UCR/50words/50words_TEST 0 1 ,
+load ../datasets/UCR/50words/50words_TRAIN 0 1 ,
 load ../datasets/UCR/Two_Patterns/Two_Patterns_TEST 0 1 ,
 load ../datasets/UCR/Two_Patterns/Two_Patterns_TRAIN 0 1 ,
 load ../datasets/UCR/wafer/wafer_TEST 0 1 ,
@@ -58,8 +58,8 @@ save 8 ../datasets/UCR/MedicalImages/MedicalImages_DATA
 save 9 ../datasets/UCR/MedicalImages/MedicalImages_QUERY
 save 10 ../datasets/UCR/FaceAll/FaceAll_DATA
 save 11 ../datasets/UCR/FaceAll/FaceAll_QUERY
-save 12 ../datasets/UCR/50Words/50Words_DATA
-save 13 ../datasets/UCR/50Words/50Words_QUERY
+save 12 ../datasets/UCR/50words/50words_DATA
+save 13 ../datasets/UCR/50words/50words_QUERY
 save 14 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
 save 15 ../datasets/UCR/Two_Patterns/Two_Patterns_QUERY
 save 16 ../datasets/UCR/wafer/wafer_DATA
