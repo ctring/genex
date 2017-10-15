@@ -607,10 +607,12 @@ double computeWeightedJaccard(const vector<genex::candidate_time_series_t> &a,
     else {
       minSum += min(a[i].data.getIndex(), b[i].data.getIndex())
               + min(a[i].data.getStart(), b[i].data.getStart())
-              + min(a[i].data.getLength(), b[i].data.getLength());
+              + min(a[i].data.getLength(), b[i].data.getLength())
+              + min(a[i].dist, b[i].dist);
       maxSum += max(a[i].data.getIndex(), b[i].data.getIndex())
               + max(a[i].data.getStart(), b[i].data.getStart())
-              + max(a[i].data.getLength(), b[i].data.getLength());
+              + max(a[i].data.getLength(), b[i].data.getLength())
+              + max(a[i].dist, b[i].dist);
     }
   }
   return minSum / maxSum;
@@ -676,6 +678,7 @@ MAKE_COMMAND(TestSim,
     ofstream fout(results_path, ios_base::out | ios_base::app );
 
     int steps = m / 100;
+    int count = -1;
     for (int h = k; h <= m; h += steps) {
 
       TIME_COMMAND(
@@ -703,6 +706,17 @@ MAKE_COMMAND(TestSim,
         printResults(fout, rawPAAResults);
         fout << endl;
       }
+      if (abs(wjaccardKSim - 1.0) < EPS) {
+        if (count == -1) {
+          count = 4;
+        }
+        else {
+          count--;
+          if (count == 0) {
+            break;
+          }
+        }
+      } 
     }
     if (fout) {
       cout << "Results appended to " << results_path << endl;
