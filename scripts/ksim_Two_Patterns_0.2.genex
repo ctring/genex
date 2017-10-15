@@ -1,7 +1,6 @@
-load ../datasets/UCR/Two_Patterns/TwoPatterns_DATA
-group 0 0.2
-saveGroup 0 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA_GROUPS_0.2
-testSim ../results/ksim_TwoPatterns_0.2_results.txt
+load ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
+loadGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS_0.2
+testSim ../results/ksim_Two_Patterns_0.2_results.txt
 testSim 15 325120 3 0 0 3699 74 128
 testSim 15 325120 3 0 0 334 46 109
 testSim 15 325120 3 0 0 2120 10 73

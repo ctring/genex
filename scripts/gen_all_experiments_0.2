@@ -5,7 +5,7 @@ PAA_BLOCK=3
 ST=0.2
 K='15 9 1'
 
-./gen_ksim_exp.py 4000 128 ../datasets/UCR/Two_Patterns/TwoPatterns_DATA ${ST} ksim_TwoPatterns_${ST}.genex ../results/ksim_TwoPatterns_${ST}_results.txt \
+./gen_ksim_exp.py 4000 128 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA ${ST} ksim_Two_Patterns_${ST}.genex ../results/ksim_Two_Patterns_${ST}_results.txt \
     -k $K -m 325120 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 50
 
 ./gen_ksim_exp.py 6174 152 ../datasets/UCR/Wafer/Wafer_DATA ${ST} ksim_Wafer_${ST}.genex ../results/ksim_Wafer_${ST}_results.txt \
