@@ -6,8 +6,12 @@ load ../datasets/UCR/synthetic_control/synthetic_control_TEST 0 1 ,
 load ../datasets/UCR/synthetic_control/synthetic_control_TRAIN 0 1 ,
 load ../datasets/UCR/Gun_Point/Gun_Point_TEST 0 1 ,
 load ../datasets/UCR/Gun_Point/Gun_Point_TRAIN 0 1 ,
+load ../datasets/UCR/MedicalImages/MedicalImages_TEST 0 1 ,
+load ../datasets/UCR/MedicalImages/MedicalImages_TRAIN 0 1 ,
 load ../datasets/UCR/FaceAll/FaceAll_TEST 0 1 ,
 load ../datasets/UCR/FaceAll/FaceAll_TRAIN 0 1 ,
+load ../datasets/UCR/50Words/50Words_TEST 0 1 ,
+load ../datasets/UCR/50Words/50Words_TRAIN 0 1 ,
 load ../datasets/UCR/Two_Patterns/Two_Patterns_TEST 0 1 ,
 load ../datasets/UCR/Two_Patterns/Two_Patterns_TRAIN 0 1 ,
 load ../datasets/UCR/wafer/wafer_TEST 0 1 ,
@@ -38,6 +42,10 @@ normalize 16
 normalize 17
 normalize 18
 normalize 19
+normalize 20
+normalize 21
+normalize 22
+normalize 23
 save 0 ../datasets/UCR/ItalyPowerDemand/ItalyPowerDemand_DATA
 save 1 ../datasets/UCR/ItalyPowerDemand/ItalyPowerDemand_QUERY
 save 2 ../datasets/UCR/ECG200/ECG200_DATA
@@ -46,15 +54,19 @@ save 4 ../datasets/UCR/synthetic_control/synthetic_control_DATA
 save 5 ../datasets/UCR/synthetic_control/synthetic_control_QUERY
 save 6 ../datasets/UCR/Gun_Point/Gun_Point_DATA
 save 7 ../datasets/UCR/Gun_Point/Gun_Point_QUERY
-save 8 ../datasets/UCR/FaceAll/FaceAll_DATA
-save 9 ../datasets/UCR/FaceAll/FaceAll_QUERY
-save 10 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
-save 11 ../datasets/UCR/Two_Patterns/Two_Patterns_QUERY
-save 12 ../datasets/UCR/wafer/wafer_DATA
-save 13 ../datasets/UCR/wafer/wafer_QUERY
-save 14 ../datasets/UCR/Haptics/Haptics_DATA
-save 15 ../datasets/UCR/Haptics/Haptics_QUERY
-save 16 ../datasets/UCR/MALLAT/MALLAT_DATA
-save 17 ../datasets/UCR/MALLAT/MALLAT_QUERY
-save 18 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA
-save 19 ../datasets/UCR/StarLightCurves/StarLightCurves_QUERY
+save 8 ../datasets/UCR/MedicalImages/MedicalImages_DATA
+save 9 ../datasets/UCR/MedicalImages/MedicalImages_QUERY
+save 10 ../datasets/UCR/FaceAll/FaceAll_DATA
+save 11 ../datasets/UCR/FaceAll/FaceAll_QUERY
+save 12 ../datasets/UCR/50Words/50Words_DATA
+save 13 ../datasets/UCR/50Words/50Words_QUERY
+save 14 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
+save 15 ../datasets/UCR/Two_Patterns/Two_Patterns_QUERY
+save 16 ../datasets/UCR/wafer/wafer_DATA
+save 17 ../datasets/UCR/wafer/wafer_QUERY
+save 18 ../datasets/UCR/Haptics/Haptics_DATA
+save 19 ../datasets/UCR/Haptics/Haptics_QUERY
+save 20 ../datasets/UCR/MALLAT/MALLAT_DATA
+save 21 ../datasets/UCR/MALLAT/MALLAT_QUERY
+save 22 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA
+save 23 ../datasets/UCR/StarLightCurves/StarLightCurves_QUERY
