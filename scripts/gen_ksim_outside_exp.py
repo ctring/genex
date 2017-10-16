@@ -1,5 +1,7 @@
 #!/usr/bin/python
 '''
+Generate a command file for automated kSim experiment with out-of-dataset queries
+
 Example:
     ./gen_ksim_outside_exp.py 10 10 dataset.txt 0.3 experiment.txt results.txt -k 1 3 5 7 -m 7 --seed 23 -n 10
 '''
