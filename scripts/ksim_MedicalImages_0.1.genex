@@ -1,6 +1,5 @@
 load ../datasets/UCR/MedicalImages/MedicalImages_DATA
-group 0 0.1
-saveGroup 0 ../datasets/UCR/MedicalImages/MedicalImages_DATA_GROUPS_0.1
+loadGroup 0 ../datasets/UCR/MedicalImages/MedicalImages_DATA_GROUPS_0.1
 testSim ../results/ksim_MedicalImages_0.1_results.txt
 testSim 15 36868 3 0 0 702 37 99
 testSim 15 36868 3 0 0 63 23 90

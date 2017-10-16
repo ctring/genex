@@ -1,6 +1,5 @@
 load ../datasets/UCR/synthetic_control/synthetic_control_DATA
-group 0 0.1
-saveGroup 0 ../datasets/UCR/synthetic_control/synthetic_control_DATA_GROUPS_0.1
+loadGroup 0 ../datasets/UCR/synthetic_control/synthetic_control_DATA_GROUPS_0.1
 testSim ../results/ksim_synthetic_control_0.1_results.txt
 testSim 15 10000 3 0 0 277 19 60
 testSim 15 10000 3 0 0 25 12 55

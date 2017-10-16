@@ -2,68 +2,68 @@ load ../datasets/UCR/MedicalImages/MedicalImages_DATA
 load ../datasets/UCR/MedicalImages/MedicalImages_QUERY
 loadGroup 0 ../datasets/UCR/MedicalImages/MedicalImages_DATA_GROUPS_0.1
 testSim ../results/ksim_outside_MedicalImages_0.1_results.txt
-// testSim 15 36868 3 0 1 352 37 99
-// testSim 15 36868 3 0 1 31 23 90
-// testSim 15 36868 3 0 1 201 5 71
-// testSim 15 36868 3 0 1 169 8 82
-// testSim 15 36868 3 0 1 9 3 89
-// testSim 15 36868 3 0 1 160 20 94
-// testSim 15 36868 3 0 1 136 2 91
-// testSim 15 36868 3 0 1 224 26 94
-// testSim 15 36868 3 0 1 369 14 93
-// testSim 15 36868 3 0 1 140 22 93
-// testSim 15 36868 3 0 1 119 3 80
-// testSim 15 36868 3 0 1 273 23 90
-// testSim 15 36868 3 0 1 244 7 72
-// testSim 15 36868 3 0 1 123 32 93
-// testSim 15 36868 3 0 1 43 3 64
-// testSim 15 36868 3 0 1 104 22 96
-// testSim 15 36868 3 0 1 126 14 81
-// testSim 15 36868 3 0 1 116 31 95
-// testSim 15 36868 3 0 1 98 4 92
-// testSim 15 36868 3 0 1 269 33 94
-// testSim 15 36868 3 0 1 207 36 98
-// testSim 15 36868 3 0 1 360 6 99
-// testSim 15 36868 3 0 1 21 16 76
-// testSim 15 36868 3 0 1 308 27 99
-// testSim 15 36868 3 0 1 306 37 98
-// testSim 9 36868 3 0 1 352 37 99
-// testSim 9 36868 3 0 1 31 23 90
-// testSim 9 36868 3 0 1 201 5 71
-// testSim 9 36868 3 0 1 169 8 82
-// testSim 9 36868 3 0 1 9 3 89
-// testSim 9 36868 3 0 1 160 20 94
-// testSim 9 36868 3 0 1 136 2 91
-// testSim 9 36868 3 0 1 224 26 94
-// testSim 9 36868 3 0 1 369 14 93
-// testSim 9 36868 3 0 1 140 22 93
-// testSim 9 36868 3 0 1 119 3 80
-// testSim 9 36868 3 0 1 273 23 90
-// testSim 9 36868 3 0 1 244 7 72
-// testSim 9 36868 3 0 1 123 32 93
-// testSim 9 36868 3 0 1 43 3 64
-// testSim 9 36868 3 0 1 104 22 96
-// testSim 9 36868 3 0 1 126 14 81
-// testSim 9 36868 3 0 1 116 31 95
-// testSim 9 36868 3 0 1 98 4 92
-// testSim 9 36868 3 0 1 269 33 94
-// testSim 9 36868 3 0 1 207 36 98
-// testSim 9 36868 3 0 1 360 6 99
-// testSim 9 36868 3 0 1 21 16 76
-// testSim 9 36868 3 0 1 308 27 99
-// testSim 9 36868 3 0 1 306 37 98
-// testSim 1 36868 3 0 1 352 37 99
-// testSim 1 36868 3 0 1 31 23 90
-// testSim 1 36868 3 0 1 201 5 71
-// testSim 1 36868 3 0 1 169 8 82
-// testSim 1 36868 3 0 1 9 3 89
-// testSim 1 36868 3 0 1 160 20 94
-// testSim 1 36868 3 0 1 136 2 91
-// testSim 1 36868 3 0 1 224 26 94
-// testSim 1 36868 3 0 1 369 14 93
-// testSim 1 36868 3 0 1 140 22 93
-// testSim 1 36868 3 0 1 119 3 80
-// testSim 1 36868 3 0 1 273 23 90
+testSim 15 36868 3 0 1 352 37 99
+testSim 15 36868 3 0 1 31 23 90
+testSim 15 36868 3 0 1 201 5 71
+testSim 15 36868 3 0 1 169 8 82
+testSim 15 36868 3 0 1 9 3 89
+testSim 15 36868 3 0 1 160 20 94
+testSim 15 36868 3 0 1 136 2 91
+testSim 15 36868 3 0 1 224 26 94
+testSim 15 36868 3 0 1 369 14 93
+testSim 15 36868 3 0 1 140 22 93
+testSim 15 36868 3 0 1 119 3 80
+testSim 15 36868 3 0 1 273 23 90
+testSim 15 36868 3 0 1 244 7 72
+testSim 15 36868 3 0 1 123 32 93
+testSim 15 36868 3 0 1 43 3 64
+testSim 15 36868 3 0 1 104 22 96
+testSim 15 36868 3 0 1 126 14 81
+testSim 15 36868 3 0 1 116 31 95
+testSim 15 36868 3 0 1 98 4 92
+testSim 15 36868 3 0 1 269 33 94
+testSim 15 36868 3 0 1 207 36 98
+testSim 15 36868 3 0 1 360 6 99
+testSim 15 36868 3 0 1 21 16 76
+testSim 15 36868 3 0 1 308 27 99
+testSim 15 36868 3 0 1 306 37 98
+testSim 9 36868 3 0 1 352 37 99
+testSim 9 36868 3 0 1 31 23 90
+testSim 9 36868 3 0 1 201 5 71
+testSim 9 36868 3 0 1 169 8 82
+testSim 9 36868 3 0 1 9 3 89
+testSim 9 36868 3 0 1 160 20 94
+testSim 9 36868 3 0 1 136 2 91
+testSim 9 36868 3 0 1 224 26 94
+testSim 9 36868 3 0 1 369 14 93
+testSim 9 36868 3 0 1 140 22 93
+testSim 9 36868 3 0 1 119 3 80
+testSim 9 36868 3 0 1 273 23 90
+testSim 9 36868 3 0 1 244 7 72
+testSim 9 36868 3 0 1 123 32 93
+testSim 9 36868 3 0 1 43 3 64
+testSim 9 36868 3 0 1 104 22 96
+testSim 9 36868 3 0 1 126 14 81
+testSim 9 36868 3 0 1 116 31 95
+testSim 9 36868 3 0 1 98 4 92
+testSim 9 36868 3 0 1 269 33 94
+testSim 9 36868 3 0 1 207 36 98
+testSim 9 36868 3 0 1 360 6 99
+testSim 9 36868 3 0 1 21 16 76
+testSim 9 36868 3 0 1 308 27 99
+testSim 9 36868 3 0 1 306 37 98
+testSim 1 36868 3 0 1 352 37 99
+testSim 1 36868 3 0 1 31 23 90
+testSim 1 36868 3 0 1 201 5 71
+testSim 1 36868 3 0 1 169 8 82
+testSim 1 36868 3 0 1 9 3 89
+testSim 1 36868 3 0 1 160 20 94
+testSim 1 36868 3 0 1 136 2 91
+testSim 1 36868 3 0 1 224 26 94
+testSim 1 36868 3 0 1 369 14 93
+testSim 1 36868 3 0 1 140 22 93
+testSim 1 36868 3 0 1 119 3 80
+testSim 1 36868 3 0 1 273 23 90
 testSim 1 36868 3 0 1 244 7 72
 testSim 1 36868 3 0 1 123 32 93
 testSim 1 36868 3 0 1 43 3 64
