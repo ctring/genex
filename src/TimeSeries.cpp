@@ -8,6 +8,7 @@
 #include <sstream>
 #include <iomanip>
 #include <limits>
+#include <cstring>
 
 namespace genex {
 

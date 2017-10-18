@@ -6,6 +6,7 @@
 #include <limits>
 #include <cmath>
 #include <iostream>
+#include <cstring>
 
 #define INF std::numeric_limits<data_t>::infinity()
 #define EPS 1e-12
