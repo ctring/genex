@@ -18,9 +18,19 @@ group 0 0.4
 saveGroup 0 ../datasets/UCR/Gun_Point/Gun_Point_DATA_GROUPS_0.4
 unload 0
 
+load ../datasets/UCR/MedicalImages/MedicalImages_DATA
+group 0 0.4
+saveGroup 0 ../datasets/UCR/MedicalImages/MedicalImages_DATA_GROUPS_0.4
+unload 0
+
 load ../datasets/UCR/FaceAll/FaceAll_DATA
 group 0 0.4
 saveGroup 0 ../datasets/UCR/FaceAll/FaceAll_DATA_GROUPS_0.4
+unload 0
+
+load ../datasets/UCR/50words/50words_DATA
+group 0 0.4
+saveGroup 0 ../datasets/UCR/50words/50words_DATA_GROUPS_0.4
 unload 0
 
 load ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
