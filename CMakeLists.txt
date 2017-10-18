@@ -2,9 +2,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(genex)
 
-
-# inform compiler libs (http://stackoverflow.com/questions/11972603/cmake-clang-and-cv11-on-os-x-10-8)
-set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ -O2 -flto")
+set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # configure header file to include CMAKE values
