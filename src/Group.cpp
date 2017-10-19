@@ -81,6 +81,10 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
     int currStart = currentMemberCoord.second;
 
     TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
+
+    // EXPERIMENT
+    extraTimeSeries ++;
+
     if (k > 0) // directly add to best 
     {
       data_t currentDistance = warpedDistance(query, currentTimeSeries, INF);
@@ -106,6 +110,8 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
     }
     currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
   }
+  // EXPERIMENT
+  extraTimeSeries -= k;
   return bestSoFar;
 }
 

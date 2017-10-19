@@ -680,7 +680,8 @@ MAKE_COMMAND(TestSim,
     int steps = m / 100;
     int count = -1;
     for (int h = k; h <= m; h += steps) {
-
+      // EXPERIMENT
+      extraTimeSeries = 0;
       TIME_COMMAND(
         std::vector<genex::candidate_time_series_t> results =
           gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end);
@@ -692,13 +693,15 @@ MAKE_COMMAND(TestSim,
       double wjaccardKSim = computeWeightedJaccard(results, rawResults);
 
       std::cout << "k = " << k << " h = " << h
+                << " h_extra = " << h + extraTimeSeries
                 << " Jaccard_kSim = " << jaccardKSim
                 << " WJaccard_KSim = " << wjaccardKSim
                 << " Jaccard_kSimRawPAA = " <<  jaccardPAA
                 << " WJaccard_kSimRawPAA = " << wjaccardPAA << endl;
 
       if (fout) {
-        fout << k << SEP << h << SEP << block << SEP << ts_index << SEP << start << SEP << end << SEP 
+        fout << k << SEP << h << SEP << h + extraTimeSeries << SEP << block << SEP
+             << ts_index << SEP << start << SEP << end << SEP 
              << jaccardKSim << SEP << wjaccardKSim << SEP << jaccardPAA << SEP << wjaccardPAA << SEP
              << kSimTime.count() << SEP << kSimRawTime.count() << SEP << kSimRawPAATime.count() << SEP;
         printResults(fout, results); fout << SEP;

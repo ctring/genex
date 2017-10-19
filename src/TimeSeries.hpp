@@ -11,6 +11,9 @@
 #define INF std::numeric_limits<data_t>::infinity()
 #define EPS 1e-12
 
+// EXPERIMENT
+extern int extraTimeSeries;
+
 namespace genex {
 
 #ifdef SINGLE_PRECISION

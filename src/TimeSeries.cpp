@@ -10,6 +10,9 @@
 #include <limits>
 #include <cstring>
 
+// EXPERIMENT
+int extraTimeSeries = 0;
+
 namespace genex {
 
 
@@ -112,7 +115,7 @@ void TimeSeries::generateKeoghLU(int warpingBand) const
 
   warpingBand = min(warpingBand, this->length - 1);
 
-  // Function provided by trillionDTW codebase. See README
+  // Function provided by trillionDTW codebase
   lower_upper_lemire(this->data + this->start, this->length, warpingBand,
                      this->keoghLower, this->keoghUpper);
 
