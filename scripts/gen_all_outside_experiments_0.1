@@ -28,7 +28,7 @@ K='15 9 1'
 ./gen_ksim_outside_exp.py 381 99 ../datasets/UCR/MedicalImages/MedicalImages_DATA \
     ../datasets/UCR/MedicalImages/MedicalImages_QUERY ${ST} \
     ksim_outside_MedicalImages_${ST}.genex ../results/ksim_outside_MedicalImages_${ST}_results.txt \
-    -k $K -m 36868 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
+    -k $K -m 73736 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
 
 ./gen_ksim_outside_exp.py 560 131 ../datasets/UCR/FaceAll/FaceAll_DATA \
     ../datasets/UCR/FaceAll/FaceAll_QUERY ${ST} \
@@ -39,3 +39,8 @@ K='15 9 1'
     ../datasets/UCR/50words/50words_QUERY ${ST} \
     ksim_outside_50words_${ST}.genex ../results/ksim_outside_50words_${ST}_results.txt \
     -k $K -m 165233 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
+
+./gen_ksim_outside_exp.py 1000 152 ../datasets/UCR/Wafer/Wafer_DATA \
+    ../datasets/UCR/Wafer/Wafer_QUERY ${ST} \
+    ksim_outside_Wafer_${ST}.genex ../results/ksim_outside_Wafer_${ST}_results.txt \
+    -k $K -m 708528 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60

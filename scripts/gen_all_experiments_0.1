@@ -18,10 +18,13 @@ K='15 9 1'
     -k $K -m 16762 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
 
 ./gen_ksim_exp.py 760 99 ../datasets/UCR/MedicalImages/MedicalImages_DATA ${ST} ksim_MedicalImages_${ST}.genex ../results/ksim_MedicalImages_${ST}_results.txt \
-    -k $K -m 36868 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
+    -k $K -m 73736 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_MEDIUM --min-length 60
 
 ./gen_ksim_exp.py 1690 131 ../datasets/UCR/FaceAll/FaceAll_DATA ${ST} ksim_FaceAll_${ST}.genex ../results/ksim_FaceAll_${ST}_results.txt \
     -k $K -m 143904 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
 
 ./gen_ksim_exp.py 455 270 ../datasets/UCR/50words/50words_DATA ${ST} ksim_50words_${ST}.genex ../results/ksim_50words_${ST}_results.txt \
     -k $K -m 165233 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
+
+./gen_ksim_exp.py 6174 152 ../datasets/UCR/Wafer/Wafer_DATA ${ST} ksim_Wafer_${ST}.genex ../results/ksim_Wafer_${ST}_results.txt \
+    -k $K -m 708528 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
