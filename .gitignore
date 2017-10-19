@@ -16,6 +16,7 @@ CTestTestfile.cmake
 *.lo
 *.o
 *.obj
+*.pyc
 
 # Precompiled Headers
 *.gch
@@ -46,7 +47,13 @@ CTestTestfile.cmake
 .swp*
 .vscode
 
-# Backups
+# others
 ~$*
 backup/
 results/
+.ipynb_checkpoints/
+*.eps
+*.svg
+*.png
+*.jpeg
+*.jpg
