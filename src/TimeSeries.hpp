@@ -206,7 +206,7 @@ struct candidate_time_series_t
 
   bool operator<(const candidate_time_series_t& rhs) const 
   {
-    if (abs(dist - rhs.dist) < EPS)
+    if (dist == rhs.dist)
     {
       if (data.getIndex() == rhs.data.getIndex())
       {

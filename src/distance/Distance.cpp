@@ -27,7 +27,7 @@ namespace genex {
 /**
  *  Add distances to this list
  */
-static vector<const dist_t> gAllDistance =
+static vector<dist_t> gAllDistance =
   {
     NEW_DISTANCE(Euclidean, data_t),
     NEW_DISTANCE(Manhattan, data_t),

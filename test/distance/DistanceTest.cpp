@@ -10,19 +10,20 @@
 #include "distance/Cosine.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
+#include "TimeSeries.hpp"
 
 using namespace genex;
 
 #define TOLERANCE 1e-9
 struct MockData
 {
-  dist_t euclidean_dist = pairwiseDistance<Euclidean, data_t>;
-  dist_t manhattan_dist = pairwiseDistance<Manhattan, data_t>;
-  dist_t chebyshev_dist = pairwiseDistance<Chebyshev, data_t>;
+  dist_t euclidean_dist = pairwiseDistance<Euclidean, double>;
+  dist_t manhattan_dist = pairwiseDistance<Manhattan, double>;
+  dist_t chebyshev_dist = pairwiseDistance<Chebyshev, double>;
 
-  dist_t euclidean_warped_dist = warpedDistance<Euclidean, data_t>;
-  dist_t manhattan_warped_dist = warpedDistance<Manhattan, data_t>;
-  dist_t chebyshev_warped_dist = warpedDistance<Chebyshev, data_t>;
+  dist_t euclidean_warped_dist = warpedDistance<Euclidean, double>;
+  dist_t manhattan_warped_dist = warpedDistance<Manhattan, double>;
+  dist_t chebyshev_warped_dist = warpedDistance<Chebyshev, double>;
 
   data_t dat_1[5] = {1, 2, 3, 4, 5};
   data_t dat_2[5] = {11, 2, 3, 4, 5};
