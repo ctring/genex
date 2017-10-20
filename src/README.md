@@ -1,0 +1,36 @@
+# Group file format
+
+## Full group file
+
+The first line contains file version, st, and properties of the dataset it comes from
+```
+<file_version> <st> <item_count> <item_length>
+```
+
+The second and third line contains the range of representative lengths and the distance used
+```
+<from_length> <to_length>
+<distance>
+```
+
+For each of the next (`<to-length> - <from_length> + 1`) blocks of lines, each block has the following format
+```
+<number_of_groups>
+<group_description>
+<group_description>
+<group_description>
+...
+(repeat <number_of_groups> times)
+```
+
+A `<group_description>` has 2 lines
+```
+<representative>
+<number_of_time_series> <index> <start> <index> <start> ...
+(the <index> <start> pair repeats <number_of_time_series> times)
+```
+Note that `<representative>` is a list of data points of a sequence; whereas we encode sequences in a group using their index and starting position. The reason is that a representative may be computed, not present in the dataset.
+
+## Group size only file
+
+These files only contain the group size information, thus much smaller. They contain everything as the above format except that the `<group_description>s` are on the same line for each representative length and each `<group_description>` does not have `<representative>` and the `<index> <start>` list.
