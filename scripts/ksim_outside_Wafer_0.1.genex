@@ -1,7 +1,7 @@
-load ../datasets/UCR/Wafer/Wafer_DATA
-load ../datasets/UCR/Wafer/Wafer_QUERY
-loadGroup 0 ../datasets/UCR/Wafer/Wafer_DATA_GROUPS_0.1
-testSim ../results/ksim_outside_Wafer_0.1_results.txt
+load ../datasets/UCR/wafer/wafer_DATA
+load ../datasets/UCR/wafer/wafer_QUERY
+loadGroup 0 ../datasets/UCR/wafer/wafer_DATA_GROUPS_0.1
+testSim ../results/ksim_outside_wafer_0.1_results.txt
 testSim 15 708528 3 0 1 924 88 152
 testSim 15 708528 3 0 1 83 55 131
 testSim 15 708528 3 0 1 530 12 87

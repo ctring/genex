@@ -40,7 +40,7 @@ K='15 9 1'
     ksim_outside_50words_${ST}.genex ../results/ksim_outside_50words_${ST}_results.txt \
     -k $K -m 165233 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
 
-./gen_ksim_outside_exp.py 1000 152 ../datasets/UCR/Wafer/Wafer_DATA \
-    ../datasets/UCR/Wafer/Wafer_QUERY ${ST} \
-    ksim_outside_Wafer_${ST}.genex ../results/ksim_outside_Wafer_${ST}_results.txt \
+./gen_ksim_outside_exp.py 1000 152 ../datasets/UCR/wafer/wafer_DATA \
+    ../datasets/UCR/wafer/wafer_QUERY ${ST} \
+    ksim_outside_wafer_${ST}.genex ../results/ksim_outside_wafer_${ST}_results.txt \
     -k $K -m 708528 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_SMALL --min-length 60
