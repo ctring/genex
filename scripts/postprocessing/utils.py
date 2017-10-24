@@ -24,6 +24,10 @@ def read_results_file(result_path):
     return df
 
 
+def combine_in_out(df_in, df_out):
+    pd.concat([df_in, df_out], ignore_index=True)
+
+
 def sort_and_clamp(s, limit):
     s = s.sort_index()
     last = s.iloc[-1]
@@ -133,7 +137,7 @@ def average_metric(df, metric, k):
             float(sum_min_extent) / counter)
 
 
-def report_accuracy(df, k, metric='l1', ylabel='L1', title='', xlim=5000, plot_paa=True):
+def report_accuracy(df, k, metric='wjaccard_dist', ylabel='L1', title='', xlim=5000, plot_paa=True):
     df_metric, avg_max_acc, avg_min_extent = average_metric(df, metric=metric, k=k)
 
     avg_metric = sort_and_clamp(df_metric.mean(axis=1), limit=xlim)

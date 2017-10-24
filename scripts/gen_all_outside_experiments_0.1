@@ -13,7 +13,7 @@ K='15 9 1'
 ./gen_ksim_outside_exp.py 100 96 ../datasets/UCR/ECG200/ECG200_DATA \
     ../datasets/UCR/ECG200/ECG200_QUERY ${ST} \
     ksim_outside_ECG200_${ST}.genex ../results/ksim_outside_ECG200_${ST}_results.txt \
-    -k $K -m 10000 --paa $PAA_BLOCK --seed 23 -n $NUM_EXAMPLE_LARGE --min-length 40
+    -k $K -m 10000 --paa $PAA_BLOCK --seed 11 -n $NUM_EXAMPLE_LARGE --min-length 40
 
 ./gen_ksim_outside_exp.py 300 60 ../datasets/UCR/synthetic_control/synthetic_control_DATA \
     ../datasets/UCR/synthetic_control/synthetic_control_QUERY ${ST} \
