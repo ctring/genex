@@ -30,7 +30,7 @@ namespace genex {
 
 void GlobalGroupSpace::reset(void)
 {
-  for (unsigned int i = 0; i < this->localLengthGroupSpace.size(); i++) {
+  for (auto i = 0; i < this->localLengthGroupSpace.size(); i++) {
     delete this->localLengthGroupSpace[i];
     this->localLengthGroupSpace[i] = nullptr;
   }
@@ -64,7 +64,7 @@ int GlobalGroupSpace::group(const string& distance_name, data_t threshold)
   this->threshold = threshold;
   int numberOfGroups = 0;
 
-  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
+  for (auto i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
     numberOfGroups += this->_group(i);
   }
@@ -81,7 +81,7 @@ int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_
 
   ThreadPool pool(num_thread);
   vector< std::future<int> > groupCounts;
-  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
+  for (auto i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
     groupCounts.emplace_back(
       pool.enqueue([this, i] {
@@ -89,7 +89,7 @@ int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_
       })
     );
   }
-  for (unsigned int i = 0; i < groupCounts.size(); i++)
+  for (auto i = 0; i < groupCounts.size(); i++)
   {
     numberOfGroups += groupCounts[i].get();
   }
@@ -106,7 +106,7 @@ candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
   const Group* bestSoFarGroup = nullptr;
 
   vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
-  for (unsigned int io = 0; io < order.size(); io++) {
+  for (auto io = 0; io < order.size(); io++) {
     int i = order[io];
     // this looks through each group of a certain length finding the best of those groups
     candidate_group_t candidate = this->localLengthGroupSpace[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
@@ -132,7 +132,7 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
   
   // process each group of a certain length keeping top sum-k groups
   vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
-  for (unsigned int io = 0; io < order.size(); io++) 
+  for (auto io = 0; io < order.size(); io++) 
   {
     int i = order[io];
     kPrime = this->localLengthGroupSpace[i]->
@@ -154,19 +154,19 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
     }
   }
   // add all timeseries in the *better* groups 
-  for (unsigned int i = 0; i < bestSoFar.size(); i++)
+  for (auto i = 0; i < bestSoFar.size(); i++)
   {
     group_index_t g = bestSoFar[i];  
     vector<TimeSeries> members = 
         this->localLengthGroupSpace[g.length]->getGroup(g.index)->getMembers();
     std::vector<candidate_time_series_t> withBounds;
-    for (unsigned int i = 0; i < members.size(); i++) {
+    for (auto i = 0; i < members.size(); i++) {
       withBounds.push_back(candidate_time_series_t(members[i], g.dist + this->threshold));
     }
     best.insert(std::end(best), std::begin(withBounds), std::end(withBounds));  
   }
 
-  for (unsigned int i = 0; i < best.size(); i++) {
+  for (auto i = 0; i < best.size(); i++) {
     best[i].dist = this->warpedDistance(query, best[i].data, INF);
   }
 
@@ -179,7 +179,7 @@ void GlobalGroupSpace::saveGroups(ofstream &fout, bool groupSizeOnly) const
   // Range of lengths and distance name
   fout << 2 << " " << this->localLengthGroupSpace.size() << endl;
   fout << this->distanceName << endl;
-  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++) {
+  for (auto i = 2; i < this->localLengthGroupSpace.size(); i++) {
     this->localLengthGroupSpace[i]->saveGroups(fout, groupSizeOnly);
   }
 }
@@ -195,8 +195,8 @@ int GlobalGroupSpace::loadGroups(ifstream &fin)
   boost::trim_right(distance);
   this->_loadDistance(distance);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);  
-  for (unsigned int i = lenFrom; i < lenTo; i++) {
-    LocalLengthGroupSpace* gel = new LocalLengthGroupSpace(dataset, i);
+  for (auto i = lenFrom; i < lenTo; i++) {
+    auto gel = new LocalLengthGroupSpace(dataset, i);
     numberOfGroups += gel->loadGroups(fin);
     this->localLengthGroupSpace[i] = gel;
   }

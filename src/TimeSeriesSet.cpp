@@ -300,7 +300,7 @@ void TimeSeriesSet::PAA(int n)
     throw GenexException("Block size must be positive");
   }
   int newItemLength = calcPAALength(this->itemLength, n);
-  data_t* new_data = new data_t[this->itemCount * newItemLength];
+  auto new_data = new data_t[this->itemCount * newItemLength];
   for (int ts = 0; ts < this->itemCount; ts++)
   {
     doPAA(this->data + ts * this->itemLength, new_data + ts * newItemLength,
@@ -387,7 +387,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   }
 
   if (PAABlock > 0) {
-    for (unsigned int i = 0; i < bestSoFar.size(); i++) {
+    for (auto i = 0; i < bestSoFar.size(); i++) {
       bestSoFar[i].dist = warpedDistance(query, bestSoFar[i].data, INF);
     }
   }

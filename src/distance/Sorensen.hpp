@@ -13,7 +13,7 @@ class Sorensen
 public:
   data_t* init() const
   {
-    data_t* newData = new data_t[2];
+    auto newData = new data_t[2];
     newData[0] = newData[1] = 0;
     return newData;
   }

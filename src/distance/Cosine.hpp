@@ -13,7 +13,7 @@ class Cosine
 public:
   data_t* init() const
   {
-    data_t* newData = new data_t[3];
+    auto newData = new data_t[3];
     newData[0] = newData[1] = newData[2] = 0;
     return newData;
   }

@@ -624,7 +624,7 @@ double computeWeightedJaccard(const vector<genex::candidate_time_series_t> &a,
 
 void printResults(ofstream &fout, const vector<genex::candidate_time_series_t> &r)
 {
-  for (unsigned int i = 0; i < r.size(); i++) {
+  for (auto i = 0; i < r.size(); i++) {
     int end = r[i].data.getStart() + r[i].data.getLength();
     fout << r[i].dist << SEP << r[i].data.getIndex() << SEP << r[i].data.getStart() << SEP << end;
     if (i < r.size() - 1) {

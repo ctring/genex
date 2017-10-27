@@ -58,7 +58,7 @@ void _initializeAllDistanceMap()
 {
   if (gAllDistanceMap.empty())
   {
-    for (unsigned int i = 0; i < gAllDistance.size(); i++)
+    for (auto i = 0; i < gAllDistance.size(); i++)
     {
       gAllDistanceMap[gAllDistanceName[i]] = gAllDistance[i];
     }
@@ -157,8 +157,8 @@ data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 
   int len = min(a.getLength(), b.getLength());
   int warpingBand = calculateWarpingBandSize(max(a.getLength(), b.getLength()));
-  const data_t* aLower = a.getKeoghLower(warpingBand);
-  const data_t* aUpper = a.getKeoghUpper(warpingBand);
+  const auto aLower = a.getKeoghLower(warpingBand);
+  const auto aUpper = a.getKeoghUpper(warpingBand);
   data_t idropout = dropout * 2 * max(a.getLength(), b.getLength());
   idropout *= idropout;
   data_t lb = 0;

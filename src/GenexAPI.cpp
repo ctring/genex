@@ -18,7 +18,7 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
                                      int startCol, const string& separators)
 {
 
-  GroupableTimeSeriesSet* newSet = new GroupableTimeSeriesSet();
+  auto newSet = new GroupableTimeSeriesSet();
   try {
     newSet->loadData(filePath, maxNumRow, startCol, separators);
   } catch (GenexException& e)
@@ -28,7 +28,7 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
   }
 
   int nextIndex = -1;
-  for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
+  for (auto i = 0; i < this->loadedDatasets.size(); i++)
   {
     if (this->loadedDatasets[i] == nullptr)
     {
@@ -69,7 +69,7 @@ void GenexAPI::unloadDataset(int index)
 
 void GenexAPI::unloadAllDataset()
 {
-  for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
+  for (auto i = 0; i < this->loadedDatasets.size(); i++)
   {
     delete this->loadedDatasets[i];
   }
@@ -86,7 +86,7 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
 {
   this->_checkDatasetIndex(index);
 
-  GroupableTimeSeriesSet* dataset = this->loadedDatasets[index];
+  auto dataset = this->loadedDatasets[index];
   return dataset_info_t(index,
                         dataset->getFilePath(),
                         dataset->getItemCount(),
@@ -98,7 +98,7 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
 vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
 {
   vector<dataset_info_t> info;
-  for (unsigned int i = 0; i < this->loadedDatasets.size(); i++)
+  for (auto i = 0; i < this->loadedDatasets.size(); i++)
   {
     if (loadedDatasets[i] != nullptr)
     {
