@@ -40,11 +40,11 @@ saveGroup 0 ../datasets/UCR/50words/50words_DATA_GROUPS_0.9
 saveGroup 0 ../datasets/UCR/50words/50words_DATA_GROUPS_SIZE_0.9 1
 unload 0
 
-// load ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
-// group 0 0.9
-// saveGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS_0.9
-// saveGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS_SIZE_0.9 1
-// unload 0
+load ../datasets/UCR/Two_Patterns/Two_Patterns_DATA
+group 0 0.9
+saveGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS_0.9
+saveGroup 0 ../datasets/UCR/Two_Patterns/Two_Patterns_DATA_GROUPS_SIZE_0.9 1
+unload 0
 
 load ../datasets/UCR/wafer/wafer_DATA
 group 0 0.9
@@ -52,20 +52,20 @@ saveGroup 0 ../datasets/UCR/wafer/wafer_DATA_GROUPS_0.9
 saveGroup 0 ../datasets/UCR/wafer/wafer_DATA_GROUPS_SIZE_0.9 1
 unload 0
 
-// load ../datasets/UCR/Haptics/Haptics_DATA
-// group 0 0.9
-// saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS_0.9
-// saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS_SIZE_0.9 1
-// unload 0
+load ../datasets/UCR/Haptics/Haptics_DATA
+group 0 0.9
+saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS_0.9
+saveGroup 0 ../datasets/UCR/Haptics/Haptics_DATA_GROUPS_SIZE_0.9 1
+unload 0
 
-// load ../datasets/UCR/MALLAT/MALLAT_DATA
-// group 0 0.9
-// saveGroup 0 ../datasets/UCR/MALLAT/MALLAT_DATA_GROUPS_0.9
-// saveGroup 0 ../datasets/UCR/MALLAT/MALLAT_DATA_GROUPS_SIZE_0.9 1
-// unload 0
+load ../datasets/UCR/MALLAT/MALLAT_DATA
+group 0 0.9
+saveGroup 0 ../datasets/UCR/MALLAT/MALLAT_DATA_GROUPS_0.9
+saveGroup 0 ../datasets/UCR/MALLAT/MALLAT_DATA_GROUPS_SIZE_0.9 1
+unload 0
 
-// load ../datasets/UCR/StarLightCurves/StarLightCurves_DATA
-// group 0 0.9
-// saveGroup 0 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA_GROUPS_0.9
-// saveGroup 0 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA_GROUPS_SIZE_0.9 1
-// unload 0
+load ../datasets/UCR/StarLightCurves/StarLightCurves_DATA
+group 0 0.9
+saveGroup 0 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA_GROUPS_0.9
+saveGroup 0 ../datasets/UCR/StarLightCurves/StarLightCurves_DATA_GROUPS_SIZE_0.9 1
+unload 0
