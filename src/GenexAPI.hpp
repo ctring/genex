@@ -134,7 +134,7 @@ public:
    *  @param distance_name the distance to use when grouping the data
    *  @return the number of groups created
    */
-  int groupDataset(int idx, data_t threshold, const string& distance_name);
+  int groupDataset(int idx, data_t threshold, const string& distance_name, int numThreads = 1);
 
   void saveGroup(int idx, const string& path, bool groupSizeOnly);
   int loadGroup(int idx, const string& path);

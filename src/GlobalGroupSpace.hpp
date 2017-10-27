@@ -49,7 +49,8 @@ public:
    *  @return the number of groups it creates
    */
   int group(const std::string& distance_name, data_t threshold);
- 
+  int groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread);
+
   /**
    *  @brief gets the most similar sequence in the dataset
    *
@@ -84,7 +85,8 @@ private:
   data_t threshold;
   std::string distanceName;
 
-  void loadDistance(const std::string& distanceName);
+  void _loadDistance(const std::string& distanceName);
+  int _group(int i);
 };
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength);

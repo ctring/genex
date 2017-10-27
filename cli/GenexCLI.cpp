@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include <cmath>
+#include <thread>
 #include <boost/tokenizer.hpp>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -296,8 +297,11 @@ MAKE_COMMAND(GroupDataset,
     string distance_name = args.size() == 4 ? args[3] : "euclidean";
 
     int count = -1;
+    int maxThreads = std::thread::hardware_concurrency();
+    cout << "Grouping using " << maxThreads << " threads." << endl;
+    
     TIME_COMMAND(
-      count = gGenexAPI.groupDataset(index, threshold, distance_name);
+      count = gGenexAPI.groupDataset(index, threshold, distance_name, maxThreads);
     )
 
     cout << "Dataset " << index << " is now grouped" << endl;

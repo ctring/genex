@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_grouping_and_reset )
 {
   GroupableTimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_10_space, 20, 0, " ");
-  int groupCnt = tsSet.groupAllLengths("euclidean", 0.5);
+  int groupCnt = tsSet.groupAllLengths("euclidean", 0.5, 1);
   BOOST_CHECK( groupCnt > 2 );
 }
 
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE( basic_get_best_match )
 {
   GroupableTimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_10_space, 20, 0, " ");
-  tsSet.groupAllLengths("euclidean", 0.5);
+  tsSet.groupAllLengths("euclidean", 0.5, 1);
   candidate_time_series_t best = tsSet.getBestMatch(tsSet.getTimeSeries(0));
   BOOST_TEST( best.dist == 0.0 );
 }

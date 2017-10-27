@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <atomic>
 #include <cmath>
 #include <iostream>
 #include <chrono>
@@ -15,6 +16,7 @@ using std::cout;
 using std::ofstream;
 using std::ifstream;
 using std::endl;
+using namespace std::chrono;
 
 #define LOG_EVERY_S 10
 #define LOG_FREQ  5
@@ -43,15 +45,16 @@ void LocalLengthGroupSpace::reset()
   groups.clear();
 }
 
-std::chrono::time_point<std::chrono::system_clock> _last_time;
+std::atomic<long> gLastTime(duration_cast<seconds>(system_clock::now().time_since_epoch()).count());
 
 int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t threshold)
 {
-  std::chrono::duration<float> elapsed_seconds = std::chrono::system_clock::now() - _last_time;
+  long nowInSec = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
+  long elapsedSeconds = nowInSec - gLastTime;
   bool doLog = false;
-  if (elapsed_seconds.count() >= LOG_EVERY_S) {
+  if (elapsedSeconds >= LOG_EVERY_S) {
     doLog = true;
-    _last_time = std::chrono::system_clock::now();
+    gLastTime = nowInSec;
   }
   if (doLog) {
     cout << "Processing time series space of length " << this->length << endl;

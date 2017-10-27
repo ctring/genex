@@ -1,17 +1,21 @@
 #include "GlobalGroupSpace.hpp"
 #include "LocalLengthGroupSpace.hpp"
+#include "TimeSeries.hpp"
+#include "TimeSeriesSet.hpp"
+#include "Group.hpp"
+#include "distance/Distance.hpp"
+#include "lib/ThreadPool.hpp"
+
 #include <cmath>
 #include <sstream>
 #include <functional>
 #include <queue>
 #include <vector>
 #include <fstream>
+#include <future>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
-#include "TimeSeries.hpp"
-#include "TimeSeriesSet.hpp"
-#include "distance/Distance.hpp"
-#include "Group.hpp"
+
 
 using std::vector;
 using std::max;
@@ -33,7 +37,7 @@ void GlobalGroupSpace::reset(void)
   this->localLengthGroupSpace.clear();
 }
 
-void GlobalGroupSpace::loadDistance(const string& distance_name)
+void GlobalGroupSpace::_loadDistance(const string& distance_name)
 {
   this->distanceName = distance_name;
   this->pairwiseDistance = getDistance(distance_name);
@@ -45,22 +49,53 @@ void GlobalGroupSpace::loadDistance(const string& distance_name)
   }  
 }
 
+int GlobalGroupSpace::_group(int i)
+{
+  this->localLengthGroupSpace[i] = new LocalLengthGroupSpace(this->dataset, i);
+  int noOfGenerated = this->localLengthGroupSpace[i]->generateGroups(this->pairwiseDistance, this->threshold);
+  return noOfGenerated;
+}
+
 int GlobalGroupSpace::group(const string& distance_name, data_t threshold)
 {
   reset();
-  this->loadDistance(distance_name);
+  this->_loadDistance(distance_name);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
   this->threshold = threshold;
   int numberOfGroups = 0;
 
   for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
-    this->localLengthGroupSpace[i] = new LocalLengthGroupSpace(dataset, i);
-    int noOfGenerated = this->localLengthGroupSpace[i]->generateGroups(this->pairwiseDistance, threshold);
-    numberOfGroups += noOfGenerated;
+    numberOfGroups += this->_group(i);
   }
   return numberOfGroups;
 }
+
+int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread)
+{
+  reset();
+  this->_loadDistance(distance_name);
+  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+  this->threshold = threshold;
+  int numberOfGroups = 0;
+
+  ThreadPool pool(num_thread);
+  vector< std::future<int> > groupCounts;
+  for (unsigned int i = 2; i < this->localLengthGroupSpace.size(); i++)
+  {
+    groupCounts.emplace_back(
+      pool.enqueue([this, i] {
+        return this->_group(i);
+      })
+    );
+  }
+  for (unsigned int i = 0; i < groupCounts.size(); i++)
+  {
+    numberOfGroups += groupCounts[i].get();
+  }
+  return numberOfGroups;
+}
+
 
 candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
 {
@@ -158,7 +193,7 @@ int GlobalGroupSpace::loadGroups(ifstream &fin)
   string distance;
   fin >> lenFrom >> lenTo >> distance;
   boost::trim_right(distance);
-  this->loadDistance(distance);
+  this->_loadDistance(distance);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);  
   for (unsigned int i = lenFrom; i < lenTo; i++) {
     LocalLengthGroupSpace* gel = new LocalLengthGroupSpace(dataset, i);

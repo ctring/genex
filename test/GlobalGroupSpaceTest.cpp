@@ -55,6 +55,43 @@ BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(TOL
   BOOST_TEST((best.dist)> 0);
 }
 
+BOOST_AUTO_TEST_CASE( local_length_group_space_multi_threaded, *boost::unit_test::tolerance(TOLERANCE) )
+{
+  MockData data;
+
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
+
+  BOOST_CHECK_EQUAL(tsSet.getItemCount(), 5);
+  BOOST_CHECK_EQUAL(tsSet.getItemLength(), 10);
+
+  GlobalGroupSpace gSet(tsSet);
+  gSet.groupMultiThreaded("euclidean", 0.5, 4);
+  candidate_time_series_t best = gSet.getBestMatch(tsSet.getTimeSeries(0, 0, 10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,4,10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,6,9));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,2,10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(0,3,7));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,0,10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,4,10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,6,10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,2,10));
+  BOOST_TEST((best.dist) == 0);
+  best = gSet.getBestMatch(tsSet.getTimeSeries(4,3,7));
+  BOOST_TEST((best.dist) == 0);
+  TimeSeries ts1(data.dat, 0,0,7);
+  best = gSet.getBestMatch(ts1);
+  BOOST_TEST((best.dist)> 0);
+}
+
 BOOST_AUTO_TEST_CASE( traverse_order )
 {
   setWarpingBandRatio(0.4);

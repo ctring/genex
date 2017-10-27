@@ -29,11 +29,12 @@ public:
    *
    *  @param distance_name the distance to use for comparing similarity
    *  @param threshold to use for determing the bound of similarity
+   *  @param numThreads number of thread to perform grouping
    *
    *  @return the number of groups created
    */
-  int groupAllLengths(const std::string& distance_name, data_t threshold);
-
+  int groupAllLengths(const std::string& distance_name, data_t threshold, int numThreads);
+  
   /**
     *  @brief deletes and clears the groups
     */

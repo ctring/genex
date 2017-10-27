@@ -125,10 +125,10 @@ std::pair<data_t, data_t> GenexAPI::normalizeDataset(int idx)
   return this->loadedDatasets[idx]->normalize();
 }
 
-int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_name)
+int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_name, int numThreads)
 {
   this->_checkDatasetIndex(index);
-  return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold);
+  return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold, numThreads);
 }
 
 void GenexAPI::saveGroup(int index, const string &path, bool groupSizeOnly)
