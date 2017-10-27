@@ -5,8 +5,11 @@ project(genex)
 if (UNIX AND NOT APPLE)
   set(CMAKE_AR "gcc-ar")
   set(CMAKE_RANLIB "gcc-ranlib")
+  set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto -pthread")  
+else()
+  set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto -stdlib=libc++")
 endif()
-set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto")
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 # configure header file to include CMAKE values
