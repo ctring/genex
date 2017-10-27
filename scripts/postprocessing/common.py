@@ -51,7 +51,7 @@ all_dataset_metadata = [
     },
     {
         'file_name': 'wafer',
-        'name': 'wafer',
+        'name': 'Wafer',
         'size': 70852824,
         'xlim': 200000
     },
