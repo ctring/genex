@@ -4,6 +4,9 @@
 #include "GroupableTimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
+#include <vector>
+#include <iostream>
+
 using std::string;
 using std::vector;
 
@@ -192,6 +195,14 @@ data_t GenexAPI::distanceBetween(int ds1, int idx1, int start1, int end1,
   TimeSeries ts2 = this->loadedDatasets[ds1]->getTimeSeries(idx2, start2, end2);  
   const dist_t distance = getDistance(distance_name);
   return distance(ts1, ts2, INF);
+}
+
+void GenexAPI::printTS(int ds, int idx, int start, int end)
+{
+  this->_checkDatasetIndex(ds);
+  TimeSeries ts = this->loadedDatasets[ds]->getTimeSeries(idx, start, end);
+  ts.printData(std::cout);
+  std::cout << std::endl;
 }
 
 void GenexAPI::_checkDatasetIndex(int index)

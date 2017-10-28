@@ -193,6 +193,8 @@ public:
                          int ds2, int idx2, int start2, int end2,
                          const std::string& distance_name);
   
+  void printTS(int ds, int idx, int start, int end);
+
 private:
   void _checkDatasetIndex(int index);
 

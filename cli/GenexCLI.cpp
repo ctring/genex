@@ -585,6 +585,36 @@ MAKE_COMMAND(kSimRaw,
   "  PAA_block       - Size of PAA block. Set to 0 or negative to disable PAA feature             \n"
   )
 
+
+  MAKE_COMMAND(PrintTS,
+    {
+      if (tooFewArgs(args, 5) || tooManyArgs(args, 5))
+      {
+        return false;
+      }
+  
+      int ds    = stoi(args[1]);
+      int index = stoi(args[2]);
+      int start = stoi(args[3]);
+      int end   = stoi(args[4]);
+  
+      gGenexAPI.printTS(ds, index, start, end);
+  
+      return true;
+    },
+  
+    "Print a time series.",
+    
+    "Usage: printTS <ds> <index> <start> <end>                            \n"
+    "  ds              - Index of the dataset containing the time series. \n"
+    "  index           - Index of the time series.                        \n"
+    "  start           - The start location of the time series.           \n"
+    "  end             - The end location of the timeseries.                "
+    )
+  
+/************************************************************************
+ *                      Start Experiment Code                           *
+ ************************************************************************/
 #define SEP ","
 string results_path = "results.txt";
 
@@ -753,6 +783,11 @@ MAKE_COMMAND(TestSim,
   
   )
 
+/************************************************************************
+ *                      End Experiment Code                             *
+ ************************************************************************/
+
+
 /**************************************************************************
  * Step 2: Add the Command object into the commands map
  *
@@ -775,6 +810,7 @@ map<string, Command*> commands = {
   {"match", &cmdMatch},
   {"kSim", &cmdkSim},
   {"kSimRaw", &cmdkSimRaw},
+  {"printTS", &cmdPrintTS},
   {"testSim", &cmdTestSim }
 };
 
