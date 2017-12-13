@@ -36,9 +36,9 @@ cmake ..
 make
 ```
 
-A binary named 'onex' will be produced in the build directory. To run it, use:
+A binary named 'konex' will be produced in the build directory. To run it, use:
 ```bash
-./onex
+./konex
 ```
 
 ### Windows
@@ -128,7 +128,7 @@ Timeseries 4 [0, 11] - distance = 0.4034
 
 ## Acknowledgement
 
-The ONEX codebase includes the trillionDTW[0] methods, uses the same pruning
+The KONEX codebase includes the trillionDTW[0] methods, uses the same pruning
 methods, and even uses the trillion implementation of lemire lower/upper
 bound.
 
