@@ -478,11 +478,11 @@ MAKE_COMMAND(kSim,
     int ts_index = stoi(args[4]);
     int start = -1;
     int end = -1;
-    int h = k;
+    int ke = k;
 
     if (args.size() == 6)
     {
-      h = stoi(args[5]);
+      ke = stoi(args[5]);
     }
     else if (args.size() > 6)
     {
@@ -491,12 +491,12 @@ MAKE_COMMAND(kSim,
     }
     if (args.size() > 7)
     {
-      h = stoi(args[7]);
+      ke = stoi(args[7]);
     }
 
     TIME_COMMAND(
       vector<genex::candidate_time_series_t> results =
-        gGenexAPI.kSim(k, h, db_index, q_index, ts_index, start, end); 
+        gGenexAPI.kSim(k, ke, db_index, q_index, ts_index, start, end); 
     )
 
     for (int i = 0; i < results.size(); i++)
@@ -512,7 +512,7 @@ MAKE_COMMAND(kSim,
 
   "Find k similar time series to a query. Provides a bound of dist to the query for each result. The distance is <= the dist provided.",
 
-    "Usage: kSim <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] [<approx>]       \n"
+    "Usage: kSim <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] [<ke>]           \n"
     "  k               - The number of neigbors                                                       \n"    
     "  dataset_index   - Index of loaded dataset to get the result from.                              \n"
     "                    Use 'list dataset' to retrieve the list of                                   \n"
@@ -521,14 +521,12 @@ MAKE_COMMAND(kSim,
     "  ts_index        - Index of the query                                                           \n"
     "  start           - The start location of the query in the timeseries                            \n"
     "  end             - The end location of the query in the timeseries (this point is not included) \n"
-    "  approx          - If set to 1, print the approximated distance. If set to 0, print the exact   \n"
-    "                    distance from the query to the results (might take a bit longer).            \n"
-    "                    (Default is 1)                                                                 "
+    "  ke              - How far that the database will be explored (Default is equal to k)           \n"
     )  
       
 MAKE_COMMAND(kSimRaw,
   {
-    if (tooFewArgs(args, 5) || tooManyArgs(args, 7))
+    if (tooFewArgs(args, 5) || tooManyArgs(args, 8))
     {
       return false;
     }
@@ -573,16 +571,16 @@ MAKE_COMMAND(kSimRaw,
 
   "Perform knn on a time series exhaustively - exact. This function will return exact distances.",
   
-  "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] <PAA_block> \n"
-  "  k               - The number of neigbors                                                     \n"
-  "  dataset_index   - Index of loaded dataset to get the result from.                            \n"
-  "                    Use 'list dataset' to retrieve the list of                                 \n"
-  "                    loaded datasets.                                                           \n"
-  "  q_dataset_idx   - Same as dataset_index, except for the query                                \n"
-  "  ts_index        - Index of the query                                                         \n"
-  "  start           - The start location of the query in the timeseries                          \n"
-  "  end             - The end location of the query in the timeseries                            \n"
-  "  PAA_block       - Size of PAA block. Set to 0 or negative to disable PAA feature             \n"
+  "Usage: kSimRaw <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] [<PAA_block>] \n"
+  "  k               - The number of neigbors                                                       \n"
+  "  dataset_index   - Index of loaded dataset to get the result from.                              \n"
+  "                    Use 'list dataset' to retrieve the list of                                   \n"
+  "                    loaded datasets.                                                             \n"
+  "  q_dataset_idx   - Same as dataset_index, except for the query                                  \n"
+  "  ts_index        - Index of the query                                                           \n"
+  "  start           - The start location of the query in the timeseries                            \n"
+  "  end             - The end location of the query in the timeseries                              \n"
+  "  PAA_block       - Size of PAA block. Set to 0 or negative to disable PAA feature               \n"
   )
 
 

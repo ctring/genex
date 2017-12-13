@@ -51,9 +51,9 @@ cmake .. -G "MinGW Makefiles"
 make
 ```
 
-A binary named 'onex' will be produced in the build directory. To run it, use:
+A binary named 'konex' will be produced in the build directory. To run it, use:
 ```bash
-./onex
+./konex
 ```
 
 ## CLI documentation
@@ -110,17 +110,21 @@ Dataset loaded
   Item length: 20
 ```
 
-5. Find a similar time series from dataset 0 to a time series in dataset 1 
+5. Find top 10 similar time series from dataset 0 to a time series in dataset 1 
 ```
->> match 0 1 0 0 10
-Command executed in 0.001114s
-Best Match is timeseries 7 starting at 8 with length 11. Distance = 0.3933
+>> kSim 10 0 1 0 0 10
+Command executed in 0.002108s
+Timeseries 7 [8, 19] - distance = 0.3933
+Timeseries 0 [7, 18] - distance = 0.3955
+Timeseries 5 [7, 18] - distance = 0.3958
+Timeseries 5 [8, 19] - distance = 0.3965
+Timeseries 5 [9, 20] - distance = 0.3974
+Timeseries 7 [9, 20] - distance = 0.3988
+Timeseries 5 [6, 17] - distance = 0.4006
+Timeseries 3 [1, 12] - distance = 0.4013
+Timeseries 7 [2, 13] - distance = 0.4033
+Timeseries 4 [0, 11] - distance = 0.4034
 ```
-
-## Contributors
-
-ONEX was implemented by Cuong Nguyen, Charles Lovering, Ramoza Ahsan, and Michael Andrews.
-Other contributors include Rodica Neamtu, and Samantha Swartz.
 
 ## Acknowledgement
 
