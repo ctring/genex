@@ -1,4 +1,4 @@
-# ONEX
+# GENEX
 
 ## Install dependencies
 
@@ -36,9 +36,9 @@ cmake ..
 make
 ```
 
-A binary named 'konex' will be produced in the build directory. To run it, use:
+A binary named 'genex' will be produced in the build directory. To run it, use:
 ```bash
-./konex
+./genex
 ```
 
 ### Windows
@@ -51,9 +51,9 @@ cmake .. -G "MinGW Makefiles"
 make
 ```
 
-A binary named 'konex' will be produced in the build directory. To run it, use:
+A binary named 'genex' will be produced in the build directory. To run it, use:
 ```bash
-./konex
+./genex
 ```
 
 ## CLI documentation
@@ -128,7 +128,7 @@ Timeseries 4 [0, 11] - distance = 0.4034
 
 ## Acknowledgement
 
-The KONEX codebase includes the trillionDTW[0] methods, uses the same pruning
+The genex codebase includes the trillionDTW[0] methods, uses the same pruning
 methods, and even uses the trillion implementation of lemire lower/upper
 bound.
 
