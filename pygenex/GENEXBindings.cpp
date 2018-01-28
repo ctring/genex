@@ -39,8 +39,14 @@ int loadDataset(const char* path,
   return info.id;
 }
 
+const char* greet()
+{
+  return "hello";
+}
+
 BOOST_PYTHON_MODULE(pygenex)
 {
   using namespace boost::python;
   def("loadDataset", loadDataset);
+  def("greet", greet);
 }
