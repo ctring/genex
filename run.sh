@@ -5,6 +5,6 @@ export CXX=/usr/bin/clang++
 mkdir -p build
 cd build
 cmake ..
-make && ctest -V
+make -j 2 && ctest -V
 cd ..
 
