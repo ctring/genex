@@ -1,5 +1,5 @@
 # primary source: https://cmake.org/cmake-tutorial/
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 2.8)
 project(genex)
 
 if (UNIX AND NOT APPLE)
@@ -24,7 +24,8 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 
 # include boost
-find_package(Boost 1.66 REQUIRED COMPONENTS unit_test_framework python3)
+find_package(Boost 1.40 REQUIRED COMPONENTS unit_test_framework python)
+message(${Boost_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 
 # include GNU readline
