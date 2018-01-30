@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <boost/test/included/unit_test.hpp>
 #include "IO.hpp"
+
 #include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"

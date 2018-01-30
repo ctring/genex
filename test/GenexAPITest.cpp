@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE "Test TimeSeriesSet class"
 
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <cstdio>
 #include <iostream>     // std::cout
