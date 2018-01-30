@@ -24,8 +24,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 
 # include boost
-find_package(Boost 1.40 REQUIRED COMPONENTS unit_test_framework python)
-message(${Boost_INCLUDE_DIRS})
+find_package(Boost 1.60 REQUIRED COMPONENTS unit_test_framework)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # include GNU readline
@@ -38,9 +37,6 @@ add_subdirectory(src)
 
 # build the genex command-line interface
 add_subdirectory(cli)
-
-# build pygenex
-add_subdirectory(pygenex)
 
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)
 enable_testing()
