@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE "Test General Distance Function"
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <cmath>
 #include <iostream>
 

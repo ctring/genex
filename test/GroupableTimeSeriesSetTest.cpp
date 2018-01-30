@@ -2,7 +2,7 @@
 
 #include <cstdio>
 #include <vector>
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include "IO.hpp"
 #include "GroupableTimeSeriesSet.hpp"
 #include "Exception.hpp"

@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE "Test Manhattan Normalization class"
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 
 #include "distance/Manhattan.hpp"
 #include "Exception.hpp"

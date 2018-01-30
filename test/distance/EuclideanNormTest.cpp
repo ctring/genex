@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE "Test Euclidean Normalization class"
 
-#include <boost/test/unit_test.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <cmath>
 
 #include "distance/Euclidean.hpp"

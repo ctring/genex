@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE "Test Groups class"
 
-#include <boost/test/unit_test.hpp>
 #include <cstdio>
+#include <boost/test/included/unit_test.hpp>
 #include "IO.hpp"
 #include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"

@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE "Test LocalLengthGroupSpace class"
 
-#include <boost/test/unit_test.hpp>
 #include <cstdio>
+#include <boost/test/included/unit_test.hpp>
 #include "IO.hpp"
 #include "group/GlobalGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
