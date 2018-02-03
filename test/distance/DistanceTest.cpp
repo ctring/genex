@@ -131,10 +131,10 @@ BOOST_AUTO_TEST_CASE( easy_gwd_dropout, *boost::unit_test::tolerance(TOLERANCE) 
   BOOST_TEST( total_3 == 0.0 );
 
   data_t total_5 = data.manhattan_warped_dist(ts_7, ts_8, 5);
-  BOOST_TEST( total_5 == INF );
+  BOOST_TEST( isinf(total_5) );
 
   data_t total_6 = data.chebyshev_warped_dist(ts_7, ts_8, 5);
-  BOOST_TEST( total_6 == INF );
+  BOOST_TEST( isinf(total_6) );
 }
 
 BOOST_AUTO_TEST_CASE( gwd_different_distances, *boost::unit_test::tolerance(TOLERANCE) )
