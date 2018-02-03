@@ -16,8 +16,6 @@
 #include "Exception.hpp"
 #include "TimeSeries.hpp"
 
-#include "config.hpp"
-
 #define TIME_COMMAND(_command)                                          \
   __start_time = chrono::system_clock::now();                           \
   _command                                                              \

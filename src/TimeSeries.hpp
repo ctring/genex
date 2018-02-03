@@ -1,7 +1,6 @@
 #ifndef TIMESERIES_H
 #define TIMESERIES_H
 
-#include "config.hpp"
 #include <string>
 #include <limits>
 #include <cmath>
@@ -16,11 +15,7 @@ extern int extraTimeSeries;
 
 namespace genex {
 
-#ifdef SINGLE_PRECISION
-typedef float data_t;
-#else
 typedef double data_t;
-#endif
 
 int calculateWarpingBandSize(int length, double ratio);
 

@@ -12,16 +12,6 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
-# configure header file to include CMAKE values
-option(SINGLE_PRECISION "Represent data using single-precision floating-point" OFF)
-configure_file (
-  "${PROJECT_SOURCE_DIR}/config.hpp.in"
-  "${PROJECT_BINARY_DIR}/config.hpp"
-)
-
-# allow src files to see generated config.hpp
-include_directories("${PROJECT_BINARY_DIR}")
-
 
 # include boost
 find_package(Boost 1.60 REQUIRED COMPONENTS unit_test_framework)

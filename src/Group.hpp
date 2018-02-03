@@ -1,8 +1,6 @@
 #ifndef GROUP_HPP
 #define GROUP_HPP
 
-#include "config.hpp"
-
 #include "TimeSeries.hpp"   // INF
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
