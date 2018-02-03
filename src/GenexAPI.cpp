@@ -30,6 +30,8 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
     throw e;
   }
 
+  // Unloading a dataset may create a 'hole' in the list of index. Find the
+  // smallest of such index to fill in.
   int nextIndex = -1;
   for (auto i = 0; i < this->loadedDatasets.size(); i++)
   {
@@ -40,6 +42,7 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
     }
   }
 
+  // If no 'hole' found, use the next index in line
   if (nextIndex < 0) {
     nextIndex = this->loadedDatasets.size();
     this->loadedDatasets.push_back(nullptr);

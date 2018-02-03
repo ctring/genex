@@ -21,16 +21,6 @@ TimeSeriesSet::~TimeSeriesSet()
   this->clearData();
 }
 
-int countNumberOfLines(std::ifstream& f)
-{
-  int lineCount = 0;
-  string line;
-  for (lineCount = 0; std::getline(f, line); ++lineCount);
-  f.clear();
-  f.seekg(0);
-  return lineCount;
-}
-
 inline int calcPAALength(int srcLength, int n)
 {
   return (srcLength - 1) / n + 1;
@@ -73,6 +63,16 @@ TimeSeries tsPAA(const TimeSeries& source, int n)
   return dest;
 }
 
+int _countNumberOfLines(std::ifstream& f)
+{
+  int lineCount = 0;
+  string line;
+  for (lineCount = 0; std::getline(f, line); ++lineCount);
+  f.clear();
+  f.seekg(0);
+  return lineCount;
+}
+
 void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
                              int startCol, const string& separators)
 {
@@ -86,10 +86,10 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
   }
 
   if (maxNumRow <= 0) {
-    maxNumRow = countNumberOfLines(f);
+    maxNumRow = _countNumberOfLines(f);
   }
   else {
-    maxNumRow = std::min(maxNumRow, countNumberOfLines(f));
+    maxNumRow = std::min(maxNumRow, _countNumberOfLines(f));
   }
 
   int length = -1;
