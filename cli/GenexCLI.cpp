@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <map>
 #include <vector>
@@ -195,9 +196,16 @@ MAKE_COMMAND(List,
       cout << infos.size() << " datasets loaded" << endl << endl;
       for (const auto& i : infos)
       {
-        cout << "  " << setw(20) << i.name;
-        cout << "\t" << setw(10) << (i.isNormalized ? "Normalized" : "");
-        cout << "\t" << setw(10) << (i.isGrouped ? "Grouped" : "");
+        cout << "  " << setw(10) << i.name;
+        if (i.isGrouped) {
+          ostringstream ss;
+          ss << "Grouped (" << i.distance << ")";
+          cout << "\t" << setw(25) << ss.str();
+        }
+        else {
+          cout << "\t" << "";
+        }
+        cout << "\t" << setw(10) << (i.isNormalized ? "Normalized" : "");        
         cout << endl;
       }
     }
