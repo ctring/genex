@@ -100,7 +100,7 @@ MAKE_COMMAND(LoadDataset,
 
     genex::dataset_metadata_t info;
     
-    info = gGenexAPI.loadDataset(name, filePath, maxNumRow, startCol, separators);
+    info = gGenexAPI.loadDataset(name, filePath, separators, maxNumRow, startCol);
 
     cout << "Dataset loaded                         " << endl
               << "  Name:        " << info.name       << endl
@@ -400,7 +400,7 @@ MAKE_COMMAND(LoadGroup,
   "  path - Where to save the groups.                                     \n"
   )
 
-MAKE_COMMAND(NormalizeDataset,
+MAKE_COMMAND(Normalize,
   {
     if (tooFewArgs(args, 1) || tooManyArgs(args, 1))
     {
@@ -409,7 +409,7 @@ MAKE_COMMAND(NormalizeDataset,
 
     string name = args[1];
 
-    gGenexAPI.normalizeDataset(name);
+    gGenexAPI.normalize(name);
 
     cout << "Dataset " << name << " is now normalized" << endl;
     return true;
@@ -856,7 +856,7 @@ map<string, Command*> commands = {
   {"group", &cmdGroupDataset},
   {"saveGroup", &cmdSaveGroup},
   {"loadGroup", &cmdLoadGroup},  
-  {"normalize", &cmdNormalizeDataset},
+  {"normalize", &cmdNormalize},
   // {"paa", &cmdPAA},
   {"sim", &cmdSim},
   {"ksim", &cmdKSim},

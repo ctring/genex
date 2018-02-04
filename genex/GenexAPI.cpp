@@ -17,8 +17,8 @@ GenexAPI::~GenexAPI()
   unloadAllDataset();
 }
 
-dataset_metadata_t GenexAPI::loadDataset(const string& name, const string& filePath, int maxNumRow,
-                                     int startCol, const string& separators)
+dataset_metadata_t GenexAPI::loadDataset(const string& name, const string& filePath, const string& separators, 
+                                         int maxNumRow, int startCol)
 {
   // Check if name is already used
   if (this->_loadedDatasets.find(name) != this->_loadedDatasets.end())
@@ -106,7 +106,7 @@ vector<distance_metadata_t> GenexAPI::getAllDistanceInfo()
   return info;
 }
 
-std::pair<data_t, data_t> GenexAPI::normalizeDataset(const string& name)
+std::pair<data_t, data_t> GenexAPI::normalize(const string& name)
 {
   this->_checkDatasetName(name);
   return this->_loadedDatasets[name]->normalize();

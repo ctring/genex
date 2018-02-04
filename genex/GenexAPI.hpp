@@ -19,20 +19,20 @@ namespace genex {
 struct dataset_metadata_t
 {
   dataset_metadata_t() : 
-    name(""), 
-    itemCount(0),
-    itemLength(0),
-    isGrouped(false),
-    distance(""),
-    isNormalized(false) {}
+    name("")
+    , itemCount(0)
+    , itemLength(0)
+    , isGrouped(false)
+    , distance("")
+    , isNormalized(false) {}
 
   dataset_metadata_t(
-    string name,
-    int itemCount,
-    int itemLength,
-    bool isGrouped,
-    string distance,
-    bool isNormalized) :
+    string name
+    , int itemCount
+    , int itemLength
+    , bool isGrouped
+    , string distance
+    , bool isNormalized) :
       name(name),
       itemCount(itemCount),
       itemLength(itemLength),
@@ -84,17 +84,17 @@ public:
    *
    *  @param name name of the dataset
    *  @param filePath path to a text file
-   *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
-   *         all lines are read
    *  @param separator a string containing possible separator characters for values
    *         in a line
+   *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
+   *         all lines are read
    *  @param startCol columns before startCol, in 0-based index, are discarded
    *  @return a dataset_metadata_t struct containing metadata of the dataset
    *
    *  @throw GenexException if cannot read from the given file
    */
-  dataset_metadata_t loadDataset(const string& name, const string& filePath, int maxNumRow,
-                             int startCol, const string& separators);
+  dataset_metadata_t loadDataset(const string& name, const string& filePath, 
+                                 const string& separators, int maxNumRow, int startCol);
 
   /*
    *  @brief saves data from memory to a file
@@ -154,7 +154,7 @@ public:
    *  @return a pair (min, max) - the minimum and maximum value across
    *          the whole dataset before being normalized.
    */
-  std::pair<data_t, data_t> normalizeDataset(const string& name);
+  std::pair<data_t, data_t> normalize(const string& name);
 
   /**
    *  @brief groups a dataset
