@@ -17,9 +17,14 @@ GenexAPI::~GenexAPI()
   unloadAllDataset();
 }
 
-dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
+dataset_info_t GenexAPI::loadDataset(const string& name, const string& filePath, int maxNumRow,
                                      int startCol, const string& separators)
 {
+  // Check if name is already used
+  if (this->_loadedDatasets.find(name) != this->_loadedDatasets.end())
+  {
+    throw GenexException("Name has already been used");
+  }
 
   auto newSet = new GroupableTimeSeriesSet();
   try {
@@ -30,71 +35,49 @@ dataset_info_t GenexAPI::loadDataset(const string& filePath, int maxNumRow,
     throw e;
   }
 
-  // Unloading a dataset may create a 'hole' in the list of index. Find the
-  // smallest of such index to fill in.
-  int nextIndex = -1;
-  for (auto i = 0; i < this->loadedDatasets.size(); i++)
-  {
-    if (this->loadedDatasets[i] == nullptr)
-    {
-      nextIndex = i;
-      break;
-    }
-  }
+  this->_loadedDatasets[name] = newSet;
+  this->_datasetCount++;
 
-  // If no 'hole' found, use the next index in line
-  if (nextIndex < 0) {
-    nextIndex = this->loadedDatasets.size();
-    this->loadedDatasets.push_back(nullptr);
-  }
-
-  this->loadedDatasets[nextIndex] = newSet;
-  this->datasetCount++;
-
-  return this->getDatasetInfo(nextIndex);
+  return this->getDatasetInfo(name);
 }
 
-void GenexAPI::saveDataset(int index, const string& filePath, char separator)
+void GenexAPI::saveDataset(const string& name, const string& filePath, char separator)
 {
-  this->_checkDatasetIndex(index);
-  this->loadedDatasets[index]->saveData(filePath, separator);
+  this->_checkDatasetName(name);
+  this->_loadedDatasets[name]->saveData(filePath, separator);
 }
 
-void GenexAPI::unloadDataset(int index)
+void GenexAPI::unloadDataset(const string& name)
 {
-  this->_checkDatasetIndex(index);
+  this->_checkDatasetName(name);
 
-  delete loadedDatasets[index];
-  loadedDatasets[index] = nullptr;
-  if (index == loadedDatasets.size() - 1)
-  {
-    loadedDatasets.pop_back();
-  }
-  this->datasetCount--;
+  delete this->_loadedDatasets[name];
+  this->_loadedDatasets[name] = nullptr;
+  this->_loadedDatasets.erase(name);
+  this->_datasetCount--;
 }
 
 void GenexAPI::unloadAllDataset()
 {
-  for (auto i = 0; i < this->loadedDatasets.size(); i++)
+  for (auto const& pair : this->_loadedDatasets)
   {
-    delete this->loadedDatasets[i];
+    delete this->_loadedDatasets[pair.first];
   }
-  this->loadedDatasets.clear();
-  this->datasetCount = 0;
+  this->_loadedDatasets.clear();
+  this->_datasetCount = 0;
 }
 
 int GenexAPI::getDatasetCount()
 {
-  return this->datasetCount;
+  return this->_datasetCount;
 }
 
-dataset_info_t GenexAPI::getDatasetInfo(int index)
+dataset_info_t GenexAPI::getDatasetInfo(const string& name)
 {
-  this->_checkDatasetIndex(index);
+  this->_checkDatasetName(name);
 
-  auto dataset = this->loadedDatasets[index];
-  return dataset_info_t(index,
-                        dataset->getFilePath(),
+  auto dataset = this->_loadedDatasets[name];
+  return dataset_info_t(name,
                         dataset->getItemCount(),
                         dataset->getItemLength(),
                         dataset->isGrouped(),
@@ -104,12 +87,9 @@ dataset_info_t GenexAPI::getDatasetInfo(int index)
 vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
 {
   vector<dataset_info_t> info;
-  for (auto i = 0; i < this->loadedDatasets.size(); i++)
+  for (auto const& pair : this->_loadedDatasets)
   {
-    if (loadedDatasets[i] != nullptr)
-    {
-      info.push_back(getDatasetInfo(i));
-    }
+    info.push_back(getDatasetInfo(pair.first));
   }
   return info;
 }
@@ -125,28 +105,28 @@ vector<distance_info_t> GenexAPI::getAllDistanceInfo()
   return info;
 }
 
-std::pair<data_t, data_t> GenexAPI::normalizeDataset(int idx)
+std::pair<data_t, data_t> GenexAPI::normalizeDataset(const string& name)
 {
-  this->_checkDatasetIndex(idx);
-  return this->loadedDatasets[idx]->normalize();
+  this->_checkDatasetName(name);
+  return this->_loadedDatasets[name]->normalize();
 }
 
-int GenexAPI::groupDataset(int index, data_t threshold, const string& distance_name, int numThreads)
+int GenexAPI::groupDataset(const string& name, data_t threshold, const string& distance_name, int numThreads)
 {
-  this->_checkDatasetIndex(index);
-  return this->loadedDatasets[index]->groupAllLengths(distance_name, threshold, numThreads);
+  this->_checkDatasetName(name);
+  return this->_loadedDatasets[name]->groupAllLengths(distance_name, threshold, numThreads);
 }
 
-void GenexAPI::saveGroup(int index, const string &path, bool groupSizeOnly)
+void GenexAPI::saveGroup(const string& name, const string &path, bool groupSizeOnly)
 {
-  this->_checkDatasetIndex(index);
-  this->loadedDatasets[index]->saveGroups(path, groupSizeOnly);
+  this->_checkDatasetName(name);
+  this->_loadedDatasets[name]->saveGroups(path, groupSizeOnly);
 }
 
-int GenexAPI::loadGroup(int index, const string& path)
+int GenexAPI::loadGroup(const string& name, const string& path)
 {
-  this->_checkDatasetIndex(index);
-  return this->loadedDatasets[index]->loadGroups(path);
+  this->_checkDatasetName(name);
+  return this->_loadedDatasets[name]->loadGroups(path);
 }
 
 void GenexAPI::setWarpingBandRatio(double ratio)
@@ -154,65 +134,72 @@ void GenexAPI::setWarpingBandRatio(double ratio)
   genex::setWarpingBandRatio(ratio);
 }
 
-candidate_time_series_t GenexAPI::getBestMatch(int result_idx, int query_idx, int index, int start, int end)
+candidate_time_series_t GenexAPI::getBestMatch(const string& target_name, const string& query_name,
+                                               int index, int start, int end)
 {
-  this->_checkDatasetIndex(result_idx);
-  this->_checkDatasetIndex(query_idx);
+  this->_checkDatasetName(target_name);
+  this->_checkDatasetName(query_name);
 
-  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->getBestMatch(query);
+  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  return _loadedDatasets[target_name]->getBestMatch(query);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSim(int k, int h, int result_idx, int query_idx, int index, int start, int end)
+vector<candidate_time_series_t> 
+GenexAPI::getKBestMatches(int k, int ke, const string& target_name, const string& query_name,
+                          int index, int start, int end)
 {
-  this->_checkDatasetIndex(result_idx);
-  this->_checkDatasetIndex(query_idx);
+  this->_checkDatasetName(target_name);
+  this->_checkDatasetName(query_name);
 
-  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->kSim(query, k, h);
+  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  return _loadedDatasets[target_name]->kSim(query, k, ke);
 }
 
-vector<candidate_time_series_t> GenexAPI::kSimRaw(int k, int result_idx, int query_idx, int index, int start, int end, int PAABlockSize)
+vector<candidate_time_series_t>
+GenexAPI::getKBestMatchesBruteForce(int k, const string& target_name, const string& query_name,
+                                    int index, int start, int end, int PAABlockSize)
 {
-  this->_checkDatasetIndex(result_idx);
-  this->_checkDatasetIndex(query_idx);
+  this->_checkDatasetName(target_name);
+  this->_checkDatasetName(query_name);
 
-  const TimeSeries& query = loadedDatasets[query_idx]->getTimeSeries(index, start, end);
-  return loadedDatasets[result_idx]->kSimRaw(query, k, PAABlockSize);
+  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  return _loadedDatasets[target_name]->kSimRaw(query, k, PAABlockSize);
 }
 
-dataset_info_t GenexAPI::PAA(int idx, int n)
-{
-  this->_checkDatasetIndex(idx);
-  this->loadedDatasets[idx]->PAA(n);
-  return this->getDatasetInfo(idx);
-}
+// TODO: fix this function and also that in the brute force k best match
+// dataset_info_t GenexAPI::PAA(int idx, int n)
+// {
+//   this->_checkDatasetName(idx);
+//   this->_loadedDatasets[idx]->PAA(n);
+//   return this->getDatasetInfo(idx);
+// }
 
-data_t GenexAPI::distanceBetween(int ds1, int idx1, int start1, int end1,
-                                 int ds2, int idx2, int start2, int end2,
-                                 const std::string& distance_name)
+data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int end1,
+                                 const string& name2, int idx2, int start2, int end2,
+                                 const string& distance_name)
 {
-  this->_checkDatasetIndex(ds1);
-  this->_checkDatasetIndex(ds2);
-  TimeSeries ts1 = this->loadedDatasets[ds1]->getTimeSeries(idx1, start1, end1);
-  TimeSeries ts2 = this->loadedDatasets[ds1]->getTimeSeries(idx2, start2, end2);  
+  this->_checkDatasetName(name1);
+  this->_checkDatasetName(name2);
+  TimeSeries ts1 = this->_loadedDatasets[name1]->getTimeSeries(idx1, start1, end1);
+  TimeSeries ts2 = this->_loadedDatasets[name2]->getTimeSeries(idx2, start2, end2);  
   const dist_t distance = getDistance(distance_name);
   return distance(ts1, ts2, INF);
 }
 
-void GenexAPI::printTS(int ds, int idx, int start, int end)
+// TODO: turn this into get time series
+void GenexAPI::printTimeSeries(const string& name, int idx, int start, int end)
 {
-  this->_checkDatasetIndex(ds);
-  TimeSeries ts = this->loadedDatasets[ds]->getTimeSeries(idx, start, end);
+  this->_checkDatasetName(name);
+  TimeSeries ts = this->_loadedDatasets[name]->getTimeSeries(idx, start, end);
   ts.printData(std::cout);
   std::cout << std::endl;
 }
 
-void GenexAPI::_checkDatasetIndex(int index)
-{
-  if (index < 0 || index >= loadedDatasets.size() || loadedDatasets[index] == nullptr)
+void GenexAPI::_checkDatasetName(const string& name)
+{ 
+  if (this->_loadedDatasets.find(name) == this->_loadedDatasets.end())
   {
-    throw GenexException("There is no dataset with given index");
+    throw GenexException("There is no dataset with the given name");
   }
 }
 

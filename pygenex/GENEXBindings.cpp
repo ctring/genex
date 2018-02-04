@@ -16,27 +16,30 @@ GenexAPI genexAPI;
  *  Values in the text file have to be arranged in a table format. The number of
  *  values (a.k.a columns) is inferred from the first line. All lines must have
  *  the same number of columns. If the number of lines exceeds maxNumRow, only
- *  maxNumRow lines are read and the rest is discarded. On the other hand, if
- *  maxNumRow is larger than or equal to the actual number of lines, or maxNumRow is
- *  not positive all lines are read.
+ *  maxNumRow lines are read and the rest is discarded. If maxNumRow is larger than 
+ *  or equal to the actual number of lines, or maxNumRow is not positive, all lines 
+ *  are read.
  *
+ *  @param name name of the dataset
  *  @param filePath path to a text file
  *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
  *         all lines are read
- *  @param separator a string containings possible separator characters for values
+ *  @param separator a string containing possible separator characters for values
  *         in a line
- *  @param startCol columns before startCol are discarded
- *  @return an index used to refer to the just loaded dataset
+ *  @param startCol columns before startCol, in 0-based index, are discarded
+ *  @return a dataset_info_t struct containing metadata of the dataset
  *
- *  @throw GenexException if cannot read from the given file
+ *  @throw GenexException if cannot read from the given file or the dataset name 
+ *                        has already been used.
  */
-int loadDataset(const char* path, 
-                int maxNumRow, 
-                int startCol, 
-                const char* separators)
+string loadDataset(const string& name,
+                   const string& path,
+                   int maxNumRow, 
+                   int startCol, 
+                   const string& separators)
 {
-  dataset_info_t info = genexAPI.loadDataset(path, maxNumRow, startCol, separators);
-  return info.id;
+  dataset_info_t info = genexAPI.loadDataset(name, path, maxNumRow, startCol, separators);
+  return info.name;
 }
 
 const char* greet()
