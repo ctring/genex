@@ -27,7 +27,7 @@ GenexAPI genexAPI;
  *  @param separator a string containing possible separator characters for values
  *         in a line
  *  @param startCol columns before startCol, in 0-based index, are discarded
- *  @return a dataset_info_t struct containing metadata of the dataset
+ *  @return a dataset_metadata_t struct containing metadata of the dataset
  *
  *  @throw GenexException if cannot read from the given file or the dataset name 
  *                        has already been used.
@@ -38,18 +38,31 @@ string loadDataset(const string& name,
                    int startCol, 
                    const string& separators)
 {
-  dataset_info_t info = genexAPI.loadDataset(name, path, maxNumRow, startCol, separators);
+  dataset_metadata_t info = genexAPI.loadDataset(name, path, maxNumRow, startCol, separators);
   return info.name;
 }
 
-const char* greet()
+/*
+ *  @brief saves data from memory to a file
+ *
+ *  @param name name of the dataset
+ *  @param filePath path to a text file
+ *  @param separator a character to separate entries in the file
+ *
+ *  @throw GenexException if cannot read from the given file
+ */
+void saveDataset(const string& name,
+                 const string& filePath,
+                 const string& separator)
 {
-  return "hello";
+  genexAPI.saveDataset(name, filePath, separator[0]);
 }
+
 
 BOOST_PYTHON_MODULE(pygenex)
 {
   using namespace boost::python;
+
   def("loadDataset", loadDataset);
-  def("greet", greet);
+  def("saveDataset", saveDataset);
 }

@@ -16,11 +16,11 @@ namespace genex {
 /**
  * A struct holding general information of a dataset
  */
-struct dataset_info_t
+struct dataset_metadata_t
 {
-  dataset_info_t() : name(""), itemCount(0),
+  dataset_metadata_t() : name(""), itemCount(0),
     itemLength(0), isGrouped(false), isNormalized(false) {}
-  dataset_info_t(string name, int itemCount, int itemLength,
+  dataset_metadata_t(string name, int itemCount, int itemLength,
                  bool isGrouped, bool isNormalized) :
     name(name), itemCount(itemCount), itemLength(itemLength),
     isGrouped(isGrouped), isNormalized(isNormalized) {}
@@ -69,11 +69,11 @@ public:
    *  @param separator a string containing possible separator characters for values
    *         in a line
    *  @param startCol columns before startCol, in 0-based index, are discarded
-   *  @return a dataset_info_t struct containing metadata of the dataset
+   *  @return a dataset_metadata_t struct containing metadata of the dataset
    *
    *  @throw GenexException if cannot read from the given file
    */
-  dataset_info_t loadDataset(const string& name, const string& filePath, int maxNumRow,
+  dataset_metadata_t loadDataset(const string& name, const string& filePath, int maxNumRow,
                              int startCol, const string& separators);
 
   /*
@@ -108,14 +108,14 @@ public:
    *  @brief gets information of a dataset
    *
    *  @param name name of the dataset
-   *  @return a dataset_info_t struct containing information about the dataset
+   *  @return a dataset_metadata_t struct containing information about the dataset
    */
-  dataset_info_t getDatasetInfo(const string& name);
+  dataset_metadata_t getDatasetInfo(const string& name);
 
   /**
    *  @return a vector of information of loaded dataset
    */
-  vector<dataset_info_t> getAllDatasetInfo();
+  vector<dataset_metadata_t> getAllDatasetInfo();
 
   /**
    *  @return a vector of names of available distance metrics
@@ -221,7 +221,7 @@ public:
   getKBestMatchesBruteForce(int k, const string& target_name, const string& query_name,
                             int index, int start = -1, int end = -1, int PAABlockSize = 0);
 
-  // dataset_info_t PAA(int idx, int n);
+  // dataset_metadata_t PAA(int idx, int n);
 
   data_t distanceBetween(const string& name1, int idx1, int start1, int end1,
                          const string& name2, int idx2, int start2, int end2,

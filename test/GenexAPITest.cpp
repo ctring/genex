@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( api_get_dataset_info )
   api.loadDataset("test0", data.test_10_20_space, 5, 0, " ");
   api.loadDataset("test1", data.test_15_20_comma, 10, 4, ",");
 
-  dataset_info_t info = api.getDatasetInfo("test1");
+  dataset_metadata_t info = api.getDatasetInfo("test1");
   BOOST_CHECK_EQUAL( info.name, "test1" );
   BOOST_CHECK_EQUAL( info.itemCount, 10 );
   BOOST_CHECK_EQUAL( info.itemLength, 16 );

@@ -97,7 +97,7 @@ MAKE_COMMAND(LoadDataset,
       separators = " ";
     }
 
-    genex::dataset_info_t info;
+    genex::dataset_metadata_t info;
     
     info = gGenexAPI.loadDataset(name, filePath, maxNumRow, startCol, separators);
 
@@ -191,7 +191,7 @@ MAKE_COMMAND(List,
 
     if (args[1] == "dataset")
     {
-      vector<genex::dataset_info_t> infos = gGenexAPI.getAllDatasetInfo();
+      vector<genex::dataset_metadata_t> infos = gGenexAPI.getAllDatasetInfo();
       cout << "There are " << infos.size() << " loaded datasets" << endl << endl;
       for (const auto& i : infos)
       {
@@ -423,7 +423,7 @@ MAKE_COMMAND(NormalizeDataset,
 //     string name = args[1];
 //     int blockSize = stoi(args[2]);
 
-//     genex::dataset_info_t info = gGenexAPI.PAA(name, blockSize);
+//     genex::dataset_metadata_t info = gGenexAPI.PAA(name, blockSize);
 
 //     cout << "Dataset PAA-ed                     " << endl
 //          << "  Name:        " << info.name       << endl

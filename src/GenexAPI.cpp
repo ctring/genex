@@ -17,7 +17,7 @@ GenexAPI::~GenexAPI()
   unloadAllDataset();
 }
 
-dataset_info_t GenexAPI::loadDataset(const string& name, const string& filePath, int maxNumRow,
+dataset_metadata_t GenexAPI::loadDataset(const string& name, const string& filePath, int maxNumRow,
                                      int startCol, const string& separators)
 {
   // Check if name is already used
@@ -72,21 +72,21 @@ int GenexAPI::getDatasetCount()
   return this->_datasetCount;
 }
 
-dataset_info_t GenexAPI::getDatasetInfo(const string& name)
+dataset_metadata_t GenexAPI::getDatasetInfo(const string& name)
 {
   this->_checkDatasetName(name);
 
   auto dataset = this->_loadedDatasets[name];
-  return dataset_info_t(name,
+  return dataset_metadata_t(name,
                         dataset->getItemCount(),
                         dataset->getItemLength(),
                         dataset->isGrouped(),
                         dataset->isNormalized());
 }
 
-vector<dataset_info_t> GenexAPI::getAllDatasetInfo()
+vector<dataset_metadata_t> GenexAPI::getAllDatasetInfo()
 {
-  vector<dataset_info_t> info;
+  vector<dataset_metadata_t> info;
   for (auto const& pair : this->_loadedDatasets)
   {
     info.push_back(getDatasetInfo(pair.first));
@@ -167,7 +167,7 @@ GenexAPI::getKBestMatchesBruteForce(int k, const string& target_name, const stri
 }
 
 // TODO: fix this function and also that in the brute force k best match
-// dataset_info_t GenexAPI::PAA(int idx, int n)
+// dataset_metadata_t GenexAPI::PAA(int idx, int n)
 // {
 //   this->_checkDatasetName(idx);
 //   this->_loadedDatasets[idx]->PAA(n);
