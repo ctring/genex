@@ -22,8 +22,8 @@ find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
 
 # add genexLib library
-include_directories("${PROJECT_SOURCE_DIR}/src")
-add_subdirectory(src)
+include_directories("${PROJECT_SOURCE_DIR}/genex")
+add_subdirectory(genex)
 
 # build the genex command-line interface
 add_subdirectory(cli)

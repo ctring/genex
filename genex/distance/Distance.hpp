@@ -1,5 +1,5 @@
-#ifndef GENERAL_DISTANCE_H
-#define GENERAL_DISTANCE_H
+#ifndef  DISTANCE_H
+#define  DISTANCE_H
 
 #include <vector>
 #include <algorithm>
@@ -272,4 +272,4 @@ data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 
 } // namespace genex
 
-#endif //GENERAL_DISTANCE_H
+#endif // DISTANCE_H

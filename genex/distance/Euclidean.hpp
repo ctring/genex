@@ -1,5 +1,5 @@
-#ifndef GENEX_SRC_EUCLIDEAN_H
-#define GENEX_SRC_EUCLIDEAN_H
+#ifndef EUCLIDEAN_H
+#define EUCLIDEAN_H
 
 #include <cmath>
 
@@ -46,4 +46,4 @@ public:
 
 } // namespace genex
 
-#endif
+#endif // EUCLIDEAN_H

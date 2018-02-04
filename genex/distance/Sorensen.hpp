@@ -1,5 +1,5 @@
-#ifndef GENEX_SRC_SORENSEN_H
-#define GENEX_SRC_SORENSEN_H
+#ifndef SORENSEN_H
+#define SORENSEN_H
 
 #include <cmath>
 
@@ -43,4 +43,4 @@ public:
 
 } // namespace genex
 
-#endif // GENEX_SRC_SORENSEN_H
+#endif // SORENSEN_H

@@ -192,7 +192,7 @@ MAKE_COMMAND(List,
     if (args[1] == "dataset")
     {
       vector<genex::dataset_metadata_t> infos = gGenexAPI.getAllDatasetInfo();
-      cout << "There are " << infos.size() << " loaded datasets" << endl << endl;
+      cout << infos.size() << " datasets loaded" << endl << endl;
       for (const auto& i : infos)
       {
         cout << "  " << setw(20) << i.name;

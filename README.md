@@ -51,9 +51,9 @@ cmake .. -G "MinGW Makefiles"
 make
 ```
 
-A binary named 'genex' will be produced in the build directory. To run it, use:
+A binary named 'genexcli' (Genex command-line interface) will be produced in the build directory. To run it, use:
 ```bash
-./genex
+./genexcli
 ```
 
 ## CLI documentation
@@ -68,10 +68,9 @@ Values of the time series must be in the range of [0, 1]. A loaded dataset can b
 
 ## Example usage
 
-1. Load a comma separated dataset:
-
+1. Load a comma separated dataset. `target_ds` is an arbitrary name given to the dataset so that we can refer to it later.
 ```
->> load ../datasets/test/test_15_20_comma.csv 0 0 ,
+>> load target_ds ../datasets/test/test_15_20_comma.csv ","
 Dataset loaded
   Name:        ../datasets/test/test_15_20_comma.csv
   ID:          0
@@ -79,16 +78,15 @@ Dataset loaded
   Item length: 20
 ```
 
-2. Normalize it:
+2. Normalize the dataset.
+```
+>> normalize target_ds
+Dataset target_ds is now normalized
+```
 
+3. Group the dataset with ST = 0.1 (for larger datasets, use larger ST for faster preprocessing):
 ```
->> normalize 0
-Dataset 0 is now normalized
-```
-
-3. Group it with ST = 0.1 (for larger datasets, use larger ST for faster preprocessing):
-```
->> group 0 0.1
+>> group target_ds 0.1
 Processing time series space of length 2
   Grouping progress... 57/285 (20%)
   Grouping progress... 114/285 (40%)
@@ -100,35 +98,51 @@ Dataset 0 is now grouped
 Number of Groups: 2578
 ```
 
-4. Load another dataset to use as queries:
+4. Load and normalize another dataset to use as queries. We can omit the argument for separator since space is set as default.
 ```
->> load ../datasets/test/test_10_20_space.txt
+>> load query_ds ../datasets/test/test_10_20_space.txt
 Dataset loaded
   Name:        ../datasets/test/test_10_20_space.txt
   ID:          1
   Item count:  10
   Item length: 20
+
+>> normalize query_ds
+Dataset query_ds is now normalized
 ```
 
-5. Find top 10 similar time series from dataset 0 to a time series in dataset 1 
+We can list the datasets currently in memory by using `list dataset`
 ```
->> kSim 10 0 1 0 0 10
-Command executed in 0.002108s
-Timeseries 7 [8, 19] - distance = 0.3933
-Timeseries 0 [7, 18] - distance = 0.3955
-Timeseries 5 [7, 18] - distance = 0.3958
-Timeseries 5 [8, 19] - distance = 0.3965
-Timeseries 5 [9, 20] - distance = 0.3974
-Timeseries 7 [9, 20] - distance = 0.3988
-Timeseries 5 [6, 17] - distance = 0.4006
-Timeseries 3 [1, 12] - distance = 0.4013
-Timeseries 7 [2, 13] - distance = 0.4033
-Timeseries 4 [0, 11] - distance = 0.4034
+>> list dataset
+2 datasets loaded
+
+  query_ds              Normalized
+  target_ds             Normalized      Grouped
+```
+
+5. Find top 10 similar time series from dataset `target_ds` to the time series 0[0, 10] in dataset `query_ds`
+```
+>> ksim 10 target_ds query_ds 0 0 10
+Command executed in 0.001768s
+Target dataset: target_ds
+Query dataset: query_ds
+k = 10. ke = 10
+Query time series: 0 [0, 10]
+Timeseries 12 [4, 13] - distance = 0.01768
+Timeseries 0 [7, 16] - distance = 0.01829
+Timeseries 12 [3, 13] - distance = 0.01911
+Timeseries 4 [0, 11] - distance = 0.02245
+Timeseries 4 [0, 10] - distance = 0.02265
+Timeseries 12 [5, 16] - distance = 0.0241
+Timeseries 3 [0, 9] - distance = 0.02459
+Timeseries 12 [5, 15] - distance = 0.02583
+Timeseries 12 [6, 17] - distance = 0.02607
+Timeseries 7 [4, 15] - distance = 0.02663
 ```
 
 ## Acknowledgement
 
-The genex codebase includes the trillionDTW[0] methods, uses the same pruning
+The Genex codebase includes the trillionDTW [0] methods, uses the same pruning
 methods, and even uses the trillion implementation of lemire lower/upper
 bound.
 

@@ -1,5 +1,5 @@
-#ifndef GENEX_SRC_CHEBYSHEV_H
-#define GENEX_SRC_CHEBYSHEV_H
+#ifndef CHEBYSHEV_H
+#define CHEBYSHEV_H
 
 #include <cmath>
 
@@ -43,4 +43,4 @@ public:
 
 } // namespace genex
 
-#endif // GENEX_SRC_MINKOWSKI_H
+#endif // CHEBYSHEV_H

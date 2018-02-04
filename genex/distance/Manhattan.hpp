@@ -1,5 +1,5 @@
-#ifndef GENEX_SRC_MANHATTAN_H
-#define GENEX_SRC_MANHATTAN_H
+#ifndef MANHATTAN_H
+#define MANHATTAN_H
 
 #include <cmath>
 
@@ -42,4 +42,4 @@ public:
 
 } // namespace genex
 
-#endif // GENEX_SRC_MINKOWSKI_H
+#endif // MANHATTAN_H

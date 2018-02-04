@@ -1,5 +1,5 @@
-#ifndef GENEX_SRC_COSINE_H
-#define GENEX_SRC_COSINE_H
+#ifndef COSINE_H
+#define COSINE_H
 
 #include <cmath>
 
@@ -44,4 +44,4 @@ public:
 
 } // namespace genex
 
-#endif // GENEX_SRC_COSINE_H
+#endif // COSINE_H
