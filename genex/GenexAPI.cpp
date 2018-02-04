@@ -78,10 +78,11 @@ dataset_metadata_t GenexAPI::getDatasetInfo(const string& name)
 
   auto dataset = this->_loadedDatasets[name];
   return dataset_metadata_t(name,
-                        dataset->getItemCount(),
-                        dataset->getItemLength(),
-                        dataset->isGrouped(),
-                        dataset->isNormalized());
+                            dataset->getItemCount(),
+                            dataset->getItemLength(),
+                            dataset->isGrouped(),
+                            dataset->getDistanceName(),
+                            dataset->isNormalized());
 }
 
 vector<dataset_metadata_t> GenexAPI::getAllDatasetInfo()

@@ -18,17 +18,33 @@ namespace genex {
  */
 struct dataset_metadata_t
 {
-  dataset_metadata_t() : name(""), itemCount(0),
-    itemLength(0), isGrouped(false), isNormalized(false) {}
-  dataset_metadata_t(string name, int itemCount, int itemLength,
-                 bool isGrouped, bool isNormalized) :
-    name(name), itemCount(itemCount), itemLength(itemLength),
-    isGrouped(isGrouped), isNormalized(isNormalized) {}
+  dataset_metadata_t() : 
+    name(""), 
+    itemCount(0),
+    itemLength(0),
+    isGrouped(false),
+    distance(""),
+    isNormalized(false) {}
+
+  dataset_metadata_t(
+    string name,
+    int itemCount,
+    int itemLength,
+    bool isGrouped,
+    string distance,
+    bool isNormalized) :
+      name(name),
+      itemCount(itemCount),
+      itemLength(itemLength),
+      isGrouped(isGrouped),
+      distance(distance),
+      isNormalized(isNormalized) {}
 
   string name;
   int itemCount;
   int itemLength;
   bool isGrouped;
+  string distance;
   bool isNormalized;
 };
 
@@ -37,8 +53,12 @@ struct dataset_metadata_t
  */
 struct distance_info_t
 {
-  distance_info_t(string name, string description) :
-    name(name), description(description) {}
+  distance_info_t(
+    string name,
+    string description) : 
+      name(name),
+      description(description) {}
+
   string name;
   string description;
 };

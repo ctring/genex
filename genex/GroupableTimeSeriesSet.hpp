@@ -27,23 +27,28 @@ public:
   /**
    *  @brief groups the datset into similarity groups
    *
-   *  @param distance_name the distance to use for comparing similarity
+   *  @param distanceName the distance to use for comparing similarity
    *  @param threshold to use for determing the bound of similarity
    *  @param numThreads number of thread to perform grouping
    *
    *  @return the number of groups created
    */
-  int groupAllLengths(const std::string& distance_name, data_t threshold, int numThreads);
+  int groupAllLengths(const std::string& distanceName, data_t threshold, int numThreads);
   
   /**
-    *  @brief deletes and clears the groups
-    */
+   *  @brief deletes and clears the groups
+   */
   void reset();
 
   /**
-    *  @brief check if the dataset is grouped
-    */
+   *  @brief check if the dataset is grouped
+   */
   bool isGrouped() const;
+
+  /**
+   *  @brief returns name of the distance used for grouping
+   */
+  string getDistanceName() const;
 
   void saveGroups(const std::string& path, bool groupSizeOnly) const;
   int loadGroups(const std::string& path);
@@ -73,7 +78,8 @@ public:
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;
-  data_t threshold;
+  std::string distanceName = "";
+  data_t threshold = 0;
 };
 
 } // namespace genex

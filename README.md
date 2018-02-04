@@ -36,9 +36,9 @@ cmake ..
 make
 ```
 
-A binary named 'genex' will be produced in the build directory. To run it, use:
+A binary named 'genexcli' will be produced in the build directory. To run it, use:
 ```bash
-./genex
+./genexcli
 ```
 
 ### Windows
