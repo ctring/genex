@@ -51,9 +51,9 @@ struct dataset_metadata_t
 /**
  * A struct holding general information of a distance metric
  */
-struct distance_info_t
+struct distance_metadata_t
 {
-  distance_info_t(
+  distance_metadata_t(
     string name,
     string description) : 
       name(name),
@@ -140,7 +140,7 @@ public:
   /**
    *  @return a vector of names of available distance metrics
    */
-  vector<distance_info_t> getAllDistanceInfo();
+  vector<distance_metadata_t> getAllDistanceInfo();
 
   /**
    *  @brief normalizes the dataset

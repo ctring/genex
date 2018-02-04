@@ -95,13 +95,13 @@ vector<dataset_metadata_t> GenexAPI::getAllDatasetInfo()
   return info;
 }
 
-vector<distance_info_t> GenexAPI::getAllDistanceInfo()
+vector<distance_metadata_t> GenexAPI::getAllDistanceInfo()
 {
   const vector<string>& allDistanceName = getAllDistanceName();
-  vector<distance_info_t> info;
+  vector<distance_metadata_t> info;
   for (auto name : allDistanceName)
   {
-    info.push_back(distance_info_t(name, ""));
+    info.push_back(distance_metadata_t(name, ""));
   }
   return info;
 }

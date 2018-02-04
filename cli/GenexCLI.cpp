@@ -202,7 +202,7 @@ MAKE_COMMAND(List,
       }
     }
     else if (args[1] == "distance") {
-      vector<genex::distance_info_t> infos = gGenexAPI.getAllDistanceInfo();
+      vector<genex::distance_metadata_t> infos = gGenexAPI.getAllDistanceInfo();
       for (const auto& i : infos)
       {
         cout << " " << setw(10) << i.name << "\t" << i.description << endl;
