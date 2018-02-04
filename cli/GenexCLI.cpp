@@ -461,12 +461,12 @@ MAKE_COMMAND(Sim,
     int start = -1;
     int end = -1;
 
-    if (args.size() > 4)
+    if (args.size() == 6)
     {
       start = stoi(args[4]);
       end = stoi(args[5]);
     }
-    else {
+    else if (args.size() == 5) {
       cout << "Both starting and ending positions must be provided.";
       return false;
     }

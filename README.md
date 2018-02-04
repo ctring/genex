@@ -122,22 +122,22 @@ We can list the datasets currently in memory by using `list dataset`
 
 5. Find top 10 similar time series from dataset `target_ds` to the time series 0[0, 10] in dataset `query_ds`
 ```
->> ksim 10 target_ds query_ds 0 0 10
-Command executed in 0.001768s
+>> ksim 10 target_ds query_ds 0 0 0 100
+Command executed in 0.00217s
 Target dataset: target_ds
 Query dataset: query_ds
-k = 10. ke = 10
-Query time series: 0 [0, 10]
-Timeseries 12 [4, 13] - distance = 0.01768
-Timeseries 0 [7, 16] - distance = 0.01829
-Timeseries 12 [3, 13] - distance = 0.01911
-Timeseries 4 [0, 11] - distance = 0.02245
-Timeseries 4 [0, 10] - distance = 0.02265
-Timeseries 12 [5, 16] - distance = 0.0241
-Timeseries 3 [0, 9] - distance = 0.02459
-Timeseries 12 [5, 15] - distance = 0.02583
-Timeseries 12 [6, 17] - distance = 0.02607
-Timeseries 7 [4, 15] - distance = 0.02663
+k = 10. ke = 100
+Query time series: 0 [-1, -1]
+Timeseries 3 [1, 19] - distance = 0.2499
+Timeseries 10 [0, 19] - distance = 0.2511
+Timeseries 10 [0, 18] - distance = 0.2522
+Timeseries 10 [0, 20] - distance = 0.2524
+Timeseries 3 [1, 20] - distance = 0.2537
+Timeseries 4 [1, 19] - distance = 0.254
+Timeseries 7 [2, 20] - distance = 0.2548
+Timeseries 10 [1, 19] - distance = 0.255
+Timeseries 4 [1, 20] - distance = 0.2552
+Timeseries 7 [1, 19] - distance = 0.2556
 ```
 
 ## Acknowledgement
