@@ -69,13 +69,32 @@ void saveDataset(const string& name
  */
 py::tuple normalize(const string& name)
 {
-  std::pair<data_t, data_t> val = genexAPI.normalize(name);
+  std::pair<data_t, data_t> val = genexAPI.normalizeDataset(name);
   return py::make_tuple(val.first, val.second);
+}
+
+/**
+ *  @brief groups a dataset
+ *
+ *  @param name name of the dataset to be grouped
+ *  @param threshold the threshold to use when creating the group
+ *  @param distance_name the distance to use when grouping the data
+ *  @return the number of groups created
+ */
+int groupDataset(const string& name
+                 , data_t threshold
+                 , const string& distanceName
+                 , int numThreads)
+{
+  return genexAPI.groupDataset(name, threshold, distanceName, numThreads);
 }
 
 BOOST_PYTHON_MODULE(pygenex)
 {
-  py::def("loadDataset", loadDataset, (py::arg("separators")=" ", py::arg("maxNumRow")=0, py::arg("startCol")=0));
+  py::def("loadDataset", loadDataset,
+          (py::arg("separators")=" ", py::arg("maxNumRow")=0, py::arg("startCol")=0));
   py::def("saveDataset", saveDataset);
   py::def("normalize", normalize);
+  py::def("group", groupDataset,
+          (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
 }

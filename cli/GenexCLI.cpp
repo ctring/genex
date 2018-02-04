@@ -409,7 +409,7 @@ MAKE_COMMAND(Normalize,
 
     string name = args[1];
 
-    gGenexAPI.normalize(name);
+    gGenexAPI.normalizeDataset(name);
 
     cout << "Dataset " << name << " is now normalized" << endl;
     return true;

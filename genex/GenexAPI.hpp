@@ -93,8 +93,11 @@ public:
    *
    *  @throw GenexException if cannot read from the given file
    */
-  dataset_metadata_t loadDataset(const string& name, const string& filePath, 
-                                 const string& separators, int maxNumRow, int startCol);
+  dataset_metadata_t loadDataset(const string& name
+                                 , const string& filePath
+                                 , const string& separators
+                                 , int maxNumRow
+                                 , int startCol);
 
   /*
    *  @brief saves data from memory to a file
@@ -154,18 +157,20 @@ public:
    *  @return a pair (min, max) - the minimum and maximum value across
    *          the whole dataset before being normalized.
    */
-  std::pair<data_t, data_t> normalize(const string& name);
+  std::pair<data_t, data_t> normalizeDataset(const string& name);
 
   /**
    *  @brief groups a dataset
    *
    *  @param name name of the dataset to be grouped
    *  @param threshold the threshold to use when creating the group
-   *  @param distance_name the distance to use when grouping the data
+   *  @param distanceName the distance to use when grouping the data
    *  @return the number of groups created
    */
-  int groupDataset(const string& name, data_t threshold, const string& distance_name,
-                   int numThreads = 1);
+  int groupDataset(const string& name
+                   , data_t threshold
+                   , const string& distanceName = "euclidean"
+                   , int numThreads = 1);
 
   /**
    *  @brief save all groups of a dataset to a file
@@ -204,8 +209,11 @@ public:
    *  @return best match in the dataset
    */
   candidate_time_series_t 
-  getBestMatch(const string& target_name, const string& query_name,
-               int index, int start = -1, int end = -1);
+  getBestMatch(const string& target_name
+               , const string& query_name
+               , int index
+               , int start = -1
+               , int end = -1);
 
 
   /**
@@ -221,8 +229,13 @@ public:
    *  @return k best match in the dataset
    */
   vector<candidate_time_series_t> 
-  getKBestMatches(int k, int ke, const string& target_name, const string& query_name,
-                  int index, int start = -1, int end = -1);
+  getKBestMatches(int k
+                  , int ke
+                  , const string& target_name
+                  , const string& query_name
+                  , int index
+                  , int start = -1
+                  , int end = -1);
 
  /**
    *  @brief gets k similar TimeSeries to the query, exhaustively.
@@ -238,14 +251,19 @@ public:
    *  @return k similar time series
    */
   vector<candidate_time_series_t>
-  getKBestMatchesBruteForce(int k, const string& target_name, const string& query_name,
-                            int index, int start = -1, int end = -1, int PAABlockSize = 0);
+  getKBestMatchesBruteForce(int k
+                            , const string& target_name
+                            , const string& query_name
+                            , int index
+                            , int start = -1
+                            , int end = -1
+                            , int PAABlockSize = 0);
 
   // dataset_metadata_t PAA(int idx, int n);
 
-  data_t distanceBetween(const string& name1, int idx1, int start1, int end1,
-                         const string& name2, int idx2, int start2, int end2,
-                         const string& distance_name);
+  data_t distanceBetween(const string& name1, int idx1, int start1, int end1
+                         , const string& name2, int idx2, int start2, int end2
+                         , const string& distance_name);
   
   void printTimeSeries(const string& name, int idx, int start, int end);
 

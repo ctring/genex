@@ -106,7 +106,7 @@ vector<distance_metadata_t> GenexAPI::getAllDistanceInfo()
   return info;
 }
 
-std::pair<data_t, data_t> GenexAPI::normalize(const string& name)
+std::pair<data_t, data_t> GenexAPI::normalizeDataset(const string& name)
 {
   this->_checkDatasetName(name);
   return this->_loadedDatasets[name]->normalize();
