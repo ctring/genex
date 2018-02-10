@@ -174,17 +174,17 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
   return best;
 }
 
-void GlobalGroupSpace::saveGroups(ofstream &fout, bool groupSizeOnly) const
+void GlobalGroupSpace::saveGroupsOld(ofstream &fout, bool groupSizeOnly) const
 {
   // Range of lengths and distance name
   fout << 2 << " " << this->localLengthGroupSpace.size() << endl;
   fout << this->distanceName << endl;
   for (auto i = 2; i < this->localLengthGroupSpace.size(); i++) {
-    this->localLengthGroupSpace[i]->saveGroups(fout, groupSizeOnly);
+    this->localLengthGroupSpace[i]->saveGroupsOld(fout, groupSizeOnly);
   }
 }
 
-int GlobalGroupSpace::loadGroups(ifstream &fin)
+int GlobalGroupSpace::loadGroupsOld(ifstream &fin)
 {
   reset();
 
@@ -197,7 +197,7 @@ int GlobalGroupSpace::loadGroups(ifstream &fin)
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);  
   for (auto i = lenFrom; i < lenTo; i++) {
     auto gel = new LocalLengthGroupSpace(dataset, i);
-    numberOfGroups += gel->loadGroups(fin);
+    numberOfGroups += gel->loadGroupsOld(fin);
     this->localLengthGroupSpace[i] = gel;
   }
   return numberOfGroups;

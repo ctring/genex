@@ -60,7 +60,7 @@ void GroupableTimeSeriesSet::reset()
   this->groupsAllLengthSet = nullptr;
 }
 
-void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) const
+void GroupableTimeSeriesSet::saveGroupsOld(const string& path, bool groupSizeOnly) const
 {
   if (!this->isGrouped()) {
     throw GenexException("No group found");
@@ -74,7 +74,7 @@ void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) 
          << this->threshold << " "
          << this->getItemCount() << " "
          << this->getItemLength() << endl;
-    this->groupsAllLengthSet->saveGroups(fout, groupSizeOnly);
+    this->groupsAllLengthSet->saveGroupsOld(fout, groupSizeOnly);
   }
   else
   {
@@ -82,7 +82,7 @@ void GroupableTimeSeriesSet::saveGroups(const string& path, bool groupSizeOnly) 
   }
 }
 
-int GroupableTimeSeriesSet::loadGroups(const string& path)
+int GroupableTimeSeriesSet::loadGroupsOld(const string& path)
 {
   int numberOfGroups = 0;
   ifstream fin(path);
@@ -107,7 +107,7 @@ int GroupableTimeSeriesSet::loadGroups(const string& path)
     reset();
     this->threshold = threshold;
     this->groupsAllLengthSet = new GlobalGroupSpace(*this);
-    numberOfGroups = this->groupsAllLengthSet->loadGroups(fin);
+    numberOfGroups = this->groupsAllLengthSet->loadGroupsOld(fin);
   }
   else
   {

@@ -8,7 +8,7 @@
 class Command
 {
 public:
-  virtual bool doCommand(const std::vector<std::string>&  args) = 0;
+  virtual bool doCommand(const std::vector<std::string>& args) = 0;
   virtual const std::string& getSummary() { return summary; }
   virtual const std::string& getHelp() { return help; };
 

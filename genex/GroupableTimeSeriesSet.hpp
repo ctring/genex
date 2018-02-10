@@ -50,8 +50,8 @@ public:
    */
   string getDistanceName() const;
 
-  void saveGroups(const std::string& path, bool groupSizeOnly) const;
-  int loadGroups(const std::string& path);
+  void saveGroupsOld(const std::string& path, bool groupSizeOnly) const;
+  int loadGroupsOld(const std::string& path);
   
   /**
    * @brief Finds the best matching subsequence in the dataset

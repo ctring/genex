@@ -152,6 +152,10 @@ public:
   void saveGroup(std::ofstream &fout) const;
   void loadGroup(std::ifstream &fin);
 
+  void saveGroupOld(std::ofstream &fout) const;
+  void loadGroupOld(std::ifstream &fin);
+
+
 private:
   const TimeSeriesSet& dataset;
   std::vector<group_membership_t>& memberMap;

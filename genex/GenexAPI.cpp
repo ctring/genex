@@ -118,16 +118,16 @@ int GenexAPI::groupDataset(const string& name, data_t threshold, const string& d
   return this->_loadedDatasets[name]->groupAllLengths(distance_name, threshold, numThreads);
 }
 
-void GenexAPI::saveGroup(const string& name, const string &path, bool groupSizeOnly)
+void GenexAPI::saveGroupsOld(const string& name, const string &path, bool groupSizeOnly)
 {
   this->_checkDatasetName(name);
-  this->_loadedDatasets[name]->saveGroups(path, groupSizeOnly);
+  this->_loadedDatasets[name]->saveGroupsOld(path, groupSizeOnly);
 }
 
-int GenexAPI::loadGroup(const string& name, const string& path)
+int GenexAPI::loadGroupsOld(const string& name, const string& path)
 {
   this->_checkDatasetName(name);
-  return this->_loadedDatasets[name]->loadGroups(path);
+  return this->_loadedDatasets[name]->loadGroupsOld(path);
 }
 
 void GenexAPI::setWarpingBandRatio(double ratio)

@@ -183,7 +183,7 @@ public:
    *  @param path path to the saved group file
    *  @param groupSizeOnly if set to true, only the sizes of the groups are saved.
    */
-  void saveGroup(const string& name, const string& path, bool groupSizeOnly);
+  void saveGroupsOld(const string& name, const string& path, bool groupSizeOnly);
 
   /**
    *  @brief load all groups of a dataset from a file.
@@ -194,7 +194,7 @@ public:
    *  @param name name of the dataset
    *  @param path path to the group file
    */
-  int loadGroup(const string& name, const string& path);
+  int loadGroupsOld(const string& name, const string& path);
 
   void setWarpingBandRatio(double ratio);
 

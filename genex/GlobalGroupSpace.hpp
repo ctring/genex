@@ -69,8 +69,8 @@ public:
    */
   std::vector<candidate_time_series_t> kSim(const TimeSeries& query, int k);
   
-  void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
-  int loadGroups(std::ifstream &fin);
+  void saveGroupsOld(std::ofstream &fout, bool groupSizeOnly) const;
+  int loadGroupsOld(std::ifstream &fin);
   /**
    *  @brief returns true if dataset is grouped
    */

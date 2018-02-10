@@ -117,7 +117,7 @@ const Group* LocalLengthGroupSpace::getGroup(int idx) const
   return this->groups[idx];
 }
 
-void LocalLengthGroupSpace::saveGroups(ofstream &fout, bool groupSizeOnly) const 
+void LocalLengthGroupSpace::saveGroupsOld(ofstream &fout, bool groupSizeOnly) const 
 {
   // Number of groups having time series of this length
   fout << groups.size() << endl;
@@ -132,12 +132,12 @@ void LocalLengthGroupSpace::saveGroups(ofstream &fout, bool groupSizeOnly) const
   {
     for (auto i = 0; i < groups.size(); i++) 
     {
-      groups[i]->saveGroup(fout);
+      groups[i]->saveGroupOld(fout);
     }
   }
 }
 
-int LocalLengthGroupSpace::loadGroups(ifstream &fin)
+int LocalLengthGroupSpace::loadGroupsOld(ifstream &fin)
 {
   reset();
   int numberOfGroups;
@@ -145,7 +145,7 @@ int LocalLengthGroupSpace::loadGroups(ifstream &fin)
   for (auto i = 0; i < numberOfGroups; i++)
   {
     auto grp = new Group(i, this->length, this->subTimeSeriesCount, this->dataset, this->memberMap);
-    grp->loadGroup(fin);
+    grp->loadGroupOld(fin);
     this->groups.push_back(grp);
   }
   return numberOfGroups;

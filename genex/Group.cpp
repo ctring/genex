@@ -131,7 +131,7 @@ vector<TimeSeries> Group::getMembers() const
   return members;
 }
 
-void Group::saveGroup(ofstream &fout) const
+void Group::saveGroupOld(ofstream &fout) const
 {
   // Group count
   // Group centroid
@@ -149,7 +149,7 @@ void Group::saveGroup(ofstream &fout) const
   fout << endl;
 }
 
-void Group::loadGroup(ifstream &fin)
+void Group::loadGroupOld(ifstream &fin)
 {
   int cnt;
   this->centroid = TimeSeries(this->memberLength);

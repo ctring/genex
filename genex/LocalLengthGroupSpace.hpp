@@ -47,8 +47,8 @@ public:
    */
   const Group* getGroup(int idx) const;
   
-  void saveGroups(std::ofstream &fout, bool groupSizeOnly) const;
-  int loadGroups(std::ifstream &fin);
+  void saveGroupsOld(std::ofstream &fout, bool groupSizeOnly) const;
+  int loadGroupsOld(std::ifstream &fin);
   
   /**
    *  @brief generates all the groups for the timeseries of this length

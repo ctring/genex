@@ -113,7 +113,7 @@ MAKE_COMMAND(LoadDataset,
   "Load a dataset to the memory.",
 
   "Dataset are text files with table-like format, such as comma-separated     \n"
-  "values files.                                                              \n"
+  "values files. Each dataset needs to have a name given by the user.         \n"
   "                                                                           \n"
   "Usage: load <name> <filePath> [<separators> [<maxNumRow> [<startCol>]]]    \n"
   "  name       - Name of the dataset. This name is used to refered to the    \n"
@@ -347,7 +347,7 @@ MAKE_COMMAND(GroupDataset,
   "              the list of loaded distance. Default to euclidean.       \n"
   )
 
-MAKE_COMMAND(SaveGroup,
+MAKE_COMMAND(SaveGroups,
   {
     if (tooFewArgs(args, 2) || tooManyArgs(args, 3))
     {
@@ -358,7 +358,7 @@ MAKE_COMMAND(SaveGroup,
     string path = args[2];
     bool groupSizeOnly = args.size() > 3 ? stoi(args[3]) : false;
 
-    gGenexAPI.saveGroup(name, path, groupSizeOnly);
+    gGenexAPI.saveGroupsOld(name, path, groupSizeOnly);
     cout << "Saved groups of dataset " << name << " to " << args[2] << endl;
 
     return true;
@@ -366,14 +366,14 @@ MAKE_COMMAND(SaveGroup,
 
   "Save groups of a grouped dataset.",
 
-  "Usage: saveGroup <name> <path> [<groupSizeOnly>]                       \n"
+  "Usage: saveGroups <name> <path> [<groupSizeOnly>]                      \n"
   "  name          - Name of the dataset whose groups will be saved.      \n"
   "  path          - Where to save the groups.                            \n"
   "  groupSizeOnly - If set to 1, only the sizes of groups are saved      \n"
   "                  (default: 0).                                        \n"
   )
 
-MAKE_COMMAND(LoadGroup,
+MAKE_COMMAND(LoadGroups,
   {
     if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
     {
@@ -383,7 +383,7 @@ MAKE_COMMAND(LoadGroup,
     string name = args[1];
     string path = args[2];
 
-    int numGroups = gGenexAPI.loadGroup(name, path);
+    int numGroups = gGenexAPI.loadGroupsOld(name, path);
 
     cout << numGroups << " groups loaded for dataset " << name;
 
@@ -395,7 +395,7 @@ MAKE_COMMAND(LoadGroup,
   "A dataset is compatible with a saved group file is when the item       \n"
   "count and item length is the same.                                     \n"
   "                                                                       \n"
-  "Usage: loadGroup <name> <path>                                         \n"
+  "Usage: loadGroups <name> <path>                                        \n"
   "  name - Name of the dataset whose groups will be loaded.              \n"
   "  path - Where to save the groups.                                     \n"
   )
@@ -854,8 +854,8 @@ map<string, Command*> commands = {
   {"timer", &cmdTimer},
   {"distance", &cmdDistance},
   {"group", &cmdGroupDataset},
-  {"saveGroup", &cmdSaveGroup},
-  {"loadGroup", &cmdLoadGroup},  
+  {"saveGroups", &cmdSaveGroups},
+  {"loadGroups", &cmdLoadGroups},  
   {"normalize", &cmdNormalize},
   // {"paa", &cmdPAA},
   {"sim", &cmdSim},
@@ -955,7 +955,9 @@ bool processLine(const string& line)
       cout << "Error! Cannot find command: " << args[0] << endl;
     }
     else {
-      commands[args[0]]->doCommand(args);
+      if (!commands[args[0]]->doCommand(args)) {
+        cout << endl << commands[args[0]]->getHelp();
+      }
     }
   }
 
