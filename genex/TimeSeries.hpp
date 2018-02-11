@@ -200,7 +200,8 @@ private:
    *************************/
   friend class boost::serialization::access;
 
-  template <class A> void serialize(A &ar, unsigned) {
+  template <class A>
+  void serialize(A &ar, unsigned) {
     for (int i = 0; i < this->length; i++) {
       ar & data[this->start + i];
     }

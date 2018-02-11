@@ -4,6 +4,8 @@
 #include <vector>
 #include <functional>
 #include <queue>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/split_member.hpp>
 
 #include "TimeSeries.hpp"
 #include "distance/Distance.hpp"
@@ -80,6 +82,45 @@ private:
   const TimeSeriesSet& dataset;
   vector<Group*> groups;
   vector<group_membership_t> memberMap;
+
+  /*************************
+   *  Start serialization
+   *************************/
+  friend class boost::serialization::access;
+  template<class A>
+  void save(A & ar, unsigned) const
+  {
+    ar << groups.size();
+    int gc = 0;
+    for (auto g : groups) {
+      ar << *g;
+      gc++;
+    }
+  }
+
+  template<class A>
+  void load(A & ar, unsigned)
+  {
+    size_t numberOfGroups;
+    ar >> numberOfGroups;
+    
+    for (int i = 0; i < numberOfGroups; i++)
+    {
+      auto g = new Group(i
+                         , this->length
+                         , this->subTimeSeriesCount
+                         , this->dataset
+                         , this->memberMap);
+      ar >> *g;
+      this->groups.push_back(g);
+    }
+  }
+
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+  
+  /*************************
+   *  End serialization
+   *************************/
 };
 
 } // namespace genex

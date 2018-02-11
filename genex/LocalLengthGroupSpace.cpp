@@ -147,7 +147,11 @@ int LocalLengthGroupSpace::loadGroupsOld(ifstream &fin)
   fin >> numberOfGroups;
   for (auto i = 0; i < numberOfGroups; i++)
   {
-    auto grp = new Group(i, this->length, this->subTimeSeriesCount, this->dataset, this->memberMap);
+    auto grp = new Group(i
+                         , this->length
+                         , this->subTimeSeriesCount
+                         , this->dataset
+                         , this->memberMap);
     grp->loadGroupOld(fin);
     this->groups.push_back(grp);
   }

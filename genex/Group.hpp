@@ -4,6 +4,7 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/split_member.hpp>
 
+#include "Common.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
@@ -176,30 +177,30 @@ private:
    *  Start serialization
    *************************/
   friend class boost::serialization::access;
-  template<class Archive>
-  void save(Archive & ar, unsigned) const
+  template<class A>
+  void save(A & ar, unsigned) const
   {
-    ar & centroid;
-    ar & count;
+    ar << this->centroid;
+    ar << this->count;
     member_coord_t currentMemberCoord = this->lastMemberCoord;
     while (currentMemberCoord.first != -1)
     {
       int currIndex = currentMemberCoord.first;
       int currStart = currentMemberCoord.second;
-      ar & currIndex & currStart;
+      ar << currIndex << currStart;
       currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
     }
   }
 
-  template<class Archive>
-  void load(Archive & ar, unsigned)
+  template<class A>
+  void load(A & ar, unsigned)
   {
-    ar & centroid;
+    ar >> this->centroid;
     int cnt;
-    ar & cnt;
+    ar >> cnt;
     for (int i = 0; i < cnt; i++) {
       int index, start;
-      ar & index & start;
+      ar >> index >> start;
       this->addMember(index, start);
     }
   }
