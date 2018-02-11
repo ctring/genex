@@ -12,12 +12,13 @@ foreach(testSrc ${TEST_SRCS})
   # set compile target
   add_executable(${testName} ${testSrc})
 
-
   target_compile_definitions(${testName} PRIVATE "BOOST_TEST_DYN_LINK=1")
 
   #link to Boost libraries AND targets and dependencies
   target_link_libraries(${testName} genexLib
-                                    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+                                    ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
+                                    ${Boost_SERIALIZATION_LIBRARY}
+                                    ${Boost_IOSTREAMS_LIBRARY})
 
   # move tests to testOut
   set_target_properties(${testName} PROPERTIES

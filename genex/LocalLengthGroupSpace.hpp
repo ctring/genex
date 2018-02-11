@@ -71,9 +71,9 @@ public:
                                  data_t dropout) const;
 
   int interLevelKSim(const TimeSeries& query, 
-    const dist_t warpedDistance, 
-    vector<group_index_t> &bestSoFar, 
-    int k);
+                     const dist_t warpedDistance, 
+                     vector<group_index_t> &bestSoFar, 
+                     int k);
     
 private:
   int length, subTimeSeriesCount;

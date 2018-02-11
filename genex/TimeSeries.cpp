@@ -85,6 +85,26 @@ TimeSeries& TimeSeries::operator+=(const TimeSeries& other)
   return *this;
 }
 
+bool TimeSeries::operator==(const TimeSeries& other) const
+{
+  if (this->data == other.data) {
+    return true;
+  }
+  else if (this->data == nullptr || other.data == nullptr) {
+    return false;
+  }
+  if (this->length != other.length) {
+    return false;
+  }
+  for (int i = 0; i < this->length; i++) {
+    if (abs(this->data[this->start + i] - other.data[other.start + i]) > EPS) {
+      return false;
+    }
+  }
+  return true;
+}
+
+
 const data_t* TimeSeries::getKeoghLower(int warpingBand) const
 {
   if (!keoghCacheValid || warpingBand != cachedWarpingBand) {
@@ -134,12 +154,13 @@ string TimeSeries::getIdentifierString() const
   return os.str();
 }
 
-void TimeSeries::printData(std::ostream &out) const
+std::ostream &TimeSeries::printData(std::ostream &out) const
 {
   for (int i = 0; i < length; i++) {
     out << std::setprecision(std::numeric_limits<data_t>::digits10 + 1)
         << data[start + i] << " ";
   }
+  return out;
 }
 
 } // namespace genex

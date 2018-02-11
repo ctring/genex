@@ -1,11 +1,10 @@
 #define BOOST_TEST_MODULE "Test TimeSeries class"
 
 #include <boost/test/unit_test.hpp>
-
+#include <cstdio>
+#include "Common.hpp"
 #include "Exception.hpp"
 #include "TimeSeries.hpp"
-
-#define TOLERANCE 1e-9
 
 using namespace genex;
 
@@ -59,7 +58,7 @@ BOOST_AUTO_TEST_CASE( time_series_modify_data )
   BOOST_CHECK_EQUAL( ts[0], 99 );
 }
 
-BOOST_AUTO_TEST_CASE( time_series_addition, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( time_series_addition, *boost::unit_test::tolerance(EPS) )
 {
   MockData data;
   TimeSeries ts1(data.dat, 7);
@@ -71,7 +70,7 @@ BOOST_AUTO_TEST_CASE( time_series_addition, *boost::unit_test::tolerance(TOLERAN
   }
 }
 
-BOOST_AUTO_TEST_CASE( time_series_keogh_upper_lower, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( time_series_keogh_upper_lower, *boost::unit_test::tolerance(EPS) )
 {
   MockData data;
   TimeSeries ts(data.dat2, 7);
@@ -112,4 +111,28 @@ BOOST_AUTO_TEST_CASE( time_series_keogh_upper_lower, *boost::unit_test::toleranc
     BOOST_TEST( data.dat3Upper5[i] == ts2.getKeoghUpper(2)[i] );
     BOOST_TEST( data.dat3Lower5[i] == ts2.getKeoghLower(2)[i] );    
   }
+}
+
+BOOST_AUTO_TEST_CASE( time_series_save_and_load, *boost::unit_test::tolerance(EPS) )
+{
+  MockData data;
+  const std::string fname = "test_time_series_save_and_load.z";
+  TimeSeries ts(data.dat, 7);
+  saveToFile(ts, fname);
+
+  TimeSeries ts2(7);
+  loadFromFile(ts2, fname);
+  BOOST_CHECK_EQUAL( ts.getLength(), ts2.getLength() );
+  for (int i = 0; i < ts.getLength(); i++) {
+    BOOST_TEST( ts[i] == ts2[i] );
+  }
+  remove(fname.c_str());
+}
+
+BOOST_AUTO_TEST_CASE( time_series_check_equal, *boost::unit_test::tolerance(EPS) )
+{
+  MockData data;
+  TimeSeries ts1(data.dat, 7);
+  TimeSeries ts2(data.dat, 7);
+  TimeSeries ts3(7);
 }

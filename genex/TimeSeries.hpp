@@ -1,11 +1,13 @@
 #ifndef TIMESERIES_H
 #define TIMESERIES_H
 
-#include <string>
-#include <limits>
 #include <cmath>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <limits>
+#include <string>
+
+#include <boost/serialization/serialization.hpp>
 
 #define INF std::numeric_limits<data_t>::infinity()
 #define EPS 1e-12
@@ -134,6 +136,11 @@ public:
   TimeSeries& operator+=(const TimeSeries& other);
 
   /**
+   * @brief compare two time series
+   */
+  bool operator==(const TimeSeries& other) const;
+
+  /**
    *  @brief gets the length of this time series
    *
    *  @return length of this time series
@@ -166,10 +173,10 @@ public:
 
   const data_t* getData() const;
   std::string getIdentifierString() const;
-  void printData(std::ostream &out = std::cout) const;
+  std::ostream &printData(std::ostream &out = std::cout) const;
 
 private:
-
+  // ATTENTION: Always offset by 'start' when indexing 'data' (i.e. data[start + i])
   data_t* data = nullptr;
   bool isOwnerOfData;
   int index;
@@ -188,6 +195,19 @@ private:
    */
   void generateKeoghLU(int warpingBand) const;
 
+  /*************************
+   *  Start serialization
+   *************************/
+  friend class boost::serialization::access;
+
+  template <class A> void serialize(A &ar, unsigned) {
+    for (int i = 0; i < this->length; i++) {
+      ar & data[this->start + i];
+    }
+  }
+  /*************************
+   *  End serialization
+   *************************/
 };
 
 /**

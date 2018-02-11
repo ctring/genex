@@ -14,7 +14,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 
 # include boost
-find_package(Boost 1.66 REQUIRED COMPONENTS unit_test_framework python3)
+find_package(Boost 1.66 REQUIRED 
+             COMPONENTS unit_test_framework python3 serialization iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # include GNU readline

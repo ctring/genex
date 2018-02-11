@@ -92,8 +92,11 @@ int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t 
       {
         bestSoFarIndex = this->groups.size();
         int newGroupIndex = this->groups.size();
-        this->groups.push_back(new Group(newGroupIndex, this->length, this->subTimeSeriesCount,
-                                         this->dataset, this->memberMap));
+        this->groups.push_back(new Group(newGroupIndex
+                                         , this->length
+                                         , this->subTimeSeriesCount
+                                         , this->dataset
+                                         , this->memberMap));
         this->groups[bestSoFarIndex]->setCentroid(idx, start);
       }
 

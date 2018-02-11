@@ -1,13 +1,12 @@
 #define BOOST_TEST_MODULE "Test Groups class"
 
 #include <boost/test/unit_test.hpp>
-
+#include <cstdio>
+#include "Common.hpp"
 #include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
 #include "Group.hpp"
-
-#define TOLERANCE 1e-9
 
 using namespace genex;
 
@@ -32,7 +31,7 @@ struct MockData
   std::string test_3_10_space = "datasets/test/test_3_10_space.txt";
 };
 
-BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(EPS) )
 {
   MockData data;
 
@@ -75,7 +74,7 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(TOLERANCE) )
   BOOST_CHECK_EQUAL( g.getCount(), 2 );
 }
 
-BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERANCE) )
+BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(EPS) )
 {
   MockData data;
   dist_t distance = warpedDistance<Euclidean, data_t>;
@@ -99,4 +98,47 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(TOLERAN
   BOOST_TEST(t[0] == 1.0);
   candidate_time_series_t best = g.getBestMatch(t, distance);
   BOOST_TEST(best.dist == sqrt(1.0)/(2 * 10.0));
+}
+
+BOOST_AUTO_TEST_CASE( group_save_and_load , *boost::unit_test::tolerance(EPS) )
+{
+  // Set up  
+  std::string fname = "group_save_and_load.z";
+  MockData data;
+  auto dataset = TimeSeriesSet();
+  dataset.loadData(data.test_3_10_space, 0, 0, " ");
+  int length = 4;
+  int subTimeSeriesCount = dataset.getItemLength() - length + 1;
+  auto memberMap = std::vector<group_membership_t>(dataset.getItemCount() * subTimeSeriesCount);
+  auto group = new Group(1, length, subTimeSeriesCount, dataset, memberMap);
+  group->setCentroid(1, 2);
+  group->addMember(0, 0);
+  group->addMember(2, 4);
+
+  // Save
+  saveToFile(*group, fname);
+  
+  // Load
+  auto memberMap2 = std::vector<group_membership_t>(dataset.getItemCount() * subTimeSeriesCount);  
+  auto group2 = new Group(1, length, subTimeSeriesCount, dataset, memberMap2);
+  loadFromFile(*group2, fname);
+
+  // Compare
+  BOOST_CHECK_EQUAL( group->getCount(), group2->getCount() );
+  BOOST_CHECK_EQUAL( group->getMemberLength(), group2->getMemberLength() );
+  BOOST_CHECK_EQUAL( group->getCentroid(), group2->getCentroid() );
+
+  for (auto ts : group->getMembers()) {
+    bool ok = false;
+    for (auto ts2 : group2->getMembers()) {
+      if (ts == ts2) {
+        ok = true;
+        break;
+      }
+    }
+    BOOST_TEST( ok );
+  }
+  remove(fname.c_str());
+  delete group;
+  delete group2;
 }

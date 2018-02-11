@@ -1,7 +1,9 @@
 #ifndef GROUP_HPP
 #define GROUP_HPP
 
-#include "TimeSeries.hpp"   // INF
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/split_member.hpp>
+
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
@@ -169,6 +171,44 @@ private:
   int count;
 
   TimeSeries centroid;
+
+  /*************************
+   *  Start serialization
+   *************************/
+  friend class boost::serialization::access;
+  template<class Archive>
+  void save(Archive & ar, unsigned) const
+  {
+    ar & centroid;
+    ar & count;
+    member_coord_t currentMemberCoord = this->lastMemberCoord;
+    while (currentMemberCoord.first != -1)
+    {
+      int currIndex = currentMemberCoord.first;
+      int currStart = currentMemberCoord.second;
+      ar & currIndex & currStart;
+      currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;    
+    }
+  }
+
+  template<class Archive>
+  void load(Archive & ar, unsigned)
+  {
+    ar & centroid;
+    int cnt;
+    ar & cnt;
+    for (int i = 0; i < cnt; i++) {
+      int index, start;
+      ar & index & start;
+      this->addMember(index, start);
+    }
+  }
+
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+
+  /*************************
+   *  End serialization
+   *************************/
 };
 
 } // namespace genex
