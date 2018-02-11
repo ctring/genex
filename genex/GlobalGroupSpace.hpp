@@ -1,14 +1,17 @@
 #ifndef GLOBAL_GROUP_SPACE_H
 #define GLOBAL_GROUP_SPACE_H
 
+#include <fstream>
+#include <vector>
+
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/split_member.hpp>
+
 #include "LocalLengthGroupSpace.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 #include "Group.hpp"
-
-#include <vector>
-#include <fstream>
 
 namespace genex {
 
@@ -87,6 +90,39 @@ private:
 
   void _loadDistance(const std::string& distanceName);
   int _group(int i);
+
+  /*************************
+   *  Start serialization
+   *************************/
+  friend class boost::serialization::access;
+  template<class A>
+  void save(A & ar, unsigned) const
+  {
+    ar << this->localLengthGroupSpace.size() << this->distanceName;
+    for (auto i = 2; i < this->localLengthGroupSpace.size(); i++) {
+      ar << *(this->localLengthGroupSpace[i]);
+    }
+  }
+
+  template<class A>
+  void load(A & ar, unsigned)
+  {
+    size_t maxLen;
+    ar >> maxLen >> this->distanceName;
+    this->_loadDistance(this->distanceName);
+    this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+    for (auto i = 2; i < maxLen; i++) {
+      auto llgs = new LocalLengthGroupSpace(dataset, i);
+      ar >> *llgs;
+      this->localLengthGroupSpace[i] = llgs;
+    }
+  }
+
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+  
+  /*************************
+   *  End serialization
+   *************************/
 };
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength);

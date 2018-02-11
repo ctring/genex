@@ -91,10 +91,8 @@ private:
   void save(A & ar, unsigned) const
   {
     ar << groups.size();
-    int gc = 0;
     for (auto g : groups) {
       ar << *g;
-      gc++;
     }
   }
 

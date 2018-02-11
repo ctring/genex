@@ -4,7 +4,6 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/split_member.hpp>
 
-#include "Common.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 
