@@ -89,6 +89,35 @@ int groupDataset(const string& name
   return genexAPI.groupDataset(name, threshold, distanceName, numThreads);
 }
 
+/**
+ *  @brief save all groups of a dataset to a file
+ *  
+ *  This function saves all groups of a dataset to a file. The dataset must be
+ *  grouped before this function is used. The dimension of the dataset (e.g. size, length)
+ *  is also included in the file so that compatibility can be checked later.
+ * 
+ *  @param name name of the dataset
+ *  @param path path to the saved group file
+ */
+void saveGroups(const string& name, const string& path)
+{
+  genexAPI.saveGroups(name, path);
+}
+
+/**
+ *  @brief load all groups of a dataset from a file.
+ *
+ *  This function load all saved groups from a file to a dataset. The dimension of
+ *  the dataset (e.g. size, lenth) must match the dimensions saved in the group file. 
+ *
+ *  @param name name of the dataset
+ *  @param path path to the group file
+ */
+void loadGroups(const string& name, const string& path)
+{
+  genexAPI.loadGroups(name, path);
+}
+
 BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
@@ -97,4 +126,6 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("normalize", normalize);
   py::def("group", groupDataset,
           (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
+  py::def("saveGroups", saveGroups);
+  py::def("loadGroups", loadGroups);
 }

@@ -168,7 +168,7 @@ public:
                    , const string& distanceName = "euclidean"
                    , int numThreads = 1);
 
-    /**
+   /**
    *  @brief save all groups of a dataset to a file
    *  
    *  This function saves all groups of a dataset to a file. The dataset must be
