@@ -221,7 +221,7 @@ public:
   void setWarpingBandRatio(double ratio);
 
   /**
-   *  @brief gets the best match in a dataset
+   *  @brief gets a single similar time series to the query
    *
    *  @param target_name name of the target dataset
    *  @param query_name name of the query dataset
@@ -238,7 +238,7 @@ public:
                , int end = -1);
 
   /**
-   *  @brief gets k similar TimeSeries to the query
+   *  @brief gets k similar time series to the query
    * 
    *  @param k number of similar time series to find
    *  @param ke number of time series to examine

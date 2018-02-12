@@ -7,6 +7,37 @@ namespace py = boost::python;
 
 GenexAPI genexAPI;
 
+/* Helpers for converting C++ types to Python types */
+
+py::list timeSeriesToPythonList(const TimeSeries & ts)
+{
+  py::list pl;
+  for (int i = 0; i < ts.getLength(); i++)
+  {
+    pl.append(ts[i]);
+  }
+  return pl;
+}
+
+py::dict timeSeriesToPythonDict(const TimeSeries & ts)
+{
+  py::dict pd;
+  pd["index"] = ts.getIndex();
+  pd["start"] = ts.getStart();
+  pd["end"] = ts.getEnd();
+  return pd;
+}
+
+py::dict candidateTimeSeriesToPythonDict(const candidate_time_series_t & cts)
+{
+  py::dict pd;
+  pd["dist"] = cts.dist;
+  pd["data"] = timeSeriesToPythonDict(cts.data);
+  return pd;
+}
+
+/* End helpers */
+
 /**
  *  @brief loads data from a text file to the memory
  *
@@ -118,6 +149,93 @@ void loadGroups(const string& name, const string& path)
   genexAPI.loadGroups(name, path);
 }
 
+/**
+ *  @brief computes the distance between 2 time series.
+ * 
+ *  @param name1 dataset name of the first time series
+ *  @param idx1 index of the first time series
+ *  @param start1 starting position of the first time series
+ *  @param end1 ending position of the first time series
+ *  @param name2 dataset name of the second time series
+ *  @param idx2 index of the second time series
+ *  @param start2 starting position of the second time series
+ *  @param end2 ending position of the second time series
+ *  @param distanceName name of the distance being used in the calculation
+ *  @return distance between the 2 time series
+ */
+data_t distance(const string& name1, int idx1, int start1, int end1,
+                const string& name2, int idx2, int start2, int end2,
+                const string& distanceName)
+{
+  return genexAPI.distanceBetween(name1, idx1, start1, end1, 
+                                  name2, idx2, start2, end2,
+                                  distanceName);
+}
+
+/**
+ *  @brief gets a single similar time series to the query
+ *
+ *  @param target_name name of the target dataset
+ *  @param query_name name of the query dataset
+ *  @param index index of the query time series
+ *  @param start start location in the query time series
+ *  @param end end location in the query time series (exclusive)
+ *  @return a dict 
+ *          { 
+ *            "dist": <distance to result>, 
+ *            "data": {
+ *                      "index": <index of result>, 
+ *                      "start": <starting position of result>,
+ *                      "end": <ending position of result> 
+ *                    }
+ *          }
+ */
+py::dict sim(const string& target_name
+                            , const string& query_name
+                            , int index
+                            , int start
+                            , int end)
+{
+  auto res = genexAPI.getBestMatch(target_name, query_name, index, start, end);
+  return candidateTimeSeriesToPythonDict(res);
+}
+
+/**
+ *  @brief gets k similar time series to the query
+ * 
+ *  @param k number of similar time series to find
+ *  @param ke number of time series to examine
+ *  @param target_name name of the result dataset
+ *  @param query_name name of the query dataset
+ *  @param index index of the query time series
+ *  @param start start location in the query time series
+ *  @param end end location in the query time series (exclusive)
+ *  @return a list of k or less dicts (less when k is larger than the total number of time series)
+ *          [{ 
+ *             "dist": <distance to result>, 
+ *             "data": {
+ *                       "index": <index of result>, 
+ *                       "start": <starting position of result>,
+ *                       "end": <ending position of result> 
+ *                     }
+ *            }, ...]
+ */
+py::list ksim(int k
+              , int ke
+              , const string& target_name
+              , const string& query_name
+              , int index
+              , int start
+              , int end)
+{
+  auto res = genexAPI.getKBestMatches(k, ke, target_name, query_name, index, start, end);
+  py::list resList;
+  for (auto r : res) {
+    resList.append(candidateTimeSeriesToPythonDict(r));
+  }
+  return resList;
+}
+
 BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
@@ -128,4 +246,7 @@ BOOST_PYTHON_MODULE(pygenex)
           (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
   py::def("saveGroups", saveGroups);
   py::def("loadGroups", loadGroups);
+  py::def("distance", distance);
+  py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
+  py::def("ksim", ksim, (py::arg("start")=-1, py::arg("end")=-1));
 }
