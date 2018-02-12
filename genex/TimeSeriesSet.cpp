@@ -16,6 +16,11 @@ using std::endl;
 
 namespace genex {
 
+TimeSeriesSet::TimeSeriesSet()
+  : itemLength(0)
+  , itemCount(0)
+  , normalized(false) {};
+
 TimeSeriesSet::~TimeSeriesSet()
 {
   this->clearData();

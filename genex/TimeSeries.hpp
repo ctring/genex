@@ -45,10 +45,7 @@ public:
    *  @param start starting position of this time series
    *  @param end ending position of this time series
    */
-  TimeSeries(data_t *data, int index, int start, int end)
-    : data(data), index(index), start(start), end(end), keoghCacheValid(false), isOwnerOfData(false) {
-      this->length = end - start;
-    };
+  TimeSeries(data_t *data, int index, int start, int end);
 
   /**
    *  @brief constructor for TimeSeries
@@ -60,8 +57,7 @@ public:
    *  @param data a pointer pointing to the actual data
    *  @param length length of the time series
    */
-  TimeSeries(data_t *data, int length)
-    : data(data), index(0), start(0), end(length), length(length), isOwnerOfData(false) {}
+  TimeSeries(data_t *data, int length);
 
   /**
    *  @brief constructor for TimeSeries
@@ -73,32 +69,12 @@ public:
    *
    *  @param length length of the time series
    */
-  TimeSeries(int length)
-    : index(0), start(0), end(length), length(length), isOwnerOfData(true)
-  {
-    this->data = new data_t[length];
-    memset(this->data, 0, length * sizeof(data_t));
-  }
+  TimeSeries(int length);
 
   /**
    * @brief Copy constructor
    */
-  TimeSeries(const TimeSeries& other)
-  {
-    isOwnerOfData = other.isOwnerOfData;
-    index = other.index;
-    start = other.start;
-    end = other.end;
-    length = other.length;
-    if (isOwnerOfData)
-    {
-      this->data = new data_t[length];
-      memcpy(this->data, other.data, length * sizeof(data_t));
-    }
-    else {
-      this->data = other.data;
-    }
-  }
+  TimeSeries(const TimeSeries& other);
 
   /**
    *  @brief Copy assignment and move assignment

@@ -15,6 +15,52 @@ int extraTimeSeries = 0;
 
 namespace genex {
 
+TimeSeries::TimeSeries(data_t *data, int index, int start, int end)
+  : data(data)
+  , index(index)
+  , start(start)
+  , end(end)
+  , keoghCacheValid(false)
+  , isOwnerOfData(false) 
+{
+  this->length = end - start;
+};
+
+TimeSeries::TimeSeries(data_t *data, int length)
+  : data(data)
+  , index(0)
+  , start(0)
+  , end(length)
+  , length(length)
+  , isOwnerOfData(false) {}
+
+TimeSeries::TimeSeries(int length)
+  : index(0)
+  , start(0)
+  , end(length)
+  , length(length)
+  , isOwnerOfData(true)
+{
+  this->data = new data_t[length];
+  memset(this->data, 0, length * sizeof(data_t));
+}
+
+TimeSeries::TimeSeries(const TimeSeries& other)
+{
+  isOwnerOfData = other.isOwnerOfData;
+  index = other.index;
+  start = other.start;
+  end = other.end;
+  length = other.length;
+  if (isOwnerOfData)
+  {
+    this->data = new data_t[length];
+    memcpy(this->data, other.data, length * sizeof(data_t));
+  }
+  else {
+    this->data = other.data;
+  }
+}
 
 TimeSeries& TimeSeries::operator=(const TimeSeries& other)
 {

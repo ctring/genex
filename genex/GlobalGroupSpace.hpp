@@ -15,6 +15,8 @@
 
 namespace genex {
 
+vector<int> generateTraverseOrder(int queryLength, int totalLength);
+
 /**
  *  The set of all groups of equal lengths for a dataset
  */
@@ -28,20 +30,17 @@ public:
    *  @param dataset the dataset to group
    *  @param threshold the threshold for similarity within a group
    */
-  GlobalGroupSpace(const TimeSeriesSet& dataset) : dataset(dataset) {};
+  GlobalGroupSpace(const TimeSeriesSet& dataset);
 
   /**
    *  @brief The deconstructor for the GlobalGroupSpace
    */
-  ~GlobalGroupSpace(void)
-  {
-    reset();
-  }
+  ~GlobalGroupSpace();
 
   /**
    *  @brief clears the groups
    */
-  void reset(void);
+  void reset();
 
   /**
    *  @brief groups the dataset into groups of equal length
@@ -53,6 +52,7 @@ public:
    */
   int group(const std::string& distance_name, data_t threshold);
   int groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread);
+  
   int getTotalNumberOfGroups() const;
   std::string getDistanceName() const;
   data_t getThreshold() const;
@@ -77,10 +77,6 @@ public:
   
   void saveGroupsOld(std::ofstream &fout, bool groupSizeOnly) const;
   int loadGroupsOld(std::ifstream &fin);
-  /**
-   *  @brief returns true if dataset is grouped
-   */
-  bool grouped(void) const;
 
 private:
   std::string distanceName;
@@ -129,8 +125,6 @@ private:
    *  End serialization
    *************************/
 };
-
-vector<int> generateTraverseOrder(int queryLength, int totalLength);
 
 } // namespace genex
 #endif //GLOBAL_GROUP_SPACE_H

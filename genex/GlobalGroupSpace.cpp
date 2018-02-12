@@ -28,6 +28,14 @@ using std::string;
 
 namespace genex {
 
+GlobalGroupSpace::GlobalGroupSpace(const TimeSeriesSet& dataset) : 
+  dataset(dataset) {};
+
+GlobalGroupSpace::~GlobalGroupSpace(void)
+{
+  reset();  
+}
+
 void GlobalGroupSpace::reset(void)
 {
   for (auto i = 0; i < this->localLengthGroupSpace.size(); i++) {
@@ -134,11 +142,6 @@ candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
   return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
 }
 
-bool GlobalGroupSpace::grouped(void) const
-{
-  return localLengthGroupSpace.size() > 0;
-}
-
 std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& query, int k)
 {
   std::vector<candidate_time_series_t> best;
@@ -185,7 +188,6 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& qu
     best[i].dist = this->warpedDistance(query, best[i].data, INF);
   }
 
-  // clean up
   return best;
 }
 

@@ -27,8 +27,7 @@ public:
    *
    *  Create a TimeSeriestSet object with is an empty string for name
    */
-  TimeSeriesSet()
-    : itemLength(0), itemCount(0), normalized(false) {};
+  TimeSeriesSet();
 
   /**
    *  @brief destructor
