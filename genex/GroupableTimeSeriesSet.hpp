@@ -50,6 +50,7 @@ public:
   /**
    *  @brief returns name of the distance used for grouping
    */
+  int getTotalNumberOfGroups() const;  
   string getDistanceName() const;
   data_t getThreshold() const;
 

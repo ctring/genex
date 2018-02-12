@@ -48,6 +48,16 @@ bool GroupableTimeSeriesSet::isGrouped() const
   return this->groupsAllLengthSet != nullptr;
 }
 
+int GroupableTimeSeriesSet::getTotalNumberOfGroups() const
+{
+  if (this->isGrouped())
+  {
+    return this->groupsAllLengthSet->getTotalNumberOfGroups();
+  }
+  return 0;
+}
+
+
 string GroupableTimeSeriesSet::getDistanceName() const
 {
   if (this->isGrouped())
@@ -65,6 +75,7 @@ data_t GroupableTimeSeriesSet::getThreshold() const
   }
   return 0;
 }
+
 
 void GroupableTimeSeriesSet::reset()
 {

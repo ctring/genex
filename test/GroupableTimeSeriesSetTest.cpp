@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_grouping_and_reset )
   tsSet.loadData(data.test_3_10_space, 0, 0, " ");
   int groupCnt = tsSet.groupAllLengths("euclidean", 0.5, 1);
   BOOST_CHECK( groupCnt > 2 );
+  BOOST_CHECK_EQUAL( tsSet.getTotalNumberOfGroups(), groupCnt );
 }
 
 BOOST_AUTO_TEST_CASE( groupable_time_series_not_grouped_exception )
@@ -75,6 +76,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_save_load )
   BOOST_TEST( ok );
   BOOST_CHECK_EQUAL( tsSet.getDistanceName(), tsSet2.getDistanceName() );
   BOOST_CHECK_EQUAL( tsSet.getThreshold(), tsSet2.getThreshold() );
+  BOOST_CHECK_EQUAL( tsSet.getTotalNumberOfGroups(), tsSet2.getTotalNumberOfGroups() );
   remove(fname.c_str());  
 }
 

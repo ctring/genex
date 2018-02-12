@@ -128,5 +128,6 @@ BOOST_AUTO_TEST_CASE( global_group_space_save_load )
   BOOST_TEST( ok );
   BOOST_CHECK_EQUAL( ggs.getDistanceName(), ggs2.getDistanceName() );
   BOOST_CHECK_EQUAL( ggs.getThreshold(), ggs2.getThreshold() );
+  BOOST_CHECK_EQUAL( ggs.getTotalNumberOfGroups(), ggs2.getTotalNumberOfGroups() );
   remove(fname.c_str());
 }

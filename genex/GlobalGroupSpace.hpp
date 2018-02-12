@@ -53,7 +53,7 @@ public:
    */
   int group(const std::string& distance_name, data_t threshold);
   int groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread);
-
+  int getTotalNumberOfGroups() const;
   std::string getDistanceName() const;
   data_t getThreshold() const;
 
@@ -89,6 +89,7 @@ private:
   dist_t pairwiseDistance;
   dist_t warpedDistance;
   data_t threshold;
+  int totalNumberOfGroups = 0;
 
   void _loadDistance(const std::string& distanceName);
   int _group(int i);
@@ -113,10 +114,12 @@ private:
     ar >> maxLen >> this->distanceName >> this->threshold;
     this->_loadDistance(this->distanceName);
     this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+    this->totalNumberOfGroups = 0;
     for (auto i = 2; i < maxLen; i++) {
       auto llgs = new LocalLengthGroupSpace(dataset, i);
       ar >> *llgs;
       this->localLengthGroupSpace[i] = llgs;
+      this->totalNumberOfGroups += llgs->getNumberOfGroups();
     }
   }
 

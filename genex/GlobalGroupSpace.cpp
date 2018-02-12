@@ -62,13 +62,13 @@ int GlobalGroupSpace::group(const string& distance_name, data_t threshold)
   this->_loadDistance(distance_name);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
   this->threshold = threshold;
-  int numberOfGroups = 0;
-
+  this->totalNumberOfGroups = 0;
   for (auto i = 2; i < this->localLengthGroupSpace.size(); i++)
   {
-    numberOfGroups += this->_group(i);
+     this->totalNumberOfGroups += this->_group(i);
   }
-  return numberOfGroups;
+
+  return  this->totalNumberOfGroups;
 }
 
 int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread)
@@ -77,8 +77,7 @@ int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_
   this->_loadDistance(distance_name);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
   this->threshold = threshold;
-  int numberOfGroups = 0;
-
+  
   ThreadPool pool(num_thread);
   vector< std::future<int> > groupCounts;
   for (auto i = 2; i < this->localLengthGroupSpace.size(); i++)
@@ -89,11 +88,18 @@ int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_
       })
     );
   }
+
+  this->totalNumberOfGroups = 0;
   for (auto i = 0; i < groupCounts.size(); i++)
   {
-    numberOfGroups += groupCounts[i].get();
+    this->totalNumberOfGroups += groupCounts[i].get();
   }
-  return numberOfGroups;
+  return this->totalNumberOfGroups;
+}
+
+int GlobalGroupSpace::getTotalNumberOfGroups() const
+{
+  return this->totalNumberOfGroups;
 }
 
 string GlobalGroupSpace::getDistanceName() const
@@ -198,18 +204,18 @@ int GlobalGroupSpace::loadGroupsOld(ifstream &fin)
   reset();
 
   int lenFrom, lenTo;
-  int numberOfGroups = 0;
   string distance;
   fin >> lenFrom >> lenTo >> distance;
   boost::trim_right(distance);
   this->_loadDistance(distance);
-  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);  
+  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+  this->totalNumberOfGroups = 0;  
   for (auto i = lenFrom; i < lenTo; i++) {
     auto gel = new LocalLengthGroupSpace(dataset, i);
-    numberOfGroups += gel->loadGroupsOld(fin);
+    this->totalNumberOfGroups += gel->loadGroupsOld(fin);
     this->localLengthGroupSpace[i] = gel;
   }
-  return numberOfGroups;
+  return this->totalNumberOfGroups;
 }
 
 vector<int> generateTraverseOrder(int queryLength, int totalLength)
