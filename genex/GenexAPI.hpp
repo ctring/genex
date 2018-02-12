@@ -172,8 +172,31 @@ public:
                    , const string& distanceName = "euclidean"
                    , int numThreads = 1);
 
-  /**
+    /**
    *  @brief save all groups of a dataset to a file
+   *  
+   *  This function saves all groups of a dataset to a file. The dataset must be
+   *  grouped before this function is used. The dimension of the dataset (e.g. size, length)
+   *  is also included in the file so that compatibility can be checked later.
+   * 
+   *  @param name name of the dataset
+   *  @param path path to the saved group file
+   */
+  void saveGroups(const string& name, const string& path);
+
+  /**
+   *  @brief load all groups of a dataset from a file.
+   *
+   *  This function load all saved groups from a file to a dataset. The dimension of
+   *  the dataset (e.g. size, lenth) must match the dimensions saved in the group file. 
+   *
+   *  @param name name of the dataset
+   *  @param path path to the group file
+   */
+  int loadGroups(const string& name, const string& path);
+
+  /**
+   *  @brief save all groups of a dataset to a text file (deprecated).
    *  
    *  This function saves all groups of a dataset to a file. The dataset must be
    *  grouped before this function is used. The dimension of the dataset (e.g. size, length)
@@ -186,7 +209,7 @@ public:
   void saveGroupsOld(const string& name, const string& path, bool groupSizeOnly);
 
   /**
-   *  @brief load all groups of a dataset from a file.
+   *  @brief load all groups of a dataset from a text file (deprecated).
    *
    *  This function load all saved groups from a file to a dataset. The dimension of
    *  the dataset (e.g. size, lenth) must match the dimensions saved in the group file. 
@@ -268,7 +291,7 @@ public:
   void printTimeSeries(const string& name, int idx, int start, int end);
 
 private:
-  void _checkDatasetName(const string& name);
+  void _checkDatasetName(const string& name) const;
 
   std::map<string, GroupableTimeSeriesSet*> _loadedDatasets;
   int _datasetCount = 0;

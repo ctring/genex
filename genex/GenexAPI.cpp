@@ -3,6 +3,7 @@
 #include "Exception.hpp"
 #include "GroupableTimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
+#include "IO.hpp"
 
 #include <vector>
 #include <iostream>
@@ -118,6 +119,19 @@ int GenexAPI::groupDataset(const string& name, data_t threshold, const string& d
   return this->_loadedDatasets[name]->groupAllLengths(distance_name, threshold, numThreads);
 }
 
+void GenexAPI::saveGroups(const string& name, const string& path)
+{
+  this->_checkDatasetName(name);
+  saveToFile(*(this->_loadedDatasets[name]), path);
+}
+
+int GenexAPI::loadGroups(const string& name, const string& path)
+{
+  this->_checkDatasetName(name);
+  loadFromFile(*(this->_loadedDatasets[name]), path);
+  return 0;
+}
+
 void GenexAPI::saveGroupsOld(const string& name, const string &path, bool groupSizeOnly)
 {
   this->_checkDatasetName(name);
@@ -196,7 +210,7 @@ void GenexAPI::printTimeSeries(const string& name, int idx, int start, int end)
   std::cout << std::endl;
 }
 
-void GenexAPI::_checkDatasetName(const string& name)
+void GenexAPI::_checkDatasetName(const string& name) const
 { 
   if (this->_loadedDatasets.find(name) == this->_loadedDatasets.end())
   {

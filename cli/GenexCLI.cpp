@@ -358,7 +358,11 @@ MAKE_COMMAND(SaveGroups,
     string path = args[2];
     bool groupSizeOnly = args.size() > 3 ? stoi(args[3]) : false;
 
-    gGenexAPI.saveGroupsOld(name, path, groupSizeOnly);
+    if (groupSizeOnly) {
+      gGenexAPI.saveGroupsOld(name, path, groupSizeOnly);
+    } else {
+      gGenexAPI.saveGroups(name, path);
+    }
     cout << "Saved groups of dataset " << name << " to " << args[2] << endl;
 
     return true;
@@ -383,7 +387,7 @@ MAKE_COMMAND(LoadGroups,
     string name = args[1];
     string path = args[2];
 
-    int numGroups = gGenexAPI.loadGroupsOld(name, path);
+    int numGroups = gGenexAPI.loadGroups(name, path);
 
     cout << numGroups << " groups loaded for dataset " << name;
 
