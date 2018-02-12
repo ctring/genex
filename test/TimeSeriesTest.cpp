@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <cstdio>
-#include "Common.hpp"
+#include "IO.hpp"
 #include "Exception.hpp"
 #include "TimeSeries.hpp"
 

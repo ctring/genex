@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <cstdio>
-#include "Common.hpp"
+#include "IO.hpp"
 #include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"

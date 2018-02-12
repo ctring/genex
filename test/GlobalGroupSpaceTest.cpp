@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <cstdio>
-#include "Common.hpp"
+#include "IO.hpp"
 #include "GlobalGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"

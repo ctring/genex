@@ -1,5 +1,5 @@
-#ifndef COMMON_HPP
-#define COMMON_HPP
+#ifndef IO_HPP
+#define IO_HPP
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -69,4 +69,4 @@ inline std::ostream &operator<<(std::ostream &os, const TimeSeries &w) {
 }
 
 } // namespace genex
-#endif // COMMON_HPP
+#endif // IO_HPP

@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <vector>
 #include <boost/test/unit_test.hpp>
-#include "Common.hpp"
+#include "IO.hpp"
 #include "GroupableTimeSeriesSet.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
