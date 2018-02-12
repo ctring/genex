@@ -3,11 +3,11 @@
 #include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include "IO.hpp"
-#include "GlobalGroupSpace.hpp"
+#include "group/GlobalGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 #define TOLERANCE 1e-9
 

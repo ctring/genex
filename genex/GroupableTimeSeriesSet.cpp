@@ -3,7 +3,7 @@
 
 #include "IO.hpp"
 #include "GroupableTimeSeriesSet.hpp"
-#include "GlobalGroupSpace.hpp"
+#include "group/GlobalGroupSpace.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
 

@@ -3,12 +3,12 @@
 #include <boost/test/unit_test.hpp>
 #include <cstdio>
 #include "IO.hpp"
-#include "LocalLengthGroupSpace.hpp"
+#include "group/LocalLengthGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 using namespace genex;
 

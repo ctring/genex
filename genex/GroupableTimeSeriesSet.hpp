@@ -6,7 +6,7 @@
 #include <boost/serialization/split_member.hpp>
 
 #include "distance/Distance.hpp"
-#include "GlobalGroupSpace.hpp"
+#include "group/GlobalGroupSpace.hpp"
 #include "TimeSeriesSet.hpp"
 
 #define GROUP_FILE_VERSION 1

@@ -11,7 +11,7 @@
 #include "GenexAPI.hpp"
 #include "Exception.hpp"
 
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 using namespace genex;
 

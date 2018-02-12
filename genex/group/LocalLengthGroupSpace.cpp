@@ -1,4 +1,4 @@
-#include "LocalLengthGroupSpace.hpp"
+#include "group/LocalLengthGroupSpace.hpp"
 
 #include <vector>
 #include <algorithm>
@@ -8,7 +8,7 @@
 #include <chrono>
 
 #include "TimeSeries.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
 

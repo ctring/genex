@@ -7,7 +7,7 @@
 #include "GroupableTimeSeriesSet.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 using namespace genex;
 

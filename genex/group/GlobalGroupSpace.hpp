@@ -7,11 +7,11 @@
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/split_member.hpp>
 
-#include "LocalLengthGroupSpace.hpp"
+#include "group/LocalLengthGroupSpace.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
 #include "distance/Distance.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 namespace genex {
 

@@ -6,7 +6,7 @@
 #include "distance/Euclidean.hpp"
 #include "distance/Distance.hpp"
 #include "Exception.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 using namespace genex;
 

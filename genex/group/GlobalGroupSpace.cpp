@@ -1,8 +1,8 @@
 #include "GlobalGroupSpace.hpp"
-#include "LocalLengthGroupSpace.hpp"
+#include "group/LocalLengthGroupSpace.hpp"
 #include "TimeSeries.hpp"
 #include "TimeSeriesSet.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 #include "distance/Distance.hpp"
 #include "lib/ThreadPool.hpp"
 

@@ -9,7 +9,7 @@
 
 #include "TimeSeries.hpp"
 #include "distance/Distance.hpp"
-#include "Group.hpp"
+#include "group/Group.hpp"
 
 using std::vector;
 
