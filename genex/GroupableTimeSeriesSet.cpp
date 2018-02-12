@@ -1,10 +1,11 @@
+#include <iostream>
+#include <fstream>
+
+#include "Common.hpp"
 #include "GroupableTimeSeriesSet.hpp"
 #include "GlobalGroupSpace.hpp"
 #include "Exception.hpp"
 #include "distance/Distance.hpp"
-#include <iostream>
-
-#include <fstream>
 
 using std::ofstream;
 using std::ifstream;
@@ -39,7 +40,6 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distanceName, dat
   else {
     throw GenexException("Number of threads must be positive");    
   }
-  this->distanceName = distanceName;
   this->threshold = threshold;
   return cntGroups;
 }
@@ -51,7 +51,11 @@ bool GroupableTimeSeriesSet::isGrouped() const
 
 string GroupableTimeSeriesSet::getDistanceName() const
 {
-  return this->distanceName;
+  if (this->isGrouped())
+  {
+    return this->groupsAllLengthSet->getDistanceName();
+  }
+  return "";
 }
 
 void GroupableTimeSeriesSet::reset()

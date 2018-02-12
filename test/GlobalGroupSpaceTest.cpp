@@ -18,6 +18,7 @@ struct MockData
   data_t dat[7] = {110, 116, 118, 117, 16.5, 112, 112};
   std::string test_group_5_10_space = "datasets/test/test_group_5_10_space.txt";
   std::string test_group_5_10_different_space = "datasets/test/test_group_5_10_different_space.txt";
+  std::string ItalyPowerDemand = "datasets/test/ItalyPowerDemand_DATA";
 };
 
 BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(EPS) )
@@ -108,7 +109,7 @@ BOOST_AUTO_TEST_CASE( global_group_space_save_load )
   MockData data;
   std::string fname = "global_group_space_save_load.z";
   TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
+  tsSet.loadData(data.ItalyPowerDemand, 5, 0, " ");
 
   GlobalGroupSpace ggs(tsSet);
   ggs.group("euclidean", 0.5);
@@ -125,6 +126,6 @@ BOOST_AUTO_TEST_CASE( global_group_space_save_load )
   auto best2 = ggs2.getBestMatch(tsSet.getTimeSeries(0,4,10));
   bool ok = best == best2;
   BOOST_TEST( ok );
-
-  remove(fname.c_str());  
+  BOOST_CHECK_EQUAL( ggs.getDistanceName(), ggs2.getDistanceName() );
+  remove(fname.c_str());
 }

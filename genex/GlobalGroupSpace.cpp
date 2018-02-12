@@ -96,6 +96,10 @@ int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_
   return numberOfGroups;
 }
 
+string GlobalGroupSpace::getDistanceName() const
+{
+  return this->distanceName;
+}
 
 candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
 {

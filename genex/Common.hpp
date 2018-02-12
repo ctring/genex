@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include "TimeSeries.hpp"
+#include "Exception.hpp"
 
 namespace genex {
 
@@ -21,32 +22,46 @@ namespace genex {
 template<typename A>
 void saveToFile(const A & obj, const std::string & fname) {
     std::ofstream ofs(fname, std::ios::binary);
-    boost::iostreams::filtering_ostreambuf filter_osbuf;
+    if (ofs)
+    {
+        boost::iostreams::filtering_ostreambuf filter_osbuf;
 
-    // push the ofstream and the compressor
-    filter_osbuf.push(
-        boost::iostreams::zlib_compressor(boost::iostreams::zlib::best_compression));
-    filter_osbuf.push(ofs);
+        // push the ofstream and the compressor
+        filter_osbuf.push(
+            boost::iostreams::zlib_compressor(boost::iostreams::zlib::best_compression));
+        filter_osbuf.push(ofs);
 
-    // start the archive on the filtering buffer
-    boost::archive::binary_oarchive boa(filter_osbuf);
+        // start the archive on the filtering buffer
+        boost::archive::binary_oarchive boa(filter_osbuf);
 
-    boa << obj;
+        boa << obj;
+    }
+    else 
+    {
+        throw GenexException("Cannot open file");    
+    }
 }
 
 template<typename A>
 void loadFromFile(A & obj, const std::string & fname) {
     std::ifstream ifs(fname, std::ios::binary);
-    boost::iostreams::filtering_istreambuf filter_isbuf;
+    if (ifs)
+    {
+        boost::iostreams::filtering_istreambuf filter_isbuf;
 
-    // push the ifstream and the decompressor
-    filter_isbuf.push(boost::iostreams::zlib_decompressor());
-    filter_isbuf.push(ifs);
+        // push the ifstream and the decompressor
+        filter_isbuf.push(boost::iostreams::zlib_decompressor());
+        filter_isbuf.push(ifs);
 
-    // start the archive on the filtering buffer
-    boost::archive::binary_iarchive bia(filter_isbuf);
+        // start the archive on the filtering buffer
+        boost::archive::binary_iarchive bia(filter_isbuf);
 
-    bia >> obj;
+        bia >> obj;
+    }
+    else 
+    {
+        throw GenexException("Cannot open file");
+    }
 }
 
 inline std::ostream &operator<<(std::ostream &os, const TimeSeries &w) { 

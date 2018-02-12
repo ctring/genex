@@ -1,11 +1,13 @@
 #ifndef GROUPABLE_TIME_SERIES_SET_H
 #define GROUPABLE_TIME_SERIES_SET_H
 
-#include "TimeSeriesSet.hpp"
-#include "GlobalGroupSpace.hpp"
 #include <vector>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/split_member.hpp>
 
 #include "distance/Distance.hpp"
+#include "GlobalGroupSpace.hpp"
+#include "TimeSeriesSet.hpp"
 
 #define GROUP_FILE_VERSION 1
 
@@ -78,8 +80,51 @@ public:
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;
-  std::string distanceName = "";
   data_t threshold = 0;
+
+
+  /*************************
+   *  Start serialization
+   *************************/
+  friend class boost::serialization::access;
+  template<class A>
+  void save(A & ar, unsigned) const
+  {
+    if (!this->isGrouped()) {
+      throw GenexException("No group found");
+    }
+
+    ar << this->getItemCount()
+       << this->getItemLength()
+       << this->threshold;
+
+    ar << *(this->groupsAllLengthSet);
+  }
+
+  template<class A>
+  void load(A & ar, unsigned)
+  {
+    int grpItemCount, grpItemLength;
+    ar >> grpItemCount >> grpItemLength;
+    if (grpItemCount != this->getItemCount())
+    {
+      throw GenexException("Incompatible item count");
+    }
+    if (grpItemLength != this->getItemLength())
+    {
+      throw GenexException("Incompatible item length");
+    }
+    reset();
+    ar >> this->threshold;
+    this->groupsAllLengthSet = new GlobalGroupSpace(*this);
+    ar >> *(this->groupsAllLengthSet);
+  }
+
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+  
+  /*************************
+   *  End serialization
+   *************************/
 };
 
 } // namespace genex

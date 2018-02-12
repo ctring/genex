@@ -54,6 +54,8 @@ public:
   int group(const std::string& distance_name, data_t threshold);
   int groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread);
 
+  std::string getDistanceName() const;
+
   /**
    *  @brief gets the most similar sequence in the dataset
    *
@@ -80,13 +82,12 @@ public:
   bool grouped(void) const;
 
 private:
-
+  std::string distanceName;
   std::vector<LocalLengthGroupSpace*> localLengthGroupSpace;
   const TimeSeriesSet& dataset;
   dist_t pairwiseDistance;
   dist_t warpedDistance;
   data_t threshold;
-  std::string distanceName;
 
   void _loadDistance(const std::string& distanceName);
   int _group(int i);
