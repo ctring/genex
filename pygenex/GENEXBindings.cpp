@@ -90,7 +90,7 @@ int groupDataset(const string& name
 }
 
 /**
- *  @brief save all groups of a dataset to a file
+ *  @brief saves all groups of a dataset to a file
  *  
  *  This function saves all groups of a dataset to a file. The dataset must be
  *  grouped before this function is used. The dimension of the dataset (e.g. size, length)
@@ -105,7 +105,7 @@ void saveGroups(const string& name, const string& path)
 }
 
 /**
- *  @brief load all groups of a dataset from a file.
+ *  @brief loads all groups of a dataset from a file.
  *
  *  This function load all saved groups from a file to a dataset. The dimension of
  *  the dataset (e.g. size, lenth) must match the dimensions saved in the group file. 

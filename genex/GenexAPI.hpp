@@ -192,7 +192,7 @@ public:
   int loadGroups(const string& name, const string& path);
 
   /**
-   *  @brief save all groups of a dataset to a text file (deprecated).
+   *  @brief saves all groups of a dataset to a text file (deprecated).
    *  
    *  This function saves all groups of a dataset to a file. The dataset must be
    *  grouped before this function is used. The dimension of the dataset (e.g. size, length)
@@ -205,7 +205,7 @@ public:
   void saveGroupsOld(const string& name, const string& path, bool groupSizeOnly);
 
   /**
-   *  @brief load all groups of a dataset from a text file (deprecated).
+   *  @brief loads all groups of a dataset from a text file (deprecated).
    *
    *  This function load all saved groups from a file to a dataset. The dimension of
    *  the dataset (e.g. size, lenth) must match the dimensions saved in the group file. 
@@ -215,6 +215,9 @@ public:
    */
   int loadGroupsOld(const string& name, const string& path);
 
+  /**
+   *  @brief sets the ratio for the warping band for computing the Keogh's lowerbound. Default: 0.1 
+   */
   void setWarpingBandRatio(double ratio);
 
   /**
@@ -233,7 +236,6 @@ public:
                , int index
                , int start = -1
                , int end = -1);
-
 
   /**
    *  @brief gets k similar TimeSeries to the query
@@ -280,10 +282,32 @@ public:
 
   // dataset_metadata_t PAA(int idx, int n);
 
+  /**
+   *  @brief computes the distance between 2 time series.
+   * 
+   *  @param name1 dataset name of the first time series
+   *  @param idx1 index of the first time series
+   *  @param start1 starting position of the first time series
+   *  @param end1 ending position of the first time series
+   *  @param name2 dataset name of the second time series
+   *  @param idx2 index of the second time series
+   *  @param start2 starting position of the second time series
+   *  @param end2 ending position of the second time series
+   *  @param distanceName name of the distance being used in the calculation
+   *  @return distance between the 2 time series
+   */
   data_t distanceBetween(const string& name1, int idx1, int start1, int end1
                          , const string& name2, int idx2, int start2, int end2
-                         , const string& distance_name);
+                         , const string& distanceName);
   
+  /**
+   * @brief prints a time series to the standard output.
+   * 
+   * @param name dataset name of the time series
+   * @param idx index of the time series
+   * @param start starting position of the time series
+   * @param end ending position of the time series
+   */
   void printTimeSeries(const string& name, int idx, int start, int end);
 
 private:
