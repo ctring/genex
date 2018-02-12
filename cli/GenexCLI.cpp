@@ -199,13 +199,13 @@ MAKE_COMMAND(List,
         cout << "  " << setw(10) << i.name;
         if (i.isGrouped) {
           ostringstream ss;
-          ss << "Grouped (" << i.distance << ")";
-          cout << "\t" << setw(25) << ss.str();
+          ss << "Grouped (" << i.distance << ", TS = " << i.threshold << ")";
+          cout << "\t" << setw(35) << ss.str();
         }
         else {
-          cout << "\t" << "";
+          cout << "\t" << setw(35) <<  "Not grouped";
         }
-        cout << "\t" << setw(10) << (i.isNormalized ? "Normalized" : "");        
+        cout << "\t" << setw(10) << (i.isNormalized ? "Normalized" : "Not normalized");        
         cout << endl;
       }
     }
@@ -1024,10 +1024,9 @@ int main (int argc, char *argv[])
       {
         cout << "Error! Cannot convert some value to numeric" << endl;
       }
-      catch (...)
+      catch (std::exception &ex)
       {
-        cout << "Error! Unknown error" << endl;
-        quit = true;
+        cout << "Error! " << ex.what() << endl;
       }
       cout << endl;
     }

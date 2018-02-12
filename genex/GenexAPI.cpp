@@ -81,9 +81,10 @@ dataset_metadata_t GenexAPI::getDatasetInfo(const string& name)
   return dataset_metadata_t(name,
                             dataset->getItemCount(),
                             dataset->getItemLength(),
+                            dataset->isNormalized(),                            
                             dataset->isGrouped(),
                             dataset->getDistanceName(),
-                            dataset->isNormalized());
+                            dataset->getThreshold());
 }
 
 vector<dataset_metadata_t> GenexAPI::getAllDatasetInfo()
@@ -129,7 +130,7 @@ int GenexAPI::loadGroups(const string& name, const string& path)
 {
   this->_checkDatasetName(name);
   loadFromFile(*(this->_loadedDatasets[name]), path);
-  return 0;
+  return this->_loadedDatasets[name]->getTotalNumberOfGroups();
 }
 
 void GenexAPI::saveGroupsOld(const string& name, const string &path, bool groupSizeOnly)
