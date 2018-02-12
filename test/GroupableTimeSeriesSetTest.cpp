@@ -74,6 +74,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_save_load )
   bool ok = best == best2;
   BOOST_TEST( ok );
   BOOST_CHECK_EQUAL( tsSet.getDistanceName(), tsSet2.getDistanceName() );
+  BOOST_CHECK_EQUAL( tsSet.getThreshold(), tsSet2.getThreshold() );
   remove(fname.c_str());  
 }
 

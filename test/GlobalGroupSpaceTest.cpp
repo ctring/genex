@@ -127,5 +127,6 @@ BOOST_AUTO_TEST_CASE( global_group_space_save_load )
   bool ok = best == best2;
   BOOST_TEST( ok );
   BOOST_CHECK_EQUAL( ggs.getDistanceName(), ggs2.getDistanceName() );
+  BOOST_CHECK_EQUAL( ggs.getThreshold(), ggs2.getThreshold() );
   remove(fname.c_str());
 }

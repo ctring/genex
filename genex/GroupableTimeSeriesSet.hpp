@@ -51,6 +51,7 @@ public:
    *  @brief returns name of the distance used for grouping
    */
   string getDistanceName() const;
+  data_t getThreshold() const;
 
   void saveGroupsOld(const std::string& path, bool groupSizeOnly) const;
   int loadGroupsOld(const std::string& path);
@@ -80,8 +81,6 @@ public:
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;
-  data_t threshold = 0;
-
 
   /*************************
    *  Start serialization
@@ -95,8 +94,7 @@ private:
     }
 
     ar << this->getItemCount()
-       << this->getItemLength()
-       << this->threshold;
+       << this->getItemLength();
 
     ar << *(this->groupsAllLengthSet);
   }
@@ -115,7 +113,6 @@ private:
       throw GenexException("Incompatible item length");
     }
     reset();
-    ar >> this->threshold;
     this->groupsAllLengthSet = new GlobalGroupSpace(*this);
     ar >> *(this->groupsAllLengthSet);
   }

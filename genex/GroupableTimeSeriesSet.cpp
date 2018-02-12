@@ -40,7 +40,6 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distanceName, dat
   else {
     throw GenexException("Number of threads must be positive");    
   }
-  this->threshold = threshold;
   return cntGroups;
 }
 
@@ -56,6 +55,15 @@ string GroupableTimeSeriesSet::getDistanceName() const
     return this->groupsAllLengthSet->getDistanceName();
   }
   return "";
+}
+
+data_t GroupableTimeSeriesSet::getThreshold() const
+{
+  if (this->isGrouped())
+  {
+    return this->groupsAllLengthSet->getThreshold();
+  }
+  return 0;
 }
 
 void GroupableTimeSeriesSet::reset()
@@ -74,8 +82,8 @@ void GroupableTimeSeriesSet::saveGroupsOld(const string& path, bool groupSizeOnl
   if (fout)
   {
     // Version of the file format, the threshold and the required dataset dimensions
-    fout << GROUP_FILE_VERSION << " " 
-         << this->threshold << " "
+    fout << GROUP_FILE_VERSION << " "
+         << this->getThreshold() << " "
          << this->getItemCount() << " "
          << this->getItemLength() << endl;
     this->groupsAllLengthSet->saveGroupsOld(fout, groupSizeOnly);
@@ -109,7 +117,6 @@ int GroupableTimeSeriesSet::loadGroupsOld(const string& path)
     }
     cout << "Saved groups are compatible with the dataset" << endl;
     reset();
-    this->threshold = threshold;
     this->groupsAllLengthSet = new GlobalGroupSpace(*this);
     numberOfGroups = this->groupsAllLengthSet->loadGroupsOld(fin);
   }

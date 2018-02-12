@@ -55,6 +55,7 @@ public:
   int groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread);
 
   std::string getDistanceName() const;
+  data_t getThreshold() const;
 
   /**
    *  @brief gets the most similar sequence in the dataset
@@ -99,7 +100,7 @@ private:
   template<class A>
   void save(A & ar, unsigned) const
   {
-    ar << this->localLengthGroupSpace.size() << this->distanceName;
+    ar << this->localLengthGroupSpace.size() << this->distanceName << this->threshold;
     for (auto i = 2; i < this->localLengthGroupSpace.size(); i++) {
       ar << *(this->localLengthGroupSpace[i]);
     }
@@ -109,7 +110,7 @@ private:
   void load(A & ar, unsigned)
   {
     size_t maxLen;
-    ar >> maxLen >> this->distanceName;
+    ar >> maxLen >> this->distanceName >> this->threshold;
     this->_loadDistance(this->distanceName);
     this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
     for (auto i = 2; i < maxLen; i++) {

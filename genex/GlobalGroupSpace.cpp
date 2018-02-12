@@ -101,6 +101,11 @@ string GlobalGroupSpace::getDistanceName() const
   return this->distanceName;
 }
 
+data_t GlobalGroupSpace::getThreshold() const
+{
+  return this->threshold;
+}
+
 candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
 {
   if (query.getLength() <= 1) {
