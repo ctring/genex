@@ -157,13 +157,13 @@ BOOST_AUTO_TEST_CASE( get_distance_metric, *boost::unit_test::tolerance(TOLERANC
 {
   MockData data;
   TimeSeries ts_for_function_call{data.dat_3, 0, 0, 2};
-  const dist_t d = getDistance("euclidean");
+  const dist_t d = getDistanceFromName("euclidean");
   BOOST_CHECK(d);
 }
 
 BOOST_AUTO_TEST_CASE( distance_not_found )
 {
-  BOOST_CHECK_THROW( getDistance("oracle"), GenexException );
+  BOOST_CHECK_THROW( getDistanceFromName("oracle"), GenexException );
 }
 
 BOOST_AUTO_TEST_CASE( keogh_lower_bound, *boost::unit_test::tolerance(TOLERANCE) )

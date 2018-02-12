@@ -324,7 +324,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   }
   std::vector<candidate_time_series_t> bestSoFar;
   const std::string& distance_name = "euclidean";
-  dist_t warpedDistance = getDistance(distance_name + DTW_SUFFIX);
+  dist_t warpedDistance = getDistanceFromName(distance_name + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
   int timeSeriesLength = getItemLength();
   int numberTimeSeries = getItemCount();

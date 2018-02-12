@@ -40,12 +40,12 @@ void GlobalGroupSpace::reset(void)
 void GlobalGroupSpace::_loadDistance(const string& distance_name)
 {
   this->distanceName = distance_name;
-  this->pairwiseDistance = getDistance(distance_name);
+  this->pairwiseDistance = getDistanceFromName(distance_name);
   if (distance_name == "euclidean") {
     this->warpedDistance = cascadeDistance;
   }
   else {
-    this->warpedDistance = getDistance(distance_name + DTW_SUFFIX);
+    this->warpedDistance = getDistanceFromName(distance_name + DTW_SUFFIX);
   }  
 }
 

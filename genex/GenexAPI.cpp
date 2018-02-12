@@ -183,7 +183,7 @@ data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int 
   this->_checkDatasetName(name2);
   TimeSeries ts1 = this->_loadedDatasets[name1]->getTimeSeries(idx1, start1, end1);
   TimeSeries ts2 = this->_loadedDatasets[name2]->getTimeSeries(idx2, start2, end2);  
-  const dist_t distance = getDistance(distance_name);
+  const dist_t distance = getDistanceFromName(distance_name);
   return distance(ts1, ts2, INF);
 }
 

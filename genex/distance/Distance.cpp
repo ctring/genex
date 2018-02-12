@@ -65,7 +65,7 @@ void _initializeAllDistanceMap()
   }
 }
 
-const dist_t getDistance(const string& distance_name)
+const dist_t getDistanceFromName(const string& distance_name)
 {
   _initializeAllDistanceMap();
   if (gAllDistanceMap.find(distance_name) == gAllDistanceMap.end())

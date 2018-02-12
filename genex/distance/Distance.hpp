@@ -36,7 +36,7 @@ void setWarpingBandRatio(double ratio);
  *  @return an object containing methods of the requested distance metric
  *  @throw GenexException if no distance with given name is found
  */
-const dist_t getDistance(const string& distance_name);
+const dist_t getDistanceFromName(const string& distance_name);
 
 /**
  *  @return a vector of names of available distances
