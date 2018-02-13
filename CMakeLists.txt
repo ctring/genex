@@ -14,6 +14,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 
 # include boost
+# TODO: check boost_python existence then build or not accordingly
+# TODO: build for both python 2 and 3
 find_package(Boost 1.66 REQUIRED 
              COMPONENTS unit_test_framework python3 serialization iostreams)
 include_directories(${Boost_INCLUDE_DIRS})
