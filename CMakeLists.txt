@@ -19,17 +19,16 @@ find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
 
 # include boost
-find_package(Boost 1.66  
+if (APPLE)
+  set(BOOST_PYTHON_NAME "python3")
+else()
+  set(BOOST_PYTHON_NAME "python")
+endif()
+find_package(Boost 1.66 REQUIRED
              COMPONENTS unit_test_framework
-                        python3
-                        python
+                        ${BOOST_PYTHON_NAME}
                         serialization
                         iostreams)
-
-if (NOT Boost_FOUND)
-  message("-- Boost libraries not found. Exitting...")
-  return()
-endif ()
 
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -41,13 +40,7 @@ add_subdirectory(genex)
 add_subdirectory(cli)
 
 # build pygenex
-# prioritize python 3
-if (${Boost_PYTHON3_FOUND})
-  set(Boost_PYTHON_FOUND ${Boost_PYTHON3_LIBRARY})
-  set(Boost_PYTHON_LIBRARY ${Boost_PYTHON3_LIBRARY})
-  message("-- Boost Python 3 found. Building with Python 3")
-endif()
-if (${Boost_PYTHON_FOUND})
+if("${Boost_PYTHON_FOUND} " STREQUAL "ON " OR "${Boost_PYTHON3_FOUND} " STREQUAL "ON ")
   add_subdirectory(pygenex)
 else()
   message("-- Boost Python not found. Pygenex will not be built.")
