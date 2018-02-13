@@ -4,10 +4,15 @@ if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 endif(APPLE)
 
-find_package(PythonLibs 2.7 REQUIRED)
+find_package(PythonLibs 2.6 REQUIRED)
+
 include_directories(${PYTHON_INCLUDE_DIR})
 add_library(pygenex SHARED "GENEXBindings.cpp")
-target_link_libraries(pygenex genexLib ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(pygenex genexLib 
+							  ${PYTHON_LIBRARIES}
+							  boostPython
+							  boostSerialization
+							  boostIOstreams)
 
 # don't prepend wrapper library name with lib
 set_target_properties(pygenex PROPERTIES PREFIX "")

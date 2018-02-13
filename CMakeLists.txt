@@ -1,5 +1,5 @@
 # primary source: https://cmake.org/cmake-tutorial/
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 project(genex)
 
 option(BUILD_CLI "build the GENEX command-line interface" ON)
@@ -13,8 +13,6 @@ message("Building PYGENEX: ${BUILD_PYGENEX}")
 if (UNIX AND NOT APPLE)
   # The next 2 lines might need to be removed if the following error occurs:
   #   "sorry - this program has been built without plugin support"
-  set(CMAKE_AR "gcc-ar")
-  set(CMAKE_RANLIB "gcc-ranlib")
   set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto -fPIC -pthread")
 else()
   set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto -stdlib=libc++")
@@ -31,10 +29,20 @@ set(BOOST_COMPONENTS serialization iostreams)
 if (BUILD_PYGENEX)
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python)
 endif()
+
 if (BUILD_TESTS)
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} unit_test_framework)
 endif()
 find_package(Boost 1.65 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+
+add_library(boostSerialization UNKNOWN IMPORTED)
+set_property(TARGET boostSerialization PROPERTY IMPORTED_LOCATION "${Boost_SERIALIZATION_LIBRARY}")
+add_library(boostIOstreams UNKNOWN IMPORTED)
+set_property(TARGET boostIOstreams PROPERTY IMPORTED_LOCATION "${Boost_IOSTREAMS_LIBRARY}")
+add_library(boostTest UNKNOWN IMPORTED)
+set_property(TARGET boostTest PROPERTY IMPORTED_LOCATION "${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}")
+add_library(boostPython UNKNOWN IMPORTED)
+set_property(TARGET boostPython PROPERTY IMPORTED_LOCATION "${Boost_PYTHON_LIBRARY}")
 
 include_directories(${Boost_INCLUDE_DIRS})
 
