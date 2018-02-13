@@ -136,7 +136,7 @@ void Group::saveGroupOld(ofstream &fout) const
   // Group count
   // Group centroid
   // Members in the group, represented by <index, start> pairs
-  this->centroid.printData(fout); fout << endl;
+  fout << this->centroid << endl;
   fout << this->count << " ";
   member_coord_t currentMemberCoord = this->lastMemberCoord;
   while (currentMemberCoord.first != -1)

@@ -149,7 +149,8 @@ public:
 
   const data_t* getData() const;
   std::string getIdentifierString() const;
-  std::ostream &printData(std::ostream &out = std::cout) const;
+
+  friend std::ostream& operator<<(std::ostream&, const TimeSeries&);
 
 private:
   // ATTENTION: Always offset by 'start' when indexing 'data' (i.e. data[start + i])
@@ -165,6 +166,8 @@ private:
   mutable data_t* keoghUpper = nullptr;
   mutable double cachedWarpingBand;
 
+  std::ostream &printData(std::ostream &out) const;
+  
   /**
    * @brief generates the upper and lower envelope used in Keogh lower bound calculation
    * @param bandSize size of the Sakoe-Chiba warpping band
@@ -186,6 +189,11 @@ private:
    *  End serialization
    *************************/
 };
+
+/* For printing */
+inline std::ostream &operator<<(std::ostream &os, const TimeSeries &ts) { 
+    return ts.printData(os);
+}
 
 /**
  *  @brief a struct pairing a dist with a time series

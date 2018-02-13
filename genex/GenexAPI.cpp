@@ -108,6 +108,13 @@ vector<distance_metadata_t> GenexAPI::getAllDistanceInfo()
   return info;
 }
 
+TimeSeries GenexAPI::getTimeSeries(const string& name, int idx, int start, int end)
+{
+  this->_checkDatasetName(name);
+  return this->_loadedDatasets[name]->getTimeSeries(idx, start, end);
+}
+
+
 std::pair<data_t, data_t> GenexAPI::normalizeDataset(const string& name)
 {
   this->_checkDatasetName(name);
@@ -200,15 +207,6 @@ data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int 
   TimeSeries ts2 = this->_loadedDatasets[name2]->getTimeSeries(idx2, start2, end2);  
   const dist_t distance = getDistanceFromName(distance_name);
   return distance(ts1, ts2, INF);
-}
-
-// TODO: turn this into get time series
-void GenexAPI::printTimeSeries(const string& name, int idx, int start, int end)
-{
-  this->_checkDatasetName(name);
-  TimeSeries ts = this->_loadedDatasets[name]->getTimeSeries(idx, start, end);
-  ts.printData(std::cout);
-  std::cout << std::endl;
 }
 
 void GenexAPI::_checkDatasetName(const string& name) const

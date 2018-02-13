@@ -174,12 +174,13 @@ data_t distance(const string& name1, int idx1, int start1, int end1,
 
 /**
  *  @brief gets a single similar time series to the query
- *
+ * 
+ *  If both 'start' and 'end' are smaller than 0. The whole time series is selected.
  *  @param target_name name of the target dataset
  *  @param query_name name of the query dataset
  *  @param index index of the query time series
- *  @param start start location in the query time series
- *  @param end end location in the query time series (exclusive)
+ *  @param start start location in the query time series. Default: -1
+ *  @param end end location in the query time series (exclusive). Default: -1
  *  @return a dict 
  *          { 
  *            "dist": <distance to result>, 
@@ -203,13 +204,14 @@ py::dict sim(const string& target_name
 /**
  *  @brief gets k similar time series to the query
  * 
+ *  If both 'start' and 'end' are smaller than 0. The whole time series is selected.
  *  @param k number of similar time series to find
  *  @param ke number of time series to examine
  *  @param target_name name of the result dataset
  *  @param query_name name of the query dataset
- *  @param index index of the query time series
- *  @param start start location in the query time series
- *  @param end end location in the query time series (exclusive)
+ *  @param index index of the query time series.
+ *  @param start start location in the query time series. Default: -1
+ *  @param end end location in the query time series (exclusive). Default: -1
  *  @return a list of k or less dicts (less when k is larger than the total number of time series)
  *          [{ 
  *             "dist": <distance to result>, 
@@ -236,6 +238,22 @@ py::list ksim(int k
   return resList;
 }
 
+/**
+ *  @brief gets a time series
+ * 
+ *  If both 'start' and 'end' are smaller than 0. The whole time series is selected. * 
+ *  @param name dataset name of the time series
+ *  @param idx index of the time series
+ *  @param start starting position of the time series. Default: -1
+ *  @param end ending position of the time series. Default: -1
+ * 
+ *  @return a list containing all data points in the time series
+ */
+py::list getTimeSeries(const string& name, int idx, int start, int end)
+{
+  return timeSeriesToPythonList(genexAPI.getTimeSeries(name, idx, start, end));
+}
+
 BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
@@ -249,4 +267,5 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("distance", distance);
   py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksim", ksim, (py::arg("start")=-1, py::arg("end")=-1));
+  py::def("getTimeSeries", getTimeSeries, (py::arg("start")=-1, py::arg("end")=-1));
 }

@@ -641,7 +641,7 @@ MAKE_COMMAND(Print,
     int start = stoi(args[3]);
     int end   = stoi(args[4]);
 
-    gGenexAPI.printTimeSeries(name, index, start, end);
+    cout << gGenexAPI.getTimeSeries(name, index, start, end);
 
     return true;
   },

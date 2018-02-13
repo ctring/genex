@@ -142,6 +142,16 @@ public:
   vector<distance_metadata_t> getAllDistanceInfo();
 
   /**
+   *  @param name dataset name of the time series
+   *  @param idx index of the time series
+   *  @param start starting position of the time series
+   *  @param end ending position of the time series
+   * 
+   *  @return a time series
+   */
+  TimeSeries getTimeSeries(const string& name, int idx, int start, int end);
+
+  /**
    *  @brief normalizes the dataset
    *
    *  Each value in the dataset is transformed by the following formula:
@@ -299,16 +309,6 @@ public:
   data_t distanceBetween(const string& name1, int idx1, int start1, int end1
                          , const string& name2, int idx2, int start2, int end2
                          , const string& distanceName);
-  
-  /**
-   * @brief prints a time series to the standard output.
-   * 
-   * @param name dataset name of the time series
-   * @param idx index of the time series
-   * @param start starting position of the time series
-   * @param end ending position of the time series
-   */
-  void printTimeSeries(const string& name, int idx, int start, int end);
 
 private:
   void _checkDatasetName(const string& name) const;

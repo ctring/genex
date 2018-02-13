@@ -64,9 +64,5 @@ void loadFromFile(A & obj, const std::string & fname) {
     }
 }
 
-inline std::ostream &operator<<(std::ostream &os, const TimeSeries &w) { 
-    return w.printData(os);
-}
-
 } // namespace genex
 #endif // IO_HPP
