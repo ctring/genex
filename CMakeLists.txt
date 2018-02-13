@@ -14,20 +14,24 @@ endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
+# include GNU readline
+find_package(Readline REQUIRED)
+include_directories(${Readline_INCLUDE_DIRS})
 
 # include boost
-find_package(Boost 1.66 REQUIRED 
+find_package(Boost 1.66  
              COMPONENTS unit_test_framework
                         python3
                         python
                         serialization
                         iostreams)
 
-include_directories(${Boost_INCLUDE_DIRS})
+if (NOT Boost_FOUND)
+  message("-- Boost libraries not found. Exitting...")
+  return()
+endif ()
 
-# include GNU readline
-find_package(Readline REQUIRED)
-include_directories(${Readline_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
 # add genexLib library
 include_directories("${PROJECT_SOURCE_DIR}/genex")
@@ -52,3 +56,4 @@ endif()
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)
 enable_testing()
 add_subdirectory(test)
+
