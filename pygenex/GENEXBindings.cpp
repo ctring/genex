@@ -55,19 +55,28 @@ py::dict candidateTimeSeriesToPythonDict(const candidate_time_series_t & cts)
  *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
  *         all lines are read
  *  @param startCol columns before startCol, in 0-based index, are discarded
- *  @return a dataset_metadata_t struct containing metadata of the dataset
+ *  @return a dict containing information of the loaded dataset:
+ *			{ 
+ *			  "name": <dataset name>,
+ *			  "count": <number of time series>,
+ *			  "length": <length of each time series>
+ *			}
  *
  *  @throw GenexException if cannot read from the given file or the dataset name 
  *                        has already been used.
  */
-string loadDataset(const string& name
+py::dict loadDataset(const string& name
                    , const string& path
                    , const string& separators
                    , int maxNumRow
                    , int startCol)
 {
   dataset_metadata_t info = genexAPI.loadDataset(name, path, separators, maxNumRow, startCol);
-  return info.name;
+  py::dict pinfo;
+  pinfo["name"] = info.name;
+  pinfo["count"] = info.itemCount;
+  pinfo["length"] = info.itemLength;
+  return pinfo;
 }
 
 /*
