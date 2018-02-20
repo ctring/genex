@@ -79,6 +79,16 @@ py::dict loadDataset(const string& name
   return pinfo;
 }
 
+/**
+*  @brief unloads a dataset at given name
+*
+*  @param name name of the dataset being unloaded
+*/
+void unloadDataset(const string& name)
+{
+  genexAPI.unloadDataset(name);
+}
+
 /*
  *  @brief saves data from memory to a file
  *
@@ -145,6 +155,17 @@ void saveGroups(const string& name, const string& path)
 }
 
 /**
+ *  @brief saves all group sizes to a file
+ *  
+ *  @param name name of the dataset
+ *  @param path path to the saved group file
+ */
+void saveGroupsSize(const string& name, const string& path)
+{
+  genexAPI.saveGroupsOld(name, path, true);
+}
+
+/**
  *  @brief loads all groups of a dataset from a file.
  *
  *  This function load all saved groups from a file to a dataset. The dimension of
@@ -157,6 +178,7 @@ void loadGroups(const string& name, const string& path)
 {
   genexAPI.loadGroups(name, path);
 }
+
 
 /**
  *  @brief computes the distance between 2 time series.
@@ -267,11 +289,13 @@ BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
           (py::arg("separators")=" ", py::arg("maxNumRow")=0, py::arg("startCol")=0));
+  py::def("unloadDataset", unloadDataset);
   py::def("saveDataset", saveDataset);
   py::def("normalize", normalize);
   py::def("group", groupDataset,
           (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
   py::def("saveGroups", saveGroups);
+  py::def("saveGroupsSize", saveGroupsSize);
   py::def("loadGroups", loadGroups);
   py::def("distance", distance);
   py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
