@@ -2,7 +2,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-
+#include <cstdio>
 #include <iostream>     // std::cout
 #include <algorithm>    // std::make_heap, std::pop_heap, std::push_heap, std::sort_heap
 #include <vector>       // std::vector
@@ -21,6 +21,7 @@ struct MockDataset
   std::string test_15_20_comma = "datasets/test/test_15_20_comma.csv";
   std::string not_exist = "unicorn_santa_magic_halting_problem_solution";
   std::string uneven_rows = "datasets/test/uneven_rows.txt";
+  std::string italy_power = "datasets/test/ItalyPowerDemand_DATA";
 } data;
 
 const bool timeSeriesEqual(const TimeSeries& a, const TimeSeries& b)
@@ -258,8 +259,8 @@ BOOST_AUTO_TEST_CASE( api_kx_k_1 )
  BOOST_AUTO_TEST_CASE( api_kx_k_4 )
  {
    GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+   api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
+   api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
    
    int count_1 = api.groupDataset("test0", 0.5, "euclidean");
  
@@ -282,4 +283,25 @@ BOOST_AUTO_TEST_CASE( api_kx_k_1 )
    BOOST_TEST(containsTimeSeries(best_2, expected_2.data));
    BOOST_TEST(containsTimeSeries(best_3, expected_3.data));
    BOOST_TEST(containsTimeSeries(best_4, expected_4.data));
-  }
+}
+
+BOOST_AUTO_TEST_CASE( save_load_groups, *boost::unit_test::tolerance(EPS)  )
+{
+  GenexAPI api;
+  std::string dsName = "italy_power";
+  std::string groupName = "italy_power_groups_test.z";
+  api.loadDataset(dsName, data.italy_power, " ", 0, 0);
+  api.groupDataset(dsName, 0.6);
+  api.saveGroups(dsName, groupName);
+  auto best = api.getBestMatch(dsName, dsName, 1, 4, 23);
+  api.unloadDataset(dsName);
+
+  api.loadDataset(dsName, data.italy_power, " ", 0, 0);
+  api.loadGroups(dsName, groupName);
+  auto best2 = api.getBestMatch(dsName, dsName, 1, 4, 23);
+
+  BOOST_CHECK_EQUAL(best.data, best2.data);
+  BOOST_CHECK_EQUAL(best.dist, best2.dist);
+
+  remove(groupName.c_str());  
+}

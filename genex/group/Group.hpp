@@ -179,7 +179,7 @@ private:
   template<class A>
   void save(A & ar, unsigned) const
   {
-    ar << this->centroid;
+    ar << this->centroid.getIndex() << this->centroid.getStart();
     ar << this->count;
     member_coord_t currentMemberCoord = this->lastMemberCoord;
     while (currentMemberCoord.first != -1)
@@ -194,7 +194,9 @@ private:
   template<class A>
   void load(A & ar, unsigned)
   {
-    ar >> this->centroid;
+    int cindex, cstart;
+    ar >> cindex >> cstart;
+    this->setCentroid(cindex, cstart);
     int cnt;
     ar >> cnt;
     for (int i = 0; i < cnt; i++) {
