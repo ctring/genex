@@ -24,7 +24,7 @@ from email.mime.text import MIMEText
 STORAGE_ROOT = '/work/ctnguyendinh/groups'
 DATASET_ROOT = '../datasets/UCR'
 
-def group_dataset(name, from_st, to_st, dist, num_threads=15,
+def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 			      exclude_callback=None, progress_callback=None):
 	dataset_path = os.path.join(DATASET_ROOT, name + '_DATA')
 	info = pg.loadDataset(name, dataset_path, ',', -1, 1)
@@ -42,42 +42,43 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15,
 
 			logging.info('Grouping [%s, %s, %.1f] with %d threads', name, d, st, num_threads)
 
-			start = time.time()
-			group_count = pg.group(name, st, d, num_threads)
-			end = time.time()
+			if not dry_run:
+				start = time.time()
+				group_count = pg.group(name, st, d, num_threads)
+				end = time.time()
 
-			logging.info('Finished [%s, %s, %.1f] after %f seconds', name, d, st, end - start)
-			logging.info('[%s, %s, %.1f] generates %d groups', name, d, st, group_count)
+				logging.info('Finished [%s, %s, %.1f] after %f seconds', name, d, st, end - start)
+				logging.info('[%s, %s, %.1f] generates %d groups', name, d, st, group_count)
 
-			save_dir = os.path.join(STORAGE_ROOT, name, d)
-			if not os.path.exists(save_dir):
-				os.makedirs(save_dir)
-			save_path = os.path.join(save_dir, 
-									 name + '_GROUPS_' + '{:.1f}'.format(st))
-			logging.info('Saving groups [%s, %s, %.1f] to %s', name, d, st, save_path)
-			pg.saveGroups(name, save_path)
-			
-			size_save_path = os.path.join(save_dir, 
-										  name + '_GROUP_SIZES_' + '{:.1f}'.format(st))
+				save_dir = os.path.join(STORAGE_ROOT, name, d)
+				if not os.path.exists(save_dir):
+					os.makedirs(save_dir)
+				save_path = os.path.join(save_dir, 
+										 name + '_GROUPS_' + '{:.1f}'.format(st))
+				logging.info('Saving groups [%s, %s, %.1f] to %s', name, d, st, save_path)
+				pg.saveGroups(name, save_path)
+				
+				size_save_path = os.path.join(save_dir, 
+											  name + '_GROUP_SIZES_' + '{:.1f}'.format(st))
 
-			logging.info('Saving groups size [%s, %s, %.1f] to %s', name, d, st, size_save_path)
-			pg.saveGroupsSize(name, size_save_path)
+				logging.info('Saving groups size [%s, %s, %.1f] to %s', name, d, st, size_save_path)
+				pg.saveGroupsSize(name, size_save_path)
 
-			records.append({
-				'dist_name': d,
-				'st': st,
-				'group_count': group_count,
-				'path': save_path,
-				'size_path': size_save_path,
-				'duration': end - start
-			})
+				records.append({
+					'dist_name': d,
+					'st': st,
+					'group_count': group_count,
+					'path': save_path,
+					'size_path': size_save_path,
+					'duration': end - start
+				})
 
-			records_df = pd.DataFrame(records)
-			records_df.to_csv(records_path, index=False)
-			logging.info('Saved grouping record for %s to %s', name, records_path)
+				records_df = pd.DataFrame(records)
+				records_df.to_csv(records_path, index=False)
+				logging.info('Saved grouping record for %s to %s', name, records_path)
 
-			if progress_callback is not None:
-				progress_callback(name, d, st)
+				if progress_callback is not None:
+					progress_callback(name, d, st)
 
 	pg.unloadDataset(name)
 	logging.info('Unloaded %s', name)
@@ -98,6 +99,7 @@ if __name__=='__main__':
 	parser.add_argument('--dist', nargs='+', default=['euclidean'],
 					    help='List of distances to group with')
 	parser.add_argument('--start-over', action='store_true', help='Start from the beginning')
+	parser.add_argument('--dry-run', action='store_true', help='Only print the datasets and params to group')
 
 	args = parser.parse_args()
 	logging.info('Args: %s', pprint.pformat(args))
@@ -130,7 +132,8 @@ if __name__=='__main__':
 				logging.info('Start over flag is set. Reset progress for %s', ds)
 				if 'progress' in ds_info[ds]:
 					del ds_info[ds]['progress']
-
+			
+			logging.info('%s. Number of subsequences %d', ds, ds_info[ds]['subsequence'])
 			group_dataset(ds.encode('ascii', 'ignore'), args.from_st, args.to_st, args.dist,
-						  exclude_callback=exclude, progress_callback=progress)
+						  exclude_callback=exclude, progress_callback=progress, dry_run=args.dry_run)
 		
