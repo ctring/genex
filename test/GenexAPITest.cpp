@@ -289,16 +289,16 @@ BOOST_AUTO_TEST_CASE( save_load_groups, *boost::unit_test::tolerance(EPS)  )
 {
   GenexAPI api;
   std::string dsName = "italy_power";
+  std::string dsName2 = "italy_power2";
   std::string groupName = "italy_power_groups_test.z";
   api.loadDataset(dsName, data.italy_power, " ", 0, 0);
   api.groupDataset(dsName, 0.6);
   api.saveGroups(dsName, groupName);
   auto best = api.getBestMatch(dsName, dsName, 1, 4, 23);
-  api.unloadDataset(dsName);
 
-  api.loadDataset(dsName, data.italy_power, " ", 0, 0);
-  api.loadGroups(dsName, groupName);
-  auto best2 = api.getBestMatch(dsName, dsName, 1, 4, 23);
+  api.loadDataset(dsName2, data.italy_power, " ", 0, 0);
+  api.loadGroups(dsName2, groupName);
+  auto best2 = api.getBestMatch(dsName2, dsName2, 1, 4, 23);
 
   BOOST_CHECK_EQUAL(best.data, best2.data);
   BOOST_CHECK_EQUAL(best.dist, best2.dist);
