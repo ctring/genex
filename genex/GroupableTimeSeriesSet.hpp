@@ -24,7 +24,7 @@ public:
   /**
    *  @brief Destructor
    */
-  ~GroupableTimeSeriesSet();
+  virtual ~GroupableTimeSeriesSet();
 
   /**
    *  @brief groups the datset into similarity groups

@@ -85,6 +85,9 @@ TimeSeries& TimeSeries::operator=(const TimeSeries& other)
 
 TimeSeries& TimeSeries::operator=(TimeSeries&& other)
 {
+  if (isOwnerOfData) {
+    delete[] this->data;
+  }
   data = other.data;
   index = other.index;
   start = other.start;
@@ -100,7 +103,7 @@ TimeSeries::~TimeSeries()
   // if object allocated the data, delete it
   if (this->isOwnerOfData)
   {
-    delete this->data;
+    delete[] this->data;
     this->data = nullptr;
   }
   delete[] keoghLower;
