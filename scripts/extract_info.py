@@ -1,7 +1,7 @@
 '''
 This script iterates over each dataset in the UCR archive and extracts
 its time series count, time series length and total number of subsequences,
-then saves these information into a csv file.
+then saves these information to a file.
 
 Copy the pygenex.so to the same folder as this script to run.
 '''
@@ -23,8 +23,9 @@ for i, ds in enumerate(all_datasets):
 	dataset_info[name] = info
 
 df = pd.DataFrame.from_dict(dataset_info, orient='index')
-df['subsequence'] = df['count'] * df['length'] * (df['length'] - 1) / 2
-df.to_csv('datasets_info.csv', index=False)
+df['subsequence'] = (df['count'] * df['length'] * (df['length'] - 1) / 2).astype('int')
+file_name = 'datasets_info.json'
+df.to_json(file_name, orient='index')
 print('Preview the first few datasets')
 print(df.head())
-print('Saved info to datasets_info.csv')
+print('Saved info to', file_name)
