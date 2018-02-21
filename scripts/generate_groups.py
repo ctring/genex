@@ -23,6 +23,22 @@ from email.mime.text import MIMEText
 # Change these parameters if running on another machine
 STORAGE_ROOT = '/work/ctnguyendinh/groups'
 DATASET_ROOT = '../datasets/UCR'
+SMTP_SERVER = 'smtp.wpi.edu'
+FROM_ADDR = 'noreply@wpi.edu'
+
+def send_notification(to_addr, subject, content):
+	if to_addr is None:
+		return
+	msg = MIMEText(content)
+	msg['Subject'] = subject
+	msg['From'] = FROM_ADDR
+	msg['To'] = to_addr
+
+	s = smtplib.SMTP(SMTP_SERVER)
+	s.sendmail(FROM_ADDR, [to_addr], msg.as_string())
+	logging.info('Sent notification to %s', to_addr)
+	s.quit()
+
 
 def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 			      exclude_callback=None, progress_callback=None):
@@ -65,6 +81,7 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 				pg.saveGroupsSize(name, size_save_path)
 
 				records.append({
+					'ds_name': name,
 					'dist_name': d,
 					'st': st,
 					'group_count': group_count,
@@ -82,6 +99,7 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 
 	pg.unloadDataset(name)
 	logging.info('Unloaded %s', name)
+	return records
 
 
 if __name__=='__main__':
@@ -89,7 +107,7 @@ if __name__=='__main__':
 	                    level=logging.INFO)
 	parser = argparse.ArgumentParser('Generate groups')
 	parser.add_argument('dataset_info_file', help='File containing information of the datasets')
-	parser.add_argument('--subseq_count_max', type=int, default=-1,
+	parser.add_argument('--subseq-count-max', type=int, default=-1,
 						help='Group datasets with total subsequences smaller than this.'
 							 'Set a non positive number to group all. Default: -1')
 	parser.add_argument('--from-st', type=float, default=0.1,
@@ -100,6 +118,7 @@ if __name__=='__main__':
 					    help='List of distances to group with')
 	parser.add_argument('--start-over', action='store_true', help='Start from the beginning')
 	parser.add_argument('--dry-run', action='store_true', help='Only print the datasets and params to group')
+	parser.add_argument('--email-addr', default=None, help='Email to send notification when finishing grouping')
 
 	args = parser.parse_args()
 	logging.info('Args: %s', pprint.pformat(args))
@@ -126,14 +145,32 @@ if __name__=='__main__':
 		with open(args.dataset_info_file, 'w') as f:
 			json.dump(ds_info, f)
 
-	for ds in ds_info:
-		if ds_info[ds]['subsequence'] <= args.subseq_count_max or args.subseq_count_max <= 0:
-			if args.start_over:
-				logging.info('Start over flag is set. Reset progress for %s', ds)
-				if 'progress' in ds_info[ds]:
-					del ds_info[ds]['progress']
-			
-			logging.info('%s. Number of subsequences %d', ds, ds_info[ds]['subsequence'])
-			group_dataset(ds.encode('ascii', 'ignore'), args.from_st, args.to_st, args.dist,
-						  exclude_callback=exclude, progress_callback=progress, dry_run=args.dry_run)
+	try:
+		for ds in ds_info:
+			if ds_info[ds]['subsequence'] <= args.subseq_count_max or args.subseq_count_max <= 0:
+				if args.start_over:
+					logging.info('Start over flag is set. Reset progress for %s', ds)
+					if 'progress' in ds_info[ds]:
+						del ds_info[ds]['progress']
+				
+				logging.info('%s. Number of subsequences %d', ds, ds_info[ds]['subsequence'])
+				records = group_dataset(ds.encode('ascii', 'ignore'),
+									    args.from_st, args.to_st, args.dist,
+										exclude_callback=exclude, progress_callback=progress,
+										dry_run=args.dry_run)
+	except Exception as e:
+		if not args.dry_run:
+			content = 'Grouping stopped - ' + str(e)
+			logger.error(content)
+			sent_notification(args.email_addr, 'Error occured. Grouping stopped', content)
+	else:
+		if not args.dry_run:
+			content = '%d grouping files generated.\n\n' % (len(records))
+			for r in records:
+				content += '%s [%s, %.1f] - Group count = %d. Elapsed time = %.1f\n' % (r['ds_name'],
+														  							    r['dist_name'],
+																					    r['st'],
+																					    r['group_count'],
+																					    r['duration'])
+			send_notification(args.email_addr, 'Grouping finished', content)
 		
