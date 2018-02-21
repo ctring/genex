@@ -81,7 +81,6 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 				pg.saveGroupsSize(name, size_save_path)
 
 				records.append({
-					'ds_name': name,
 					'dist_name': d,
 					'st': st,
 					'group_count': group_count,
@@ -107,9 +106,12 @@ if __name__=='__main__':
 	                    level=logging.INFO)
 	parser = argparse.ArgumentParser('Generate groups')
 	parser.add_argument('dataset_info_file', help='File containing information of the datasets')
+	parser.add_argument('--subseq-count-min', type=int, default=-1,
+						help='Group datasets with total subsequences larger than this.'
+							 'Set a negative number to group all. Default: -1')
 	parser.add_argument('--subseq-count-max', type=int, default=-1,
 						help='Group datasets with total subsequences smaller than this.'
-							 'Set a non positive number to group all. Default: -1')
+							 'Set a negative number to group all. Default: -1')
 	parser.add_argument('--from-st', type=float, default=0.1,
 						help='Group from this similarity threshold. Default: 0.1')
 	parser.add_argument('--to-st', type=float, default=0.6,
@@ -146,8 +148,16 @@ if __name__=='__main__':
 			json.dump(ds_info, f)
 
 	try:
+		all_records = {}
+		record_count = 0
+		subseq_max = args.subseq_count_max
+		subseq_min = args.subseq_count_min
 		for ds in ds_info:
-			if ds_info[ds]['subsequence'] <= args.subseq_count_max or args.subseq_count_max <= 0:
+			subseq = ds_info[ds]['subsequence']
+			if (subseq_max < 0 and subseq_min < 0) or\
+			   (subseq_min <= subseq <= subseq_max) or\
+			   (subseq_min < 0 and subseq_max >= 0 and subseq <= subseq_max) or\
+			   (subseq_max < 0 and subseq_min >= 0 and subseq >= subseq_min):
 				if args.start_over:
 					logging.info('Start over flag is set. Reset progress for %s', ds)
 					if 'progress' in ds_info[ds]:
@@ -158,19 +168,24 @@ if __name__=='__main__':
 									    args.from_st, args.to_st, args.dist,
 										exclude_callback=exclude, progress_callback=progress,
 										dry_run=args.dry_run)
+				all_records[ds] = records
+				record_count += len(records)
+
 	except Exception as e:
+		content = 'Grouping stopped - ' + str(e)
+		logger.error(content)
 		if not args.dry_run:
-			content = 'Grouping stopped - ' + str(e)
-			logger.error(content)
 			sent_notification(args.email_addr, 'Error occured. Grouping stopped', content)
 	else:
+		content = 'Grouped %d dataset(s). %d grouping files generated.\n' % (len(all_records), record_count)
+		logging.info(content)
 		if not args.dry_run:
-			content = '%d grouping files generated.\n\n' % (len(records))
-			for r in records:
-				content += '%s [%s, %.1f] - Group count = %d. Elapsed time = %.1f\n' % (r['ds_name'],
-														  							    r['dist_name'],
-																					    r['st'],
-																					    r['group_count'],
-																					    r['duration'])
+			for ds in all_records:
+				content += '\n%s\n' % ds
+				for r in all_records[ds]:
+					content += '[%s, %.1f] - Group count = %d. Elapsed time = %.2f sec.\n' % (r['dist_name'],
+																				 		      r['st'],
+																						      r['group_count'],
+																						      r['duration'])
 			send_notification(args.email_addr, 'Grouping finished', content)
 		
