@@ -1,28 +1,33 @@
+'''
+This script copies the data files in dataset folder to the parent
+folder and renames *_TRAIN to *_QUERY, *_TEST to *_DATA.
+'''
 from __future__ import print_function
+import pygenex as pg
+import pandas as pd
 import argparse
 import os
 import shutil
 
-if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='Process UCR datasets')
-	parser.add_argument('ucr_path', help='Path to the UCR dataset folder')
-	
-	args = parser.parse_args()
+parser = argparse.ArgumentParser(description='Process UCR datasets')
+parser.add_argument('ucr_path', help='Path to the UCR dataset folder')
 
-	root = args.ucr_path
+args = parser.parse_args()
 
-	all_datasets = os.listdir(root)
-	for i, ds in enumerate(all_datasets):
-		train_path = os.path.join(root, ds, ds + '_TRAIN')
-		query_path = os.path.join(root, ds + '_QUERY')
+root = args.ucr_path
 
-		test_path = os.path.join(root, ds, ds + '_TEST')
-		data_path = os.path.join(root, ds + '_DATA')
+all_datasets = os.listdir(root)
+for i, ds in enumerate(all_datasets):
+	train_path = os.path.join(root, ds, ds + '_TRAIN')
+	query_path = os.path.join(root, ds + '_QUERY')
 
-		print('Copying %s_TRAIN to %s_QUERY' % (ds, ds))
-		shutil.copyfile(train_path, query_path)
-		print('Copying %s_TEST to %s_DATA' % (ds, ds))
-		shutil.copyfile(test_path, data_path)
-		print('%d/%d done' % (i + 1, len(all_datasets)))
+	test_path = os.path.join(root, ds, ds + '_TEST')
+	data_path = os.path.join(root, ds + '_DATA')
+
+	print('Copying %s_TRAIN to %s_QUERY' % (ds, ds))
+	shutil.copyfile(train_path, query_path)
+	print('Copying %s_TEST to %s_DATA' % (ds, ds))
+	shutil.copyfile(test_path, data_path)
+	print('%d/%d done' % (i + 1, len(all_datasets)))
 
 
