@@ -57,6 +57,8 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 				continue
 
 			logging.info('Grouping [%s, %s, %.1f] with %d threads', name, d, st, num_threads)
+			if dry_run:
+				records.append({})
 
 			if not dry_run:
 				start = time.time()
@@ -152,7 +154,9 @@ if __name__=='__main__':
 		record_count = 0
 		subseq_max = args.subseq_count_max
 		subseq_min = args.subseq_count_min
-		for ds in ds_info:
+		order = sorted([(ds_info[ds]['subsequence'], ds) for ds in ds_info])
+		order = zip(*order)[1]
+		for ds in order:
 			subseq = ds_info[ds]['subsequence']
 			if (subseq_max < 0 and subseq_min < 0) or\
 			   (subseq_min <= subseq <= subseq_max) or\
@@ -172,12 +176,15 @@ if __name__=='__main__':
 				record_count += len(records)
 
 	except Exception as e:
-		content = 'Grouping stopped - ' + str(e)
-		logger.error(content)
+		content = 'Grouping stopped - ' + repr(e)
+		logging.error(content)
 		if not args.dry_run:
 			sent_notification(args.email_addr, 'Error occured. Grouping stopped', content)
 	else:
-		content = 'Grouped %d dataset(s). %d grouping files generated.\n' % (len(all_records), record_count)
+		nonempty_records = [all_records[ds] for ds in all_records if len(all_records[ds]) > 0]
+		content = 'Touched %d/%d dataset(s). %d grouping files generated.\n' % (len(nonempty_records),
+																				len(all_records), 
+																			    record_count)
 		logging.info(content)
 		if not args.dry_run:
 			for ds in all_records:
