@@ -46,12 +46,15 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 	info = pg.loadDataset(name, dataset_path, ',', -1, 1)
 	logging.info('Loaded dataset %s. Count = %d. Length = %d', 
 				 name, info['count'], info['length'])
+	pg.normalize(name)
+	logging.info('Normalized the dataset %s.', name)
 	records = []
 	timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M_%S') 
 	records_name = name + '_records_' + timestamp + '.csv'
 	records_path = os.path.join(STORAGE_ROOT, name, records_name)
 	for d in dist:
 		for st in np.arange(from_st, to_st, 0.1):
+			st = round(st * 10) / 10
 			if exclude_callback is not None and exclude_callback(name, d, st):
 				logging.info('Ignore [%s, %s, %.1f]', name, d, st)
 				continue
