@@ -13,6 +13,7 @@
 #include "TimeSeries.hpp"
 
 using namespace genex;
+using std::isinf;
 
 #define TOLERANCE 1e-9
 struct MockData
