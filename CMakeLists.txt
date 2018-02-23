@@ -24,7 +24,7 @@ if (APPLE)
 else()
   set(BOOST_PYTHON_NAME "python")
 endif()
-find_package(Boost 1.66 REQUIRED
+find_package(Boost 1.65 REQUIRED
              COMPONENTS unit_test_framework
                         ${BOOST_PYTHON_NAME}
                         serialization

@@ -4,7 +4,7 @@ if(APPLE)
     set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
 endif(APPLE)
 
-find_package(PythonLibs 3.5 REQUIRED)
+find_package(PythonLibs 2.7 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIR})
 add_library(pygenex SHARED "GENEXBindings.cpp")
 target_link_libraries(pygenex genexLib ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
