@@ -19,14 +19,9 @@ find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
 
 # include boost
-if (APPLE)
-  set(BOOST_PYTHON_NAME "python3")
-else()
-  set(BOOST_PYTHON_NAME "python")
-endif()
 find_package(Boost 1.65 REQUIRED
              COMPONENTS unit_test_framework
-                        ${BOOST_PYTHON_NAME}
+                        python
                         serialization
                         iostreams)
 
@@ -40,11 +35,7 @@ add_subdirectory(genex)
 add_subdirectory(cli)
 
 # build pygenex
-if("${Boost_PYTHON_FOUND} " STREQUAL "ON " OR "${Boost_PYTHON3_FOUND} " STREQUAL "ON ")
-  add_subdirectory(pygenex)
-else()
-  message("-- Boost Python not found. Pygenex will not be built.")
-endif()
+add_subdirectory(pygenex)
 
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)
 enable_testing()
