@@ -285,6 +285,17 @@ py::list getTimeSeries(const string& name, int idx, int start, int end)
   return timeSeriesToPythonList(genexAPI.getTimeSeries(name, idx, start, end));
 }
 
+py::list getAllDistances()
+{
+  vector<distance_metadata_t> distances = genexAPI.getAllDistanceInfo();
+  py::list distList;
+  for (auto d : distances)
+  {
+    distList.append(d.name);
+  }
+  return distList;
+}
+
 BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
@@ -301,4 +312,5 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksim", ksim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("getTimeSeries", getTimeSeries, (py::arg("start")=-1, py::arg("end")=-1));
+  py::def("getAllDistances", getAllDistances);
 }
