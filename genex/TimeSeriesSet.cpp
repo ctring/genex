@@ -26,7 +26,7 @@ TimeSeriesSet::~TimeSeriesSet()
   this->clearData();
 }
 
-string TimeSeriesSet::getName(int index) const
+string TimeSeriesSet::getTimeSeriesName(int index) const
 {
   if (index < 0 || index >= this->itemCount)
   {

@@ -136,6 +136,15 @@ public:
   dataset_metadata_t getDatasetInfo(const string& name);
 
   /**
+   *  @brief gets name of a time series in a dataset
+   *
+   *  @param name name of the dataset
+   *  @param index index of the time series
+   *  @return name of the specified time series.
+   */
+  string getTimeSeriesName(const string& name, int index);
+
+  /**
    *  @return a vector of information of loaded dataset
    */
   vector<dataset_metadata_t> getAllDatasetInfo();

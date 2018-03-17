@@ -78,6 +78,12 @@ int GenexAPI::getDatasetCount()
   return this->_datasetCount;
 }
 
+string GenexAPI::getTimeSeriesName(const string& name, int index)
+{
+  this->_checkDatasetName(name);
+  return this->_loadedDatasets[name]->getTimeSeriesName(index);
+}
+
 dataset_metadata_t GenexAPI::getDatasetInfo(const string& name)
 {
   this->_checkDatasetName(name);

@@ -89,7 +89,7 @@ public:
    *
    * @return name of a time series
    */
-  string getName(int i) const;
+  string getTimeSeriesName(int i) const;
 
   /**
    * @brief gets the file path of the dataset

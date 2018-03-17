@@ -230,26 +230,26 @@ BOOST_AUTO_TEST_CASE( read_time_series_name )
 {
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_5_10_space, -1, 0, " ", false);
-  BOOST_CHECK_EQUAL( tsSet.getName(0), "0" );
-  BOOST_CHECK_EQUAL( tsSet.getName(1), "1" );
-  BOOST_CHECK_EQUAL( tsSet.getName(2), "2" );
-  BOOST_CHECK_EQUAL( tsSet.getName(3), "3" );
-  BOOST_CHECK_EQUAL( tsSet.getName(4), "4" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(0), "0" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(1), "1" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(2), "2" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(3), "3" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(4), "4" );
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );
   
   tsSet.loadData(data.test_5_10_space_with_names, -1, 1, " ", true);
-  BOOST_CHECK_EQUAL( tsSet.getName(0), "alice" );
-  BOOST_CHECK_EQUAL( tsSet.getName(1), "bob" );
-  BOOST_CHECK_EQUAL( tsSet.getName(2), "charles" );
-  BOOST_CHECK_EQUAL( tsSet.getName(3), "david" );
-  BOOST_CHECK_EQUAL( tsSet.getName(4), "emma" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(0), "alice" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(1), "bob" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(2), "charles" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(3), "david" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(4), "emma" );
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );   
 
   tsSet.loadData(data.test_5_10_comma_with_names, -1, 0, ",", true);
-  BOOST_CHECK_EQUAL( tsSet.getName(0), "alice alice" );
-  BOOST_CHECK_EQUAL( tsSet.getName(1), "bob bob" );
-  BOOST_CHECK_EQUAL( tsSet.getName(2), "charles charles" );
-  BOOST_CHECK_EQUAL( tsSet.getName(3), "david david" );
-  BOOST_CHECK_EQUAL( tsSet.getName(4), "emma emma" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(0), "alice alice" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(1), "bob bob" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(2), "charles charles" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(3), "david david" );
+  BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(4), "emma emma" );
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );  
 }

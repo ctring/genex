@@ -132,6 +132,18 @@ py::tuple normalize(const string& name)
 }
 
 /**
+ *  @brief gets name of a time series in a dataset
+ *
+ *  @param name name of the dataset
+ *  @param index index of the time series
+ *  @return name of the specified time series.
+ */
+string getTimeSeriesName(const string& name, int index)
+{
+  return genexAPI.getTimeSeriesName(name, index);
+}
+
+/**
  *  @brief groups a dataset
  *
  *  @param name name of the dataset to be grouped
@@ -309,11 +321,12 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("loadDataset", loadDataset,
           (py::arg("separators")=" "
           , py::arg("maxNumRow")=0
-          , py::arg("startCol")=0)
-          , py::arg("hasNameCol")=false);
+          , py::arg("startCol")=0
+          , py::arg("hasNameCol")=false));
   py::def("unloadDataset", unloadDataset);
   py::def("saveDataset", saveDataset);
   py::def("normalize", normalize);
+  py::def("getTimeSeriesName", getTimeSeriesName);
   py::def("group", groupDataset,
           (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
   py::def("saveGroups", saveGroups);
