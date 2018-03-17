@@ -8,6 +8,7 @@
 #include <vector>
 #include <cmath>
 #include <thread>
+#include <boost/algorithm/string/replace.hpp>
 #include <boost/tokenizer.hpp>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -52,14 +53,6 @@ bool tooManyArgs(const vector<string>& args, int limit)
   return false;
 }
 
-string stripQuotes(const string& str)
-{
-  if (str.length() < 2 || str[0] != '"' || str[str.length()-1] != '"') {
-    return "";
-  }
-  return str.substr(1, str.length() - 2);
-}
-
 /**************************************************************************
  * HOW TO CREATE A NEW COMMAND
  *
@@ -89,14 +82,11 @@ MAKE_COMMAND(LoadDataset,
 
     string name = args[1];
     string filePath = args[2];
-    string separators = args.size() > 3 ? args[3] : "";
+    string separators = args.size() > 3 ? args[3] : " ";
     int maxNumRow = args.size() > 4 ? stoi(args[4]) : 0;
     int startCol  = args.size() > 5 ? stoi(args[5]) : 0;
 
-    separators = stripQuotes(separators);
-    if (separators == "") {
-      separators = " ";
-    }
+    boost::replace_all(separators, "\\s", " ");
 
     genex::dataset_metadata_t info;
     
@@ -120,8 +110,7 @@ MAKE_COMMAND(LoadDataset,
   "               dataset later. Space is not allowed.                        \n"
   "  filePath   - Path to a text file containing the dataset                  \n"
   "  separators - A list of characters used to separate values in the file.   \n"
-  "               This list must start and end with quotation marks.          \n"
-  "               (default: \" \")                                            \n"
+  "               Use \"\\s\" to specify space. (default: \"\\s\")            \n"
   "  maxNumRow  - Maximum number of rows will be read from the file. If this  \n"
   "               number is non-positive or the number of actual line is      \n"
   "               smaller than this number, all lines are read. (default: 0)  \n"
@@ -138,12 +127,8 @@ MAKE_COMMAND(SaveDataset,
     string name = args[1];
     string filePath = args[2];
     string separators = args.size() > 3 ? args[3] : " ";
-
-    separators = stripQuotes(separators);
-    if (separators == "") {
-      separators = " ";
-    }
-
+    boost::replace_all(separators, "\\s", " ");
+    
     gGenexAPI.saveDataset(name, filePath, separators[0]);
 
     cout << "Saved dataset " << name << " to " << filePath << endl;
@@ -156,9 +141,8 @@ MAKE_COMMAND(SaveDataset,
   "Usage: save <name> <filePath> [<separator>]                             \n"
   "  name      - Name of the dataset to be saved                           \n"
   "  filePath  - Path to the saved file                                    \n"
-  "  separator - A character used to separate values in the file. This     \n"
-  "              character must be wrapped with quotation marks.           \n"
-  "              (default: \" \")                                          \n"
+  "  separator - A character used to separate values in the file.          \n"
+  "              (default: \"\\s\")                                        \n"
   )
 
 MAKE_COMMAND(UnloadDataset,
