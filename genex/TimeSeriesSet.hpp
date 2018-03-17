@@ -8,6 +8,7 @@
 #include "distance/Distance.hpp"
 
 using std::string;
+using std::vector;
 
 namespace genex {
 
@@ -47,14 +48,20 @@ public:
    *  @param filePath path to a text file
    *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
    *         all lines are read
+   *  @param startCol columns before startCol, in 0-based index, are discarded.
    *  @param separator a string containing possible separator characters for values
    *         in a line
-   *  @param startCol columns before startCol, in 0-based index, are discarded.
+   *  @param hasNameCol whether the first column (starting from startCol) is the one
+   *         with names for each time series
    *  @return an id number used to refer to the loaded dataset
    *
    *  @throw GenexException if cannot read from the given file
    */
-  void loadData(const string& filePath, int maxNumRow, int startCol, const string& separator);
+  void loadData(const string& filePath
+               , int maxNumRow
+               , int startCol
+               , const string& separator
+               , bool hasNameCol = false);
 
   void saveData(const string& filePath, char separator) const;
 
@@ -76,6 +83,13 @@ public:
    * @return number of time series
    */
   int getItemCount() const { return this->itemCount; }
+
+  /**
+   * @brief gets name of a time series
+   *
+   * @return name of a time series
+   */
+  string getName(int i) const;
 
   /**
    * @brief gets the file path of the dataset
@@ -140,15 +154,16 @@ public:
    *  
    * @vector vector of candidates with exact distance from query.
    */
-  std::vector<candidate_time_series_t> kSimRaw(const TimeSeries& query, int k, int PAABlock = 0);
+  vector<candidate_time_series_t> kSimRaw(const TimeSeries& query, int k, int PAABlock = 0);
       
   /**
    *  @brief check if data is loaded
    */
-  bool isLoaded(void);
+  bool isLoaded() { return this->data != nullptr; }
 
 protected:
   data_t* data = nullptr;
+  vector<string> names;
   int itemLength;
   int itemCount;
 

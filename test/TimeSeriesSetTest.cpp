@@ -22,6 +22,8 @@ struct MockDataset
   std::string text_only = "datasets/test/test_text_only.txt";
   std::string very_big = "datasets/test/very_big_value.txt";
   std::string test_5_10_space = "datasets/test/test_5_10_space.txt";
+  std::string test_5_10_space_with_names = "datasets/test/test_5_10_space_with_names.txt";
+  std::string test_5_10_comma_with_names = "datasets/test/test_5_10_comma_with_names.txt";  
   std::string test_3_10_space = "datasets/test/test_3_10_space.txt";
   std::string test_3_11_space = "datasets/test/test_3_11_space.txt";
 } data;
@@ -222,4 +224,32 @@ BOOST_AUTO_TEST_CASE( basic_k_exhaustive )
   tsSet.loadData(data.test_3_10_space, 20, 0, " ");
   std::vector<candidate_time_series_t> best = tsSet.kSimRaw(tsSet.getTimeSeries(0), 1);
   BOOST_TEST( best[0].dist == 0.0 );
+}
+
+BOOST_AUTO_TEST_CASE( read_time_series_name )
+{
+  TimeSeriesSet tsSet;
+  tsSet.loadData(data.test_5_10_space, -1, 0, " ", false);
+  BOOST_CHECK_EQUAL( tsSet.getName(0), "0" );
+  BOOST_CHECK_EQUAL( tsSet.getName(1), "1" );
+  BOOST_CHECK_EQUAL( tsSet.getName(2), "2" );
+  BOOST_CHECK_EQUAL( tsSet.getName(3), "3" );
+  BOOST_CHECK_EQUAL( tsSet.getName(4), "4" );
+  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );
+  
+  tsSet.loadData(data.test_5_10_space_with_names, -1, 1, " ", true);
+  BOOST_CHECK_EQUAL( tsSet.getName(0), "alice" );
+  BOOST_CHECK_EQUAL( tsSet.getName(1), "bob" );
+  BOOST_CHECK_EQUAL( tsSet.getName(2), "charles" );
+  BOOST_CHECK_EQUAL( tsSet.getName(3), "david" );
+  BOOST_CHECK_EQUAL( tsSet.getName(4), "emma" );
+  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );   
+
+  tsSet.loadData(data.test_5_10_comma_with_names, -1, 0, ",", true);
+  BOOST_CHECK_EQUAL( tsSet.getName(0), "alice alice" );
+  BOOST_CHECK_EQUAL( tsSet.getName(1), "bob bob" );
+  BOOST_CHECK_EQUAL( tsSet.getName(2), "charles charles" );
+  BOOST_CHECK_EQUAL( tsSet.getName(3), "david david" );
+  BOOST_CHECK_EQUAL( tsSet.getName(4), "emma emma" );
+  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );  
 }

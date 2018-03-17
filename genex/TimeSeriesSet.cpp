@@ -26,46 +26,17 @@ TimeSeriesSet::~TimeSeriesSet()
   this->clearData();
 }
 
-inline int calcPAALength(int srcLength, int n)
+string TimeSeriesSet::getName(int index) const
 {
-  return (srcLength - 1) / n + 1;
-}
-
-void doPAA(const data_t* source, data_t* dest, int srcLength, int n)
-{
-  data_t sum = 0;
-  int count = 0;
-  int destLength = calcPAALength(srcLength, n);
-  for (int i = 0; i < srcLength; i++)
+  if (index < 0 || index >= this->itemCount)
   {
-    count++;
-    sum += source[i];
-    if (count == n || i == srcLength - 1) {
-      dest[i / n] = sum / count;
-      sum = 0;
-      count = 0;
-    }
+    throw GenexException("Invalid time series index");
   }
-}
-
-TimeSeries tsPAA(const TimeSeries& source, int n)
-{
-  data_t sum = 0;
-  int count = 0;
-  int srcLength = source.getLength();
-  int destLength = calcPAALength(srcLength, n);
-  TimeSeries dest(destLength);
-  for (int i = 0; i < srcLength; i++)
+  if (index < this->names.size()) 
   {
-    count++;
-    sum += source[i];
-    if (count == n || i == srcLength - 1) {
-      dest[i / n] = sum / count;
-      sum = 0;
-      count = 0;
-    }
+    return this->names[index];
   }
-  return dest;
+  return std::to_string(index);
 }
 
 int _countNumberOfLines(std::ifstream& f)
@@ -78,8 +49,11 @@ int _countNumberOfLines(std::ifstream& f)
   return lineCount;
 }
 
-void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
-                             int startCol, const string& separators)
+void TimeSeriesSet::loadData(const string& filePath
+                            , int maxNumRow
+                            , int startCol
+                            , const string& separators
+                            , bool hasNameCol)
 {
   this->clearData();
 
@@ -99,6 +73,7 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
 
   int length = -1;
   string line;
+  // Tokenize each line using the given separators
   boost::char_separator<char> sep(separators.c_str());
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
 
@@ -118,7 +93,6 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
         length = std::distance(tokens.begin(), tokens.end());
         this->data = new data_t[maxNumRow * length];
         memset(this->data, 0, maxNumRow * length * sizeof(data_t*));
-
       }
       else if (length != std::distance(tokens.begin(), tokens.end()))
       {
@@ -136,7 +110,12 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
         {
           try
           {
-            data[row * length + (col - startCol)] = (data_t)std::stod(*tok_iter);
+            if (col == startCol && hasNameCol) {
+              this->names.push_back(*tok_iter);
+            }
+            else {
+              this->data[row * length + (col - startCol)] = (data_t)std::stod(*tok_iter);
+            }
           }
           catch (const std::invalid_argument& e)
           {
@@ -165,7 +144,7 @@ void TimeSeriesSet::loadData(const string& filePath, int maxNumRow,
     throw GenexException("Error while reading file");
   }
 
-  this->itemLength = length - startCol;
+  this->itemLength = length - startCol - hasNameCol;
   this->filePath = filePath;
 
   f.close();
@@ -180,6 +159,9 @@ void TimeSeriesSet::saveData(const string& filePath, char separator) const
     throw GenexException(string("Cannot open ") + filePath);
   }
   for (int i = 0; i < itemCount; i++) {
+    if (!this->names.empty()) {
+      f << names[i] << separator;
+    }
     for (int j = 0; j < itemLength; j++) {
       f << data[i * itemLength + j] << separator;
     }
@@ -194,6 +176,7 @@ void TimeSeriesSet::clearData()
   this->data = nullptr;
   this->itemCount = 0;
   this->itemLength = 0;
+  this->names.clear();
 }
 
 TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
@@ -299,6 +282,49 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   return std::make_pair(MIN, MAX);
 }
 
+
+inline int calcPAALength(int srcLength, int n)
+{
+  return (srcLength - 1) / n + 1;
+}
+
+void doPAA(const data_t* source, data_t* dest, int srcLength, int n)
+{
+  data_t sum = 0;
+  int count = 0;
+  int destLength = calcPAALength(srcLength, n);
+  for (int i = 0; i < srcLength; i++)
+  {
+    count++;
+    sum += source[i];
+    if (count == n || i == srcLength - 1) {
+      dest[i / n] = sum / count;
+      sum = 0;
+      count = 0;
+    }
+  }
+}
+
+TimeSeries tsPAA(const TimeSeries& source, int n)
+{
+  data_t sum = 0;
+  int count = 0;
+  int srcLength = source.getLength();
+  int destLength = calcPAALength(srcLength, n);
+  TimeSeries dest(destLength);
+  for (int i = 0; i < srcLength; i++)
+  {
+    count++;
+    sum += source[i];
+    if (count == n || i == srcLength - 1) {
+      dest[i / n] = sum / count;
+      sum = 0;
+      count = 0;
+    }
+  }
+  return dest;
+}
+
 void TimeSeriesSet::PAA(int n)
 {
   if (n <= 0) {
@@ -314,11 +340,6 @@ void TimeSeriesSet::PAA(int n)
   delete this->data;
   this->data = new_data;
   this->itemLength = newItemLength;
-}
-
-bool TimeSeriesSet::isLoaded()
-{
-  return this->data != nullptr;
 }
 
 std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
