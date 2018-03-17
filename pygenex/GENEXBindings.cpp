@@ -55,6 +55,8 @@ py::dict candidateTimeSeriesToPythonDict(const candidate_time_series_t & cts)
  *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
  *         all lines are read
  *  @param startCol columns before startCol, in 0-based index, are discarded
+ *  @param hasNameCol whether the first column (starting from startCol) is the one
+ *         with names for each time series
  *  @return a dict containing information of the loaded dataset:
  *			{ 
  *			  "name": <dataset name>,
@@ -69,9 +71,15 @@ py::dict loadDataset(const string& name
                    , const string& path
                    , const string& separators
                    , int maxNumRow
-                   , int startCol)
+                   , int startCol
+                   , bool hasNameCol)
 {
-  dataset_metadata_t info = genexAPI.loadDataset(name, path, separators, maxNumRow, startCol);
+  dataset_metadata_t info = genexAPI.loadDataset(name
+                                                , path
+                                                , separators
+                                                , maxNumRow
+                                                , startCol
+                                                , hasNameCol);
   py::dict pinfo;
   pinfo["name"] = info.name;
   pinfo["count"] = info.itemCount;
@@ -299,7 +307,10 @@ py::list getAllDistances()
 BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
-          (py::arg("separators")=" ", py::arg("maxNumRow")=0, py::arg("startCol")=0));
+          (py::arg("separators")=" "
+          , py::arg("maxNumRow")=0
+          , py::arg("startCol")=0)
+          , py::arg("hasNameCol")=false);
   py::def("unloadDataset", unloadDataset);
   py::def("saveDataset", saveDataset);
   py::def("normalize", normalize);

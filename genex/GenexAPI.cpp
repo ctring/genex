@@ -18,8 +18,12 @@ GenexAPI::~GenexAPI()
   unloadAllDataset();
 }
 
-dataset_metadata_t GenexAPI::loadDataset(const string& name, const string& filePath, const string& separators, 
-                                         int maxNumRow, int startCol)
+dataset_metadata_t GenexAPI::loadDataset(const string& name
+                                        , const string& filePath
+                                        , const string& separators
+                                        , int maxNumRow
+                                        , int startCol
+                                        , bool hasNameCol)
 {
   // Check if name is already used
   if (this->_loadedDatasets.find(name) != this->_loadedDatasets.end())
@@ -29,8 +33,9 @@ dataset_metadata_t GenexAPI::loadDataset(const string& name, const string& fileP
 
   auto newSet = new GroupableTimeSeriesSet();
   try {
-    newSet->loadData(filePath, maxNumRow, startCol, separators);
-  } catch (GenexException& e)
+    newSet->loadData(filePath, maxNumRow, startCol, separators, hasNameCol);
+  } 
+  catch (GenexException& e)
   {
     delete newSet;
     throw e;

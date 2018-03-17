@@ -85,15 +85,19 @@ public:
    *  @param maxNumRow maximum number of rows to be read. If this value is not positive,
    *         all lines are read
    *  @param startCol columns before startCol, in 0-based index, are discarded
+   *  @param hasNameCol whether the first column (starting from startCol) is the one
+   *         with names for each time series
+   *
    *  @return a dataset_metadata_t struct containing metadata of the dataset
    *
    *  @throw GenexException if cannot read from the given file
    */
   dataset_metadata_t loadDataset(const string& name
                                  , const string& filePath
-                                 , const string& separators
-                                 , int maxNumRow
-                                 , int startCol);
+                                 , const string& separators = " "
+                                 , int maxNumRow = 0
+                                 , int startCol = 0
+                                 , bool hasNameCol = false);
 
   /*
    *  @brief saves data from memory to a file

@@ -44,22 +44,22 @@ const bool containsTimeSeries(const std::vector<candidate_time_series_t> a, cons
 BOOST_AUTO_TEST_CASE( api_load_dataset )
 {
   GenexAPI api;
-  string ds0 = api.loadDataset("test0", data.test_10_20_space, " ", 0, 0).name;
-  string ds1 = api.loadDataset("test1", data.test_15_20_comma, ",", 10, 0).name;
+  string ds0 = api.loadDataset("test0", data.test_10_20_space).name;
+  string ds1 = api.loadDataset("test1", data.test_15_20_comma, ",", 10).name;
   BOOST_CHECK_EQUAL( ds0, "test0" );
   BOOST_CHECK_EQUAL( ds1, "test1" );
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 2 );
-  BOOST_CHECK_THROW( api.loadDataset("test0", data.test_10_20_space, " ", 0, 0), GenexException);
-  BOOST_CHECK_THROW( api.loadDataset("not_exist", data.not_exist, " ", 10, 0), GenexException );
-  BOOST_CHECK_THROW( api.loadDataset("uneven", data.uneven_rows, " ", 10, 0), GenexException );
+  BOOST_CHECK_THROW( api.loadDataset("test0", data.test_10_20_space), GenexException);
+  BOOST_CHECK_THROW( api.loadDataset("not_exist", data.not_exist, " ", 10), GenexException );
+  BOOST_CHECK_THROW( api.loadDataset("uneven", data.uneven_rows, " ", 10), GenexException );
 }
 
 BOOST_AUTO_TEST_CASE( api_unload_dataset )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_15_20_comma, ",", 10, 0);
-  api.loadDataset("test2", data.test_10_20_space, " ", 6, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_15_20_comma, ",", 10);
+  api.loadDataset("test2", data.test_10_20_space, " ", 6);
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
 
   api.unloadDataset("test1");
@@ -71,9 +71,9 @@ BOOST_AUTO_TEST_CASE( api_unload_dataset )
 BOOST_AUTO_TEST_CASE( api_unload_all_dataset )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_15_20_comma, ",", 10, 0);
-  api.loadDataset("test2", data.test_10_20_space, " ", 6, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_15_20_comma, ",", 10);
+  api.loadDataset("test2", data.test_10_20_space, " ", 6);
   BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
 
   api.unloadAllDataset();
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE( api_unload_all_dataset )
 BOOST_AUTO_TEST_CASE( api_get_dataset_info )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
   api.loadDataset("test1", data.test_15_20_comma, ",", 10, 4);
 
   dataset_metadata_t info = api.getDatasetInfo("test1");
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE( api_get_dataset_info )
   BOOST_CHECK_EQUAL( info.itemCount, 10 );
   BOOST_CHECK_EQUAL( info.itemLength, 16 );
 
-  api.loadDataset("test2", data.test_15_20_comma, ",", 10, 0);
+  api.loadDataset("test2", data.test_15_20_comma, ",", 10);
   api.unloadDataset("test2");
   BOOST_CHECK_THROW( api.getDatasetInfo("test2"), GenexException );
 }
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE( api_get_dataset_info )
 BOOST_AUTO_TEST_CASE( api_group )
 {
   GenexAPI api;
-  api.loadDataset("test", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test", data.test_10_20_space, " ", 5);
  
   int count_1 = api.groupDataset("test", 0.5, "euclidean");
   int count_2 = api.groupDataset("test", 0.5, "chebyshev");
@@ -113,8 +113,8 @@ BOOST_AUTO_TEST_CASE( api_group )
 BOOST_AUTO_TEST_CASE( api_match )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_10_20_space, " ", 5);
 
   int count_1 = api.groupDataset("test0", 0.5, "euclidean");
 
@@ -137,8 +137,8 @@ BOOST_AUTO_TEST_CASE( api_match )
 BOOST_AUTO_TEST_CASE( api_knn_k_1 )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_10_20_space, " ", 5);
 
   int count_1 = api.groupDataset("test0", 0.5, "euclidean");
   api.setWarpingBandRatio(1.0);  
@@ -170,8 +170,8 @@ BOOST_AUTO_TEST_CASE( api_knn_k_1 )
 BOOST_AUTO_TEST_CASE( api_knn_k_2 )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_10_20_space, " ", 5);
 
   int count_1 = api.groupDataset("test0", 0.5, "euclidean");
   api.setWarpingBandRatio(1.0);  
@@ -199,8 +199,8 @@ BOOST_AUTO_TEST_CASE( api_knn_k_2 )
 BOOST_AUTO_TEST_CASE( api_knn_k_4 )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_10_20_space, " ", 5);
   
   int count_1 = api.groupDataset("test0", 0.5, "euclidean");
  
@@ -230,8 +230,8 @@ BOOST_AUTO_TEST_CASE( api_knn_k_4 )
 BOOST_AUTO_TEST_CASE( api_kx_k_1 )
 {
   GenexAPI api;
-  api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-  api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+  api.loadDataset("test0", data.test_10_20_space, " ", 5);
+  api.loadDataset("test1", data.test_10_20_space, " ", 5);
   
   int count_1 = api.groupDataset("test0", 0.5, "euclidean");
 
@@ -259,8 +259,8 @@ BOOST_AUTO_TEST_CASE( api_kx_k_1 )
  BOOST_AUTO_TEST_CASE( api_kx_k_4 )
  {
    GenexAPI api;
-   api.loadDataset("test0", data.test_10_20_space, " ", 5, 0);
-   api.loadDataset("test1", data.test_10_20_space, " ", 5, 0);
+   api.loadDataset("test0", data.test_10_20_space, " ", 5);
+   api.loadDataset("test1", data.test_10_20_space, " ", 5);
    
    int count_1 = api.groupDataset("test0", 0.5, "euclidean");
  
@@ -291,12 +291,12 @@ BOOST_AUTO_TEST_CASE( save_load_groups, *boost::unit_test::tolerance(EPS)  )
   std::string dsName = "italy_power";
   std::string dsName2 = "italy_power2";
   std::string groupName = "italy_power_groups_test.z";
-  api.loadDataset(dsName, data.italy_power, " ", 0, 0);
+  api.loadDataset(dsName, data.italy_power);
   api.groupDataset(dsName, 0.6);
   api.saveGroups(dsName, groupName);
   auto best = api.getBestMatch(dsName, dsName, 1, 4, 23);
 
-  api.loadDataset(dsName2, data.italy_power, " ", 0, 0);
+  api.loadDataset(dsName2, data.italy_power);
   api.loadGroups(dsName2, groupName);
   auto best2 = api.getBestMatch(dsName2, dsName2, 1, 4, 23);
 
