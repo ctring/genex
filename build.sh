@@ -1,16 +1,17 @@
 #!/bin/bash
 show_help() {
-	echo "usage: $0 [run|test] [-r] [-d] [-h]"
+	echo "usage: $0 [run|test] [Options...]"
 	echo "Build GENEX if no argument is provided. Otherwise:"
 	echo "	run     build then run"
 	echo "	test    build then test"
 	echo "Options:"
-	echo "  -d		compile in debug mode"
-	echo "  -r		rebuild everything"
-	echo "  -h		show this help"
+	echo "  -d					compile in debug mode"
+	echo "  -r					rebuild everything"
+	echo "  -h					show this help"
+	echo "  --cmake	flags...	flags to be passed to cmake"
 }
 
-OPTS=$(getopt -o rdh  -n "$0" -- "$@")
+OPTS=$(getopt -o rdh --long cmake: -n "$0" -- "$@")
 
 if [ $? != 0 ] ; then show_help; exit 1; fi
 
@@ -26,6 +27,8 @@ while true; do
 			DEBUG=true; shift; ;;
 		-h )
 			SHOW_HELP=true; shift; ;;
+		--cmake )
+			CMAKE_FLAGS="$2"; shift; shift; ;;
 		-- ) 
 			shift; break; ;;
 		* ) 
@@ -59,6 +62,7 @@ if [ $DEBUG ]; then
 	CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Debug"
 fi
 
+echo "CMake flags: ${CMAKE_FLAGS}"
 cmake .. $CMAKE_FLAGS
 CPU=$(lscpu | grep ^CPU\(s\): | tr -s " " | cut -f2 -d " ")
 BUILD_CPU=$(expr $CPU / 2)
