@@ -57,7 +57,7 @@ echo "Create and enter the 'build' directory"
 mkdir -p build 
 cd build
 
-if [ $DEBUG ]; then
+if [ $DEBUG = true ]; then
 	echo "Build in Debug mode"
 	CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_BUILD_TYPE=Debug"
 fi
