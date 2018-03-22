@@ -15,30 +15,10 @@ import os
 import pygenex as pg
 import pandas as pd
 import pprint
-import smtplib
 import time
 from datetime import datetime
-from email.mime.text import MIMEText
 
-# Change these parameters if running on another machine
-STORAGE_ROOT = '/work/ctnguyendinh/groups'
-DATASET_ROOT = '../datasets/UCR'
-SMTP_SERVER = 'smtp.wpi.edu'
-FROM_ADDR = 'noreply@wpi.edu'
-
-def send_notification(to_addr, subject, content):
-	if to_addr is None:
-		return
-	msg = MIMEText(content)
-	msg['Subject'] = subject
-	msg['From'] = FROM_ADDR
-	msg['To'] = to_addr
-
-	s = smtplib.SMTP(SMTP_SERVER)
-	s.sendmail(FROM_ADDR, [to_addr], msg.as_string())
-	logging.info('Sent notification to %s', to_addr)
-	s.quit()
-
+from common import *
 
 def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 			      exclude_callback=None, progress_callback=None):
@@ -110,7 +90,6 @@ if __name__=='__main__':
 	logging.basicConfig(format='%(asctime)s [%(levelname)s] %(name)s: %(message)s', 
 	                    level=logging.INFO)
 	parser = argparse.ArgumentParser('Generate groups')
-	parser.add_argument('dataset_info_file', help='File containing information of the datasets')
 	parser.add_argument('--subseq-count-min', type=int, default=-1,
 						help='Group datasets with total subsequences larger than this.'
 							 'Set a negative number to group all. Default: -1')
@@ -130,7 +109,7 @@ if __name__=='__main__':
 	args = parser.parse_args()
 	logging.info('Args: %s', pprint.pformat(args))
 	
-	with open(args.dataset_info_file, 'r') as f:
+	with open(GROUPING_RECORDS, 'r') as f:
 		ds_info = json.load(f)
 
 	def exclude(ds_name, dist, st):
