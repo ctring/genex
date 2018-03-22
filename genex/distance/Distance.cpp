@@ -100,56 +100,13 @@ data_t kimLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   int bl = b.getLength();
   int l = min(al, bl);
 
-  if (l == 0) {
-    return 0;
-  }
-
+  data_t result = 0;
   if (l == 1) {
-    return _euc.dist(a[0], b[0]);
+    result = _euc.dist(a[0], b[0]);
+  } else if (l > 1) {
+    result = _euc.dist(a[0], b[0]) + _euc.dist(a[al - 1], b[bl - 1]);
   }
-
-  double lb = 0;
-
-  lb += _euc.dist(a[0], b[0]);
-  lb += _euc.dist(a[al - 1], b[bl - 1]);
-  if (lb > dropout) {
-    return INF;
-  }
-
-  lb += min(min(_euc.dist(a[0], b[1]),
-                _euc.dist(a[1], b[1])),
-                _euc.dist(a[1], b[0]));
-  if (lb > dropout) {
-    return INF;
-  }
-
-  lb += min(min(_euc.dist(a[al-1], b[bl-2]),
-                _euc.dist(a[al-2], b[bl-2])),
-                _euc.dist(a[al-2], b[bl-1]));
-  if (lb >=dropout) {
-    return INF;
-  }
-
-  if (l == 4) {
-    return lb;
-  }
-
-  lb += min(min(min(_euc.dist(a[0], b[2]),
-                    _euc.dist(a[1], b[2])),
-                min(_euc.dist(a[2], b[2]),
-                    _euc.dist(a[2], b[1]))),
-            _euc.dist(a[2], b[0]));
-
-  if (lb > dropout) {
-    return INF;
-  }
-
-  lb += min(min(min(_euc.dist(a[al-1], b[bl-3]),
-                    _euc.dist(a[al-2], b[bl-3])),
-                min(_euc.dist(a[al-3], b[bl-3]),
-                    _euc.dist(a[al-3], b[bl-2]))),
-            _euc.dist(a[al-3], b[bl-1]));
-  return lb;
+  return _euc.normDTW(result, a, b);
 }
 
 data_t keoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dropout)
@@ -188,12 +145,11 @@ data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dro
 
 data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
 {
-  // Temporarily disable this because the code seems to be problematic
-  // data_t lb = kimLowerBound(a, b, dropout);
-  // if (lb > dropout) {
-  //   return INF;
-  // }
-  data_t lb = crossKeoghLowerBound(a, b, dropout);
+  data_t lb = kimLowerBound(a, b, dropout);
+  if (lb > dropout) {
+    return INF;
+  }
+  lb = crossKeoghLowerBound(a, b, dropout);
   if (lb > dropout) {
     return INF;
   }
