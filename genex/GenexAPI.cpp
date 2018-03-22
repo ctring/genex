@@ -200,14 +200,6 @@ GenexAPI::getKBestMatchesBruteForce(int k, const string& target_name, const stri
   return _loadedDatasets[target_name]->getKBestMatchesBruteForce(query, k);
 }
 
-// TODO: fix this function and also that in the brute force k best match
-// dataset_metadata_t GenexAPI::PAA(int idx, int n)
-// {
-//   this->_checkDatasetName(idx);
-//   this->_loadedDatasets[idx]->PAA(n);
-//   return this->getDatasetInfo(idx);
-// }
-
 data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int end1,
                                  const string& name2, int idx2, int start2, int end2,
                                  const string& distance_name)

@@ -174,50 +174,6 @@ BOOST_AUTO_TEST_CASE( normalize_exception )
   BOOST_CHECK_THROW(tsSet.normalize(), GenexException); // no data to normalize
 }
 
-BOOST_AUTO_TEST_CASE( PAA, *boost::unit_test::tolerance(TOLERANCE)  )
-{
-  TimeSeriesSet tsSet;
-  tsSet.loadData(data.test_3_11_space, 11, 0, " ");
-  tsSet.PAA(1);
-  BOOST_CHECK_EQUAL(tsSet.getItemCount(), 3);
-  BOOST_CHECK_EQUAL(tsSet.getItemLength(), 11);
-  TimeSeries t = tsSet.getTimeSeries(0);  
-  BOOST_TEST(t[0] == 1.0);
-  BOOST_TEST(t[1] == 2.0);
-  BOOST_TEST(t[2] == 3.0); 
-  BOOST_TEST(t[3] == 4.0);
-  BOOST_TEST(t[4] == 5.0);
-  BOOST_TEST(t[5] == 6.0);
-  BOOST_TEST(t[6] == 7.0); 
-  BOOST_TEST(t[7] == 8.0);
-  BOOST_TEST(t[8] == 9.0);
-  BOOST_TEST(t[9] == 10.0);
-  BOOST_TEST(t[10] == 11.0);
-
-  tsSet.PAA(3);
-
-  BOOST_CHECK_EQUAL(tsSet.getItemCount(), 3);
-  BOOST_CHECK_EQUAL(tsSet.getItemLength(), 4);
-
-  t = tsSet.getTimeSeries(0);
-  BOOST_TEST(t[0] == 2.0);
-  BOOST_TEST(t[1] == 5.0);
-  BOOST_TEST(t[2] == 8.0); 
-  BOOST_TEST(t[3] == 10.5);
-  
-
-  t = tsSet.getTimeSeries(2);
-  BOOST_TEST(t[0] == 12.0);
-  BOOST_TEST(t[1] == 15.0);
-  BOOST_TEST(t[2] == 18.0); 
-  BOOST_TEST(t[3] == 20.5);
-
-  tsSet.PAA(5);
-  BOOST_CHECK_EQUAL(tsSet.getItemLength(), 1);  
-  t = tsSet.getTimeSeries(0);
-  BOOST_TEST(t[0] == 6.375);
-}
-
 BOOST_AUTO_TEST_CASE( basic_k_exhaustive )
 {
   TimeSeriesSet tsSet;

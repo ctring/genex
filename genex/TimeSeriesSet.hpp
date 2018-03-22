@@ -128,8 +128,6 @@ public:
   */
   bool isNormalized() { return normalized; }
 
-  void PAA(int n);
-
   /**
     *  @brief calculates the distance between a subsequence of a series in this dataset to
     *   input timeseries
@@ -150,11 +148,14 @@ public:
    * @brief Exhaustively searches through timeseries set for k similar time series.
    * 
    * @param query to search for
-   * @param k - number of time series to find
+   * @param k number of time series to find
+   * @param distance_name distance to use
    *  
    * @vector vector of candidates with exact distance from query.
    */
-  vector<candidate_time_series_t> getKBestMatchesBruteForce(const TimeSeries& query, int k);
+  vector<candidate_time_series_t> getKBestMatchesBruteForce(const TimeSeries& query
+                                                            , int k
+                                                            , string distance_name = "euclidean");
       
   /**
    *  @brief check if data is loaded

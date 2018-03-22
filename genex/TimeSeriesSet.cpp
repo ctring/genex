@@ -325,31 +325,15 @@ TimeSeries tsPAA(const TimeSeries& source, int n)
   return dest;
 }
 
-void TimeSeriesSet::PAA(int n)
-{
-  if (n <= 0) {
-    throw GenexException("Block size must be positive");
-  }
-  int newItemLength = calcPAALength(this->itemLength, n);
-  auto new_data = new data_t[this->itemCount * newItemLength];
-  for (int ts = 0; ts < this->itemCount; ts++)
-  {
-    doPAA(this->data + ts * this->itemLength, new_data + ts * newItemLength,
-      this->itemLength, n);
-  }
-  delete this->data;
-  this->data = new_data;
-  this->itemLength = newItemLength;
-}
-
 std::vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
-  const TimeSeries& query, int k)
+  const TimeSeries& query, int k, string distance_name)
 {
   if (k <= 0) {
     throw GenexException("K must be positive");
   }
+
   std::vector<candidate_time_series_t> bestSoFar;
-  const std::string& distance_name = "euclidean";
+
   dist_t warpedDistance = getDistanceFromName(distance_name + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
   int timeSeriesLength = getItemLength();

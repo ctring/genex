@@ -291,7 +291,6 @@ public:
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
-   *  @param PAABlockSize block size of PAA
    *  @return k similar time series
    */
   vector<candidate_time_series_t>
@@ -302,7 +301,6 @@ public:
                             , int start = -1
                             , int end = -1);
 
-  // dataset_metadata_t PAA(int idx, int n);
 
   /**
    *  @brief computes the distance between 2 time series.
