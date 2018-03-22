@@ -562,36 +562,29 @@ MAKE_COMMAND(KSimBF,
     int query_index = stoi(args[4]);
     int start = -1;
     int end = -1;
-    int PAABlock = 0;
 
-    if (args.size() == 6)
-    {
-      PAABlock = stoi(args[5]);
-    }
     if (args.size() == 7)
     {
       start = stoi(args[5]);
       end = stoi(args[6]);
     }
-    if (args.size() == 8)
-    {
-      PAABlock = stoi(args[7]);
-    }
 
     TIME_COMMAND(
       std::vector<genex::candidate_time_series_t> results = 
         gGenexAPI.getKBestMatchesBruteForce(
-          k, target_name, query_name, query_index, start, end, PAABlock);
+          k, target_name, query_name, query_index, start, end);
     )
 
     cout << "Target dataset: " << target_name << endl;
     cout << "Query dataset: " << query_name << endl;
-    cout << "k = " << k << ". PAABlock = " << PAABlock << endl;
+    cout << "k = " << k << endl;
     cout << "Query time series: " << query_index << " [" << start << ", " << end << "] " << endl;
     for (int i = 0; i < results.size(); i++)
     {
       std::cout << "Timeseries " 
-                << results[i].data.getIndex() << " [" << results[i].data.getStart() << ", " << results[i].data.getEnd() << "] "
+                << results[i].data.getIndex() << " [" 
+                << results[i].data.getStart() << ", "
+                << results[i].data.getEnd() << "] "
                 << "- distance = " << results[i].dist 
                 << std::endl; 
     }
@@ -601,7 +594,7 @@ MAKE_COMMAND(KSimBF,
 
   "Find the k most similar time series to a query using brute force.",
   
-  "Usage: kSimBF <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>] [<PAA_block>] \n"
+  "Usage: kSimBF <k> <target_dataset_idx> <q_dataset_idx> <ts_index> [<start> <end>]               \n"
   "  k           - The number of similar time series to find.                                      \n"
   "  target_name - Name of a loaded dataset to get the result from.                                \n"
   "                Use 'list dataset' to retrieve the list of loaded                               \n"
@@ -610,7 +603,6 @@ MAKE_COMMAND(KSimBF,
   "  query_index - Index of the query time series.                                                 \n"
   "  start       - Start location in the query time series.                                        \n"
   "  end         - End location in the query time series (exclusive).                              \n"
-  "  PAA_block   - Size of PAA block. Set to 0 or negative to disable PAA feature                  \n"
   )
 
 MAKE_COMMAND(Print,
@@ -690,137 +682,137 @@ void printResults(ofstream &fout, const vector<genex::candidate_time_series_t> &
   }
 }
 
-MAKE_COMMAND(TestSim,
-  {
-    if (args.size() == 2) {
-      results_path = args[1];
-      cout << "Path for result file set to: " << results_path << endl;
-      return true;
-    }
+// MAKE_COMMAND(TestSim,
+//   {
+//     if (args.size() == 2) {
+//       results_path = args[1];
+//       cout << "Path for result file set to: " << results_path << endl;
+//       return true;
+//     }
 
-    if (tooFewArgs(args, 6) || tooManyArgs(args, 8))
-    {
-      return false;
-    }
+//     if (tooFewArgs(args, 6) || tooManyArgs(args, 8))
+//     {
+//       return false;
+//     }
 
-    int k = stoi(args[1]);
-    int m = stoi(args[2]);
-    int block = stoi(args[3]);
-    string target_name = args[4];
-    string query_name = args[5];
-    int query_index = stoi(args[6]);
-    int start = -1;
-    int end = -1;
+//     int k = stoi(args[1]);
+//     int m = stoi(args[2]);
+//     int block = stoi(args[3]);
+//     string target_name = args[4];
+//     string query_name = args[5];
+//     int query_index = stoi(args[6]);
+//     int start = -1;
+//     int end = -1;
 
-    if (args.size() == 9)
-    {
-      start = stoi(args[7]);
-      end = stoi(args[8]);
-    }
-    else {
-      cout << "Invalid number of arguments";
-      return false;
-    }
+//     if (args.size() == 9)
+//     {
+//       start = stoi(args[7]);
+//       end = stoi(args[8]);
+//     }
+//     else {
+//       cout << "Invalid number of arguments";
+//       return false;
+//     }
 
-    chrono::duration<float> kSimBFTime;
-    chrono::duration<float> kSimBFPAATime;
-    chrono::duration<float> kSimTime;
+//     chrono::duration<float> kSimBFTime;
+//     chrono::duration<float> kSimBFPAATime;
+//     chrono::duration<float> kSimTime;
 
-    // First run brute force and other methods and record run time
-    TIME_COMMAND(
-      std::vector<genex::candidate_time_series_t> rawResults =
-        gGenexAPI.getKBestMatchesBruteForce(
-          k, target_name, query_name, query_index, start, end, 0);
-    )
-    kSimBFTime = __end_time - __start_time;
+//     // First run brute force and other methods and record run time
+//     TIME_COMMAND(
+//       std::vector<genex::candidate_time_series_t> rawResults =
+//         gGenexAPI.getKBestMatchesBruteForce(
+//           k, target_name, query_name, query_index, start, end);
+//     )
+//     kSimBFTime = __end_time - __start_time;
 
-    TIME_COMMAND(
-      std::vector<genex::candidate_time_series_t> rawPAAResults =
-        gGenexAPI.getKBestMatchesBruteForce(
-          k, target_name, query_name, query_index, start, end, block);
-    )
-    kSimBFPAATime = __end_time - __start_time;
+//     TIME_COMMAND(
+//       std::vector<genex::candidate_time_series_t> rawPAAResults =
+//         gGenexAPI.getKBestMatchesBruteForce(
+//           k, target_name, query_name, query_index, start, end, block);
+//     )
+//     kSimBFPAATime = __end_time - __start_time;
 
-    double jaccardPAA  = computeJaccard(rawPAAResults, rawResults);
-    double wjaccardPAA = computeWeightedJaccard(rawPAAResults, rawResults);
+//     double jaccardPAA  = computeJaccard(rawPAAResults, rawResults);
+//     double wjaccardPAA = computeWeightedJaccard(rawPAAResults, rawResults);
 
-    ofstream fout(results_path, ios_base::out | ios_base::app );
+//     ofstream fout(results_path, ios_base::out | ios_base::app );
 
-    // Try with different range of k_e
-    int steps = m / 100;
-    int count = -1;
-    for (int h = k; h <= m; h += steps) {
-      // EXPERIMENT
-      extraTimeSeries = 0;
-      TIME_COMMAND(
-        std::vector<genex::candidate_time_series_t> results =
-          gGenexAPI.getKBestMatches(
-            k, h, target_name, query_name, query_index, start, end);
-      )
-      kSimTime = __end_time - __start_time;
+//     // Try with different range of k_e
+//     int steps = m / 100;
+//     int count = -1;
+//     for (int h = k; h <= m; h += steps) {
+//       // EXPERIMENT
+//       extraTimeSeries = 0;
+//       TIME_COMMAND(
+//         std::vector<genex::candidate_time_series_t> results =
+//           gGenexAPI.getKBestMatches(
+//             k, h, target_name, query_name, query_index, start, end);
+//       )
+//       kSimTime = __end_time - __start_time;
 
-      // Compute the metrics
-      double jaccardKSim = computeJaccard(results, rawResults);
-      double wjaccardKSim = computeWeightedJaccard(results, rawResults);
+//       // Compute the metrics
+//       double jaccardKSim = computeJaccard(results, rawResults);
+//       double wjaccardKSim = computeWeightedJaccard(results, rawResults);
 
-      std::cout << "k = " << k << " h = " << h
-                << " h_extra = " << h + extraTimeSeries
-                << " Jaccard_kSim = " << jaccardKSim
-                << " WJaccard_KSim = " << wjaccardKSim
-                << " Jaccard_kSimBFPAA = " <<  jaccardPAA
-                << " WJaccard_kSimBFPAA = " << wjaccardPAA << endl;
+//       std::cout << "k = " << k << " h = " << h
+//                 << " h_extra = " << h + extraTimeSeries
+//                 << " Jaccard_kSim = " << jaccardKSim
+//                 << " WJaccard_KSim = " << wjaccardKSim
+//                 << " Jaccard_kSimBFPAA = " <<  jaccardPAA
+//                 << " WJaccard_kSimBFPAA = " << wjaccardPAA << endl;
 
-      if (fout) {
-        fout << k << SEP << h << SEP << h + extraTimeSeries << SEP << block << SEP
-             << query_index << SEP << start << SEP << end << SEP 
-             << jaccardKSim << SEP << wjaccardKSim << SEP << jaccardPAA << SEP << wjaccardPAA << SEP
-             << kSimTime.count() << SEP << kSimBFTime.count() << SEP << kSimBFPAATime.count() << SEP;
-        printResults(fout, results); fout << SEP;
-        printResults(fout, rawResults); fout << SEP;
-        printResults(fout, rawPAAResults);
-        fout << endl;
-      }
+//       if (fout) {
+//         fout << k << SEP << h << SEP << h + extraTimeSeries << SEP << block << SEP
+//              << query_index << SEP << start << SEP << end << SEP 
+//              << jaccardKSim << SEP << wjaccardKSim << SEP << jaccardPAA << SEP << wjaccardPAA << SEP
+//              << kSimTime.count() << SEP << kSimBFTime.count() << SEP << kSimBFPAATime.count() << SEP;
+//         printResults(fout, results); fout << SEP;
+//         printResults(fout, rawResults); fout << SEP;
+//         printResults(fout, rawPAAResults);
+//         fout << endl;
+//       }
 
-      // Stop early when the optimal amount of data is explored
-      if (abs(wjaccardKSim - 1.0) < EPS) {
-        if (count == -1) {
-          count = 4;
-        }
-        else {
-          count--;
-          if (count == 0) {
-            break;
-          }
-        }
-      } 
-    }
-    if (fout) {
-      cout << "Results appended to " << results_path << endl;
-    } else {
-      cout << "Cannot open " << results_path << ". Nothing has been saved" << endl;
-    }
-    return true;
-  },
+//       // Stop early when the optimal amount of data is explored
+//       if (abs(wjaccardKSim - 1.0) < EPS) {
+//         if (count == -1) {
+//           count = 4;
+//         }
+//         else {
+//           count--;
+//           if (count == 0) {
+//             break;
+//           }
+//         }
+//       } 
+//     }
+//     if (fout) {
+//       cout << "Results appended to " << results_path << endl;
+//     } else {
+//       cout << "Cannot open " << results_path << ". Nothing has been saved" << endl;
+//     }
+//     return true;
+//   },
 
-  "For science",
+//   "For science",
   
-  "Usage: testSim <k> <m> <n> <target_name> <query_name> <query_index> [<start> <end>] \n"
-  "  k           - The number of similar time series to find.                          \n"
-  "  m           - For i = 1..m, an experiment is run with the number of examined      \n"
-  "                time series (h) to be i*k.                                          \n"
-  "  n           - Block size for PAA.                                                 \n"
-  "  target_name - Index of loaded dataset to get the result from.                     \n"
-  "                Use 'list dataset' to retrieve the list of                          \n"
-  "                loaded datasets.                                                    \n"
-  "  query_name  - Same as dataset_index, except for the query                         \n"
-  "  query_index - Index of the query                                                  \n"
-  "  start       - The start location of the query in the time series                  \n"
-  "  end         - The end location of the query in the time series                    \n"
-  "                                                                                    \n"
-  "  Note: use testSim <path> to specify where the experiment output will be save.     \n"
-  "  By default, the results will be saved to results.txt in the working directory.    \n"
+//   "Usage: testSim <k> <m> <n> <target_name> <query_name> <query_index> [<start> <end>] \n"
+//   "  k           - The number of similar time series to find.                          \n"
+//   "  m           - For i = 1..m, an experiment is run with the number of examined      \n"
+//   "                time series (h) to be i*k.                                          \n"
+//   "  n           - Block size for PAA.                                                 \n"
+//   "  target_name - Index of loaded dataset to get the result from.                     \n"
+//   "                Use 'list dataset' to retrieve the list of                          \n"
+//   "                loaded datasets.                                                    \n"
+//   "  query_name  - Same as dataset_index, except for the query                         \n"
+//   "  query_index - Index of the query                                                  \n"
+//   "  start       - The start location of the query in the time series                  \n"
+//   "  end         - The end location of the query in the time series                    \n"
+//   "                                                                                    \n"
+//   "  Note: use testSim <path> to specify where the experiment output will be save.     \n"
+//   "  By default, the results will be saved to results.txt in the working directory.    \n"
   
-  )
+//   )
 
 /************************************************************************
  *                      End Experiment Code                             *
@@ -850,7 +842,7 @@ map<string, Command*> commands = {
   {"ksim", &cmdKSim},
   {"ksimBF", &cmdKSimBF},
   {"print", &cmdPrint},
-  {"testSim", &cmdTestSim }
+  // {"testSim", &cmdTestSim }
 };
 
 /**************************************************************************/

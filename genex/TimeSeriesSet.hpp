@@ -154,7 +154,7 @@ public:
    *  
    * @vector vector of candidates with exact distance from query.
    */
-  vector<candidate_time_series_t> kSimRaw(const TimeSeries& query, int k, int PAABlock = 0);
+  vector<candidate_time_series_t> getKBestMatchesBruteForce(const TimeSeries& query, int k);
       
   /**
    *  @brief check if data is loaded

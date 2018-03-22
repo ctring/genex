@@ -300,8 +300,7 @@ public:
                             , const string& query_name
                             , int index
                             , int start = -1
-                            , int end = -1
-                            , int PAABlockSize = 0);
+                            , int end = -1);
 
   // dataset_metadata_t PAA(int idx, int n);
 

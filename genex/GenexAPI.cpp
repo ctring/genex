@@ -191,13 +191,13 @@ GenexAPI::getKBestMatches(int k, int ke, const string& target_name, const string
 
 vector<candidate_time_series_t>
 GenexAPI::getKBestMatchesBruteForce(int k, const string& target_name, const string& query_name,
-                                    int index, int start, int end, int PAABlockSize)
+                                    int index, int start, int end)
 {
   this->_checkDatasetName(target_name);
   this->_checkDatasetName(query_name);
 
   const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
-  return _loadedDatasets[target_name]->kSimRaw(query, k, PAABlockSize);
+  return _loadedDatasets[target_name]->getKBestMatchesBruteForce(query, k);
 }
 
 // TODO: fix this function and also that in the brute force k best match

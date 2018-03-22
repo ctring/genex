@@ -342,8 +342,8 @@ void TimeSeriesSet::PAA(int n)
   this->itemLength = newItemLength;
 }
 
-std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
-  const TimeSeries& query, int k, int PAABlock)
+std::vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
+  const TimeSeries& query, int k)
 {
   if (k <= 0) {
     throw GenexException("K must be positive");
@@ -355,12 +355,6 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
   int timeSeriesLength = getItemLength();
   int numberTimeSeries = getItemCount();
   
-  TimeSeries PAAQuery(0);
-  if (PAABlock > 0)
-  {
-    PAAQuery = tsPAA(query, PAABlock);
-  }
-
   // iterate through every timeseries
   for (int idx = 0; idx < numberTimeSeries; idx++)
   {
@@ -374,14 +368,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
       {
         TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);
         if (k > 0) {
-          if (PAABlock > 0)
-          {
-            TimeSeries PAACurrentTimeSeries = tsPAA(currentTimeSeries, PAABlock);
-            currentDist = warpedDistance(PAAQuery, PAACurrentTimeSeries, INF);
-          }
-          else {
-            currentDist = warpedDistance(query, currentTimeSeries, INF);
-          }
+          currentDist = warpedDistance(query, currentTimeSeries, INF);
           bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
           k--;
           if (k == 0) {
@@ -392,14 +379,7 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
         else
         {
           bestSoFarDist = bestSoFar.front().dist;
-          if (PAABlock > 0)
-          {
-            TimeSeries PAACurrentTimeSeries = tsPAA(currentTimeSeries, PAABlock);
-            currentDist = warpedDistance(PAAQuery, PAACurrentTimeSeries, bestSoFarDist);
-          }
-          else {
-            currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);
-          }
+          currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);
           if (currentDist < bestSoFarDist)
           { 
             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
@@ -412,11 +392,6 @@ std::vector<candidate_time_series_t> TimeSeriesSet::kSimRaw(
     }
   }
 
-  if (PAABlock > 0) {
-    for (auto i = 0; i < bestSoFar.size(); i++) {
-      bestSoFar[i].dist = warpedDistance(query, bestSoFar[i].data, INF);
-    }
-  }
   std::sort(bestSoFar.begin(), bestSoFar.end());
   
   return bestSoFar;

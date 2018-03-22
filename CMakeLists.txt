@@ -6,6 +6,10 @@ option(BUILD_CLI "build the GENEX command-line interface" ON)
 option(BUILD_TESTS "build tests" ON)
 option(BUILD_PYGENEX "build the Python version of GENEX" ON)
 
+message("Building GENEX command-line interface: ${BUILD_CLI}")
+message("Building tests: ${BUILD_TESTS}")
+message("Building PYGENEX: ${BUILD_PYGENEX}")
+
 if (UNIX AND NOT APPLE)
   # The next 2 lines might need to be removed if the following error occurs:
   #   "sorry - this program has been built without plugin support"
