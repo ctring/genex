@@ -1,5 +1,7 @@
 # GENEX
 
+This is the source code for ...
+
 ## Install dependencies
 
 ### macOS:
@@ -7,18 +9,19 @@
 ```bash
   brew install cmake
   brew install boost
+  brew install boost-python
   brew install readline
 ```
 
 ### Linux:
 - Install [latest CMake for Linux](https://cmake.org/download/).
-- Install [Boost 1.6 or above](http://www.boost.org/doc/libs/1_61_0/more/getting_started/unix-variants.html)
+- Install [Boost 1.6 or above with Boost.Python](http://www.boost.org/doc/libs/1_61_0/more/getting_started/unix-variants.html)
 - Install readline library:
 ```bash
-  sudo apt-get install libreadline6 libreadline6-dev
+  sudo apt-get install libreadline6 libreadline6-dev python-dev
 ```
 
-### Windows:
+### Windows (Not Tested):
 
 - Install [CMake for Windows](https://cmake.org/download/). Make sure that the **bin** directory of CMake is in your PATH environment variable.
 - Install [MinGW Distro with Boost](https://nuwen.net/mingw.html) in **C:\\**
