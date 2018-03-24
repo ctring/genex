@@ -289,6 +289,23 @@ py::list ksim(int k
   return resList;
 }
 
+py::list ksimbf(int k
+                , const string& target_name
+                , const string& query_name
+                , int index
+                , int start
+                , int end
+                , const string& distance)
+{
+  auto res = genexAPI.getKBestMatchesBruteForce(
+    k, target_name, query_name, index, start, end, distance);
+  py::list resList;
+  for (auto r : res) {
+    resList.append(candidateTimeSeriesToPythonDict(r));
+  }
+  return resList;
+}
+
 /**
  *  @brief gets a time series
  * 
@@ -335,6 +352,7 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("distance", distance);
   py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksim", ksim, (py::arg("start")=-1, py::arg("end")=-1));
+  py::def("ksimbf", ksimbf, (py::arg("start")=-1, py::arg("end")=-1, py::arg("distance")="euclidean"));  
   py::def("getTimeSeries", getTimeSeries, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("getAllDistances", getAllDistances);
 }

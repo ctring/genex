@@ -299,7 +299,8 @@ public:
                             , const string& query_name
                             , int index
                             , int start = -1
-                            , int end = -1);
+                            , int end = -1
+                            , const string& distance = "euclidean");
 
 
   /**
