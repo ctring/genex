@@ -113,7 +113,7 @@ if __name__=='__main__':
 		ds_info = json.load(f)
 
 	def exclude(ds_name, dist, st):
-		if 'progress' in ds_info[ds_name]:
+		if not args.start_over and 'progress' in ds_info[ds_name]:
 			excluded = ds_info[ds_name]['progress']
 			return '%s %s %.1f' % (ds_name, dist, st) in excluded
 		return False
@@ -144,11 +144,7 @@ if __name__=='__main__':
 			   (subseq_min <= subseq <= subseq_max) or\
 			   (subseq_min < 0 and subseq_max >= 0 and subseq <= subseq_max) or\
 			   (subseq_max < 0 and subseq_min >= 0 and subseq >= subseq_min):
-				if args.start_over:
-					logging.info('Start over flag is set. Reset progress for %s', ds)
-					if 'progress' in ds_info[ds]:
-						del ds_info[ds]['progress']
-				
+
 				logging.info('%s. Number of subsequences %d', ds, ds_info[ds]['subsequence'])
 				records = group_dataset(ds.encode('ascii', 'ignore'),
 									    args.from_st, args.to_st, args.dist,
