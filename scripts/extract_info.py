@@ -11,7 +11,7 @@ import os
 import pygenex as pg
 import pandas as pd
 
-from common import GROUPING_RECORDS, EXPERIMENT_RECORDS, DATASET_ROOT
+from common import GROUPING_RECORDS, DATASET_ROOT
 
 all_datasets = [n for n in os.listdir(DATASET_ROOT) if n.endswith('DATA')]
 
@@ -32,7 +32,6 @@ for i, ds in enumerate(all_datasets):
 df = pd.DataFrame.from_dict(dataset_info, orient='index')
 df['subsequence'] = (df['count'] * df['length'] * (df['length'] - 1) / 2).astype('int')
 df.to_json(GROUPING_RECORDS, orient='index')
-df.to_json(EXPERIMENT_RECORDS, orient='index')
 print('Preview the first few datasets')
 print(df.head())
-print('Saved info to', GROUPING_RECORDS, EXPERIMENT_RECORDS)
+print('Saved info to', GROUPING_RECORDS)

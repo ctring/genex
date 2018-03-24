@@ -31,7 +31,7 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 	records = []
 	timestamp = datetime.now().strftime('%Y_%m_%d_%H_%M_%S') 
 	records_name = name + '_records_' + timestamp + '.csv'
-	records_path = os.path.join(STORAGE_ROOT, name, records_name)
+	records_path = os.path.join(GROUPS_ROOT, name, records_name)
 	for d in dist:
 		for st in np.arange(from_st, to_st, 0.1):
 			st = round(st * 10) / 10
@@ -51,7 +51,7 @@ def group_dataset(name, from_st, to_st, dist, num_threads=15, dry_run=False,
 				logging.info('Finished [%s, %s, %.1f] after %f seconds', name, d, st, end - start)
 				logging.info('[%s, %s, %.1f] generates %d groups', name, d, st, group_count)
 
-				save_dir = os.path.join(STORAGE_ROOT, name, d)
+				save_dir = os.path.join(GROUPS_ROOT, name, d)
 				if not os.path.exists(save_dir):
 					os.makedirs(save_dir)
 				save_path = os.path.join(save_dir, 
