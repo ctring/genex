@@ -14,7 +14,7 @@ class Manhattan
 public:
   data_t dist(data_t x_1, data_t x_2) const
   {
-    return abs(x_1 - x_2);
+    return std::abs(x_1 - x_2);
   }
 
   data_t init() const
