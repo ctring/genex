@@ -128,7 +128,7 @@ if __name__=='__main__':
 		if not params in progress:
 			progress.append(params)
 
-		with open(args.dataset_info_file, 'w') as f:
+		with open(GROUPING_RECORDS, 'w') as f:
 			json.dump(ds_info, f)
 
 	try:
@@ -136,7 +136,7 @@ if __name__=='__main__':
 		record_count = 0
 		subseq_max = args.subseq_count_max
 		subseq_min = args.subseq_count_min
-		order = sorted([(ds_info[ds]['subsequence'], ds) for ds in ds_info])
+		order = sorted([(ds_info[ds]['subsequence'], ds) for ds in ds_info if not ds.endswith('_out')])
 		order = zip(*order)[1]
 		for ds in order:
 			subseq = ds_info[ds]['subsequence']
