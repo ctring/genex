@@ -157,7 +157,7 @@ if __name__=='__main__':
 		content = 'Grouping stopped - ' + repr(e)
 		logging.error(content)
 		if not args.dry_run:
-			sent_notification(args.email_addr, 'Error occured. Grouping stopped', content)
+			send_notification(args.email_addr, 'Error occured. Grouping stopped', content)
 	else:
 		nonempty_records = [all_records[ds] for ds in all_records if len(all_records[ds]) > 0]
 		content = 'Touched %d/%d dataset(s). %d grouping files generated.\n' % (len(nonempty_records),

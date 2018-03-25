@@ -7,7 +7,6 @@ GROUPS_ROOT = '/work/ctnguyendinh/groups'
 GROUPING_RECORDS = '/work/ctnguyendinh/groups/grouping_records.json'
 
 EXPERIMENT_ROOT = '/work/ctnguyendinh/experiments'
-EXPERIMENT_RECORDS = '/work/ctnguyendinh/experiments/experiment_records.json'
 
 SMTP_SERVER = 'smtp.wpi.edu'
 FROM_ADDR = 'noreply@wpi.edu'
