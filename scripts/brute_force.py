@@ -97,8 +97,8 @@ def run_brute_force(name, dist, k, queries_df, dry_run=False):
 
 			find_query = filter(lambda o: o['query'] == query, results[d])
 			if len(find_query) == 0 or 'result_bf' not in find_query[0]:
-				logging.info('Running BF[%d, %d, %d, %d, %d, %s]...(%d/%d)',
-							 k, query['index'], query['start'], query['end'], query['outside'],
+				logging.info('Running %s BF[%d, %d, %d, %d, %d, %s]...(%d/%d)',
+							 name, k, query['index'], query['start'], query['end'], query['outside'],
 							 d, i, queries_df.shape[0])
 				if not dry_run:
 					start = time.time()
