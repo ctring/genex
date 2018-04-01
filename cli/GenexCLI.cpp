@@ -409,33 +409,6 @@ MAKE_COMMAND(Normalize,
   "  name - Name of the dataset to be normalized.                         \n"
 )
 
-// MAKE_COMMAND(PAA,
-//   {
-//     if (tooFewArgs(args, 2) || tooManyArgs(args, 2))
-//     {
-//       return false;
-//     }
-
-//     string name = args[1];
-//     int blockSize = stoi(args[2]);
-
-//     genex::dataset_metadata_t info = gGenexAPI.PAA(name, blockSize);
-
-//     cout << "Dataset PAA-ed                     " << endl
-//          << "  Name:        " << info.name       << endl
-//          << "  Item count:  " << info.itemCount  << endl
-//          << "  Item length: " << info.itemLength << endl;
-//     return true;
-//   },
-
-//   "Perform piecewise aggregate approximation (PAA) on a dataset. "
-//   "(Warning: this operation cannot be undone)",
-
-//   "Usage: paa <name> <block_size>                                         \n"
-//   "  name       - Index of the dataset to be PAA-ed                       \n"
-//   "  block_size - Size of a block to aggregate                            \n"
-// )
-
 MAKE_COMMAND(Sim,
   {
     if (tooFewArgs(args, 3) || tooManyArgs(args, 5))
@@ -682,138 +655,6 @@ void printResults(ofstream &fout, const vector<genex::candidate_time_series_t> &
   }
 }
 
-// MAKE_COMMAND(TestSim,
-//   {
-//     if (args.size() == 2) {
-//       results_path = args[1];
-//       cout << "Path for result file set to: " << results_path << endl;
-//       return true;
-//     }
-
-//     if (tooFewArgs(args, 6) || tooManyArgs(args, 8))
-//     {
-//       return false;
-//     }
-
-//     int k = stoi(args[1]);
-//     int m = stoi(args[2]);
-//     int block = stoi(args[3]);
-//     string target_name = args[4];
-//     string query_name = args[5];
-//     int query_index = stoi(args[6]);
-//     int start = -1;
-//     int end = -1;
-
-//     if (args.size() == 9)
-//     {
-//       start = stoi(args[7]);
-//       end = stoi(args[8]);
-//     }
-//     else {
-//       cout << "Invalid number of arguments";
-//       return false;
-//     }
-
-//     chrono::duration<float> kSimBFTime;
-//     chrono::duration<float> kSimBFPAATime;
-//     chrono::duration<float> kSimTime;
-
-//     // First run brute force and other methods and record run time
-//     TIME_COMMAND(
-//       std::vector<genex::candidate_time_series_t> rawResults =
-//         gGenexAPI.getKBestMatchesBruteForce(
-//           k, target_name, query_name, query_index, start, end);
-//     )
-//     kSimBFTime = __end_time - __start_time;
-
-//     TIME_COMMAND(
-//       std::vector<genex::candidate_time_series_t> rawPAAResults =
-//         gGenexAPI.getKBestMatchesBruteForce(
-//           k, target_name, query_name, query_index, start, end, block);
-//     )
-//     kSimBFPAATime = __end_time - __start_time;
-
-//     double jaccardPAA  = computeJaccard(rawPAAResults, rawResults);
-//     double wjaccardPAA = computeWeightedJaccard(rawPAAResults, rawResults);
-
-//     ofstream fout(results_path, ios_base::out | ios_base::app );
-
-//     // Try with different range of k_e
-//     int steps = m / 100;
-//     int count = -1;
-//     for (int h = k; h <= m; h += steps) {
-//       // EXPERIMENT
-//       extraTimeSeries = 0;
-//       TIME_COMMAND(
-//         std::vector<genex::candidate_time_series_t> results =
-//           gGenexAPI.getKBestMatches(
-//             k, h, target_name, query_name, query_index, start, end);
-//       )
-//       kSimTime = __end_time - __start_time;
-
-//       // Compute the metrics
-//       double jaccardKSim = computeJaccard(results, rawResults);
-//       double wjaccardKSim = computeWeightedJaccard(results, rawResults);
-
-//       std::cout << "k = " << k << " h = " << h
-//                 << " h_extra = " << h + extraTimeSeries
-//                 << " Jaccard_kSim = " << jaccardKSim
-//                 << " WJaccard_KSim = " << wjaccardKSim
-//                 << " Jaccard_kSimBFPAA = " <<  jaccardPAA
-//                 << " WJaccard_kSimBFPAA = " << wjaccardPAA << endl;
-
-//       if (fout) {
-//         fout << k << SEP << h << SEP << h + extraTimeSeries << SEP << block << SEP
-//              << query_index << SEP << start << SEP << end << SEP 
-//              << jaccardKSim << SEP << wjaccardKSim << SEP << jaccardPAA << SEP << wjaccardPAA << SEP
-//              << kSimTime.count() << SEP << kSimBFTime.count() << SEP << kSimBFPAATime.count() << SEP;
-//         printResults(fout, results); fout << SEP;
-//         printResults(fout, rawResults); fout << SEP;
-//         printResults(fout, rawPAAResults);
-//         fout << endl;
-//       }
-
-//       // Stop early when the optimal amount of data is explored
-//       if (abs(wjaccardKSim - 1.0) < EPS) {
-//         if (count == -1) {
-//           count = 4;
-//         }
-//         else {
-//           count--;
-//           if (count == 0) {
-//             break;
-//           }
-//         }
-//       } 
-//     }
-//     if (fout) {
-//       cout << "Results appended to " << results_path << endl;
-//     } else {
-//       cout << "Cannot open " << results_path << ". Nothing has been saved" << endl;
-//     }
-//     return true;
-//   },
-
-//   "For science",
-  
-//   "Usage: testSim <k> <m> <n> <target_name> <query_name> <query_index> [<start> <end>] \n"
-//   "  k           - The number of similar time series to find.                          \n"
-//   "  m           - For i = 1..m, an experiment is run with the number of examined      \n"
-//   "                time series (h) to be i*k.                                          \n"
-//   "  n           - Block size for PAA.                                                 \n"
-//   "  target_name - Index of loaded dataset to get the result from.                     \n"
-//   "                Use 'list dataset' to retrieve the list of                          \n"
-//   "                loaded datasets.                                                    \n"
-//   "  query_name  - Same as dataset_index, except for the query                         \n"
-//   "  query_index - Index of the query                                                  \n"
-//   "  start       - The start location of the query in the time series                  \n"
-//   "  end         - The end location of the query in the time series                    \n"
-//   "                                                                                    \n"
-//   "  Note: use testSim <path> to specify where the experiment output will be save.     \n"
-//   "  By default, the results will be saved to results.txt in the working directory.    \n"
-  
-//   )
-
 /************************************************************************
  *                      End Experiment Code                             *
  ************************************************************************/
@@ -837,12 +678,10 @@ map<string, Command*> commands = {
   {"saveGroups", &cmdSaveGroups},
   {"loadGroups", &cmdLoadGroups},  
   {"normalize", &cmdNormalize},
-  // {"paa", &cmdPAA},
   {"sim", &cmdSim},
   {"ksim", &cmdKSim},
   {"ksimBF", &cmdKSimBF},
-  {"print", &cmdPrint},
-  // {"testSim", &cmdTestSim }
+  {"print", &cmdPrint}
 };
 
 /**************************************************************************/
