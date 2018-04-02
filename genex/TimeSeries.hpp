@@ -144,6 +144,11 @@ public:
    */
   int getEnd() const { return this->end; }
 
+  /**
+   *  @brief returns the average of the whole time series
+   */
+  data_t average();
+
   const data_t* getKeoghLower(int warpingBand) const;
   const data_t* getKeoghUpper(int warpingBand) const;
 

@@ -165,6 +165,14 @@ bool TimeSeries::operator==(const TimeSeries& other) const
   return true;
 }
 
+data_t TimeSeries::average() {
+  data_t sum;
+  for (int i = 0; i < this->length; i++) {
+    sum += data[this->start + i];
+  }
+  return sum / this->length;
+}
+
 
 const data_t* TimeSeries::getKeoghLower(int warpingBand) const
 {
