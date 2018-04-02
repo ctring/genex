@@ -13,6 +13,7 @@
 using std::string;
 using std::cout;
 using std::endl;
+using std::vector;
 
 namespace genex {
 
@@ -282,59 +283,16 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   return std::make_pair(MIN, MAX);
 }
 
-
-inline int calcPAALength(int srcLength, int n)
-{
-  return (srcLength - 1) / n + 1;
-}
-
-void doPAA(const data_t* source, data_t* dest, int srcLength, int n)
-{
-  data_t sum = 0;
-  int count = 0;
-  int destLength = calcPAALength(srcLength, n);
-  for (int i = 0; i < srcLength; i++)
-  {
-    count++;
-    sum += source[i];
-    if (count == n || i == srcLength - 1) {
-      dest[i / n] = sum / count;
-      sum = 0;
-      count = 0;
-    }
-  }
-}
-
-TimeSeries tsPAA(const TimeSeries& source, int n)
-{
-  data_t sum = 0;
-  int count = 0;
-  int srcLength = source.getLength();
-  int destLength = calcPAALength(srcLength, n);
-  TimeSeries dest(destLength);
-  for (int i = 0; i < srcLength; i++)
-  {
-    count++;
-    sum += source[i];
-    if (count == n || i == srcLength - 1) {
-      dest[i / n] = sum / count;
-      sum = 0;
-      count = 0;
-    }
-  }
-  return dest;
-}
-
-std::vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
-  const TimeSeries& query, int k, string distance_name)
+vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
+  const TimeSeries& query, int k, string distanceName)
 {
   if (k <= 0) {
     throw GenexException("K must be positive");
   }
 
-  std::vector<candidate_time_series_t> bestSoFar;
+  vector<candidate_time_series_t> bestSoFar;
 
-  dist_t warpedDistance = getDistanceFromName(distance_name + DTW_SUFFIX);
+  dist_t warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
   int timeSeriesLength = getItemLength();
   int numberTimeSeries = getItemCount();

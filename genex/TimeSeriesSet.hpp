@@ -26,7 +26,7 @@ public:
   /**
    *  @brief default constructor for TimeSeriesSet
    *
-   *  Create a TimeSeriestSet object with is an empty string for name
+   *  Create a TimeSeriestSet object
    */
   TimeSeriesSet();
 
@@ -129,39 +129,24 @@ public:
   bool isNormalized() { return normalized; }
 
   /**
-    *  @brief calculates the distance between a subsequence of a series in this dataset to
-    *   input timeseries
-    *
-    *  @param idx indexs which time series this subsequence belongs to
-    *  @param start where in the time series the subsequence starts
-    *  @param length how long the timeseries is
-    *  @param other the other time series we are comparing against
-    *
-    *  @note this used to be in groupable, but there is no reason to not be here
-    *
-    *  @return the calculated distance. If the arguments are invalid we throw an exception
-    */
-  data_t distanceBetween(int idx, int start, int length,
-      const TimeSeries& other, const string& distance_name);
+   *  @brief check if data is loaded
+   */
+  bool isLoaded() { return this->data != nullptr; }
 
   /**
    * @brief Exhaustively searches through timeseries set for k similar time series.
    * 
    * @param query to search for
    * @param k number of time series to find
-   * @param distance_name distance to use
+   * @param distanceName distance to use
    *  
    * @vector vector of candidates with exact distance from query.
    */
   vector<candidate_time_series_t> getKBestMatchesBruteForce(const TimeSeries& query
                                                             , int k
-                                                            , string distance_name = "euclidean");
-      
-  /**
-   *  @brief check if data is loaded
-   */
-  bool isLoaded() { return this->data != nullptr; }
-
+                                                            , string distanceName = "euclidean");
+  
+  
 protected:
   data_t* data = nullptr;
   vector<string> names;
