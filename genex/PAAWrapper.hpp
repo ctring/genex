@@ -39,17 +39,19 @@ public:
   TimeSeries getPAA(int index, int start, int end);
 
   /**
-   * @brief Searches through timeseries set for k similar time series, using PAA to reduce the dimension.
+   * @brief Searches through timeseries set for k similar time series, using PAA to 
+   *        reduce the dimension, thus producing approximated results.
    * 
    * @param query to search for
    * @param k number of time series to find
+   * @param blockSize size of block in PAA
    * @param distanceName distance to use
    *  
    * @vector vector of candidates with exact distance from query.
    */
   std::vector<candidate_time_series_t> getKBestMatchesPAA(
-    const TimeSeries& data, int k, const string& distanceName);
-  
+    const TimeSeries& query, int k, int blockSize, const string& distanceName);
+
 private:
   const TimeSeriesSet& dataset;
   int blockSize;

@@ -20,6 +20,9 @@ PAAWrapper::PAAWrapper(const TimeSeriesSet& dataset): dataset(dataset)
   }
 }
 
+/**
+ * Perform PAA on a time series.
+ */
 TimeSeries tsPAA(const TimeSeries& source, int blockSize)
 {
   data_t sum = 0;
@@ -92,60 +95,62 @@ TimeSeries PAAWrapper::getPAA(int index, int start, int end) {
     return paaTS;
   }
 
-// vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
-//   const TimeSeries& query, int k, const string& distanceName)
-// {
-//   if (k <= 0) {
-//     throw GenexException("K must be positive");
-//   }
+vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
+  const TimeSeries& query, int k, int blockSize, const string& distanceName)
+{
+  if (k <= 0) {
+    throw GenexException("K must be positive");
+  }
 
-//   vector<candidate_time_series_t> bestSoFar;
+  vector<candidate_time_series_t> bestSoFar;
 
-//   dist_t warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
-//   data_t bestSoFarDist, currentDist;
-//   int timeSeriesLength = dataset.getItemLength();
-//   int numberTimeSeries = dataset.getItemCount();
+  dist_t warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
+  data_t bestSoFarDist, currentDist;
+  int timeSeriesLength = dataset.getItemLength();
+  int numberTimeSeries = dataset.getItemCount();
+  TimeSeries paaQuery = tsPAA(query, blockSize);
 
-//   // iterate through every timeseries
-//   for (int idx = 0; idx < numberTimeSeries; idx++)
-//   {
-//     // iterate through every length of interval
-//     for (int intervalLength = 2; intervalLength <= timeSeriesLength;
-//         intervalLength++) 
-//     {
-//       // iterate through all interval window lengths
-//       for (int start = 0; start <= timeSeriesLength - intervalLength; 
-//             start++) 
-//       {
-//         TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);
-//         if (k > 0) {
-//           currentDist = warpedDistance(query, currentTimeSeries, INF);
-//           bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
-//           k--;
-//           if (k == 0) {
-//             // Heapify exactly once when the heap is filled.
-//             std::make_heap(bestSoFar.begin(), bestSoFar.end());
-//           }
-//         } 
-//         else
-//         {
-//           bestSoFarDist = bestSoFar.front().dist;
-//           currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);
-//           if (currentDist < bestSoFarDist)
-//           { 
-//             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
-//             std::push_heap(bestSoFar.begin(), bestSoFar.end());
-//             std::pop_heap(bestSoFar.begin(), bestSoFar.end());
-//             bestSoFar.pop_back();
-//           } 
-//         }
-//       }
-//     }
-//   }
+  // iterate through every timeseries
+  for (int idx = 0; idx < numberTimeSeries; idx++)
+  {
+    // iterate through every length of interval
+    for (int intervalLength = 2; intervalLength <= timeSeriesLength;
+        intervalLength++) 
+    {
+      // iterate through all interval window lengths
+      for (int start = 0; start <= timeSeriesLength - intervalLength; 
+            start++) 
+      {
+        TimeSeries currentTimeSeries = dataset.getTimeSeries(idx, start, start + intervalLength);
+        TimeSeries currentPAATimeSeries = getPAA(idx, start, start + intervalLength);
+        if (k > 0) {
+          currentDist = warpedDistance(paaQuery, currentPAATimeSeries, INF);
+          bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
+          k--;
+          if (k == 0) {
+            // Heapify exactly once when the heap is filled.
+            std::make_heap(bestSoFar.begin(), bestSoFar.end());
+          }
+        } 
+        else
+        {
+          bestSoFarDist = bestSoFar.front().dist;
+          currentDist = warpedDistance(paaQuery, currentPAATimeSeries, bestSoFarDist);
+          if (currentDist < bestSoFarDist)
+          {
+            bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
+            std::push_heap(bestSoFar.begin(), bestSoFar.end());
+            std::pop_heap(bestSoFar.begin(), bestSoFar.end());
+            bestSoFar.pop_back();
+          } 
+        }
+      }
+    }
+  }
 
-//   std::sort(bestSoFar.begin(), bestSoFar.end());
+  std::sort(bestSoFar.begin(), bestSoFar.end());
 
-//   return bestSoFar;
-// }
+  return bestSoFar;
+}
 
 } // namespace genex

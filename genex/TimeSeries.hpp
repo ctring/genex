@@ -10,7 +10,7 @@
 #include <boost/serialization/serialization.hpp>
 
 #define INF std::numeric_limits<data_t>::infinity()
-#define EPS 1e-12
+#define EPS 1e-9
 
 // EXPERIMENT
 extern int extraTimeSeries;
@@ -211,7 +211,7 @@ struct candidate_time_series_t
 
   bool operator<(const candidate_time_series_t& rhs) const 
   {
-    if (dist == rhs.dist)
+    if (std::abs(dist - rhs.dist) < EPS)
     {
       if (data.getIndex() == rhs.data.getIndex())
       {
@@ -230,7 +230,7 @@ struct candidate_time_series_t
 
   bool operator==(const candidate_time_series_t& rhs) const
   {
-    return data == rhs.data && abs(dist - rhs.dist) < EPS;
+    return data == rhs.data && std::abs(dist - rhs.dist) < EPS;
   }
 };
 

@@ -148,9 +148,13 @@ BOOST_AUTO_TEST_CASE( get_paa, *boost::unit_test::tolerance(TOLERANCE) ) {
     TimeSeries paa2 = paa.getPAA(7, 12, 18);
     boostCheckTimeSeries( paa2, actual2 );
 
-    paa.generatePAAMatrix(4);
-    vector<data_t> actual3 {1.737579346, 2.723388672, 2.108886719, 1.959960937};
-    TimeSeries paa3 = paa.getPAA(3, 2, 17);
+    vector<data_t> actual3 {3.624023438};
+    TimeSeries paa3 = paa.getPAA(1, 4, 6);
     boostCheckTimeSeries( paa3, actual3 );
+
+    paa.generatePAAMatrix(4);
+    vector<data_t> actual4 {1.737579346, 2.723388672, 2.108886719, 1.959960937};
+    TimeSeries paa4 = paa.getPAA(3, 2, 17);
+    boostCheckTimeSeries( paa4, actual4 );
 
 }
