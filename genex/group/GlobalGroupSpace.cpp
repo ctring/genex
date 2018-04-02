@@ -142,7 +142,7 @@ candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
   return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
 }
 
-std::vector<candidate_time_series_t> GlobalGroupSpace::kSim(const TimeSeries& query, int k)
+std::vector<candidate_time_series_t> GlobalGroupSpace::getKBestMatches(const TimeSeries& query, int k)
 {
   std::vector<candidate_time_series_t> best;
   std::vector<group_index_t> bestSoFar;

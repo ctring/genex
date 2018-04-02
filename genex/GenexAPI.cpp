@@ -186,7 +186,7 @@ GenexAPI::getKBestMatches(int k, int ke, const string& target_name, const string
   this->_checkDatasetName(query_name);
 
   const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
-  return _loadedDatasets[target_name]->kSim(query, k, ke);
+  return _loadedDatasets[target_name]->getKBestMatches(query, k, ke);
 }
 
 vector<candidate_time_series_t>

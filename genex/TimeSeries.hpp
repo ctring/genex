@@ -65,7 +65,7 @@ public:
    *  This constructor is use when only length is needed
    *  to specify the time series. Index is set to 0, starting position
    *  is set to 0 and ending position is the length of the time series
-   *  Memory is then allocated for the data.
+   *  Memory is allocated for the data.
    *
    *  @param length length of the time series
    */

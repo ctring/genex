@@ -73,7 +73,7 @@ public:
    *  @param approx if true, return the approximated distance, otherwise return the exact distance
    *  @return the best match in the dataset
    */
-  std::vector<candidate_time_series_t> kSim(const TimeSeries& query, int k);
+  std::vector<candidate_time_series_t> getKBestMatches(const TimeSeries& query, int k);
   
   void saveGroupsOld(std::ofstream &fout, bool groupSizeOnly) const;
   int loadGroupsOld(std::ifstream &fin);

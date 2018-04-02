@@ -14,8 +14,7 @@
 namespace genex {
 
 /**
- *  @brief a GroupableTimeSeriesSet object is a TimeSeriesSet with grouping
- *         functionalities
+ *  @brief a GroupableTimeSeriesSet object is a TimeSeriesSet with grouping capability
  */
 class GroupableTimeSeriesSet : public TimeSeriesSet
 {
@@ -78,7 +77,7 @@ public:
    * @return a vector of struct containing the closest TimeSeries and the distance between them
    * @throws exception if dataset is not grouped
    */
-  std::vector<candidate_time_series_t> kSim(const TimeSeries& data, int k, int h);
+  std::vector<candidate_time_series_t> getKBestMatches(const TimeSeries& data, int k, int h);
   
 private:
   GlobalGroupSpace* groupsAllLengthSet = nullptr;

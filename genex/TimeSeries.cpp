@@ -54,10 +54,12 @@ TimeSeries::TimeSeries(const TimeSeries& other)
   length = other.length;
   if (isOwnerOfData)
   {
+    // If the data is internal to the TimeSeries, copy this data
     this->data = new data_t[length];
     memcpy(this->data, other.data, length * sizeof(data_t));
   }
   else {
+    // If the data is external, only need to copy the referring pointer
     this->data = other.data;
   }
 }
@@ -65,44 +67,54 @@ TimeSeries::TimeSeries(const TimeSeries& other)
 TimeSeries& TimeSeries::operator=(const TimeSeries& other)
 {
   if (isOwnerOfData) {
+    // If the data is internal, remove it as it will be replaced soon
     delete[] this->data;
   }
+  if (other.isOwnerOfData)
+  {
+    // If the data is internal to the TimeSeries, copy this data
+    this->data = new data_t[length];
+    memcpy(this->data, other.data, length * sizeof(data_t));
+  }
+  else {
+    // If the data is external, only need to copy the referring pointer
+    this->data = other.data;
+  }
+
   isOwnerOfData = other.isOwnerOfData;
   index = other.index;
   start = other.start;
   end = other.end;
   length = other.length;
-  if (other.isOwnerOfData)
-  {
-    this->data = new data_t[length];
-    memcpy(this->data, other.data, length * sizeof(data_t));
-  }
-  else {
-    this->data = other.data;
-  }
+
   return *this;
 }
 
 TimeSeries& TimeSeries::operator=(TimeSeries&& other)
 {
   if (isOwnerOfData) {
+    // If the data is internal, remove it as it will be replaced soon    
     delete[] this->data;
   }
+  // Move data directly since we know that the other TimeSeries will be
+  // deleted soon
   data = other.data;
+  other.data = nullptr;
+
+  isOwnerOfData = other.isOwnerOfData;
   index = other.index;
   start = other.start;
   end = other.end;
   length = other.length;
-  isOwnerOfData = other.isOwnerOfData;
-  other.data = nullptr;
+
   return *this;
 }
 
 TimeSeries::~TimeSeries()
 {
-  // if object allocated the data, delete it
   if (this->isOwnerOfData)
   {
+    // if object allocated the data, delete it  
     delete[] this->data;
     this->data = nullptr;
   }
