@@ -1,10 +1,23 @@
-# Ignore datasets except the ones for testing
+# Datasets except the ones for testing
 datasets/
 !datasets/test
 
-# Ignore build file contents
+# Distribution / packaging
+.Python
 build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
 # Cmake output
 CMakeFiles
@@ -42,15 +55,25 @@ CTestTestfile.cmake
 *.out
 *.app
 
-# os
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# OS
 .DS_STORE
 .swp*
 .vscode
 
 # others
 ~$*
-.ipynb_checkpoints/
-env/
 *.eps
 *.svg
 *.png

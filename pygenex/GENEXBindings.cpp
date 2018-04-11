@@ -386,6 +386,10 @@ py::list getAllDistances()
   return distList;
 }
 
+void setWarpignBandRatio(double ratio) {
+  genexAPI.setWarpingBandRatio(ratio);
+}
+
 BOOST_PYTHON_MODULE(pygenex)
 {
   py::def("loadDataset", loadDataset,
@@ -410,4 +414,5 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("ksimpaa", ksimpaa, (py::arg("start")=-1, py::arg("end")=-1, py::arg("distance")="euclidean")); 
   py::def("getTimeSeries", getTimeSeries, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("getAllDistances", getAllDistances);
+  py::def("setWarpingBandRatio", setWarpingBandRatio);
 }

@@ -1,4 +1,7 @@
-recursive-include cmake
-recursive-include genex *.cpp *.hpp *.c *.h
-recursive-include pygenex *.cpp *.hpp *.c *.h
+recursive-include cmake *
+recursive-include genex *
+recursive-include pygenex *
 include CMakeLists.txt
+recursive-exclude genex .DS_Store
+recursive-exclude pygenex .DS_Store
+recursive-exclude cmake .DS_Store
