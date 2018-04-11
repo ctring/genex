@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 show_help() {
 	echo "usage: $0 [run|test] [Options...]"
 	echo "Build GENEX if no argument is provided. Otherwise:"
@@ -64,18 +66,31 @@ fi
 
 echo "CMake flags: ${CMAKE_FLAGS}"
 cmake .. $CMAKE_FLAGS
-CPU=$(lscpu | grep ^CPU\(s\): | tr -s " " | cut -f2 -d " ")
-BUILD_CPU=$(expr $CPU / 2)
+
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+
+if [ $unameOut = Linux ]; then
+	CPU=$(lscpu | grep ^CPU\(s\): | tr -s " " | cut -f2 -d " ")
+	BUILD_CPU=$(expr $CPU / 2)
+	MULTI_THREAD_BUILD="-j $BUILD_CPU"
+	echo "Number of CPU(s): $CPU"
+	echo "Building with $BUILD_CPU CPU(s)"
+fi
 
 if [ $REBUILD = true ]; then
 	make clean
 fi
 
-echo "Number of CPU(s): $CPU"
-echo "Building with $BUILD_CPU CPU(s)"
-make -j $BUILD_CPU
+make $MULTI_THREAD_BUILD
 
-cp -v pygenex.so ../scripts/ 
+cp -v pygenex/pygenex.so ../scripts/ 
 
 if [ "$1" = "run" ]; then
 	./genexcli
