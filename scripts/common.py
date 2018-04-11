@@ -54,7 +54,7 @@ def get_queries(name, nquery, incount, inlength, outcount, outlength):
 	inquery = generate_random_queries(nin, incount, inlength)
 	outquery = generate_random_queries(nout, outcount, outlength)
 	inquery = np.hstack((inquery, np.tile(0, (nin, 1))))
-	outquery = np.hstack((outquery, np.tile(1, (nin, 1))))
+	outquery = np.hstack((outquery, np.tile(1, (nout, 1))))
 	df = pd.DataFrame(np.vstack((inquery, outquery)),
 					  columns=['index', 'start', 'end', 'outside'])
 	df.to_csv(query_path, index=False)
