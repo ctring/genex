@@ -34,7 +34,7 @@ def run_paa(name, dist, k, queries_df, dry_run=False):
 	pg.normalize(name_out)
 	logging.info('Normalized the dataset %s.', name_out)
 
-	pg.generatePAA(name, 3)
+	pg.preparePAA(name, 3)
 	logging.info('Generate PAA of block size 3 for dataset %s.', name)
 
 	experiment_path = os.path.join(EXPERIMENT_ROOT, name + '.json')
