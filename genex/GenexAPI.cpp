@@ -61,6 +61,13 @@ void GenexAPI::unloadDataset(const string& name)
   delete this->_loadedDatasets[name];
   this->_loadedDatasets[name] = nullptr;
   this->_loadedDatasets.erase(name);
+
+  if (this->_paaWrappers.find(name) == this->_paaWrappers.end())
+  {
+    delete this->_paaWrappers[name];
+    this->_paaWrappers[name] = nullptr;
+    this->_paaWrappers.erase(name);
+  }
   this->_datasetCount--;
 }
 

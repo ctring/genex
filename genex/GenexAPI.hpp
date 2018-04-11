@@ -292,6 +292,7 @@ public:
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
+   *  @param distance distance used in computing DTW
    *  @return k similar time series
    */
   vector<candidate_time_series_t>
@@ -321,6 +322,7 @@ public:
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
+   *  @param distance distance used in computing DTW.
    *  @return k similar time series
    */
   vector<candidate_time_series_t>

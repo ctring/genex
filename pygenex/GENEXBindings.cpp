@@ -289,6 +289,19 @@ py::list ksim(int k
   return resList;
 }
 
+/**
+ *  @brief gets k similar TimeSeries to the query, exhaustively.
+ *  Provides the exact distance.
+ * 
+ *  @param k the number of similar time series to find
+ *  @param target_name the index of the result dataset
+ *  @param query_name the index of the query dataset
+ *  @param index the index of the timeseries in the query dataset
+ *  @param start the start of the index
+ *  @param end the end of the index
+ *  @param distance distance used in computing DTW
+ *  @return k similar time series in the same format as ksim
+ */
 py::list ksimbf(int k
                 , const string& target_name
                 , const string& query_name
@@ -298,6 +311,46 @@ py::list ksimbf(int k
                 , const string& distance)
 {
   auto res = genexAPI.getKBestMatchesBruteForce(
+    k, target_name, query_name, index, start, end, distance);
+  py::list resList;
+  for (auto r : res) {
+    resList.append(candidateTimeSeriesToPythonDict(r));
+  }
+  return resList;
+}
+
+/**
+ * @brief prepare a dataset for matching with PAA
+ * @param name name of a dataset
+ * @blockSize block size used for PAA
+ */
+void preparePAA(const string& name, int blockSize) 
+{
+  genexAPI.preparePAA(name, blockSize);
+}
+
+/**
+ *  @brief gets k similar TimeSeries to the query, using PAA.
+ *  Provides approximated distance.
+ * 
+ *  @param k the number of similar time series to find
+ *  @param target_name the index of the result dataset
+ *  @param query_name the index of the query dataset
+ *  @param index the index of the timeseries in the query dataset
+ *  @param start the start of the index
+ *  @param end the end of the index
+ *  @param distance distance used in computing DTW.
+ *  @return k similar time series in the same format as ksim.
+ */
+py::list ksimpaa(int k
+                , const string& target_name
+                , const string& query_name
+                , int index
+                , int start
+                , int end
+                , const string& distance)
+{
+  auto res = genexAPI.getKBestMatchesPAA(
     k, target_name, query_name, index, start, end, distance);
   py::list resList;
   for (auto r : res) {
@@ -346,6 +399,7 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("getTimeSeriesName", getTimeSeriesName);
   py::def("group", groupDataset,
           (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
+  py::def("preparePAA", preparePAA);
   py::def("saveGroups", saveGroups);
   py::def("saveGroupsSize", saveGroupsSize);
   py::def("loadGroups", loadGroups);
@@ -353,6 +407,7 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksim", ksim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksimbf", ksimbf, (py::arg("start")=-1, py::arg("end")=-1, py::arg("distance")="euclidean"));  
+  py::def("ksimpaa", ksimpaa, (py::arg("start")=-1, py::arg("end")=-1, py::arg("distance")="euclidean")); 
   py::def("getTimeSeries", getTimeSeries, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("getAllDistances", getAllDistances);
 }
