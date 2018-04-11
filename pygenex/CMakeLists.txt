@@ -12,4 +12,4 @@ target_link_libraries(pygenex genexLib ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 # don't prepend wrapper library name with lib
 set_target_properties(pygenex PROPERTIES PREFIX "")
 # move the library to root of build
-set_target_properties(pygenex PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+# set_target_properties(pygenex PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

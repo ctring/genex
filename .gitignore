@@ -3,7 +3,8 @@ datasets/
 !datasets/test
 
 # Ignore build file contents
-build/*
+build/
+dist/
 
 # Cmake output
 CMakeFiles
