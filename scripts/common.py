@@ -1,4 +1,7 @@
+import os
 import argparse
+import numpy as np
+import pandas as pd
 import smtplib
 from email.mime.text import MIMEText
 import logging
