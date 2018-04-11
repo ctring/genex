@@ -96,7 +96,7 @@ TimeSeries PAAWrapper::getPAA(int index, int start, int end) {
   }
 
 vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
-  const TimeSeries& query, int k, int blockSize, const string& distanceName)
+  const TimeSeries& query, int k, const string& distanceName)
 {
   if (k <= 0) {
     throw GenexException("K must be positive");
@@ -108,7 +108,7 @@ vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
   data_t bestSoFarDist, currentDist;
   int timeSeriesLength = dataset.getItemLength();
   int numberTimeSeries = dataset.getItemCount();
-  TimeSeries paaQuery = tsPAA(query, blockSize);
+  TimeSeries paaQuery = tsPAA(query, this->blockSize);
 
   // iterate through every timeseries
   for (int idx = 0; idx < numberTimeSeries; idx++)

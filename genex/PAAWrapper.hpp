@@ -44,13 +44,12 @@ public:
    * 
    * @param query to search for
    * @param k number of time series to find
-   * @param blockSize size of block in PAA
    * @param distanceName distance to use
    *  
    * @vector vector of candidates with exact distance from query.
    */
   std::vector<candidate_time_series_t> getKBestMatchesPAA(
-    const TimeSeries& query, int k, int blockSize, const string& distanceName);
+    const TimeSeries& query, int k, const string& distanceName);
 
 private:
   const TimeSeriesSet& dataset;

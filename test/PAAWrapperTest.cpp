@@ -2,9 +2,11 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "TimeSeries.hpp"
+#include "TestUtils.hpp"
+
 #define private public
 #include "PAAWrapper.hpp"
-#include "TimeSeries.hpp"
 
 #define TOLERANCE 1e-7
 
@@ -21,14 +23,6 @@ BOOST_AUTO_TEST_CASE( create_paa_wrapper ) {
     for (auto r : paa.paaMat) {
         BOOST_CHECK_EQUAL( r.size(), 1 );
         BOOST_CHECK_EQUAL( r[0].getLength(), 20 );
-    }
-}
-
-void boostCheckTimeSeries(const TimeSeries& ts, const vector<data_t> actual)
-{
-    BOOST_REQUIRE_EQUAL( ts.getLength(), actual.size() );
-    for (int i = 0; i < ts.getLength(); i++) {
-        BOOST_TEST( ts[i] == actual[i] );
     }
 }
 

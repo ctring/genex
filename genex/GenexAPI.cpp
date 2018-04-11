@@ -2,6 +2,7 @@
 
 #include "Exception.hpp"
 #include "GroupableTimeSeriesSet.hpp"
+#include "PAAWrapper.hpp"
 #include "distance/Distance.hpp"
 #include "IO.hpp"
 
@@ -198,6 +199,32 @@ GenexAPI::getKBestMatchesBruteForce(int k, const string& target_name, const stri
 
   const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
   return _loadedDatasets[target_name]->getKBestMatchesBruteForce(query, k, distance);
+}
+
+void GenexAPI::preparePAA(const string& name, int blockSize) {
+  this->_checkDatasetName(name);
+  PAAWrapper* wrapper;
+  if (this->_paaWrappers.find(name) != this->_paaWrappers.end()) {
+    wrapper = this->_paaWrappers[name];
+  }
+  else {
+    wrapper = new PAAWrapper(*(this->_loadedDatasets[name]));
+    this->_paaWrappers[name] = wrapper;
+  }
+  wrapper->generatePAAMatrix(blockSize);
+}
+
+vector<candidate_time_series_t>
+GenexAPI::getKBestMatchesPAA(int k, const string& target_name, const string& query_name
+                            , int index, int start, int end, const string& distance)
+{
+  this->_checkDatasetName(target_name);
+  this->_checkDatasetName(query_name);
+  if (this->_paaWrappers.find(target_name) == this->_paaWrappers.end()) {
+    throw GenexException("Dataset is not prepared for PAA");
+  }
+  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  return this->_paaWrappers[target_name]->getKBestMatchesPAA(query, k, distance);
 }
 
 data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int end1,

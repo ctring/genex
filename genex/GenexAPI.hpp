@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "GroupableTimeSeriesSet.hpp"
+#include "PAAWrapper.hpp"
 #include "TimeSeries.hpp"
 
 using std::string;
@@ -286,8 +287,8 @@ public:
    *  Provides the exact distance.
    * 
    *  @param k the number of similar time series to find
-   *  @param result_idx the index of the result dataset
-   *  @param query_idx the index of the query dataset
+   *  @param target_name the index of the result dataset
+   *  @param query_name the index of the query dataset
    *  @param index the index of the timeseries in the query dataset
    *  @param start the start of the index
    *  @param end the end of the index
@@ -302,6 +303,34 @@ public:
                             , int end = -1
                             , const string& distance = "euclidean");
 
+
+  /**
+   * @brief prepare a dataset for matching with PAA
+   * @param name name of a dataset
+   * @blockSize block size used for PAA
+   */
+  void preparePAA(const string& name, int blockSize);
+
+ /**
+   *  @brief gets k similar TimeSeries to the query, using PAA.
+   *  Provides approximated distance.
+   * 
+   *  @param k the number of similar time series to find
+   *  @param target_name the index of the result dataset
+   *  @param query_name the index of the query dataset
+   *  @param index the index of the timeseries in the query dataset
+   *  @param start the start of the index
+   *  @param end the end of the index
+   *  @return k similar time series
+   */
+  vector<candidate_time_series_t>
+  getKBestMatchesPAA(int k
+                     , const string& target_name
+                     , const string& query_name
+                     , int index
+                     , int start = -1
+                     , int end = -1
+                     , const string& distance = "euclidean");
 
   /**
    *  @brief computes the distance between 2 time series.
@@ -325,6 +354,7 @@ private:
   void _checkDatasetName(const string& name) const;
 
   std::map<string, GroupableTimeSeriesSet*> _loadedDatasets;
+  std::map<string, PAAWrapper*> _paaWrappers;
   int _datasetCount = 0;
 };
 
