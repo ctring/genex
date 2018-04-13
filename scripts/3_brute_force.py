@@ -1,5 +1,5 @@
 '''
-This script ...
+This script runs the brute-force method on all datasets
 '''
 from __future__ import print_function
 import argparse
@@ -15,8 +15,7 @@ from datetime import datetime
 
 from common import *
 
-
-def run_paa(name, dist, k, queries_df, dry_run=False):
+def run_brute_force(name, dist, k, queries_df, dry_run=False):
 	name_out = name + '_out'
 	dataset_path = os.path.join(DATASET_ROOT, name + '_DATA')
 	query_path   = os.path.join(DATASET_ROOT, name + '_QUERY')
@@ -34,9 +33,6 @@ def run_paa(name, dist, k, queries_df, dry_run=False):
 	pg.normalize(name_out)
 	logging.info('Normalized the dataset %s.', name_out)
 
-	pg.preparePAA(name, 3)
-	logging.info('Generate PAA of block size 3 for dataset %s.', name)
-
 	experiment_path = os.path.join(EXPERIMENT_ROOT, name + '.json')
 	if os.path.exists(experiment_path):
 		logging.info('Result file for %s exists', name)
@@ -47,8 +43,8 @@ def run_paa(name, dist, k, queries_df, dry_run=False):
 	# result structure
 	# {
 	#	'euclidean': [{ query: [index, start, end, outside]
-	#					result_paa: [{'data': {'index': ..., 'end': .., 'start': ...}, 'dist': ...}, ...]
-	#					time_paa: ....},
+	#					result_bf: [{'data': {'index': ..., 'end': .., 'start': ...}, 'dist': ...}, ...]
+	#					time_bf: ....},
 	#				  ...]
 	#   'manhattan': ...
 	# }
@@ -64,30 +60,30 @@ def run_paa(name, dist, k, queries_df, dry_run=False):
 					}
 
 			find_query = filter(lambda o: o['query'] == query, results[d])
-			if len(find_query) == 0 or 'result_paa' not in find_query[0]:
-				logging.info('Running %s PAA[%d, %d, %d, %d, %d, %s]...(%d/%d)',
+			if len(find_query) == 0 or 'result_bf' not in find_query[0]:
+				logging.info('Running %s BF[%d, %d, %d, %d, %d, %s]...(%d/%d)',
 							 name, k, query['index'], query['start'], query['end'], query['outside'],
 							 d, i, queries_df.shape[0])
 				if not dry_run:
 					start = time.time()
 					if query['outside'] == 0: # is inside
-						result_paa = pg.ksimpaa(k, name, name, query['index'], query['start'], query['end'], d)
+						result_bf = pg.ksimbf(k, name, name, query['index'], query['start'], query['end'], d)
 					else:
-						result_paa = pg.ksimpaa(k, name, name_out, query['index'], query['start'], query['end'], d)
+						result_bf = pg.ksimbf(k, name, name_out, query['index'], query['start'], query['end'], d)
 					end = time.time()
-					time_paa = end - start
+					time_bf = end - start
 
 					results[d].append({
 						'query': query,
-						'result_paa': result_paa,
-						'time_paa': time_paa
+						'result_bf': result_bf,
+						'time_bf': time_bf
 					})
 					with open(experiment_path, 'w') as f:
 						json.dump(results, f)
-					logging.info('Finished PAA[%d, %d, %d, %d, %d, %s] after %.1f seconds', 
+					logging.info('Finished BF[%d, %d, %d, %d, %d, %s] after %.1f seconds', 
 								 k, query['index'], query['start'], query['end'], query['outside'], d, end - start)
 			else:
-				logging.info('Query PAA[%d, %d, %d, %d, %d, %s] is already run',
+				logging.info('Query BF[%d, %d, %d, %d, %d, %s] is already run',
 							 k, query['index'], query['start'], query['end'], query['outside'], d)
 
 	pg.unloadDataset(name)
@@ -101,7 +97,8 @@ if __name__=='__main__':
 	logging.basicConfig(format='%(asctime)s [%(levelname)s] %(name)s: %(message)s', 
 						level=logging.INFO)
 
-	parser = common_argparser('Generate random queries and run PAA method over them')
+	parser = common_argparser('Generate random queries and run brute\
+									 force method over them')
 
 	args = parser.parse_args()
 	logging.info('Args: %s', pprint.pformat(args))
@@ -133,15 +130,15 @@ if __name__=='__main__':
 									 , ds_info[ds + '_out']['length'])
 
 				# Run the experiment on the current dataset
-				run_paa(name
+				run_brute_force(name
 								, args.dist
-							  , args.k
+								, args.k
 								, queries
 								, args.dry_run)
 
 	except Exception as e:
-		content = 'PAA stopped - ' + repr(e)
+		content = 'Brute force stopped - ' + repr(e)
 		logging.error(content)
 		if not args.dry_run:
-			send_notification(args.email_addr, 'Error occured. PAA stopped', content)
+			send_notification(args.email_addr, 'Error occured. Brute force stopped', content)
 		

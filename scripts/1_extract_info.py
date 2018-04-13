@@ -3,8 +3,6 @@ This script iterates over each dataset in the UCR archive and extracts
 its time series count, time series length and total number of subsequences,
 then saves these information to a file. The output file of this script serves
 as a bookkeeper for the experiment.
-
-Copy the pygenex.so to the same folder as this script to run.
 '''
 from __future__ import print_function
 import os
