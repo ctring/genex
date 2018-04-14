@@ -57,7 +57,7 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 	}
 	accuracy_x means x percent of the dataset is explored
 	'''
-	load_and_normalize(name)
+	name, name_out = load_and_normalize(name)
 
 	results, experiment_path = get_results_object(name)
 	results_15nn, experiment_path_15nn = get_results_object(name + '_15NN')
@@ -70,7 +70,7 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 		if d not in results_15nn:
 			results_15nn[d] = []
 
-		for st in [0.1, 0.2, 0.3, 0.4, 0.5]:
+		for st in [0.1]:#, 0.2, 0.3, 0.4, 0.5]:
 			group_file_name = '{}_GROUPS_{}'.format(name, str(st))
 			group_file_path = GROUPS_ROOT + '/{}/{}/{}'.format(name, d, group_file_name)
 
@@ -79,8 +79,8 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 				continue
 
 			logging.info('Loading group file %s', group_file_name)
-			noOfGroups = pg.loadGroups(name, group_file_path)
-			logging.info('Loaded %s with %d groups', group_file_name, noOfGroups)
+			number_of_groups = pg.loadGroups(name, group_file_path)
+			logging.info('Loaded %s with %d groups', group_file_name, number_of_groups)
 
 			method_key = 'genex_' + str(st)
 			for i in range(queries_df.shape[0]):
@@ -92,12 +92,13 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 				}
 
 				#####################################
-				##				 1-NN experiment				 ##
+				##	      1-NN experiment          ##
 				#####################################
 				logging.info('1-NN experiment for %s', 
 										 query_description('GENEX', 1, query, d))
-				find_query = filter(lambda o: method_key in o 
-																			and o['query'] == query, results[d])
+				find_query = filter(lambda o: 'result_' + method_key in o 
+									and o['query'] == query, results[d])
+				print(method_key)
 				if len(find_query) == 0:
 					logging.info('Running %s %s...(%d/%d)',
 								name, query_description('GENEX', 1, query, d), 
@@ -107,7 +108,7 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 						start = time.time()
 						query_name = name if query['outside'] == 0 else name_out
 						result_genex = pg.sim(name, query_name,
-																	query['index'], query['start'], query['end'])
+											  query['index'], query['start'], query['end'])
 						end = time.time()
 						
 						time_genex = end - start
@@ -131,36 +132,43 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 
 
 				#####################################
-				##				15-NN experiment				 ##
+				##		  15-NN experiment         ##
 				#####################################
  				logging.info('15-NN experiment for %s',
 										 query_description('GENEX', k, query, d))
 				result_bf = filter(lambda o: 'result_bf' in o and o['query'] == query, results[d])
-				find_query = filter(lambda o: method_key in o 
-															and o['query'] == query, results_15nn[d])
+				find_query = filter(lambda o: 'result_' + method_key in o and o['query'] == query, results_15nn[d])
 				if len(find_query) == 0 and len(result_bf) > 0:
 					logging.info('Running %s %s...(%d/%d)',
 								name, query_description('GENEX', k, query, d), 
 								i, queries_df.shape[0])
 
 					if not dry_run:
-						accuracy = []
-						time = []
-						for ke in arange(0.1, 5.1, 0.1):
+						dist_bf = [r['dist'] for r in result_bf[0]['result_bf']]
+						all_err = []
+						all_time = []
+						counter = 0
+						for ke_ratio in np.arange(0.1, 5.1, 0.1):
+							if counter % 10 == 0:
+								logging.info('ke_ratio = %f', ke_ratio)
+							counter += 1 
 							start = time.time()
-
+							
+							ke = int(round(ke_ratio * subseq))
 							query_name = name if query['outside'] == 0 else name_out
 							result_genex = pg.ksim(k, ke, name, query_name,
-																		query['index'], query['start'], query['end'])
+												   query['index'], query['start'], query['end'])
 							end = time.time()
-							acc = compute_accuracy(result_genex, result_bf)
-							accuracy.append(acc)
-							time.append(end - start)
+							dist_genex = [r['dist'] for r in result_genex]
+							
+							err = compute_rel_error(dist_genex, dist_bf)
+							all_err.append(err)
+							all_time.append(end - start)
 
 						results_15nn[d].append({
 							'query': query,
-							'result_' + method_key: accuracy,
-							'time_' + method_key: time
+							'result_' + method_key: all_err,
+							'time_' + method_key: all_time
 						})
 
 						with open(experiment_path_15nn, 'w') as f:
@@ -195,30 +203,29 @@ if __name__=='__main__':
 		for ds in get_dataset_order(ds_info):
 			subseq = ds_info[ds]['subsequence']
 			if check_subseq_range(subseq
-														, args.subseq_count_min
-														, args.subseq_count_max):
+								, args.subseq_count_min
+								, args.subseq_count_max):
 				name = ds.encode('ascii', 'ignore')
 				logging.info('%s. Number of subsequences %d', name, subseq)
 
 				# Generate queries or load existing ones
 				queries = get_queries(name
-															, args.nquery
-															, ds_info[ds]['count']
-															, ds_info[ds]['length']
-															, ds_info[ds + '_out']['count']
-															, ds_info[ds + '_out']['length'])
+									, args.nquery
+									, ds_info[ds]['count']
+									, ds_info[ds]['length']
+									, ds_info[ds + '_out']['count']
+									, ds_info[ds + '_out']['length'])
 
 				# Run the experiment on the current dataset
 				run_genex(name
-									, args.dist
-									, args.k
-									, queries
-									, subseq
-									, args.dry_run)
+						, args.dist
+						, args.k
+						, queries
+						, subseq
+						, args.dry_run)
 
 	except Exception as e:
-		content = 'GENEX stopped - ' + repr(e)
-		logging.error(content)
+		logging.exception('GENEX stopped')
 		if not args.dry_run:
-			send_notification(args.email_addr, 'Error occured. GENEX stopped', content)
+			send_notification(args.email_addr, 'Error occured. GENEX stopped', repr(e))
 		
