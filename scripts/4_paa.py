@@ -16,64 +16,55 @@ from datetime import datetime
 from common import *
 
 def run_paa(name, dist, k, queries_df, dry_run=False):
-	name_out = name + '_out'
-	dataset_path = os.path.join(DATASET_ROOT, name + '_DATA')
-	query_path   = os.path.join(DATASET_ROOT, name + '_QUERY')
-	info = pg.loadDataset(name, dataset_path, ',', -1, 1)
-	logging.info('Loaded dataset %s. Count = %d. Length = %d', 
-				 name, info['count'], info['length'])
-	
-	info = pg.loadDataset(name_out, query_path, ',', -1, 1)
-	logging.info('Loaded dataset %s. Count = %d. Length = %d', 
-				 name_out, info['count'], info['length'])
-	
-	pg.normalize(name)
-	logging.info('Normalized the dataset %s.', name)
+	'''Run PAA experiment
 
-	pg.normalize(name_out)
-	logging.info('Normalized the dataset %s.', name_out)
+	For each distance, this method iterates over the queries. It checks if
+	the current query was already performed and recorded to the json result file.
+	If it was not, it run the PAA method with that query
+
+	JSON result structure
+	{
+		'euclidean': [{ query: [index, start, end, outside]
+						result_paa: [{'data': {'index': ..., 'end': .., 'start': ...}, 'dist': ...}, ...]
+						time_paa: ....},
+					  ...]
+	  'manhattan': ...
+	}
+	'''
+	load_and_normalize(name)
 
 	pg.preparePAA(name, 3)
 	logging.info('Generate PAA of block size 3 for dataset %s.', name)
 
-	experiment_path = os.path.join(EXPERIMENT_ROOT, name + '.json')
-	if os.path.exists(experiment_path):
-		logging.info('Result file for %s exists', name)
-		with open(experiment_path, 'r') as f:
-			results = json.load(f)
-	else:
-		results = {}
-	# result structure
-	# {
-	#	'euclidean': [{ query: [index, start, end, outside]
-	#					result_paa: [{'data': {'index': ..., 'end': .., 'start': ...}, 'dist': ...}, ...]
-	#					time_paa: ....},
-	#				  ...]
-	#   'manhattan': ...
-	# }
-	#
+	results, experiment_path = get_results_object(name)
+
 	for d in dist:
 		if d not in results:
 			results[d] = []
-		for i in range(queries_df.shape[0]):
-			query = { 'index': queries_df['index'][i],
-					  'start': queries_df.start[i],
-					  'end': queries_df.end[i],
-					  'outside': queries_df.outside[i]
-					}
 
-			find_query = filter(lambda o: o['query'] == query, results[d])
-			if len(find_query) == 0 or 'result_paa' not in find_query[0]:
-				logging.info('Running %s PAA[%d, %d, %d, %d, %d, %s]...(%d/%d)',
-							 name, k, query['index'], query['start'], query['end'], query['outside'],
-							 d, i, queries_df.shape[0])
+		for i in range(queries_df.shape[0]):
+			query = { 
+				'index': queries_df['index'][i],
+				'start': queries_df.start[i],
+				'end': queries_df.end[i],
+				'outside': queries_df.outside[i]
+			}
+
+			find_query = filter(lambda o: 'result_paa' in o and o['query'] == query,
+												  results[d])
+			if len(find_query) == 0:
+				logging.info('Running %s %s...(%d/%d)',
+							 name, query_description('PAA', k, query, d), 
+							 i, queries_df.shape[0])
 				if not dry_run:
+					# Run the query and measure response time
 					start = time.time()
 					if query['outside'] == 0: # is inside
 						result_paa = pg.ksimpaa(k, name, name, query['index'], query['start'], query['end'], d)
 					else:
 						result_paa = pg.ksimpaa(k, name, name_out, query['index'], query['start'], query['end'], d)
 					end = time.time()
+
 					time_paa = end - start
 
 					results[d].append({
@@ -81,13 +72,15 @@ def run_paa(name, dist, k, queries_df, dry_run=False):
 						'result_paa': result_paa,
 						'time_paa': time_paa
 					})
+
+					# Dump result to file immediatelly
 					with open(experiment_path, 'w') as f:
 						json.dump(results, f)
-					logging.info('Finished PAA[%d, %d, %d, %d, %d, %s] after %.1f seconds', 
-								 k, query['index'], query['start'], query['end'], query['outside'], d, end - start)
+
+					logging.info('Finished %s after %.1f seconds', 
+								query_description('PAA', k, query, d), end - start)
 			else:
-				logging.info('Query PAA[%d, %d, %d, %d, %d, %s] is already run',
-							 k, query['index'], query['start'], query['end'], query['outside'], d)
+				logging.info('Query %s is already run', query_description('PAA', k, query, d))
 
 	pg.unloadDataset(name)
 	logging.info('Unloaded %s', name)
@@ -109,17 +102,11 @@ if __name__=='__main__':
 		ds_info = json.load(f)
 
 	try:
-		subseq_max = args.subseq_count_max
-		subseq_min = args.subseq_count_min
-		order = sorted([(ds_info[ds]['subsequence'], ds) 
-						for ds in ds_info if not ds.endswith('_out')])
-		order = zip(*order)[1]
-		for ds in order:
+		for ds in get_dataset_order(ds_info):
 			subseq = ds_info[ds]['subsequence']
-			if (subseq_max < 0 and subseq_min < 0) or\
-			   (subseq_min <= subseq <= subseq_max) or\
-			   (subseq_min < 0 and subseq_max >= 0 and subseq <= subseq_max) or\
-			   (subseq_max < 0 and subseq_min >= 0 and subseq >= subseq_min):
+			if check_subseq_range(subseq
+														, args.subseq_count_min
+														, args.subseq_count_max):
 				name = ds.encode('ascii', 'ignore')
 				logging.info('%s. Number of subsequences %d', name, subseq)
 

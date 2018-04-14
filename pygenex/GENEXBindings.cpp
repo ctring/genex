@@ -243,10 +243,10 @@ data_t distance(const string& name1, int idx1, int start1, int end1,
  *          }
  */
 py::dict sim(const string& target_name
-                            , const string& query_name
-                            , int index
-                            , int start
-                            , int end)
+            , const string& query_name
+            , int index
+            , int start
+            , int end)
 {
   auto res = genexAPI.getBestMatch(target_name, query_name, index, start, end);
   return candidateTimeSeriesToPythonDict(res);

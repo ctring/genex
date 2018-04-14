@@ -3,6 +3,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import smtplib
+import pygenex as pg
 from email.mime.text import MIMEText
 import logging
 
@@ -81,3 +82,62 @@ def common_argparser(description):
 						help='Group datasets with total subsequences smaller than this.'
 							 'Set a negative number to group all. Default: -1')
 	return parser
+
+
+def check_subseq_range(subseq, subseq_min, subseq_max):
+	return (subseq_max < 0 and subseq_min < 0) or\
+			   (subseq_min <= subseq <= subseq_max) or\
+			   (subseq_min < 0 and subseq_max >= 0 and subseq <= subseq_max) or\
+			   (subseq_max < 0 and subseq_min >= 0 and subseq >= subseq_min)
+
+
+def get_dataset_order(ds_info):
+	order = sorted([(ds_info[ds]['subsequence'], ds) 
+								 for ds in ds_info if not ds.endswith('_out')])
+	return zip(*order)[1]
+
+
+def load_and_normalize(name):
+	name_out = name + '_out'
+	dataset_path = os.path.join(DATASET_ROOT, name + '_DATA')
+	query_path   = os.path.join(DATASET_ROOT, name + '_QUERY')
+	info = pg.loadDataset(name, dataset_path, ',', -1, 1)
+	logging.info('Loaded dataset %s. Count = %d. Length = %d', 
+				 name, info['count'], info['length'])
+	
+	info = pg.loadDataset(name_out, query_path, ',', -1, 1)
+	logging.info('Loaded dataset %s. Count = %d. Length = %d', 
+				 name_out, info['count'], info['length'])
+	
+	pg.normalize(name)
+	logging.info('Normalized the dataset %s.', name)
+
+	pg.normalize(name_out)
+	logging.info('Normalized the dataset %s.', name_out)
+
+
+def get_results_object(name):
+	experiment_path = os.path.join(EXPERIMENT_ROOT, name + '.json')
+	if os.path.exists(experiment_path):
+		logging.info('Result file for %s exists', name)
+		with open(experiment_path, 'r') as f:
+			results = json.load(f)
+	else:
+		results = {}
+	return results, experiment_path
+
+
+def query_description(method, k, query, distance):
+	return '%s[%d, %d, %d, %d, %d, %s]' % (method
+																				, k
+																				, query['index']
+																				, query['start']
+																				, query['end']
+																				, query['outside']
+																				, distance)
+
+
+def compute_accuracy(dist1, dist2):
+	a = np.array(dist1)
+	b = np.array(dist2)
+	return 1 - np.mean((a - b)/b)
