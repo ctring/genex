@@ -212,6 +212,7 @@ public:
    *
    *  @param name name of the dataset
    *  @param path path to the group file
+   *  @return number of groups
    */
   int loadGroups(const string& name, const string& path);
 

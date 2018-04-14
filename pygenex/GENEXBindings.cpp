@@ -193,10 +193,11 @@ void saveGroupsSize(const string& name, const string& path)
  *
  *  @param name name of the dataset
  *  @param path path to the group file
+ *  @return number of groups
  */
-void loadGroups(const string& name, const string& path)
+int loadGroups(const string& name, const string& path)
 {
-  genexAPI.loadGroups(name, path);
+  return genexAPI.loadGroups(name, path);
 }
 
 
