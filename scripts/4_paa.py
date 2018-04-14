@@ -31,7 +31,7 @@ def run_paa(name, dist, k, queries_df, dry_run=False):
 	  'manhattan': ...
 	}
 	'''
-	load_and_normalize(name)
+	name, name_out = load_and_normalize(name)
 
 	pg.preparePAA(name, 3)
 	logging.info('Generate PAA of block size 3 for dataset %s.', name)
@@ -105,8 +105,8 @@ if __name__=='__main__':
 		for ds in get_dataset_order(ds_info):
 			subseq = ds_info[ds]['subsequence']
 			if check_subseq_range(subseq
-														, args.subseq_count_min
-														, args.subseq_count_max):
+								  , args.subseq_count_min
+								  , args.subseq_count_max):
 				name = ds.encode('ascii', 'ignore')
 				logging.info('%s. Number of subsequences %d', name, subseq)
 
@@ -120,14 +120,13 @@ if __name__=='__main__':
 
 				# Run the experiment on the current dataset
 				run_paa(name
-								, args.dist
-							  , args.k
-								, queries
-								, args.dry_run)
+						, args.dist
+						, args.k
+						, queries
+						, args.dry_run)
 
 	except Exception as e:
-		content = 'PAA stopped - ' + repr(e)
-		logging.error(content)
+		logging.exception('PAA stopped')
 		if not args.dry_run:
-			send_notification(args.email_addr, 'Error occured. PAA stopped', content)
+			send_notification(args.email_addr, 'Error occured. PAA stopped', repr(e))
 		

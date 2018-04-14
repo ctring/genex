@@ -31,7 +31,7 @@ def run_brute_force(name, dist, k, queries_df, dry_run=False):
 	  'manhattan': ...
 	}
 	'''
-	load_and_normalize(name)
+	name, name_out = load_and_normalize(name)
 
 	results, experiment_path = get_results_object(name)
 
@@ -58,10 +58,10 @@ def run_brute_force(name, dist, k, queries_df, dry_run=False):
 					start = time.time()
 					if query['outside'] == 0: # is inside
 						result_bf = pg.ksimbf(k, name, name,
-																	query['index'], query['start'], query['end'], d)
+											  query['index'], query['start'], query['end'], d)
 					else:
 						result_bf = pg.ksimbf(k, name, name_out,
-																  query['index'], query['start'], query['end'], d)
+											  query['index'], query['start'], query['end'], d)
 					end = time.time()
 	
 					time_bf = end - start
@@ -113,11 +113,11 @@ if __name__=='__main__':
 
 				# Generate queries or load existing ones
 				queries = get_queries(name
-															, args.nquery
-															, ds_info[ds]['count']
-															, ds_info[ds]['length']
-															, ds_info[ds + '_out']['count']
-															, ds_info[ds + '_out']['length'])
+									, args.nquery
+									, ds_info[ds]['count']
+									, ds_info[ds]['length']
+									, ds_info[ds + '_out']['count']
+									, ds_info[ds + '_out']['length'])
 
 				# Run the experiment on the current dataset
 				run_brute_force(name
@@ -127,8 +127,7 @@ if __name__=='__main__':
 								, args.dry_run)
 
 	except Exception as e:
-		content = 'Brute force stopped - ' + repr(e)
-		logging.error(content)
+		logging.exception('Brute force stopped')
 		if not args.dry_run:
-			send_notification(args.email_addr, 'Error occured. Brute force stopped', content)
+			send_notification(args.email_addr, 'Error occured. Brute force stopped', repr(e))
 		

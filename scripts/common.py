@@ -1,5 +1,6 @@
 import os
 import argparse
+import json
 import numpy as np
 import pandas as pd
 import smtplib
@@ -114,6 +115,7 @@ def load_and_normalize(name):
 
 	pg.normalize(name_out)
 	logging.info('Normalized the dataset %s.', name_out)
+	return name, name_out
 
 
 def get_results_object(name):
@@ -129,12 +131,12 @@ def get_results_object(name):
 
 def query_description(method, k, query, distance):
 	return '%s[%d, %d, %d, %d, %d, %s]' % (method
-																				, k
-																				, query['index']
-																				, query['start']
-																				, query['end']
-																				, query['outside']
-																				, distance)
+										, k
+										, query['index']
+										, query['start']
+										, query['end']
+										, query['outside']
+										, distance)
 
 
 def compute_accuracy(dist1, dist2):
