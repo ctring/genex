@@ -3,7 +3,6 @@ This script copies the data files in dataset folder to the parent
 folder and renames *_TRAIN to *_QUERY, *_TEST to *_DATA.
 '''
 from __future__ import print_function
-import pygenex as pg
 import pandas as pd
 import argparse
 import os
@@ -18,6 +17,8 @@ root = args.ucr_path
 
 all_datasets = os.listdir(root)
 for i, ds in enumerate(all_datasets):
+        if ds.startswith('.'):
+            continue
 	train_path = os.path.join(root, ds, ds + '_TRAIN')
 	query_path = os.path.join(root, ds + '_QUERY')
 
