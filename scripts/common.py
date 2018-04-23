@@ -139,7 +139,7 @@ def query_description(method, k, query, distance):
 										, distance)
 
 
-def compute_accuracy(dist1, dist2):
+def compute_rel_error(dist1, dist2):
 	a = np.array(dist1)
 	b = np.array(dist2)
-	return 1 - np.mean((a - b)/b)
+	return np.mean((a - b)/(b+1))

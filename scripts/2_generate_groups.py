@@ -105,7 +105,7 @@ if __name__=='__main__':
 	parser.add_argument('--start-over', action='store_true', help='Start from the beginning')
 	parser.add_argument('--dry-run', action='store_true', help='Only print the datasets and params to group')
 	parser.add_argument('--email-addr', default=None, help='Email to send notification when finishing grouping')
-
+	parser.add_argument('--threads', default=2, type=int, help='Number of threads to run')
 	args = parser.parse_args()
 	logging.info('Args: %s', pprint.pformat(args))
 	
@@ -149,7 +149,7 @@ if __name__=='__main__':
 				records = group_dataset(ds.encode('ascii', 'ignore'),
 									    args.from_st, args.to_st, args.dist,
 										exclude_callback=exclude, progress_callback=progress,
-										dry_run=args.dry_run)
+										dry_run=args.dry_run, num_threads=args.threads)
 				all_records[ds] = records
 				record_count += len(records)
 

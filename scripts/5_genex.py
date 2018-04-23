@@ -98,7 +98,6 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 										 query_description('GENEX', 1, query, d))
 				find_query = filter(lambda o: 'result_' + method_key in o 
 									and o['query'] == query, results[d])
-				print(method_key)
 				if len(find_query) == 0:
 					logging.info('Running %s %s...(%d/%d)',
 								name, query_description('GENEX', 1, query, d), 
@@ -148,13 +147,13 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 						all_err = []
 						all_time = []
 						counter = 0
-						for ke_ratio in np.arange(0.1, 5.1, 0.1):
+						for ke_ratio in np.arange(0.1, 100.1, 0.1):
+							ke = int(round(ke_ratio/100 * subseq))
 							if counter % 10 == 0:
-								logging.info('ke_ratio = %f', ke_ratio)
+								logging.info('ke_ratio = %f. ke = %d', ke_ratio, ke)
 							counter += 1 
 							start = time.time()
 							
-							ke = int(round(ke_ratio * subseq))
 							query_name = name if query['outside'] == 0 else name_out
 							result_genex = pg.ksim(k, ke, name, query_name,
 												   query['index'], query['start'], query['end'])
@@ -164,6 +163,8 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 							err = compute_rel_error(dist_genex, dist_bf)
 							all_err.append(err)
 							all_time.append(end - start)
+							if abs(err) < 1e-9:
+								break
 
 						results_15nn[d].append({
 							'query': query,
