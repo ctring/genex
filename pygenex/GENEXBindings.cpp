@@ -363,8 +363,8 @@ py::list ksimpaa(int k
 /**
  *  @brief gets a time series
  * 
- *  If both 'start' and 'end' are smaller than 0. The whole time series is selected. * 
- *  @param name dataset name of the time series
+ *  If both 'start' and 'end' are smaller than 0. The whole time series is selected.
+ *  @param name the dataset that the time series comes from
  *  @param idx index of the time series
  *  @param start starting position of the time series. Default: -1
  *  @param end ending position of the time series. Default: -1
