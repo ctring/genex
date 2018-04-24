@@ -115,7 +115,8 @@ void TimeSeriesSet::loadData(const string& filePath
               this->names.push_back(*tok_iter);
             }
             else {
-              this->data[row * length + (col - startCol)] = (data_t)std::stod(*tok_iter);
+              int index = row * (length - startCol - hasNameCol) + (col - startCol - hasNameCol);
+              this->data[index] = (data_t)std::stod(*tok_iter);
             }
           }
           catch (const std::invalid_argument& e)

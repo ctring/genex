@@ -130,6 +130,11 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_omit_rows_and_columns )
   TimeSeries ts = tsSet.getTimeSeries(0);
   BOOST_TEST( ts[0] == 2.656250000 );
   BOOST_TEST( ts[ts.getLength() - 1] == 2.537109375);
+
+  ts = tsSet.getTimeSeries(1);
+  BOOST_TEST( ts[0] == 2.267578125 );
+  BOOST_TEST( ts[ts.getLength() - 1] == 0.352783203);
+
 }
 
 BOOST_AUTO_TEST_CASE( normalize, *boost::unit_test::tolerance(TOLERANCE) )
@@ -182,7 +187,7 @@ BOOST_AUTO_TEST_CASE( basic_k_exhaustive )
   BOOST_TEST( best[0].dist == 0.0 );
 }
 
-BOOST_AUTO_TEST_CASE( read_time_series_name )
+BOOST_AUTO_TEST_CASE( read_time_series_name, *boost::unit_test::tolerance(TOLERANCE) )
 {
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_5_10_space, -1, 0, " ", false);
@@ -207,5 +212,11 @@ BOOST_AUTO_TEST_CASE( read_time_series_name )
   BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(2), "charles charles" );
   BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(3), "david david" );
   BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(4), "emma emma" );
-  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );  
+  BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );
+
+  TimeSeries ts = tsSet.getTimeSeries(2);
+  BOOST_TEST( ts[0] == 2.0 );
+  BOOST_TEST( ts[1] == 3.0 );
+  BOOST_TEST( ts[2] == 4.0 );
+
 }
