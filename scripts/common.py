@@ -142,4 +142,4 @@ def query_description(method, k, query, distance):
 def compute_rel_error(dist1, dist2):
 	a = np.array(dist1)
 	b = np.array(dist2)
-	return np.mean((a - b)/(b+1))
+	return np.mean(a - b)

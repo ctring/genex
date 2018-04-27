@@ -70,7 +70,7 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 		if d not in results_15nn:
 			results_15nn[d] = []
 
-		for st in [0.1]:#, 0.2, 0.3, 0.4, 0.5]:
+		for st in [0.1, 0.2, 0.3, 0.4, 0.5]:
 			group_file_name = '{}_GROUPS_{}'.format(name, str(st))
 			group_file_path = GROUPS_ROOT + '/{}/{}/{}'.format(name, d, group_file_name)
 
@@ -101,7 +101,7 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 				if len(find_query) == 0:
 					logging.info('Running %s %s...(%d/%d)',
 								name, query_description('GENEX', 1, query, d), 
-								i, queries_df.shape[0])
+								i + 1, queries_df.shape[0])
 					if not dry_run:
 						# Run the query and measure response time					
 						start = time.time()
@@ -140,7 +140,7 @@ def run_genex(name, dist, k, queries_df, num_subseq, dry_run=False):
 				if len(find_query) == 0 and len(result_bf) > 0:
 					logging.info('Running %s %s...(%d/%d)',
 								name, query_description('GENEX', k, query, d), 
-								i, queries_df.shape[0])
+								i + 1, queries_df.shape[0])
 
 					if not dry_run:
 						dist_bf = [r['dist'] for r in result_bf[0]['result_bf']]

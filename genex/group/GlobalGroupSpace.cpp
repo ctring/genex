@@ -20,11 +20,10 @@
 using std::vector;
 using std::max;
 using std::min;
-using std::cout;
-using std::endl;
 using std::ofstream;
 using std::ifstream;
 using std::string;
+using std::endl;
 
 namespace genex {
 

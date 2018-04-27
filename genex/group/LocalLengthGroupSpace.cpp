@@ -208,6 +208,11 @@ int LocalLengthGroupSpace::interLevelKSim(const TimeSeries& query,
         if (k <= 0) {
           // heapify the heap exactly once when it becomes full.
           std::make_heap(bestSoFar.begin(), bestSoFar.end());
+          while(k + bestSoFar.front().members <= 0) { 
+            k += bestSoFar.front().members;
+            std::pop_heap(bestSoFar.begin(), bestSoFar.end());
+            bestSoFar.pop_back();
+          }
         }
       }
   }
