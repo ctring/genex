@@ -140,10 +140,12 @@ std::pair<data_t, data_t> GenexAPI::normalizeDataset(const string& name)
   return this->_loadedDatasets[name]->normalize();
 }
 
-int GenexAPI::groupDataset(const string& name, data_t threshold, const string& distance_name, int numThreads)
+int GenexAPI::groupDataset(
+  const string& name, data_t threshold, const string& distance_name, int numThreads, bool wholeSeriesOnly)
 {
   this->_checkDatasetName(name);
-  return this->_loadedDatasets[name]->groupAllLengths(distance_name, threshold, numThreads);
+  return this->_loadedDatasets[name]->groupAllLengths(
+    distance_name, threshold, numThreads, wholeSeriesOnly);
 }
 
 void GenexAPI::saveGroups(const string& name, const string& path)

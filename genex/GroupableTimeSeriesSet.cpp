@@ -19,7 +19,8 @@ GroupableTimeSeriesSet::~GroupableTimeSeriesSet()
   this->reset();
 }
 
-int GroupableTimeSeriesSet::groupAllLengths(const std::string& distanceName, data_t threshold, int numThreads)
+int GroupableTimeSeriesSet::groupAllLengths(
+  const std::string& distanceName, data_t threshold, int numThreads, bool wholeSeriesOnly)
 {
   if (!this->isLoaded())
   {
@@ -32,10 +33,12 @@ int GroupableTimeSeriesSet::groupAllLengths(const std::string& distanceName, dat
   this->groupsAllLengthSet = new GlobalGroupSpace(*this);
   int cntGroups;
   if (numThreads == 1) {
-    cntGroups = this->groupsAllLengthSet->group(distanceName, threshold);
+    cntGroups = this->groupsAllLengthSet->group(
+      distanceName, threshold, wholeSeriesOnly);
   }
   else if (numThreads > 1) {
-    cntGroups = this->groupsAllLengthSet->groupMultiThreaded(distanceName, threshold, numThreads);    
+    cntGroups = this->groupsAllLengthSet->groupMultiThreaded(
+      distanceName, threshold, numThreads, wholeSeriesOnly);
   }
   else {
     throw GenexException("Number of threads must be positive");    

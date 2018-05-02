@@ -31,7 +31,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_grouping_and_reset )
 {
   GroupableTimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_10_space, 0, 0, " ");
-  int groupCnt = tsSet.groupAllLengths("euclidean", 0.5, 1);
+  int groupCnt = tsSet.groupAllLengths("euclidean", 0.5, 1, false);
   BOOST_CHECK( groupCnt > 2 );
   BOOST_CHECK_EQUAL( tsSet.getTotalNumberOfGroups(), groupCnt );
 }
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( basic_get_best_match )
   GroupableTimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_10_space, 0, 0, " ");
   tsSet.normalize();
-  tsSet.groupAllLengths("euclidean", 0.5, 1);
+  tsSet.groupAllLengths("euclidean", 0.5, 1, false);
   candidate_time_series_t best = tsSet.getBestMatch(tsSet.getTimeSeries(0));
   BOOST_TEST( best.dist == 0.0 );
 }
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_save_load )
   std::string fname = "groupable_time_series_save_load.z";
   tsSet.loadData(data.test_3_10_space, 0, 0, " ");
   tsSet.normalize();
-  tsSet.groupAllLengths("euclidean", 0.1, 1);
+  tsSet.groupAllLengths("euclidean", 0.1, 1, false);
   candidate_time_series_t best = tsSet.getBestMatch(tsSet.getTimeSeries(0));
   
   saveToFile(tsSet, fname);
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE( groupable_time_series_save_load_incompatible )
   std::string fname = "groupable_time_series_save_load_incompatible.z";
   tsSet.loadData(data.test_3_10_space, 0, 0, " ");
   tsSet.normalize();
-  tsSet.groupAllLengths("euclidean", 0.1, 1);
+  tsSet.groupAllLengths("euclidean", 0.1, 1, false);
   
   saveToFile(tsSet, fname);
 

@@ -63,31 +63,44 @@ int GlobalGroupSpace::_group(int i)
   return noOfGenerated;
 }
 
-int GlobalGroupSpace::group(const string& distance_name, data_t threshold)
+int GlobalGroupSpace::_getMinLength() const
+{
+  return this->wholeSeriesOnly ? this->localLengthGroupSpace.size() - 1 : 2;
+}
+
+int GlobalGroupSpace::group(
+  const string& distance_name, data_t threshold, bool wholeSeriesOnly)
 {
   reset();
   this->_loadDistance(distance_name);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
   this->threshold = threshold;
   this->totalNumberOfGroups = 0;
-  for (auto i = 2; i < this->localLengthGroupSpace.size(); i++)
+  this->wholeSeriesOnly = wholeSeriesOnly;
+  auto maxLength = this->localLengthGroupSpace.size();
+  auto minLength = _getMinLength();
+  for (auto i = minLength; i < maxLength; i++)
   {
-     this->totalNumberOfGroups += this->_group(i);
+    this->totalNumberOfGroups += this->_group(i);
   }
 
   return  this->totalNumberOfGroups;
 }
 
-int GlobalGroupSpace::groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread)
+int GlobalGroupSpace::groupMultiThreaded(
+  const std::string& distance_name, data_t threshold, int num_thread, bool wholeSeriesOnly)
 {
   reset();
   this->_loadDistance(distance_name);
   this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
   this->threshold = threshold;
-  
+  this->wholeSeriesOnly = wholeSeriesOnly;
   ThreadPool pool(num_thread);
   vector< std::future<int> > groupCounts;
-  for (auto i = 2; i < this->localLengthGroupSpace.size(); i++)
+
+  auto maxLength = this->localLengthGroupSpace.size();
+  auto minLength = _getMinLength();
+  for (auto i = minLength; i < maxLength; i++)
   {
     groupCounts.emplace_back(
       pool.enqueue([this, i] {
@@ -130,12 +143,14 @@ candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
   vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
   for (auto io = 0; io < order.size(); io++) {
     int i = order[io];
-    // this looks through each group of a certain length finding the best of those groups
-    candidate_group_t candidate = this->localLengthGroupSpace[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
-    if (candidate.second < bestSoFarDist)
-    {
-      bestSoFarGroup = candidate.first;
-      bestSoFarDist = candidate.second;
+    if (this->localLengthGroupSpace[i] != nullptr) {
+      // this looks through each group of a certain length finding the best of those groups
+      candidate_group_t candidate = this->localLengthGroupSpace[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
+      if (candidate.second < bestSoFarDist)
+      {
+        bestSoFarGroup = candidate.first;
+        bestSoFarDist = candidate.second;
+      }
     }
   }
   return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
@@ -152,8 +167,10 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::getKBestMatches(const Tim
   for (auto io = 0; io < order.size(); io++) 
   {
     int i = order[io];
-    kPrime = this->localLengthGroupSpace[i]->
-        interLevelKSim(query, this->warpedDistance, bestSoFar, kPrime);
+    if (this->localLengthGroupSpace[i] != nullptr) {
+      kPrime = this->localLengthGroupSpace[i]->
+          interLevelKSim(query, this->warpedDistance, bestSoFar, kPrime);
+    }
   }
   
   // process top group directly
@@ -193,10 +210,15 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::getKBestMatches(const Tim
 void GlobalGroupSpace::saveGroupsOld(ofstream &fout, bool groupSizeOnly) const
 {
   // Range of lengths and distance name
-  fout << 2 << " " << this->localLengthGroupSpace.size() << endl;
+  auto minLength = _getMinLength();
+  auto maxLength = this->localLengthGroupSpace.size();
+  fout << minLength
+       << " " << maxLength << endl;
   fout << this->distanceName << endl;
-  for (auto i = 2; i < this->localLengthGroupSpace.size(); i++) {
-    this->localLengthGroupSpace[i]->saveGroupsOld(fout, groupSizeOnly);
+  for (auto i = minLength; i < maxLength; i++) {
+    if (this->localLengthGroupSpace[i] != nullptr) {
+      this->localLengthGroupSpace[i]->saveGroupsOld(fout, groupSizeOnly);
+    }
   }
 }
 

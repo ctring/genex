@@ -31,10 +31,14 @@ public:
    *  @param distanceName the distance to use for comparing similarity
    *  @param threshold to use for determing the bound of similarity
    *  @param numThreads number of thread to perform grouping
+   *  @param wholeSeriesOnly if set to true group the largest length only
    *
    *  @return the number of groups created
    */
-  int groupAllLengths(const std::string& distanceName, data_t threshold, int numThreads);
+  int groupAllLengths(const std::string& distanceName,
+                      data_t threshold,
+                      int numThreads,
+                      bool wholeSeriesOnly);
   
   /**
    *  @brief deletes and clears the groups

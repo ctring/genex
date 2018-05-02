@@ -48,10 +48,13 @@ public:
    *
    *  @param metric the metric used to group by
    *  @param threshold the threshold to be group with
+   *  @param wholeSeriesOnly if set to true group the largest length only
    *  @return the number of groups it creates
    */
-  int group(const std::string& distance_name, data_t threshold);
-  int groupMultiThreaded(const std::string& distance_name, data_t threshold, int num_thread);
+  int group(
+    const std::string& distance_name, data_t threshold, bool wholeSeriesOnly=false);
+  int groupMultiThreaded(
+    const std::string& distance_name, data_t threshold, int num_thread, bool wholeSeriesOnly=false);
   
   int getTotalNumberOfGroups() const;
   std::string getDistanceName() const;
@@ -86,9 +89,10 @@ private:
   dist_t warpedDistance;
   data_t threshold;
   int totalNumberOfGroups = 0;
-
+  bool wholeSeriesOnly = false;
   void _loadDistance(const std::string& distanceName);
   int _group(int i);
+  int _getMinLength() const;
 
   /*************************
    *  Start serialization
@@ -97,8 +101,10 @@ private:
   template<class A>
   void save(A & ar, unsigned) const
   {
-    ar << this->localLengthGroupSpace.size() << this->distanceName << this->threshold;
-    for (auto i = 2; i < this->localLengthGroupSpace.size(); i++) {
+    size_t maxLen = this->localLengthGroupSpace.size();
+    size_t minLen = _getMinLength();
+    ar << minLen << maxLen << this->distanceName << this->threshold;
+    for (auto i = minLen; i < maxLen; i++) {
       ar << *(this->localLengthGroupSpace[i]);
     }
   }
@@ -106,12 +112,12 @@ private:
   template<class A>
   void load(A & ar, unsigned)
   {
-    size_t maxLen;
-    ar >> maxLen >> this->distanceName >> this->threshold;
+    size_t maxLen, minLen;
+    ar >> minLen >> maxLen >> this->distanceName >> this->threshold;
     this->_loadDistance(this->distanceName);
     this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
     this->totalNumberOfGroups = 0;
-    for (auto i = 2; i < maxLen; i++) {
+    for (auto i = minLen; i < maxLen; i++) {
       auto llgs = new LocalLengthGroupSpace(dataset, i);
       ar >> *llgs;
       this->localLengthGroupSpace[i] = llgs;

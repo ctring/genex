@@ -185,12 +185,14 @@ public:
    *  @param name name of the dataset to be grouped
    *  @param threshold the threshold to use when creating the group
    *  @param distanceName the distance to use when grouping the data
+   *  @param wholeSeriesOnly if set to true group the largest length only
    *  @return the number of groups created
    */
   int groupDataset(const string& name
                    , data_t threshold
                    , const string& distanceName = "euclidean"
-                   , int numThreads = 1);
+                   , int numThreads = 1
+                   , bool wholeSeriesOnly = false);
 
    /**
    *  @brief save all groups of a dataset to a file

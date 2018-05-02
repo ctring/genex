@@ -148,15 +148,19 @@ string getTimeSeriesName(const string& name, int index)
  *
  *  @param name name of the dataset to be grouped
  *  @param threshold the threshold to use when creating the group
- *  @param distance_name the distance to use when grouping the data
+ *  @param distanceName the distance to use when grouping the data
+ *  @param numThreads number of threads used to group
+ *  @param wholeSeriesOnly if set to true group the largest length only
  *  @return the number of groups created
  */
-int groupDataset(const string& name
-                 , data_t threshold
-                 , const string& distanceName
-                 , int numThreads)
+int group(const string& name
+          , data_t threshold
+          , const string& distanceName
+          , int numThreads
+          , bool wholeSeriesOnly)
 {
-  return genexAPI.groupDataset(name, threshold, distanceName, numThreads);
+  return genexAPI.groupDataset(
+    name, threshold, distanceName, numThreads, wholeSeriesOnly);
 }
 
 /**
@@ -402,8 +406,10 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("saveDataset", saveDataset);
   py::def("normalize", normalize);
   py::def("getTimeSeriesName", getTimeSeriesName);
-  py::def("group", groupDataset,
-          (py::arg("distanceName")="euclidean", py::arg("numThreads")=1));
+  py::def("group", group,
+          (py::arg("distanceName")="euclidean"
+          , py::arg("numThreads")=1
+          , py::arg("wholeSeriesOnly")=false));
   py::def("preparePAA", preparePAA);
   py::def("saveGroups", saveGroups);
   py::def("saveGroupsSize", saveGroupsSize);
