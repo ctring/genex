@@ -1,27 +1,34 @@
 # GENEX
 
-This is the source code for ...
+GENEX (General Exploration System) is a time series exploration tool that facilities series exploration with multiple distances.
 
 ## Install dependencies
 
 ### macOS:
 
 ```bash
-  brew install cmake
-  brew install boost
-  brew install boost-python
-  brew install readline
+brew install cmake
+brew install boost
+brew install boost-python
+brew install readline
 ```
 
 ### Linux:
 - Install [latest CMake for Linux](https://cmake.org/download/).
-- Install [Boost 1.6 or above with Boost.Python](http://www.boost.org/doc/libs/1_61_0/more/getting_started/unix-variants.html)
+- Install Boost 1.6 or above with Boost.Python:
+```bash
+wget https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
+tar xzf boost_1_66_0.tar.gz
+cd boost_1_66_0/
+./bootstrap.sh --with-libraries=serialization,iostreams,python,test
+./b2 install
+```
 - Install readline library:
 ```bash
-  sudo apt-get install libreadline6 libreadline6-dev python-dev
+sudo apt-get install libreadline6 libreadline6-dev python-dev
 ```
 
-### Windows (Not Tested):
+### Windows (Untested):
 
 - Install [CMake for Windows](https://cmake.org/download/). Make sure that the **bin** directory of CMake is in your PATH environment variable.
 - Install [MinGW Distro with Boost](https://nuwen.net/mingw.html) in **C:\\**
@@ -30,8 +37,10 @@ This is the source code for ...
 
 ## Build and Run
 
+GENEX comes as a command line interface and a Python module. 
+
 ### Linux & macOS
-Change current directory to this repository and run the following commands
+Change current directory to this repository and run the following commands.
 ```bash
 mkdir build
 cd build
@@ -44,7 +53,19 @@ A binary named 'genexcli' will be produced in the build directory. To run it, us
 ./genexcli
 ```
 
-### Windows
+To install the Python module, activate your virtual environment, if any, then run the following command in the root folder of GENEX.
+```bash
+python setup.py install
+```
+
+After that, you can import the module `pygenex`.
+```python
+import pygenex as pg
+```
+
+Documentation of the available functions can be found in `pygenex/GENEXBindings.cpp`.
+
+### Windows (Untested)
 
 Change current directory to this repository and run the following commands in **cmd**
 ```
@@ -143,7 +164,68 @@ Timeseries 4 [1, 20] - distance = 0.2552
 Timeseries 7 [1, 19] - distance = 0.2556
 ```
 
+## Adding a new distance
+
+To add a new distance, add a new class to the folder `genex/distance` with the template shown below and register the new distance. Instructions for how to register a new distance can be found in `Distance.cpp`.
+
+```C++
+#ifndef NEWDISTANCE_H
+#define NEWDISTANCE_H
+
+#include "TimeSeries.hpp"
+#include "Exception.hpp"
+
+namespace genex {
+
+class NewDistance
+{
+public:
+  IDT init() const {...}
+
+  IDT reduce(IDT next, IDT prev, data_t x_1, data_t x_2) const {...}
+
+  data_t norm(IDT total, const TimeSeries& t_1, const TimeSeries& t_2) const {...}
+
+  data_t normDTW(IDT total, const TimeSeries& t_1, const TimeSeries& t_2) const {...}
+
+  void clean(IDT x) {...}
+};
+
+} // namespace genex
+
+#endif // NEWDISTANCE_H
+
+```
+In this template, `data_t` is a pre-defined data type in `TimeSeries.hpp` (right now it is `double`), and `IDT` can be any data type. For example, in the definition of `Sorensen.hpp` and `Cosine.hpp`, `IDT` is `data_t*`. `IDT` stands for "Intermediate Data Type", which is used in more complex distances that require keeping track of the intermediate values. For simple distances such as Euclidean or Manhattan, it can simply be `data_t`.
+
+For each new distance class, two versions will be generated: a pairwise version and a warped version.
+
+### Pairwise distance
+The pairwise version takes in two sequences `X` and `Y` of the same length then computes the distance as follows:
+
+```
+pairwise = init()
+for i = 0 to length(X)
+  pairwise = reduce(pairwise, pairwise, X[i], Y[i])
+return norm(pairwise, X, Y)
+```
+
+`init()` is used to initialize the first value of the distance. For example, it is `0` for Euclidean distance or `-INF` for Chebyshev distance. For more complex distance, it can initialize an instance of a data structure.
+
+`reduce()`, in general, takes in the previous distance value and the values of the current points then combines them according to a specific distance definition. Note that it also has a `next` argument, which will be explained in the warped version.
+
+`norm()` normalizes the distance value in the end.
+
+### Warped distance
+
+The warped version takes in two sequences `X` and `Y` that are possibly of different lengthts. It uses the same `init()` and `reduce()` as the pairwise distance, but uses `normDTW()` to normalizes the final result.
+
+Unlike pairwise distance where the `next` argument and the `prev` argument will take the same value, in warped distance, they can be different. For simple distances such as Euclidean or Manhattan, this difference is not significant and we can ignore the `next` argument when defining `reduce()`. However, for complex distances where `IDT` is a data struct or an array, `next` is a new object or memory allocated by GENEX. Therefore, we don't need to allocate a new object or memory inside the definition of `reduce()` and write the new values into the `next` object instead. Additionally, the `clean()` method has to be defined as well to instruct GENEX how to deallocate the object or memory.
+
+
 ## Acknowledgement
+
+GENEX was designed and implemented by Cuong Nguyen, Charles Lovering, Ramoza Ahsan, and Rodica Neamtu.
 
 The Genex codebase includes the trillionDTW [0] methods, uses the same pruning
 methods, and even uses the trillion implementation of lemire lower/upper
