@@ -15,17 +15,17 @@ brew install readline
 
 ### Linux:
 - Install [latest CMake for Linux](https://cmake.org/download/).
-- Install Boost 1.6 or above with Boost.Python:
+- Install dependencies:
+```bash
+sudo apt-get install libreadline6 libreadline6-dev python-dev zlibc zlib1g zlib1g-dev
+```
+- Install Boost 1.66 or above with Boost.Python:
 ```bash
 wget https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
 tar xzf boost_1_66_0.tar.gz
 cd boost_1_66_0/
 ./bootstrap.sh --with-libraries=serialization,iostreams,python,test
 ./b2 install
-```
-- Install readline library:
-```bash
-sudo apt-get install libreadline6 libreadline6-dev python-dev
 ```
 
 ### Windows (Untested):
