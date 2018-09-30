@@ -159,7 +159,7 @@ GroupableTimeSeriesSet::getKBestMatches(const TimeSeries& query, int k, int h)
       throw GenexException("Number of examined time series must be larger than "
                            "or equal to the number of time series to look for");
     }
-    std::vector<candidate_time_series_t> results = this->groupsAllLengthSet->getKBestMatches(query, h);
+    auto results = this->groupsAllLengthSet->getKBestMatches(query, h);
     std::sort(results.begin(), results.end());
     results.resize(k);
     return results;

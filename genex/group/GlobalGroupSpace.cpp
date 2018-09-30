@@ -16,7 +16,6 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 
-
 using std::vector;
 using std::max;
 using std::min;

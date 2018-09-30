@@ -293,10 +293,10 @@ vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
 
   vector<candidate_time_series_t> bestSoFar;
 
-  dist_t warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
+  auto warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
-  int timeSeriesLength = getItemLength();
-  int numberTimeSeries = getItemCount();
+  auto timeSeriesLength = getItemLength();
+  auto numberTimeSeries = getItemCount();
   
   // iterate through every timeseries
   for (int idx = 0; idx < numberTimeSeries; idx++)

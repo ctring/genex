@@ -86,9 +86,9 @@ data_t warpedDistance(
   matching_t& matching)
 {
   bool computeMatching = matching.empty(); 
-  int m = a.getLength();
-  int n = b.getLength();
-  int r = calculateWarpingBandSize(max(m, n));
+  auto m = a.getLength();
+  auto n = b.getLength();
+  auto r = calculateWarpingBandSize(max(m, n));
   
   static DM* metric;
   if (metric == nullptr) {
@@ -100,7 +100,7 @@ data_t warpedDistance(
   {
     T result = metric->init();
     result = metric->reduce(result, result, a[0], b[0]);
-    data_t normalizedResult = metric->normDTW(result, a, b);
+    auto normalizedResult = metric->normDTW(result, a, b);
     metric->clean(result);
     return normalizedResult;
   }
@@ -145,9 +145,9 @@ data_t warpedDistance(
         bestSoFar = min(bestSoFar, ncost[i][j]);
         continue;
       }
-      data_t ij1  = (i - r <= j-1 && j-1 <= i + r) ? ncost[i][j-1] : INF;
-      data_t i1j1 = ncost[i-1][j-1];
-      data_t i1j  = (j - r <= i-1 && i-1 <= j + r) ? ncost[i-1][j] : INF;
+      auto ij1  = (i - r <= j-1 && j-1 <= i + r) ? ncost[i][j-1] : INF;
+      auto i1j1 = ncost[i-1][j-1];
+      auto i1j  = (j - r <= i-1 && i-1 <= j + r) ? ncost[i-1][j] : INF;
       T minPrev = cost[i-1][j];
       if (i1j1 < ij1 && i1j1 < i1j)
       {
@@ -224,7 +224,7 @@ pairwiseDistance(
     }
   }
 
-  data_t result = dropped ? INF : metric->norm(total, x_1, x_2);
+  auto result = dropped ? INF : metric->norm(total, x_1, x_2);
   metric->clean(total);
 
   return result;
@@ -268,7 +268,7 @@ pairwiseDistance(
     }
   }
 
-  data_t result = dropped ? INF : metric->norm(total, x_1, x_2);
+  auto result = dropped ? INF : metric->norm(total, x_1, x_2);
   metric->clean(total);
 
   return result;

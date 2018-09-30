@@ -80,11 +80,11 @@ MAKE_COMMAND(LoadDataset,
       return false;
     }
 
-    string name = args[1];
-    string filePath = args[2];
-    string separators = args.size() > 3 ? args[3] : " ";
-    int maxNumRow = args.size() > 4 ? stoi(args[4]) : 0;
-    int startCol  = args.size() > 5 ? stoi(args[5]) : 0;
+    auto name = args[1];
+    auto filePath = args[2];
+    auto separators = args.size() > 3 ? args[3] : " ";
+    auto maxNumRow = args.size() > 4 ? stoi(args[4]) : 0;
+    auto startCol  = args.size() > 5 ? stoi(args[5]) : 0;
 
     boost::replace_all(separators, "\\s", " ");
 
@@ -124,9 +124,9 @@ MAKE_COMMAND(SaveDataset,
       return false;
     }
 
-    string name = args[1];
-    string filePath = args[2];
-    string separators = args.size() > 3 ? args[3] : " ";
+    auto name = args[1];
+    auto filePath = args[2];
+    auto separators = args.size() > 3 ? args[3] : " ";
     boost::replace_all(separators, "\\s", " ");
     
     gGenexAPI.saveDataset(name, filePath, separators[0]);
@@ -176,7 +176,7 @@ MAKE_COMMAND(List,
 
     if (args[1] == "dataset")
     {
-      vector<genex::dataset_metadata_t> infos = gGenexAPI.getAllDatasetInfo();
+      auto infos = gGenexAPI.getAllDatasetInfo();
       cout << infos.size() << " datasets loaded" << endl << endl;
       for (const auto& i : infos)
       {
@@ -194,7 +194,7 @@ MAKE_COMMAND(List,
       }
     }
     else if (args[1] == "distance") {
-      vector<genex::distance_metadata_t> infos = gGenexAPI.getAllDistanceInfo();
+      auto infos = gGenexAPI.getAllDistanceInfo();
       for (const auto& i : infos)
       {
         cout << " " << setw(10) << i.name << "\t" << i.description << endl;
@@ -260,20 +260,20 @@ MAKE_COMMAND(Distance,
       return false;
     }
 
-    string ds1 = args[1];
-    int idx1 = stoi(args[2]);
-    int start1 = stoi(args[3]);
-    int end1 = stoi(args[4]);
-    string ds2 = args[5];
-    int idx2 = stoi(args[6]);
-    int start2 = stoi(args[7]);
-    int end2 = stoi(args[8]);
-    string distance = "euclidean_dtw";
+    auto ds1 = args[1];
+    auto idx1 = stoi(args[2]);
+    auto start1 = stoi(args[3]);
+    auto end1 = stoi(args[4]);
+    auto ds2 = args[5];
+    auto idx2 = stoi(args[6]);
+    auto start2 = stoi(args[7]);
+    auto end2 = stoi(args[8]);
+    std::string distance = "euclidean_dtw";
     if (args.size() == 10)
     {
       distance = args[9];
     }
-    genex::data_t dist = gGenexAPI.distanceBetween(ds1, idx1, start1, end1, ds2, idx2, start2, end2, distance);
+    auto dist = gGenexAPI.distanceBetween(ds1, idx1, start1, end1, ds2, idx2, start2, end2, distance);
     cout << distance << " distance between " << endl
          << idx1 << " [" << start1 << ", " << end1 << "] from dataset " << ds1 << endl
          << idx2 << " [" << start2 << ", " << end2 << "] from dataset " << ds2 << endl
@@ -303,12 +303,12 @@ MAKE_COMMAND(GroupDataset,
       return false;
     }
 
-    string name = args[1];
+    auto name = args[1];
     genex::data_t threshold = stod(args[2]);
-    string distance_name = args.size() == 4 ? args[3] : "euclidean";
+    auto distance_name = args.size() == 4 ? args[3] : "euclidean";
 
     int count = -1;
-    int maxThreads = std::thread::hardware_concurrency();
+    auto maxThreads = std::thread::hardware_concurrency();
     cout << "Grouping using " << maxThreads << " threads." << endl;
     
     TIME_COMMAND(
@@ -338,8 +338,8 @@ MAKE_COMMAND(SaveGroups,
       return false;
     }
 
-    string name = args[1];
-    string path = args[2];
+    auto name = args[1];
+    auto path = args[2];
     bool groupSizeOnly = args.size() > 3 ? stoi(args[3]) : false;
 
     if (groupSizeOnly) {
@@ -368,10 +368,10 @@ MAKE_COMMAND(LoadGroups,
       return false;
     }
 
-    string name = args[1];
-    string path = args[2];
+    auto name = args[1];
+    auto path = args[2];
 
-    int numGroups = gGenexAPI.loadGroups(name, path);
+    auto numGroups = gGenexAPI.loadGroups(name, path);
 
     cout << numGroups << " groups loaded for dataset " << name;
 
@@ -395,7 +395,7 @@ MAKE_COMMAND(Normalize,
       return false;
     }
 
-    string name = args[1];
+    auto name = args[1];
 
     gGenexAPI.normalizeDataset(name);
 
@@ -416,9 +416,9 @@ MAKE_COMMAND(Sim,
       return false;
     }
 
-    string target_name = args[1];
-    string query_name = args[2];
-    int query_index = stoi(args[3]);
+    auto target_name = args[1];
+    auto query_name = args[2];
+    auto query_index = stoi(args[3]);
     int start = -1;
     int end = -1;
 
@@ -433,7 +433,7 @@ MAKE_COMMAND(Sim,
     }
 
     TIME_COMMAND(
-      genex::candidate_time_series_t best =
+      auto best =
         gGenexAPI.getBestMatch(target_name, query_name, query_index, start, end);
     )
 
@@ -466,9 +466,9 @@ MAKE_COMMAND(KSim,
       return false;
     }
 
-    int k = stoi(args[1]);
-    string target_name = args[2];
-    string query_name = args[3];
+    auto k = stoi(args[1]);
+    auto target_name = args[2];
+    auto query_name = args[3];
     int query_index = stoi(args[4]);
     int start = -1;
     int end = -1;
@@ -530,8 +530,8 @@ MAKE_COMMAND(KSimBF,
     }
 
     int k = stoi(args[1]);
-    string target_name = args[2];
-    string query_name = args[3];
+    auto target_name = args[2];
+    auto query_name = args[3];
     int query_index = stoi(args[4]);
     int start = -1;
     int end = -1;
@@ -585,10 +585,10 @@ MAKE_COMMAND(Print,
       return false;
     }
 
-    string name    = args[1];
-    int index = stoi(args[2]);
-    int start = stoi(args[3]);
-    int end   = stoi(args[4]);
+    auto name  = args[1];
+    auto index = stoi(args[2]);
+    auto start = stoi(args[3]);
+    auto end   = stoi(args[4]);
 
     cout << gGenexAPI.getTimeSeries(name, index, start, end);
 

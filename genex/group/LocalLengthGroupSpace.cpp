@@ -49,9 +49,9 @@ std::atomic<long> gLastTime(duration_cast<seconds>(system_clock::now().time_sinc
 
 int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t threshold)
 {
-  long nowInSec = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
-  long elapsedSeconds = nowInSec - gLastTime;
-  bool doLog = false;
+  auto nowInSec = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
+  auto elapsedSeconds = nowInSec - gLastTime;
+  auto doLog = false;
   if (elapsedSeconds >= LOG_EVERY_S) {
     doLog = true;
     gLastTime = nowInSec;
@@ -59,7 +59,7 @@ int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t 
   if (doLog) {
     cout << "Processing time series space of length " << this->length << endl;
   }
-  int totalTimeSeries = this->subTimeSeriesCount * dataset.getItemCount();
+  auto totalTimeSeries = this->subTimeSeriesCount * dataset.getItemCount();
   int counter = 0;
   for (int start = 0; start < this->subTimeSeriesCount; start++)
   {
@@ -80,7 +80,7 @@ int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t 
 
       for (auto i = 0; i < groups.size(); i++)
       {
-        data_t dist = this->groups[i]->distanceFromCentroid(query, pairwiseDistance, bestSoFar);
+        auto dist = this->groups[i]->distanceFromCentroid(query, pairwiseDistance, bestSoFar);
         if (dist < bestSoFar)
         {
           bestSoFar = dist;
@@ -91,7 +91,7 @@ int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t 
       if (bestSoFar > threshold / 2 || this->groups.size() == 0)
       {
         bestSoFarIndex = this->groups.size();
-        int newGroupIndex = this->groups.size();
+        auto newGroupIndex = this->groups.size();
         this->groups.push_back(new Group(newGroupIndex
                                          , this->length
                                          , this->subTimeSeriesCount
@@ -162,10 +162,10 @@ candidate_group_t LocalLengthGroupSpace::getBestGroup(const TimeSeries& query,
   const dist_t warpedDistance,
   data_t dropout) const
 {
-  data_t bestSoFarDist = dropout;
+  auto bestSoFarDist = dropout;
   const Group* bestSoFarGroup = nullptr;
   for (auto i = 0; i < groups.size(); i++) {
-    data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
+    auto dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
     if (dist < bestSoFarDist) {
       bestSoFarDist = dist;
       bestSoFarGroup = groups[i];
@@ -183,10 +183,10 @@ int LocalLengthGroupSpace::interLevelKSim(const TimeSeries& query,
   for (auto i = 0; i < groups.size(); i++) {
       if (k <= 0) // if heap is full, keep only sum-k groups
       {
-        data_t bestSoFarDist = bestSoFar.front().dist;
-        data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
+        auto bestSoFarDist = bestSoFar.front().dist;
+        auto dist = groups[i]->distanceFromCentroid(query, warpedDistance, bestSoFarDist);
         if (dist < bestSoFarDist) {
-          int membersAdded = groups[i]->getCount();
+          auto membersAdded = groups[i]->getCount();
           bestSoFar.push_back(group_index_t(this->length, i, membersAdded, dist));
           std::push_heap(bestSoFar.begin(), bestSoFar.end());
           k -= membersAdded;
@@ -201,8 +201,8 @@ int LocalLengthGroupSpace::interLevelKSim(const TimeSeries& query,
       }
       else // heap is not full, directly add to heap.
       {
-        int membersAdded = groups[i]->getCount();
-        data_t dist = groups[i]->distanceFromCentroid(query, warpedDistance, INF);
+        auto membersAdded = groups[i]->getCount();
+        auto dist = groups[i]->distanceFromCentroid(query, warpedDistance, INF);
         bestSoFar.push_back(group_index_t(this->length, i, membersAdded, dist));
         k -= membersAdded;
         if (k <= 0) {

@@ -118,7 +118,7 @@ vector<dataset_metadata_t> GenexAPI::getAllDatasetInfo()
 
 vector<distance_metadata_t> GenexAPI::getAllDistanceInfo()
 {
-  const vector<string>& allDistanceName = getAllDistanceName();
+  const auto& allDistanceName = getAllDistanceName();
   vector<distance_metadata_t> info;
   for (auto name : allDistanceName)
   {
@@ -195,7 +195,7 @@ GenexAPI::getKBestMatches(int k, int ke, const string& target_name, const string
   this->_checkDatasetName(target_name);
   this->_checkDatasetName(query_name);
 
-  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  const auto& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
   return _loadedDatasets[target_name]->getKBestMatches(query, k, ke);
 }
 
@@ -206,7 +206,7 @@ GenexAPI::getKBestMatchesBruteForce(int k, const string& target_name, const stri
   this->_checkDatasetName(target_name);
   this->_checkDatasetName(query_name);
 
-  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  const auto& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
   return _loadedDatasets[target_name]->getKBestMatchesBruteForce(query, k, distance);
 }
 
@@ -232,7 +232,7 @@ GenexAPI::getKBestMatchesPAA(int k, const string& target_name, const string& que
   if (this->_paaWrappers.find(target_name) == this->_paaWrappers.end()) {
     throw GenexException("Dataset is not prepared for PAA");
   }
-  const TimeSeries& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
+  const auto& query = _loadedDatasets[query_name]->getTimeSeries(index, start, end);
   return this->_paaWrappers[target_name]->getKBestMatchesPAA(query, k, distance);
 }
 
@@ -242,8 +242,8 @@ data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int 
 {
   this->_checkDatasetName(name1);
   this->_checkDatasetName(name2);
-  TimeSeries ts1 = this->_loadedDatasets[name1]->getTimeSeries(idx1, start1, end1);
-  TimeSeries ts2 = this->_loadedDatasets[name2]->getTimeSeries(idx2, start2, end2);  
+  auto ts1 = this->_loadedDatasets[name1]->getTimeSeries(idx1, start1, end1);
+  auto ts2 = this->_loadedDatasets[name2]->getTimeSeries(idx2, start2, end2);  
   const dist_t distance = getDistanceFromName(distance_name);
   return distance(ts1, ts2, INF, gNoMatching);
 }

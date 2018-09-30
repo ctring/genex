@@ -104,11 +104,11 @@ vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
 
   vector<candidate_time_series_t> bestSoFar;
 
-  dist_t warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
+  auto warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
-  int timeSeriesLength = dataset.getItemLength();
-  int numberTimeSeries = dataset.getItemCount();
-  TimeSeries paaQuery = tsPAA(query, this->blockSize);
+  auto timeSeriesLength = dataset.getItemLength();
+  auto numberTimeSeries = dataset.getItemCount();
+  auto paaQuery = tsPAA(query, this->blockSize);
 
   // iterate through every timeseries
   for (int idx = 0; idx < numberTimeSeries; idx++)
@@ -121,8 +121,8 @@ vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
       for (int start = 0; start <= timeSeriesLength - intervalLength; 
             start++) 
       {
-        TimeSeries currentTimeSeries = dataset.getTimeSeries(idx, start, start + intervalLength);
-        TimeSeries currentPAATimeSeries = getPAA(idx, start, start + intervalLength);
+        auto currentTimeSeries = dataset.getTimeSeries(idx, start, start + intervalLength);
+        auto currentPAATimeSeries = getPAA(idx, start, start + intervalLength);
         if (k > 0) {
           currentDist = warpedDistance(
             paaQuery, currentPAATimeSeries, INF, gNoMatching);

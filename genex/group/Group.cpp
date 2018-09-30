@@ -30,8 +30,7 @@ void Group::setCentroid(int tsIndex, int tsStart)
 
 data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout)
 {
-  data_t d = distance(this->centroid, query, dropout, gNoMatching);
-  return d;
+  return distance(this->centroid, query, dropout, gNoMatching);
 }
 
 candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_t warpedDistance) const
@@ -43,8 +42,8 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
 
   while (currentMemberCoord.first != -1)
   {
-    int currIndex = currentMemberCoord.first;
-    int currStart = currentMemberCoord.second;
+    auto currIndex = currentMemberCoord.first;
+    auto currStart = currentMemberCoord.second;
 
     TimeSeries currentTimeSeries = 
       this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
@@ -61,8 +60,8 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
       this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;
   }
 
-  int bestIndex = bestSoFarMember.first;
-  int bestStart = bestSoFarMember.second;
+  auto bestIndex = bestSoFarMember.first;
+  auto bestStart = bestSoFarMember.second;
   TimeSeries bestTimeSeries = this->dataset.getTimeSeries(bestIndex, bestStart, bestStart + this->memberLength);
   candidate_time_series_t best(bestTimeSeries, bestSoFarDist);
 
@@ -80,8 +79,8 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
 
   while (currentMemberCoord.first != -1)
   {
-    int currIndex = currentMemberCoord.first;
-    int currStart = currentMemberCoord.second;
+    auto currIndex = currentMemberCoord.first;
+    auto currStart = currentMemberCoord.second;
 
     TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
 
@@ -90,7 +89,7 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
 
     if (k > 0) // directly add to best 
     {
-      data_t currentDistance = 
+      auto currentDistance = 
         warpedDistance(query, currentTimeSeries, INF, gNoMatching);
       bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDistance));
       k -= 1;      
@@ -102,7 +101,7 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
     else // heap is full, keep only best k'
     { 
       bestSoFarDist = bestSoFar.front().dist;
-      data_t currentDistance = 
+      auto currentDistance = 
         warpedDistance(query, currentTimeSeries, bestSoFarDist, gNoMatching); 
 
       if (currentDistance < bestSoFarDist) 
@@ -123,13 +122,14 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
 vector<TimeSeries> Group::getMembers() const
 {
   vector<TimeSeries> members;
-  member_coord_t currentMemberCoord = this->lastMemberCoord;
+  auto currentMemberCoord = this->lastMemberCoord;
   while (currentMemberCoord.first != -1)
   {
-    int currIndex = currentMemberCoord.first;
-    int currStart = currentMemberCoord.second;
+    auto currIndex = currentMemberCoord.first;
+    auto currStart = currentMemberCoord.second;
 
-    TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
+    auto currentTimeSeries = 
+      this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
     members.push_back(currentTimeSeries);
     currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;
   }
@@ -143,7 +143,7 @@ void Group::saveGroupOld(ofstream &fout) const
   // Members in the group, represented by <index, start> pairs
   fout << this->centroid << endl;
   fout << this->count << " ";
-  member_coord_t currentMemberCoord = this->lastMemberCoord;
+  auto currentMemberCoord = this->lastMemberCoord;
   while (currentMemberCoord.first != -1)
   {
     int currIndex = currentMemberCoord.first;
