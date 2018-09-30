@@ -124,7 +124,8 @@ vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
         TimeSeries currentTimeSeries = dataset.getTimeSeries(idx, start, start + intervalLength);
         TimeSeries currentPAATimeSeries = getPAA(idx, start, start + intervalLength);
         if (k > 0) {
-          currentDist = warpedDistance(paaQuery, currentPAATimeSeries, INF);
+          currentDist = warpedDistance(
+            paaQuery, currentPAATimeSeries, INF, gNoMatching);
           bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
           k--;
           if (k == 0) {
@@ -135,7 +136,8 @@ vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
         else
         {
           bestSoFarDist = bestSoFar.front().dist;
-          currentDist = warpedDistance(paaQuery, currentPAATimeSeries, bestSoFarDist);
+          currentDist = warpedDistance(
+            paaQuery, currentPAATimeSeries, bestSoFarDist, gNoMatching);
           if (currentDist < bestSoFarDist)
           {
             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));

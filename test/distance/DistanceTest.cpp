@@ -54,13 +54,13 @@ BOOST_AUTO_TEST_CASE( general_distance, *boost::unit_test::tolerance(TOLERANCE) 
   TimeSeries ts_1(data.dat_1, 0, 0, 5);
   TimeSeries ts_2(data.dat_2, 0, 0, 5);
 
-  data_t total_1 = data.euclidean_dist(ts_1, ts_2, INF);
+  data_t total_1 = data.euclidean_dist(ts_1, ts_2, INF, gNoMatching);
   BOOST_TEST( total_1, 2.0 );
 
-  data_t total_2 = data.manhattan_dist(ts_1, ts_2, INF);
+  data_t total_2 = data.manhattan_dist(ts_1, ts_2, INF, gNoMatching);
   BOOST_TEST( total_2, 2.0 );
 
-  data_t total_3 = data.chebyshev_dist(ts_1, ts_2, INF);
+  data_t total_3 = data.chebyshev_dist(ts_1, ts_2, INF, gNoMatching);
   BOOST_TEST( total_3, 10.0 );
 }
 
@@ -81,35 +81,35 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
 
   setWarpingBandRatio(1.0);
 
-  data_t total_0 = data.euclidean_warped_dist(ts_1, ts_2, INF);
+  data_t total_0 = data.euclidean_warped_dist(ts_1, ts_2, INF, gNoMatching);
   BOOST_TEST( total_0 == sqrt(100.0) / (2 * 2) );
 
-  data_t total_1 = data.euclidean_warped_dist(ts_3, ts_4, INF);
+  data_t total_1 = data.euclidean_warped_dist(ts_3, ts_4, INF, gNoMatching);
   BOOST_TEST( total_1 == 0.0 );
 
-  data_t total_2 = data.manhattan_warped_dist(ts_3, ts_4, INF);
+  data_t total_2 = data.manhattan_warped_dist(ts_3, ts_4, INF, gNoMatching);
   BOOST_TEST( total_2 == 0.0 );
 
-  data_t total_3 = data.chebyshev_warped_dist(ts_3, ts_4, INF);
+  data_t total_3 = data.chebyshev_warped_dist(ts_3, ts_4, INF, gNoMatching);
   BOOST_TEST( total_3 == 0.0 );
 
-  data_t total_4 = data.euclidean_warped_dist(ts_5, ts_6, INF);
+  data_t total_4 = data.euclidean_warped_dist(ts_5, ts_6, INF, gNoMatching);
   BOOST_TEST( total_4 == sqrt(1.0) / (2 * 4.0) );
 
-  data_t total_5 = data.manhattan_warped_dist(ts_5, ts_6, INF);
+  data_t total_5 = data.manhattan_warped_dist(ts_5, ts_6, INF, gNoMatching);
   BOOST_TEST( total_5 == 1.0/ (2 * 4.0) );
 
-  data_t total_6 = data.chebyshev_warped_dist(ts_5, ts_6, INF);
+  data_t total_6 = data.chebyshev_warped_dist(ts_5, ts_6, INF, gNoMatching);
   BOOST_TEST( total_6 == 1.0 );
 
-  data_t total_7 = data.euclidean_warped_dist(ts_11, ts_12, INF);
+  data_t total_7 = data.euclidean_warped_dist(ts_11, ts_12, INF, gNoMatching);
   data_t result_7 = sqrt(12.0)/ (2 * 7);
   BOOST_TEST( total_7 == result_7 );
 
-  data_t total_8 = data.manhattan_warped_dist(ts_11, ts_12, INF);
+  data_t total_8 = data.manhattan_warped_dist(ts_11, ts_12, INF, gNoMatching);
   BOOST_TEST( total_8 == 8.0 / (2 * 7) );
 
-  data_t total_9 = data.chebyshev_warped_dist(ts_11, ts_12, INF);
+  data_t total_9 = data.chebyshev_warped_dist(ts_11, ts_12, INF, gNoMatching);
   BOOST_TEST( total_9 == (2.0) );
 }
 
@@ -122,19 +122,19 @@ BOOST_AUTO_TEST_CASE( easy_gwd_dropout, *boost::unit_test::tolerance(TOLERANCE) 
   TimeSeries ts_7{data.dat_7, 0, 0, 4};
   TimeSeries ts_8{data.dat_8, 0, 0, 4};
 
-  data_t total_1 = data.euclidean_warped_dist(ts_3, ts_4, 5);
+  data_t total_1 = data.euclidean_warped_dist(ts_3, ts_4, 5, gNoMatching);
   BOOST_TEST( total_1 == 0.0 );
 
-  data_t total_2 = data.manhattan_warped_dist(ts_3, ts_4, 5);
+  data_t total_2 = data.manhattan_warped_dist(ts_3, ts_4, 5, gNoMatching);
   BOOST_TEST( total_2 == 0.0 );
 
-  data_t total_3 = data.chebyshev_warped_dist(ts_3, ts_4, 5);
+  data_t total_3 = data.chebyshev_warped_dist(ts_3, ts_4, 5, gNoMatching);
   BOOST_TEST( total_3 == 0.0 );
 
-  data_t total_5 = data.manhattan_warped_dist(ts_7, ts_8, 5);
+  data_t total_5 = data.manhattan_warped_dist(ts_7, ts_8, 5, gNoMatching);
   BOOST_TEST( isinf(total_5) );
 
-  data_t total_6 = data.chebyshev_warped_dist(ts_7, ts_8, 5);
+  data_t total_6 = data.chebyshev_warped_dist(ts_7, ts_8, 5, gNoMatching);
   BOOST_TEST( isinf(total_6) );
 }
 
@@ -144,13 +144,13 @@ BOOST_AUTO_TEST_CASE( gwd_different_distances, *boost::unit_test::tolerance(TOLE
   TimeSeries ts_9{data.dat_9, 0, 0, 6};
   TimeSeries ts_10{data.dat_10, 0, 0, 6};
 
-  data_t total_1 = data.euclidean_warped_dist(ts_9, ts_10, INF);
+  data_t total_1 = data.euclidean_warped_dist(ts_9, ts_10, INF, gNoMatching);
   BOOST_TEST( total_1 == sqrt(9.0)/(2 * 6) );
 
-  data_t total_2 = data.manhattan_warped_dist(ts_9, ts_10, INF);
+  data_t total_2 = data.manhattan_warped_dist(ts_9, ts_10, INF, gNoMatching);
   BOOST_TEST( total_2 == 7.0/ (2 * 6) );
 
-  data_t total_3 = data.chebyshev_warped_dist(ts_9, ts_10, INF);
+  data_t total_3 = data.chebyshev_warped_dist(ts_9, ts_10, INF, gNoMatching);
   BOOST_TEST( total_3 == 2.0 );
 }
 

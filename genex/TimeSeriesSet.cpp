@@ -311,7 +311,8 @@ vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
       {
         TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);
         if (k > 0) {
-          currentDist = warpedDistance(query, currentTimeSeries, INF);
+          currentDist = warpedDistance(
+            query, currentTimeSeries, INF, gNoMatching);
           bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));
           k--;
           if (k == 0) {
@@ -322,7 +323,8 @@ vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
         else
         {
           bestSoFarDist = bestSoFar.front().dist;
-          currentDist = warpedDistance(query, currentTimeSeries, bestSoFarDist);
+          currentDist = warpedDistance(
+            query, currentTimeSeries, bestSoFarDist, gNoMatching);
           if (currentDist < bestSoFarDist)
           { 
             bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDist));

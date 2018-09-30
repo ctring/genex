@@ -24,7 +24,9 @@ using std::pair;
 
 namespace genex {
 
-typedef data_t (*dist_t)(const TimeSeries&, const TimeSeries&, data_t);
+using matching_t = std::vector<std::pair<int, int>>;
+using dist_t = 
+    data_t (*)(const TimeSeries&, const TimeSeries&, data_t, matching_t&);
 
 int calculateWarpingBandSize(int length);
 void setWarpingBandRatio(double ratio);
@@ -69,15 +71,21 @@ template <class T> struct hasInverseNorm
 
 /**
  *  @brief returns the warped distance between two sets of data
- *
+ *  In this implementation, we are only supporting sum-based distances
+ *  such as Euclidean or Manhattan.
  *  @param metric the distance metric to use
  *  @param a one of the two arrays of data
  *  @param b the other of the two arrays of data
  *  @param dropout drops the calculation of distance if within this
  */
 template<typename DM, typename T>
-data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
+data_t warpedDistance(
+  const TimeSeries& a, 
+  const TimeSeries& b, 
+  data_t dropout, 
+  matching_t& matching)
 {
+  bool computeMatching = matching.empty(); 
   int m = a.getLength();
   int n = b.getLength();
   int r = calculateWarpingBandSize(max(m, n));
@@ -185,7 +193,11 @@ data_t warpedDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
  */
 template<typename DM, typename T>
 typename std::enable_if<!hasInverseNorm<DM>::value, data_t>::type
-pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
+pairwiseDistance(
+  const TimeSeries& x_1, 
+  const TimeSeries& x_2, 
+  data_t dropout, 
+  matching_t& /* not used */)
 {
   if (x_1.getLength() != x_2.getLength())
   {
@@ -224,7 +236,11 @@ pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
  */
 template<typename DM, typename T>
 typename std::enable_if<hasInverseNorm<DM>::value, data_t>::type
-pairwiseDistance(const TimeSeries& x_1, const TimeSeries& x_2, data_t dropout)
+pairwiseDistance(
+  const TimeSeries& x_1, 
+  const TimeSeries& x_2, 
+  data_t dropout,
+  matching_t& /* not used */)
 {
   if (x_1.getLength() != x_2.getLength())
   {
@@ -268,8 +284,14 @@ data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dro
 /**
  * ...
  */
-data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout);
+data_t cascadeDistance(
+  const TimeSeries& a, 
+  const TimeSeries& b, 
+  data_t dropout, 
+  matching_t& matching);
 
+// Dummy variable to use when no matching is needed to be returned
+extern matching_t gNoMatching;
 } // namespace genex
 
 #endif // DISTANCE_H

@@ -30,7 +30,7 @@ void Group::setCentroid(int tsIndex, int tsStart)
 
 data_t Group::distanceFromCentroid(const TimeSeries& query, const dist_t distance, data_t dropout)
 {
-  data_t d = distance(this->centroid, query, dropout);
+  data_t d = distance(this->centroid, query, dropout, gNoMatching);
   return d;
 }
 
@@ -46,8 +46,10 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
     int currIndex = currentMemberCoord.first;
     int currStart = currentMemberCoord.second;
 
-    TimeSeries currentTimeSeries = this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
-    data_t currentDistance = warpedDistance(query, currentTimeSeries, bestSoFarDist);
+    TimeSeries currentTimeSeries = 
+      this->dataset.getTimeSeries(currIndex, currStart, currStart + this->memberLength);
+    data_t currentDistance = 
+      warpedDistance(query, currentTimeSeries, bestSoFarDist, gNoMatching);
 
     if (currentDistance < bestSoFarDist)
     {
@@ -55,7 +57,8 @@ candidate_time_series_t Group::getBestMatch(const TimeSeries& query, const dist_
       bestSoFarMember = currentMemberCoord;
     }
 
-    currentMemberCoord = this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;
+    currentMemberCoord = 
+      this->memberMap[currIndex * this->subTimeSeriesCount + currStart].prev;
   }
 
   int bestIndex = bestSoFarMember.first;
@@ -87,7 +90,8 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
 
     if (k > 0) // directly add to best 
     {
-      data_t currentDistance = warpedDistance(query, currentTimeSeries, INF);
+      data_t currentDistance = 
+        warpedDistance(query, currentTimeSeries, INF, gNoMatching);
       bestSoFar.push_back(candidate_time_series_t(currentTimeSeries, currentDistance));
       k -= 1;      
       if (k == 0) {
@@ -98,7 +102,8 @@ vector<candidate_time_series_t> Group::intraGroupKSim(
     else // heap is full, keep only best k'
     { 
       bestSoFarDist = bestSoFar.front().dist;
-      data_t currentDistance = warpedDistance(query, currentTimeSeries, bestSoFarDist); 
+      data_t currentDistance = 
+        warpedDistance(query, currentTimeSeries, bestSoFarDist, gNoMatching); 
 
       if (currentDistance < bestSoFarDist) 
       { 

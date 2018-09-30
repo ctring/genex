@@ -59,7 +59,8 @@ void GlobalGroupSpace::_loadDistance(const string& distance_name)
 int GlobalGroupSpace::_group(int i)
 {
   this->localLengthGroupSpace[i] = new LocalLengthGroupSpace(this->dataset, i);
-  int noOfGenerated = this->localLengthGroupSpace[i]->generateGroups(this->pairwiseDistance, this->threshold);
+  int noOfGenerated = 
+    this->localLengthGroupSpace[i]->generateGroups(this->pairwiseDistance, this->threshold);
   return noOfGenerated;
 }
 
@@ -132,7 +133,8 @@ data_t GlobalGroupSpace::getThreshold() const
   return this->threshold;
 }
 
-candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
+candidate_time_series_t 
+GlobalGroupSpace::getBestMatch(const TimeSeries& query)
 {
   if (query.getLength() <= 1) {
     throw GenexException("Length of query must be larger than 1");
@@ -140,12 +142,15 @@ candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
   data_t bestSoFarDist = INF;
   const Group* bestSoFarGroup = nullptr;
 
-  vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
+  vector<int> order (
+    generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
   for (auto io = 0; io < order.size(); io++) {
     int i = order[io];
     if (this->localLengthGroupSpace[i] != nullptr) {
       // this looks through each group of a certain length finding the best of those groups
-      candidate_group_t candidate = this->localLengthGroupSpace[i]->getBestGroup(query, this->warpedDistance, bestSoFarDist);
+      candidate_group_t candidate = 
+        this->localLengthGroupSpace[i]->getBestGroup(
+          query, this->warpedDistance, bestSoFarDist);
       if (candidate.second < bestSoFarDist)
       {
         bestSoFarGroup = candidate.first;
@@ -156,14 +161,16 @@ candidate_time_series_t GlobalGroupSpace::getBestMatch(const TimeSeries& query)
   return bestSoFarGroup->getBestMatch(query, this->warpedDistance);
 }
 
-std::vector<candidate_time_series_t> GlobalGroupSpace::getKBestMatches(const TimeSeries& query, int k)
+std::vector<candidate_time_series_t> 
+GlobalGroupSpace::getKBestMatches(const TimeSeries& query, int k)
 {
   std::vector<candidate_time_series_t> best;
   std::vector<group_index_t> bestSoFar;
   int kPrime = k;
   
   // process each group of a certain length keeping top sum-k groups
-  vector<int> order (generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
+  vector<int> order(
+    generateTraverseOrder(query.getLength(), this->localLengthGroupSpace.size() - 1));
   for (auto io = 0; io < order.size(); io++) 
   {
     int i = order[io];
@@ -201,7 +208,7 @@ std::vector<candidate_time_series_t> GlobalGroupSpace::getKBestMatches(const Tim
   }
 
   for (auto i = 0; i < best.size(); i++) {
-    best[i].dist = this->warpedDistance(query, best[i].data, INF);
+    best[i].dist = this->warpedDistance(query, best[i].data, INF, gNoMatching);
   }
 
   return best;

@@ -143,7 +143,11 @@ data_t crossKeoghLowerBound(const TimeSeries& a, const TimeSeries& b, data_t dro
   }
 }
 
-data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
+data_t cascadeDistance(
+  const TimeSeries& a, 
+  const TimeSeries& b, 
+  data_t dropout, 
+  matching_t& matching)
 {
   data_t lb = kimLowerBound(a, b, dropout);
   if (lb > dropout) {
@@ -153,8 +157,10 @@ data_t cascadeDistance(const TimeSeries& a, const TimeSeries& b, data_t dropout)
   if (lb > dropout) {
     return INF;
   }
-  data_t d = warpedDistance<Euclidean, data_t>(a, b, dropout);
+  data_t d = warpedDistance<Euclidean, data_t>(a, b, dropout, matching);
   return d;
 }
+
+matching_t gNoMatching {{0, 0}};
 
 } // namespace genex
