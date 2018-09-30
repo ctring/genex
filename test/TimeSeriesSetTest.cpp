@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_space, *boost::unit_test::tolerance(T
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 10 );
   BOOST_CHECK( tsSet.getFilePath() == data.test_10_20_space );
 
-  TimeSeries ts = tsSet.getTimeSeries(0);
+  auto ts = tsSet.getTimeSeries(0);
   BOOST_TEST( ts[0] == 3.029296875 );
   BOOST_TEST( ts[ts.getLength() - 1] == 2.537109375);
 
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_comma, *boost::unit_test::tolerance(T
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 15 );
   BOOST_CHECK( tsSet.getFilePath() == data.test_15_20_comma );
 
-  TimeSeries ts = tsSet.getTimeSeries(0);
+  auto ts = tsSet.getTimeSeries(0);
   BOOST_TEST( ts[0] == 4.122284712 );
   BOOST_TEST( ts[ts.getLength() - 1] == 2.684802835);
 }
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE( time_series_set_load_omit_rows_and_columns )
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 15 );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), 5 );
 
-  TimeSeries ts = tsSet.getTimeSeries(0);
+  auto ts = tsSet.getTimeSeries(0);
   BOOST_TEST( ts[0] == 2.656250000 );
   BOOST_TEST( ts[ts.getLength() - 1] == 2.537109375);
 
@@ -141,11 +141,11 @@ BOOST_AUTO_TEST_CASE( normalize, *boost::unit_test::tolerance(TOLERANCE) )
 {
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_5_10_space, 10, 0, " ");
-  std::pair<data_t, data_t> min_max = tsSet.normalize();
+  auto min_max = tsSet.normalize();
   BOOST_TEST( min_max.first == 1 );
   BOOST_TEST( min_max.second == 11 );
 
-  TimeSeries t = tsSet.getTimeSeries(0);
+  auto t = tsSet.getTimeSeries(0);
   for(int i = 0; i < tsSet.getItemLength(); i++)
   {
     BOOST_TEST( t[i] == (i)/10.0 );
@@ -156,7 +156,7 @@ BOOST_AUTO_TEST_CASE( normalize_2, *boost::unit_test::tolerance(TOLERANCE) )
 {
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_11_space, 11, 0, " ");
-  std::pair<data_t, data_t> min_max = tsSet.normalize();
+  auto min_max = tsSet.normalize();
   BOOST_TEST( min_max.first == 1 );
   BOOST_TEST( min_max.second == 21 );
 
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE( basic_k_exhaustive )
 {
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_3_10_space, 20, 0, " ");
-  std::vector<candidate_time_series_t> best = tsSet.getKBestMatchesBruteForce(tsSet.getTimeSeries(0), 1);
+  auto best = tsSet.getKBestMatchesBruteForce(tsSet.getTimeSeries(0), 1);
   BOOST_TEST( best[0].dist == 0.0 );
 }
 
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE( read_time_series_name, *boost::unit_test::tolerance(TOLERA
   BOOST_CHECK_EQUAL( tsSet.getTimeSeriesName(4), "emma emma" );
   BOOST_CHECK_EQUAL( tsSet.getItemLength(), 10 );
 
-  TimeSeries ts = tsSet.getTimeSeries(2);
+  auto ts = tsSet.getTimeSeries(2);
   BOOST_TEST( ts[0] == 2.0 );
   BOOST_TEST( ts[1] == 3.0 );
   BOOST_TEST( ts[2] == 4.0 );

@@ -27,9 +27,18 @@ find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
 
 # include Boost
+# From FindBoost documentation:
+# "Note that Boost Python components require a Python version suffix
+# (Boost 1.67 and later), e.g. ``python36`` or ``python27`` for the
+# versions built against Python 3.6 and 2.7, respectively.  This also
+# applies to additional components using Python including
+# ``mpi_python`` and ``numpy``.  Earlier Boost releases may use
+# distribution-specific suffixes such as ``2``, ``3`` or ``2.7``.
+# These may also be used as suffixes, but note that they are not
+# portable.""
 set(BOOST_COMPONENTS serialization iostreams)
 if (BUILD_PYGENEX)
-  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python)
+  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python27)
 endif()
 if (BUILD_TESTS)
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} unit_test_framework)
