@@ -38,7 +38,7 @@ include_directories(${Readline_INCLUDE_DIRS})
 # portable.""
 set(BOOST_COMPONENTS serialization iostreams)
 if (BUILD_PYGENEX)
-  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python27)
+  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python)
 endif()
 if (BUILD_TESTS)
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} unit_test_framework)
