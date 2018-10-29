@@ -115,8 +115,44 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
   matching_t matching_1 = {};
   matching_t matching_1_test = {{1, 1}, {0, 0}};
   data_t total_10 = data.euclidean_warped_dist(ts_1, ts_2, INF, matching_1);
-  BOOST_TEST( total_0 == sqrt(100.0) / (2 * 2) );
-  BOOST_TEST( matching_1 ==  matching_1_test);
+  BOOST_TEST( total_10 == sqrt(100.0) / (2 * 2) );
+  BOOST_TEST( matching_1 == matching_1_test);
+
+  matching_t matching_2 = {};
+  matching_t matching_2_test = {{1, 4}, {1, 3}, {0, 2}, {0, 1}, {0, 0}};
+  data_t total_11 = data.euclidean_warped_dist(ts_3, ts_4, INF, matching_2);
+  BOOST_TEST( total_11 == 0 );
+  BOOST_TEST( matching_2 == matching_2_test);
+
+  matching_t matching_3 = {};
+  matching_t matching_3_test = {{1, 4}, {1, 3}, {0, 2}, {0, 1}, {0, 0}};
+  data_t total_12 = data.manhattan_warped_dist(ts_3, ts_4, INF, matching_3);
+  BOOST_TEST( total_12 == 0 );
+  BOOST_TEST( matching_3 == matching_3_test);
+
+  matching_t matching_4 = {};
+  matching_t matching_4_test = {{1, 4}, {1, 3}, {0, 2}, {0, 1}, {0, 0}};
+  data_t total_13 = data.chebyshev_warped_dist(ts_3, ts_4, INF, matching_4);
+  BOOST_TEST( total_13 == 0 );
+  BOOST_TEST( matching_4 == matching_4_test);
+
+  matching_t matching_5 = {};
+  matching_t matching_5_test = {{3, 3}, {3, 2}, {2, 1}, {1, 1}, {0, 0}};
+  data_t total_14 = data.euclidean_warped_dist(ts_5, ts_6, INF, matching_5);
+  BOOST_TEST( total_14 == sqrt(1.0) / (2 * 4.0) );
+  BOOST_TEST( matching_5 == matching_5_test);
+
+  matching_t matching_6 = {};
+  matching_t matching_6_test = {{3, 3}, {3, 2}, {2, 1}, {1, 1}, {0, 0}};
+  data_t total_15 = data.manhattan_warped_dist(ts_5, ts_6, INF, matching_6);
+  BOOST_TEST( total_15 == sqrt(1.0) / (2 * 4.0) );
+  BOOST_TEST( matching_6 == matching_6_test);
+  
+  matching_t matching_7 = {};
+  matching_t matching_7_test = {{3, 3}, {3, 2}, {2, 1}, {1, 1}, {0, 0}};
+  data_t total_16 = data.chebyshev_warped_dist(ts_5, ts_6, INF, matching_7);
+  BOOST_TEST( total_16 == 1.0 );
+  BOOST_TEST( matching_7 == matching_7_test);
 }
 
 BOOST_AUTO_TEST_CASE( easy_gwd_dropout, *boost::unit_test::tolerance(TOLERANCE) )
