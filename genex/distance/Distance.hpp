@@ -24,7 +24,8 @@ using std::pair;
 
 namespace genex {
 
-using matching_t = std::vector<std::pair<int, int>>;
+using pair_t = std::pair<int, int>;
+using matching_t = std::vector<pair_t>;
 using dist_t = 
     data_t (*)(const TimeSeries&, const TimeSeries&, data_t, matching_t&);
 
@@ -176,6 +177,34 @@ data_t warpedDistance(
   {
     result = ncost[m - 1][n - 1];
   }
+
+  int i = m - 1;
+  int j = n - 1;
+  while ((i != 0) || (j != 0)) {
+    matching.push_back(pair_t {i, j});
+    if (!i)
+      j--;
+    
+    else if (!j)
+      i--;
+    
+    else {
+      double minNeighbor = std::min(ncost[i - 1][j - 1]
+                                    , std::min(ncost[i - 1][j]
+                                               , ncost[i][j - 1])
+                                    );
+      if (ncost[i - 1][j - 1] == minNeighbor) {
+        i--;
+        j--;
+      }
+      else if (ncost[i - 1][j] == minNeighbor)
+        i--;
+      else if (ncost[i][j - 1] == minNeighbor)
+        j--;
+    }
+  }
+  matching.push_back(pair_t {0, 0});
+  
   for(int i = 1; i < m; i++)
   {
     for(int j = 1; j < n; j++)

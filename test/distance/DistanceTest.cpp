@@ -111,6 +111,12 @@ BOOST_AUTO_TEST_CASE( easy_general_warped_distance, *boost::unit_test::tolerance
 
   data_t total_9 = data.chebyshev_warped_dist(ts_11, ts_12, INF, gNoMatching);
   BOOST_TEST( total_9 == (2.0) );
+
+  matching_t matching_1 = {};
+  matching_t matching_1_test = {{1, 1}, {0, 0}};
+  data_t total_10 = data.euclidean_warped_dist(ts_1, ts_2, INF, matching_1);
+  BOOST_TEST( total_0 == sqrt(100.0) / (2 * 2) );
+  BOOST_TEST( matching_1 ==  matching_1_test);
 }
 
 BOOST_AUTO_TEST_CASE( easy_gwd_dropout, *boost::unit_test::tolerance(TOLERANCE) )
