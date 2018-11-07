@@ -229,6 +229,33 @@ data_t distance(const string& name1, int idx1, int start1, int end1,
 }
 
 /**
+ *  @brief computes dtw matchings between 2 time series.
+ * 
+ *  @param name1 dataset name of the first time series
+ *  @param idx1 index of the first time series
+ *  @param start1 starting position of the first time series
+ *  @param end1 ending position of the first time series
+ *  @param name2 dataset name of the second time series
+ *  @param idx2 index of the second time series
+ *  @param start2 starting position of the second time series
+ *  @param end2 ending position of the second time series
+ *  @param distanceName name of the distance being used in the calculation
+ *  @return distance between the 2 time series
+ */
+py::list getMatching(const string& name1, int idx1, int start1, int end1
+                     , const string& name2, int idx2, int start2, int end2
+                     , const string& distanceName)
+{
+  auto matching = genexAPI.matchingBetween(name1, idx1, start1, end1,
+                                      name2, idx2, start2, end2,
+                                      distanceName);
+  py::list res;
+  for(auto coordinates : matching) {
+    res.append(py::make_tuple(coordinates.first, coordinates.second));
+  }
+  return res;
+}
+/**
  *  @brief gets a single similar time series to the query
  * 
  *  If both 'start' and 'end' are smaller than 0. The whole time series is selected.
@@ -415,6 +442,7 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("saveGroupsSize", saveGroupsSize);
   py::def("loadGroups", loadGroups);
   py::def("distance", distance);
+  py::def("getMatching", getMatching, (py::arg("start2")=-1, py::arg("end2")=-1));
   py::def("sim", sim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksim", ksim, (py::arg("start")=-1, py::arg("end")=-1));
   py::def("ksimbf", ksimbf, (py::arg("start")=-1, py::arg("end")=-1, py::arg("distance")="euclidean"));  

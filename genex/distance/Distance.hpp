@@ -208,7 +208,7 @@ data_t warpedDistance(
     }
   }
   matching.push_back(coord_t {0, 0});
-  
+  std::reverse(matching.begin(), matching.end());
   for(int i = 1; i < m; i++)
   {
     for(int j = 1; j < n; j++)
