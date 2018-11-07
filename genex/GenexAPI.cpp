@@ -248,6 +248,23 @@ data_t GenexAPI::distanceBetween(const string& name1, int idx1, int start1, int 
   return distance(ts1, ts2, INF, gNoMatching);
 }
 
+matching_t GenexAPI::matchingBetween(const string& name1, int idx1, int start1, int end1
+                           , const string& name2, int idx2, int start2, int end2
+                           , const string& distance_name)
+{
+  this->_checkDatasetName(name1);
+  this->_checkDatasetName(name2);
+  auto ts1 = this->_loadedDatasets[name1]->getTimeSeries(idx1, start1, end1);
+  auto ts2 = this->_loadedDatasets[name2]->getTimeSeries(idx2, start2, end2);
+  if (distance_name.substr(distance_name.length() - 3) != "dtw") {
+    throw GenexException("Can only compute matchings using _dtw distances");
+  }  
+  const dist_t distance = getDistanceFromName(distance_name);
+  matching_t matching = {};
+  auto warped_distance = distance(ts1, ts2, INF, matching);
+  return matching;
+}                     
+
 void GenexAPI::_checkDatasetName(const string& name) const
 { 
   if (this->_loadedDatasets.find(name) == this->_loadedDatasets.end())

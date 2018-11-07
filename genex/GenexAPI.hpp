@@ -355,6 +355,24 @@ public:
                          , const string& name2, int idx2, int start2, int end2
                          , const string& distanceName);
 
+  /**
+   *  @brief computes the dtw matchings between 2 time series.
+   * 
+   *  @param name1 dataset name of the first time series
+   *  @param idx1 index of the first time series
+   *  @param start1 starting position of the first time series
+   *  @param end1 ending position of the first time series
+   *  @param name2 dataset name of the second time series
+   *  @param idx2 index of the second time series
+   *  @param start2 starting position of the second time series
+   *  @param end2 ending position of the second time series
+   *  @param distanceName name of the distance being used in the calculation
+   *  @return distance between the 2 time series
+   */
+  matching_t matchingBetween(const string& name1, int idx1, int start1, int end1
+                         , const string& name2, int idx2, int start2, int end2
+                         , const string& distanceName);
+
 private:
   void _checkDatasetName(const string& name) const;
 
