@@ -43,12 +43,12 @@ BOOST_AUTO_TEST_CASE( basic_groups, *boost::unit_test::tolerance(EPS) )
   TimeSeriesSet tsSet;
   tsSet.loadData(data.test_5_10_space, timeSeriesCount, 0, " ");
 
-  BOOST_CHECK_EQUAL( tsSet.getItemLength(), timeSeriesLengths );
+  BOOST_CHECK_EQUAL( tsSet.getMaxLength(), timeSeriesLengths );
   BOOST_CHECK_EQUAL( tsSet.getItemCount(), timeSeriesCount );
   BOOST_CHECK( tsSet.getFilePath() == data.test_5_10_space );
 
   std::vector<group_membership_t> memberMap =
-    std::vector<group_membership_t>(tsSet.getItemCount() * tsSet.getItemLength());
+    std::vector<group_membership_t>(tsSet.getItemCount() * tsSet.getMaxLength());
   Group g(0, memberLength, subTimeSeriesCount, tsSet, memberMap);
 
   const TimeSeries& c = g.getCentroid();
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE( group_get_best_match, *boost::unit_test::tolerance(EPS) )
   tsSet.loadData(data.test_3_10_space, timeSeriesCount, 0, " ");
 
   std::vector<group_membership_t> memberMap =
-    std::vector<group_membership_t>(tsSet.getItemCount() * tsSet.getItemLength());
+    std::vector<group_membership_t>(tsSet.getItemCount() * tsSet.getMaxLength());
 
 
   Group g(0, memberLength, subTimeSeriesCount, tsSet, memberMap);
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE( group_save_and_load , *boost::unit_test::tolerance(EPS) )
   auto dataset = TimeSeriesSet();
   dataset.loadData(data.test_3_10_space, 0, 0, " ");
   int length = 4;
-  int subTimeSeriesCount = dataset.getItemLength() - length + 1;
+  int subTimeSeriesCount = dataset.getMaxLength() - length + 1;
   auto memberMap = std::vector<group_membership_t>(dataset.getItemCount() * subTimeSeriesCount);
   auto group = new Group(1, length, subTimeSeriesCount, dataset, memberMap);
   group->setCentroid(1, 2);

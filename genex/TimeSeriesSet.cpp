@@ -18,7 +18,7 @@ using std::vector;
 namespace genex {
 
 TimeSeriesSet::TimeSeriesSet()
-  : itemLength(0)
+  : maxCol(0)
   , itemCount(0)
   , normalized(false) {};
 
@@ -40,14 +40,25 @@ string TimeSeriesSet::getTimeSeriesName(int index) const
   return std::to_string(index);
 }
 
-int _countNumberOfLines(std::ifstream& f)
+std::pair<int, int> _getMaxRowsMaxColumns(std::ifstream& f, const string& separators)
 {
   int lineCount = 0;
+  int maxColumn = 0;
+  int length;
   string line;
-  for (lineCount = 0; std::getline(f, line); ++lineCount);
+  boost::char_separator<char> sep(separators.c_str());
+  typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+  for (lineCount = 0; std::getline(f, line); ++lineCount)
+  {
+    tokenizer tokens(line, sep);
+    length = std::distance(tokens.begin(), tokens.end());
+    if (maxColumn < length) {
+      maxColumn = length;
+    }
+  }
   f.clear();
   f.seekg(0);
-  return lineCount;
+  return {lineCount, maxColumn};
 }
 
 void TimeSeriesSet::loadData(const string& filePath
@@ -64,14 +75,14 @@ void TimeSeriesSet::loadData(const string& filePath
     f.close();
     throw GenexException(string("Cannot open ") + filePath);
   }
-
+  auto maxRowMaxColumn = _getMaxRowsMaxColumns(f, separators);
   if (maxNumRow <= 0) {
-    maxNumRow = _countNumberOfLines(f);
+    maxNumRow = maxRowMaxColumn.first;
   }
   else {
-    maxNumRow = std::min(maxNumRow, _countNumberOfLines(f));
+    maxNumRow = std::min(maxNumRow, maxRowMaxColumn.first);
   }
-
+  auto rawMaxCol = maxRowMaxColumn.second;
   int length = -1;
   string line;
   // Tokenize each line using the given separators
@@ -79,29 +90,15 @@ void TimeSeriesSet::loadData(const string& filePath
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
 
   this->itemCount = 0;
+  this->data = new data_t[maxNumRow * rawMaxCol];
+  memset(this->data, 0, maxNumRow * rawMaxCol * sizeof(data_t*));
   for (int row = 0; row < maxNumRow; row++, this->itemCount++)
   {
     // Read and process line by line
     if (getline(f, line))
     {
       tokenizer tokens(line, sep);
-
-      // Number of columns in the first line is assumed to be number of columns of
-      // the whole dataset
-      if (row == 0)
-      {
-        // If this is the first row, set length of each row to length of this row
-        length = std::distance(tokens.begin(), tokens.end());
-        this->data = new data_t[maxNumRow * length];
-        memset(this->data, 0, maxNumRow * length * sizeof(data_t*));
-      }
-      else if (length != std::distance(tokens.begin(), tokens.end()))
-      {
-        f.close();
-        this->clearData();
-        throw GenexException("File contains time series with inconsistent lengths");
-      }
-
+      this->lengths.push_back(std::distance(tokens.begin(), tokens.end()) - startCol - hasNameCol);
       int col = 0;
       for (tokenizer::iterator tok_iter = tokens.begin();
            tok_iter != tokens.end(); tok_iter++, col++)
@@ -115,7 +112,7 @@ void TimeSeriesSet::loadData(const string& filePath
               this->names.push_back(*tok_iter);
             }
             else {
-              int index = row * (length - startCol - hasNameCol) + (col - startCol - hasNameCol);
+              int index = row * (rawMaxCol - startCol - hasNameCol) + (col - startCol - hasNameCol);
               this->data[index] = (data_t)std::stod(*tok_iter);
             }
           }
@@ -139,6 +136,7 @@ void TimeSeriesSet::loadData(const string& filePath
     }
   }
 
+
   if (f.bad())
   {
     f.close();
@@ -146,9 +144,8 @@ void TimeSeriesSet::loadData(const string& filePath
     throw GenexException("Error while reading file");
   }
 
-  this->itemLength = length - startCol - hasNameCol;
   this->filePath = filePath;
-
+  this->maxCol = rawMaxCol - startCol - hasNameCol;
   f.close();
 }
 
@@ -164,8 +161,8 @@ void TimeSeriesSet::saveData(const string& filePath, char separator) const
     if (!this->names.empty()) {
       f << names[i] << separator;
     }
-    for (int j = 0; j < itemLength; j++) {
-      f << data[i * itemLength + j] << separator;
+    for (int j = 0; j < this->lengths[i]; j++) {
+      f << data[i * this->maxCol + j] << separator;
     }
     f << endl;
   }
@@ -177,7 +174,7 @@ void TimeSeriesSet::clearData()
   delete[] this->data;
   this->data = nullptr;
   this->itemCount = 0;
-  this->itemLength = 0;
+  this->maxCol = 0;
   this->names.clear();
 }
 
@@ -189,20 +186,19 @@ TimeSeries TimeSeriesSet::getTimeSeries(int index, int start, int end) const
   }
   if (start < 0 && end < 0)
   {
-    return TimeSeries(this->data + index * this->itemLength, index, 0, this->itemLength);
+    return TimeSeries(this->data + index * this->maxCol, index, 0, this->lengths[index]);
   }
-  if (start < 0 || start >= end || end > this->itemLength)
+  if (start < 0 || start >= end || end > this->lengths[index])
   {
     throw GenexException("Invalid starting or ending position of a time series");
   }
-  return TimeSeries(this->data + index * this->itemLength, index, start, end);
+  return TimeSeries(this->data + index * this->maxCol, index, start, end);
 }
 
 std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
 {
-  int length = this->getItemLength() * this->getItemCount();
 
-  if (!length)
+  if (!this->itemCount)
   {
     throw GenexException("No data to normalize");
   }
@@ -214,40 +210,52 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
   unsigned int i;
 
   // find min and max in 1.5 comparisons per element
-  for (int ts = 0; ts < this->itemCount; ts++)
-  {
-    data_t x, y, z;
+  // for (int ts = 0; ts < this->itemCount; ts++)
+  // {
+  //   data_t x, y, z;
 
-    // start at 0 if even, 1 if odd
-    if ((i = (length % 2 != 0)))
-    {
-      if (data[ts * this->itemLength] < MIN)
-      {
-        MIN = data[ts * this->itemLength];
-      }
-      if (data[ts * this->itemLength] > MAX)
-      {
-        MAX = data[ts * this->itemLength];
-      }
-    }
+  //   // start at 0 if even, 1 if odd
+  //   if ((i = (length % 2 != 0)))
+  //   {
+  //     if (data[ts * this->itemLength] < MIN)
+  //     {
+  //       MIN = data[ts * this->itemLength];
+  //     }
+  //     if (data[ts * this->itemLength] > MAX)
+  //     {
+  //       MAX = data[ts * this->itemLength];
+  //     }
+  //   }
 
-    for (; i < this->itemLength - 1; i += 2)
-    {
-      x = data[ts * this->itemLength + i];
-      y = data[ts * this->itemLength + (i + 1)];
-      if ( x > y )
-      {
-        z = y;
-        y = x;
-        x = z;
+  //   for (; i < this->itemLength - 1; i += 2)
+  //   {
+  //     x = data[ts * this->itemLength + i];
+  //     y = data[ts * this->itemLength + (i + 1)];
+  //     if ( x > y )
+  //     {
+  //       z = y;
+  //       y = x;
+  //       x = z;
+  //     }
+  //     if ( y > MAX )
+  //     {
+  //       MAX = y;
+  //     }
+  //     if ( x < MIN )
+  //     {
+  //       MIN = x;
+  //     }
+  //   }
+  // }
+
+  for (int ts = 0; ts < this->itemCount; ts++) {
+    for (i = 0; i < this->lengths[ts]; i++) {
+      if (data[ts * this->maxCol + i] > MAX) {
+        MAX = data[ts * this->maxCol + i];
       }
-      if ( y > MAX )
-      {
-        MAX = y;
-      }
-      if ( x < MIN )
-      {
-        MIN = x;
+
+      if (data[ts * this->maxCol + i] < MIN) {
+        MIN = data[ts * this->maxCol + i];
       }
     }
   }
@@ -262,9 +270,9 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
       // zero out data (use memset instead...)
       for (int ts = 0; ts < this->itemCount; ts++)
       {
-        for (i = 0; i < this->itemLength; i++)
+        for (i = 0; i < this->lengths[ts]; i++)
         {
-          data[ts * this->itemLength + i] = 0;
+          data[ts * this->maxCol + i] = 0;
         }
       }
     }
@@ -274,9 +282,9 @@ std::pair<data_t, data_t> TimeSeriesSet::normalize(void)
     // normalize
     for (int ts = 0; ts < this->itemCount; ts++)
     {
-      for (i = 0; i < this->itemLength; i++)
+      for (i = 0; i < this->lengths[ts]; i++)
       {
-        data[ts * this->itemLength + i] = (data[ts * this->itemLength + i] - MIN)/ diff;
+        data[ts * this->maxCol + i] = (data[ts * this->maxCol + i] - MIN)/ diff;
       }
     }
   }
@@ -295,18 +303,18 @@ vector<candidate_time_series_t> TimeSeriesSet::getKBestMatchesBruteForce(
 
   auto warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
-  auto timeSeriesLength = getItemLength();
+  // auto timeSeriesLength = getItemLength();
   auto numberTimeSeries = getItemCount();
   
   // iterate through every timeseries
   for (int idx = 0; idx < numberTimeSeries; idx++)
   {
     // iterate through every length of interval
-    for (int intervalLength = 2; intervalLength <= timeSeriesLength;
+    for (int intervalLength = 2; intervalLength <= getItemLength(idx);
         intervalLength++) 
     {
       // iterate through all interval window lengths
-      for (int start = 0; start <= timeSeriesLength - intervalLength; 
+      for (int start = 0; start <= getItemLength(idx) - intervalLength; 
             start++) 
       {
         TimeSeries currentTimeSeries = getTimeSeries(idx, start, start + intervalLength);

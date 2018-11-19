@@ -99,7 +99,7 @@ dataset_metadata_t GenexAPI::getDatasetInfo(const string& name)
   auto dataset = this->_loadedDatasets[name];
   return dataset_metadata_t(name,
                             dataset->getItemCount(),
-                            dataset->getItemLength(),
+                            dataset->getMaxLength(),
                             dataset->isNormalized(),                            
                             dataset->isGrouped(),
                             dataset->getDistanceName(),

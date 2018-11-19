@@ -19,6 +19,7 @@ struct MockDataset
 {
   std::string test_10_20_space = "datasets/test/test_10_20_space.txt";
   std::string test_15_20_comma = "datasets/test/test_15_20_comma.csv";
+  std::string test_3_uneven_space = "datasets/test/test_3_uneven_space.txt";
   std::string not_exist = "unicorn_santa_magic_halting_problem_solution";
   std::string uneven_rows = "datasets/test/uneven_rows.txt";
   std::string italy_power = "datasets/test/ItalyPowerDemand_DATA";
@@ -46,12 +47,14 @@ BOOST_AUTO_TEST_CASE( api_load_dataset )
   GenexAPI api;
   string ds0 = api.loadDataset("test0", data.test_10_20_space).name;
   string ds1 = api.loadDataset("test1", data.test_15_20_comma, ",", 10).name;
+  string ds2 = api.loadDataset("test2", data.test_3_uneven_space).name;
   BOOST_CHECK_EQUAL( ds0, "test0" );
   BOOST_CHECK_EQUAL( ds1, "test1" );
-  BOOST_CHECK_EQUAL( api.getDatasetCount(), 2 );
+  BOOST_CHECK_EQUAL( ds2, "test2" );
+  BOOST_CHECK_EQUAL( api.getDatasetCount(), 3 );
   BOOST_CHECK_THROW( api.loadDataset("test0", data.test_10_20_space), GenexException);
   BOOST_CHECK_THROW( api.loadDataset("not_exist", data.not_exist, " ", 10), GenexException );
-  BOOST_CHECK_THROW( api.loadDataset("uneven", data.uneven_rows, " ", 10), GenexException );
+  // BOOST_CHECK_THROW( api.loadDataset("uneven", data.uneven_rows, " ", 10), GenexException );
 }
 
 BOOST_AUTO_TEST_CASE( api_unload_dataset )

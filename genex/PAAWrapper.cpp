@@ -48,8 +48,8 @@ void PAAWrapper::generatePAAMatrix(int blockSize)
   if (blockSize < 1) {
     throw GenexException("Block size for PAA must be positive");
   }
-
-  int itemLength = dataset.getItemLength();
+ 
+  int itemLength = dataset.getItemLength(dataset.getMaxLength());
   blockSize = min(blockSize, itemLength);
   for (int i = 0; i < dataset.getItemCount(); i++) {
     this->paaMat[i].clear();
@@ -69,9 +69,9 @@ TimeSeries PAAWrapper::getPAA(int index, int start, int end) {
     if (start < 0 && end < 0)
     {
       start = 0;
-      end = dataset.getItemLength();
+      end = dataset.getItemLength(index);
     }
-    if (start < 0 || start >= end || end > dataset.getItemLength())
+    if (start < 0 || start >= end || end > dataset.getItemLength(index))
     {
       throw GenexException("Invalid starting or ending position of a time series");
     }
@@ -106,7 +106,7 @@ vector<candidate_time_series_t> PAAWrapper::getKBestMatchesPAA(
 
   auto warpedDistance = getDistanceFromName(distanceName + DTW_SUFFIX);
   data_t bestSoFarDist, currentDist;
-  auto timeSeriesLength = dataset.getItemLength();
+  auto timeSeriesLength = dataset.getItemLength(dataset.getMaxLength());
   auto numberTimeSeries = dataset.getItemCount();
   auto paaQuery = tsPAA(query, this->blockSize);
 

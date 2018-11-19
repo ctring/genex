@@ -73,7 +73,7 @@ int GlobalGroupSpace::group(
 {
   reset();
   this->_loadDistance(distance_name);
-  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+  this->localLengthGroupSpace.resize(dataset.getMaxLength() + 1, nullptr);
   this->threshold = threshold;
   this->totalNumberOfGroups = 0;
   this->wholeSeriesOnly = wholeSeriesOnly;
@@ -92,7 +92,7 @@ int GlobalGroupSpace::groupMultiThreaded(
 {
   reset();
   this->_loadDistance(distance_name);
-  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+  this->localLengthGroupSpace.resize(dataset.getMaxLength() + 1, nullptr);
   this->threshold = threshold;
   this->wholeSeriesOnly = wholeSeriesOnly;
   ThreadPool pool(num_thread);
@@ -237,7 +237,7 @@ int GlobalGroupSpace::loadGroupsOld(ifstream &fin)
   fin >> lenFrom >> lenTo >> distance;
   boost::trim_right(distance);
   this->_loadDistance(distance);
-  this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+  this->localLengthGroupSpace.resize(dataset.getMaxLength() + 1, nullptr);
   this->totalNumberOfGroups = 0;  
   for (auto i = lenFrom; i < lenTo; i++) {
     auto gel = new LocalLengthGroupSpace(dataset, i);
