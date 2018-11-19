@@ -115,7 +115,7 @@ private:
     size_t maxLen, minLen;
     ar >> minLen >> maxLen >> this->distanceName >> this->threshold;
     this->_loadDistance(this->distanceName);
-    this->localLengthGroupSpace.resize(dataset.getItemLength() + 1, nullptr);
+    this->localLengthGroupSpace.resize(dataset.getMaxLength() + 1, nullptr);
     this->totalNumberOfGroups = 0;
     for (auto i = minLen; i < maxLen; i++) {
       auto llgs = new LocalLengthGroupSpace(dataset, i);

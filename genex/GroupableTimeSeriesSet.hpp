@@ -97,7 +97,7 @@ private:
     }
 
     ar << this->getItemCount()
-       << this->getItemLength();
+       << this->getMaxLength();
 
     ar << *(this->groupsAllLengthSet);
   }
@@ -111,7 +111,7 @@ private:
     {
       throw GenexException("Incompatible item count");
     }
-    if (grpItemLength != this->getItemLength())
+    if (grpItemLength != this->getMaxLength())
     {
       throw GenexException("Incompatible item length");
     }

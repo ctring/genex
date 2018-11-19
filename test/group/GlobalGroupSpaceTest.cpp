@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE( local_length_group_space, *boost::unit_test::tolerance(EPS
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
 
   BOOST_CHECK_EQUAL(tsSet.getItemCount(), 5);
-  BOOST_CHECK_EQUAL(tsSet.getItemLength(), 10);
+  BOOST_CHECK_EQUAL(tsSet.getMaxLength(), 10);
 
   GlobalGroupSpace gSet(tsSet);
   gSet.group("euclidean", 0.5);
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( local_length_group_space_multi_threaded, *boost::unit_test
   tsSet.loadData(data.test_group_5_10_different_space, 5, 0, " ");
 
   BOOST_CHECK_EQUAL(tsSet.getItemCount(), 5);
-  BOOST_CHECK_EQUAL(tsSet.getItemLength(), 10);
+  BOOST_CHECK_EQUAL(tsSet.getMaxLength(), 10);
 
   GlobalGroupSpace gSet(tsSet);
   gSet.groupMultiThreaded("euclidean", 0.5, 4);

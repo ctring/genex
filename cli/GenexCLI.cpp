@@ -75,7 +75,7 @@ bool tooManyArgs(const vector<string>& args, int limit)
 
 MAKE_COMMAND(LoadDataset,
   {
-    if (tooFewArgs(args, 2) || tooManyArgs(args, 5))
+    if (tooFewArgs(args, 2) || tooManyArgs(args, 6))
     {
       return false;
     }
@@ -85,12 +85,13 @@ MAKE_COMMAND(LoadDataset,
     auto separators = args.size() > 3 ? args[3] : " ";
     auto maxNumRow = args.size() > 4 ? stoi(args[4]) : 0;
     auto startCol  = args.size() > 5 ? stoi(args[5]) : 0;
+    auto hasNameCol = args.size() > 6 ? stoi(args[6]) : false;
 
     boost::replace_all(separators, "\\s", " ");
 
     genex::dataset_metadata_t info;
     
-    info = gGenexAPI.loadDataset(name, filePath, separators, maxNumRow, startCol);
+    info = gGenexAPI.loadDataset(name, filePath, separators, maxNumRow, startCol, hasNameCol);
 
     cout << "Dataset loaded                         " << endl
               << "  Name:        " << info.name       << endl
@@ -115,6 +116,8 @@ MAKE_COMMAND(LoadDataset,
   "               number is non-positive or the number of actual line is      \n"
   "               smaller than this number, all lines are read. (default: 0)  \n"
   "  startCol   - Omit all columns before this column. (default: 0)           \n"
+  "  hasNameCol - Boolean to indicate whether name column exists or not.      \n"
+  "               (default: 0)                                                \n"
   )
 
 MAKE_COMMAND(SaveDataset,

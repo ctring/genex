@@ -26,7 +26,7 @@ namespace genex {
 LocalLengthGroupSpace::LocalLengthGroupSpace(const TimeSeriesSet& dataset, int length)
  : dataset(dataset), length(length)
 {
-  this->subTimeSeriesCount = dataset.getItemLength() - length + 1;
+  this->subTimeSeriesCount = dataset.getMaxLength() - length + 1;
   this->memberMap = std::vector<group_membership_t>(dataset.getItemCount() * this->subTimeSeriesCount);
 }
 
@@ -72,7 +72,9 @@ int LocalLengthGroupSpace::generateGroups(const dist_t pairwiseDistance, data_t 
                << " (" << counter*100/totalTimeSeries << "%)" << endl;
         }
       }
-
+      if (start + this->length > dataset.getItemLength(idx)) {
+        continue;
+      }
       TimeSeries query = dataset.getTimeSeries(idx, start, start + this->length);
 
       data_t bestSoFar = INF;

@@ -98,8 +98,7 @@ void GroupableTimeSeriesSet::saveGroupsOld(const string& path, bool groupSizeOnl
     // Version of the file format, the threshold and the required dataset dimensions
     fout << GROUP_FILE_VERSION << " "
          << this->getThreshold() << " "
-         << this->getItemCount() << " "
-         << this->getItemLength() << endl;
+         << this->getItemCount() << endl;
     this->groupsAllLengthSet->saveGroupsOld(fout, groupSizeOnly);
   }
   else
@@ -125,10 +124,10 @@ int GroupableTimeSeriesSet::loadGroupsOld(const string& path)
     {
       throw GenexException("Incompatible item count");
     }
-    if (grpItemLength != this->getItemLength())
-    {
-      throw GenexException("Incompatible item length");
-    }
+    // if (grpItemLength != this->getItemLength())
+    // {
+    //   throw GenexException("Incompatible item length");
+    // }
     cout << "Saved groups are compatible with the dataset" << endl;
     reset();
     this->groupsAllLengthSet = new GlobalGroupSpace(*this);

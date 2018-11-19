@@ -71,11 +71,11 @@ public:
   void clearData();
 
   /**
-   * @brief gets length of each time series in the dataset
+   * @brief gets length of the specified time series in the dataset
    *
    * @return length of each time series
    */
-  int getItemLength() const { return this->itemLength; }
+  int getItemLength(int index) const { return this->lengths[index]; }
 
   /**
    * @brief gets number of time series in the dataset
@@ -83,6 +83,13 @@ public:
    * @return number of time series
    */
   int getItemCount() const { return this->itemCount; }
+
+  /**
+   * @brief gets maximum length of time series in the dataset
+   *
+   * @return maximum length of timeseries in the dataset
+   */
+  int getMaxLength() const { return this->maxCol; }
 
   /**
    * @brief gets name of a time series
@@ -150,8 +157,9 @@ public:
 protected:
   data_t* data = nullptr;
   vector<string> names;
-  int itemLength;
+  vector<int> lengths;
   int itemCount;
+  int maxCol;
 
 private:
   string filePath;
