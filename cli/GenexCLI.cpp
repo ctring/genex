@@ -103,21 +103,21 @@ MAKE_COMMAND(LoadDataset,
 
   "Load a dataset to the memory.",
 
-  "Dataset are text files with table-like format, such as comma-separated     \n"
-  "values files. Each dataset needs to have a name given by the user.         \n"
-  "                                                                           \n"
-  "Usage: load <name> <filePath> [<separators> [<maxNumRow> [<startCol>]]]    \n"
-  "  name       - Name of the dataset. This name is used to refered to the    \n"
-  "               dataset later. Space is not allowed.                        \n"
-  "  filePath   - Path to a text file containing the dataset                  \n"
-  "  separators - A list of characters used to separate values in the file.   \n"
-  "               Use \"\\s\" to specify space. (default: \"\\s\")            \n"
-  "  maxNumRow  - Maximum number of rows will be read from the file. If this  \n"
-  "               number is non-positive or the number of actual line is      \n"
-  "               smaller than this number, all lines are read. (default: 0)  \n"
-  "  startCol   - Omit all columns before this column. (default: 0)           \n"
-  "  hasNameCol - Boolean to indicate whether name column exists or not.      \n"
-  "               (default: 0)                                                \n"
+  "Dataset are text files with table-like format, such as comma-separated                    \n"
+  "values files. Each dataset needs to have a name given by the user.                        \n"
+  "                                                                                          \n"
+  "Usage: load <name> <filePath> [<separators> [<maxNumRow> [<startCol> [<hasNameCol>]]]]    \n"
+  "  name       - Name of the dataset. This name is used to referred to the                  \n"
+  "               dataset later. Space is not allowed.                                       \n"
+  "  filePath   - Path to a text file containing the dataset                                 \n"
+  "  separators - A list of characters used to separate values in the file.                  \n"
+  "               Use \"\\s\" to specify space. (default: \"\\s\")                           \n"
+  "  maxNumRow  - Maximum number of rows will be read from the file. If this                 \n"
+  "               number is non-positive or the number of actual line is                     \n"
+  "               smaller than this number, all lines are read. (default: 0)                 \n"
+  "  startCol   - Omit all columns before this column. (default: 0)                          \n"
+  "  hasNameCol - Boolean to indicate whether name column exists or not.                     \n"
+  "               (default: false)                                                           \n"
   )
 
 MAKE_COMMAND(SaveDataset,
