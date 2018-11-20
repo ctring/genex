@@ -98,7 +98,8 @@ void GroupableTimeSeriesSet::saveGroupsOld(const string& path, bool groupSizeOnl
     // Version of the file format, the threshold and the required dataset dimensions
     fout << GROUP_FILE_VERSION << " "
          << this->getThreshold() << " "
-         << this->getItemCount() << endl;
+         << this->getItemCount() << " "
+         << this->getMaxLength() << endl;
     this->groupsAllLengthSet->saveGroupsOld(fout, groupSizeOnly);
   }
   else

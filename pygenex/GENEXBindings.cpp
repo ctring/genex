@@ -144,6 +144,18 @@ string getTimeSeriesName(const string& name, int index)
 }
 
 /**
+ *  @brief gets length of a time series in a dataset
+ *
+ *  @param name name of the dataset
+ *  @param index index of the time series
+ *  @return length of the specified time series.
+ */
+int getTimeSeriesLength(const string& name, int index)
+{
+  return genexAPI.getTimeSeriesLength(name, index);
+}
+
+/**
  *  @brief groups a dataset
  *
  *  @param name name of the dataset to be grouped
@@ -433,6 +445,7 @@ BOOST_PYTHON_MODULE(pygenex)
   py::def("saveDataset", saveDataset);
   py::def("normalize", normalize);
   py::def("getTimeSeriesName", getTimeSeriesName);
+  py::def("getTimeSeriesLength", getTimeSeriesLength);
   py::def("group", group,
           (py::arg("distanceName")="euclidean"
           , py::arg("numThreads")=1

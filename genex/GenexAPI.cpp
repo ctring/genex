@@ -92,6 +92,12 @@ string GenexAPI::getTimeSeriesName(const string& name, int index)
   return this->_loadedDatasets[name]->getTimeSeriesName(index);
 }
 
+int GenexAPI::getTimeSeriesLength(const string& name, int index)
+{
+  this->_checkDatasetName(name);
+  return this->_loadedDatasets[name]->getItemLength(index);
+}
+
 dataset_metadata_t GenexAPI::getDatasetInfo(const string& name)
 {
   this->_checkDatasetName(name);
