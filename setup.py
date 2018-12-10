@@ -42,8 +42,7 @@ class CMakeBuild(build_ext):
                       '-DPYTHON_EXECUTABLE=' + sys.executable,
                       '-DBUILD_CLI=OFF',
                       '-DBUILD_TESTS=OFF',
-                      '-DBUILD_PYGENEX=ON']
-
+                      '-DBUILD_PYGENEX=ON', '-DBoost_NO_BOOST_CMAKE=TRUE', '-DBoost_NO_SYSTEM_PATHS=TRUE', '-DBoost_NO_SYSTEM_PATHS=TRUE', '-DCMAKE_LIBRARY_PATH=/work/msslocal/lib', '-DBoost_INCLUDE_DIRS=/work/msslocal/include', '-DBoost_LIBRARY_DIRS=/work/msslocal/lib', '-DBOOST_ROOT=/work/msslocal/Downloads/boost_1_66_0']
         cfg = 'Debug' if self.debug else 'Release'
         build_args = []
 

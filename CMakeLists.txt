@@ -1,8 +1,8 @@
 # primary source: https://cmake.org/cmake-tutorial/
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 project(genex)
 
-option(BUILD_CLI "build the GENEX command-line interface" ON)
+option(BUILD_CLI "build the GENEX command-line interface" OFF)
 option(BUILD_TESTS "build tests" ON)
 option(BUILD_PYGENEX "build the Python version of GENEX" ON)
 
@@ -13,8 +13,8 @@ message("Building PYGENEX: ${BUILD_PYGENEX}")
 if (UNIX AND NOT APPLE)
   # The next 2 lines might need to be removed if the following error occurs:
   #   "sorry - this program has been built without plugin support"
-  set(CMAKE_AR "gcc-ar")
-  set(CMAKE_RANLIB "gcc-ranlib")
+  # set(CMAKE_AR "gcc-ar")
+  # set(CMAKE_RANLIB "gcc-ranlib")
   set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto -fPIC -pthread")
 else()
   set(CMAKE_CXX_FLAGS "-std=c++11 -O2 -flto -stdlib=libc++")
@@ -25,6 +25,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 # include GNU readline
 find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
+
+# include zlib
+find_package(ZLIB REQUIRED)
+include_directories(${ZLIB_INCLUDE_DIRS})
 
 # include Boost
 # From FindBoost documentation:
@@ -40,10 +44,11 @@ set(BOOST_COMPONENTS serialization iostreams)
 if (BUILD_PYGENEX)
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python)
 endif()
-if (BUILD_TESTS)
-  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} unit_test_framework)
-endif()
-find_package(Boost 1.65 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+
+set(Boost_USE_STATIC_LIBS ON)
+message(">>>>> boost include ${Boost_INCLUDE_DIRS}")
+message(">>>>> boost lib ${Boost_LIBRARY_DIRS}")
+find_package(Boost 1.66 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -64,6 +69,9 @@ endif()
 # testing (http://neyasystems.com/an-engineers-guide-to-unit-testing-cmake-and-boost-unit-tests/)
 if (BUILD_TESTS)
   enable_testing()
+  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} unit_test_framework)
+  set(Boost_USE_STATIC_LIBS OFF)
+  find_package(Boost 1.66 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
   add_subdirectory(test)
 endif()
 
