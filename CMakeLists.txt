@@ -26,6 +26,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(Readline REQUIRED)
 include_directories(${Readline_INCLUDE_DIRS})
 
+# See "Boost CMake" section in https://cmake.org/cmake/help/latest/module/FindBoost.html
+# This new feature breaks FindBoost of this project so disable it
+set(Boost_NO_BOOST_CMAKE ON)
+
 # include Boost
 # From FindBoost documentation:
 # "Note that Boost Python components require a Python version suffix
@@ -38,12 +42,12 @@ include_directories(${Readline_INCLUDE_DIRS})
 # portable.""
 set(BOOST_COMPONENTS serialization iostreams)
 if (BUILD_PYGENEX)
-  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python)
+  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} python27)
 endif()
 if (BUILD_TESTS)
   set(BOOST_COMPONENTS ${BOOST_COMPONENTS} unit_test_framework)
 endif()
-find_package(Boost 1.65 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+find_package(Boost 1.72 REQUIRED COMPONENTS ${BOOST_COMPONENTS})
 
 include_directories(${Boost_INCLUDE_DIRS})
 
